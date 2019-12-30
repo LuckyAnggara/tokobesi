@@ -51,7 +51,7 @@
                         },
                         {
                             title: "Kode Barang",
-                            data: "kd_barang",
+                            data: "kode_barang",
                             searching: true,
                             targets: 1,
                             render: function(data, type, full, meta) {
@@ -87,7 +87,7 @@
                         },
                         {
                             title: "Action",
-                            data: "kd_barang",
+                            data: "kode_barang",
                             searching: true,
                             targets: 5,
                             render: function(data, type, full, meta) {
@@ -152,7 +152,7 @@
                                 },
                                 {
                                     title: "Kode Barang",
-                                    data: "kd_barang",
+                                    data: "kode_barang",
                                     searching: true,
                                     targets: 1,
                                     render: function(data, type, full, meta) {
@@ -188,7 +188,7 @@
                                 },
                                 {
                                     title: "Action",
-                                    data: "kd_barang",
+                                    data: "kode_barang",
                                     searching: true,
                                     targets: 5,
                                     render: function(data, type, full, meta) {

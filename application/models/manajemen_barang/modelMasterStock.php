@@ -21,7 +21,7 @@ class ModelMasterStock extends CI_Model
         if ($string == null) {
             $this->db->select('master_barang.*, master_stock.id, master_stock.jumlah_stock');
             $this->db->from('master_barang');
-            $this->db->join('master_stock', 'master_stock.kd_barang = master_barang.kd_barang', 'left');
+            $this->db->join('master_stock', 'master_stock.kode_barang = master_barang.kode_barang', 'left');
             $output = $this->db->get();
 
 
@@ -29,8 +29,8 @@ class ModelMasterStock extends CI_Model
         } else {
             $this->db->select('master_barang.*, master_stock.id, master_stock.jumlah_stock');
             $this->db->from('master_barang');
-            $this->db->join('master_stock', 'master_stock.kd_barang = master_barang.kd_barang', 'left');
-            $this->db->like("master_barang.kd_barang", $string);
+            $this->db->join('master_stock', 'master_stock.kode_barang = master_barang.kode_barang', 'left');
+            $this->db->like("master_barang.kode_barang", $string);
             $this->db->or_like("nama_barang", $string);
             $this->db->or_like("harga_satuan", $string);
             $this->db->or_like("jumlah_stock", $string);

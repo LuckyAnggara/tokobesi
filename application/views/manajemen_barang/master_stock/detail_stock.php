@@ -40,7 +40,7 @@
                                         <div class="form-group row">
                                             <label class="col-2 col-form-label">Kode Barang</label>
                                             <div class="col-10">
-                                                <input id="kode_barang" type="text" class="form-control" value="<?= $stock['kd_barang']; ?>" disabled>
+                                                <input id="kode_barang" type="text" class="form-control" value="<?= $stock['kode_barang']; ?>" disabled>
                                             </div>
                                         </div>
                                         <div class="form-group row">

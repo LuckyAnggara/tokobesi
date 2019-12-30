@@ -50,7 +50,7 @@
                         },
                         {
                             title: "Kode Supplier",
-                            data: "kd_barang",
+                            data: "kode_barang",
                             searching: true,
                             targets: 1,
                             render: function(data, type, full, meta) {
