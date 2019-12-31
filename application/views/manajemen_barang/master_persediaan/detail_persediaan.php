@@ -40,32 +40,32 @@
                                         <div class="form-group row">
                                             <label class="col-2 col-form-label">Kode Barang</label>
                                             <div class="col-10">
-                                                <input id="kode_barang" type="text" class="form-control" value="<?= $stock['kode_barang']; ?>" disabled>
+                                                <input id="kode_barang" type="text" class="form-control" value="<?= $persediaan['kode_barang']; ?>" disabled>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-2 col-form-label">Nama Barang</label>
                                             <div class="col-10">
-                                                <input id="nama_barang" type="text" class="form-control" value="<?= $stock['nama_barang']; ?>" disabled>
+                                                <input id="nama_barang" type="text" class="form-control" value="<?= $persediaan['nama_barang']; ?>" disabled>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-2 col-form-label">Jumlah Persediaan</label>
                                             <div class="col-10">
-                                                <input id="jumlah_persediaan" type="text" class="form-control" value="<?= $stock['jumlah_stock']; ?>" disabled>
+                                                <input id="jumlah_persediaan" type="text" class="form-control" value="<?= $persediaan['jumlah_persediaan']; ?>" disabled>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-2 col-form-label">Harga Satuan Terkahir</label>
                                             <div class="col-10">
-                                                <input id="harga_satuan" type="text" class="form-control" value="<?= $stock['harga_satuan']; ?>" disabled>
+                                                <input id="harga_satuan" type="text" class="form-control" value="<?= $persediaan['harga_satuan']; ?>" disabled>
                                             </div>
                                         </div>
                                         <hr>
                                         <div class="form-group row">
                                             <label class="col-3 col-form-label">Total Persediaan Batu Bata </label>
                                             <div class="col-3">
-                                                <h3>Rp. <?= $stock['jumlah_stock'] * $stock['harga_satuan']; ?></h3>
+                                                <h3>Rp. <?= $persediaan['jumlah_persediaan'] * $persediaan['harga_satuan']; ?></h3>
                                             </div>
                                             <div class="col-4">
                                                 <h4>(Empat Ratus Juta Rupiah)</h4>

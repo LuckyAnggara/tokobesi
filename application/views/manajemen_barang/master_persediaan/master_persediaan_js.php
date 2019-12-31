@@ -25,8 +25,8 @@
                     };
                 };
 
-                //Init Datatabel Master Stock Persediaan 
-                var table = $('#datatable-master-stock').DataTable({
+                //Init Datatabel Master persediaan Persediaan 
+                var table = $('#datatable-master-persediaan').DataTable({
                     "oLanguage": {
                         sProcessing: "Sabar yah...",
                         sZeroRecords: "Tidak ada Data..."
@@ -37,7 +37,7 @@
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": '<?= base_url("manajemen_barang/MasterStock/getData"); ?>',
+                        "url": '<?= base_url("manajemen_barang/MasterPersediaan/getData"); ?>',
                         "type": "POST",
                     },
                     "columnDefs": [{
@@ -69,7 +69,7 @@
                         },
                         {
                             title: "Jumlah Persediaan",
-                            data: "jumlah_stock",
+                            data: "jumlah_persediaan",
                             searching: true,
                             targets: 3,
                             render: function(data, type, full, meta) {
@@ -91,7 +91,7 @@
                             searching: true,
                             targets: 5,
                             render: function(data, type, full, meta) {
-                                var display = '<a type="button" class="btn btn-icon waves-effect waves-light btn-success btn-sm" href="<?= base_url('manajemen_barang/masterstock/detail_stock/'); ?>' + data + '" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i></a>';
+                                var display = '<a type="button" class="btn btn-icon waves-effect waves-light btn-success btn-sm" href="<?= base_url('manajemen_barang/masterpersediaan/detail_persediaan/'); ?>' + data + '" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i></a>';
                                 return display;
                             }
                         }
@@ -125,9 +125,9 @@
                 $('#searchInput').on('keypress', function(e) {
                     var code = e.keyCode || e.which;
                     if (code == 13) {
-                        $('#datatable-master-stock').DataTable().destroy();
+                        $('#datatable-master-persediaan').DataTable().destroy();
                         var input = $('#searchInput').val();
-                        var table = $('#datatable-master-stock').DataTable({
+                        var table = $('#datatable-master-persediaan').DataTable({
                             "oLanguage": {
                                 sProcessing: "Sabar yah...",
                                 sZeroRecords: "Tidak ada Data..."
@@ -138,7 +138,7 @@
                             "processing": true,
                             "serverSide": true,
                             "ajax": {
-                                "url": '<?= base_url("manajemen_barang/MasterStock/getData/"); ?>' + input,
+                                "url": '<?= base_url("manajemen_barang/Masterpersediaan/getData/"); ?>' + input,
                                 "type": "POST",
                             },
                             "columnDefs": [{
@@ -170,7 +170,7 @@
                                 },
                                 {
                                     title: "Jumlah Persediaan",
-                                    data: "jumlah_stock",
+                                    data: "jumlah_persediaan",
                                     searching: true,
                                     targets: 3,
                                     render: function(data, type, full, meta) {

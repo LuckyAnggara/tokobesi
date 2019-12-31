@@ -8,11 +8,46 @@
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
 
+<!-- file uploads js -->
+<script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
+
+<!-- Sweet Alert Js  -->
+<script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.min.js"></script>
+
 <!-- script validasi -->
 
+<!-- script Uploader -->
+<script type="text/javascript">
+            $('#gambar').dropify({
+                messages: {
+                    'default': 'Drag dan drop Gambar Barang disini',
+                    'replace': 'Drag dan drop gambar untuk mengganti',
+                    'remove': 'Hapus',
+                    'error': 'Ooops, terjadi sesuatu, silahkan coba lagi.'
+                },
+                error: {
+                    'fileSize': 'File terlalu besar (3 Mb max).',
+                    'imageFormat': 'Format Gambar tidak Support, hanya ({{ value }} saja).'
+                }
+            });
+            $('#edit_gambar_dropfy').dropify({
+                "defaultFile": "<?=base_url('assets/images/barang/default.jpg');?>",
+                messages: {
+                    'default': 'Drag dan drop Gambar Barang disini',
+                    'replace': 'Drag dan drop gambar untuk mengganti',
+                    'remove': 'Hapus',
+                    'error': 'Ooops, terjadi sesuatu, silahkan coba lagi.'
+                },
+                error: {
+                    'fileSize': 'File terlalu besar (3 Mb max).',
+                    'imageFormat': 'Format Gambar tidak Support, hanya ({{ value }} saja).'
+                },
+            });
+        </script>
+<!-- script validasi -->
 <script type="text/javascript">
             $(document).ready(function() {
-                $('submitForm').parsley();
+                $('#submitForm').parsley();
             });
 </script>
 
@@ -47,13 +82,10 @@
 
     function normalrupiah(angka) {
 
-var tanparp = angka.replace("Rp", "");
-var tanpatitik = tanparp.split(".").join("");
-return tanpatitik;
+    var tanparp = angka.replace("Rp", "");
+    var tanpatitik = tanparp.split(".").join("");
+    return tanpatitik;
     }
-    
-
-
 </script>
 
 <!-- Script Auto Generate Kode Barang -->
@@ -65,12 +97,15 @@ return tanpatitik;
         string_awalan = nama_barang.val();
         string_awalan = string_awalan.substr(0, 1);
         string_awalan = string_awalan.toUpperCase();
+        console.log(string_awalan);
         var tambahan = cekData(string_awalan);
         var res = string_awalan.concat(tambahan);
         kode_barang.val(res);
     });
 
     function cekData(string) {
+
+        // tambah lagi if untuk string dibawah 1
 
         $.ajax({
             url: '<?= base_url("manajemen_barang/MasterBarang/cekData/"); ?>' + string,
@@ -86,7 +121,17 @@ return tanpatitik;
 
 <script>
     $(document).ready(function() {
-        $('#addModal').on('hidden.bs.modal', function(e) {
+        $('#add_Modal').on('hidden.bs.modal', function(e) {
+            $(this)
+                .find("input,textarea,select")
+                .val('')
+                .end()
+                .find("input[type=checkbox], input[type=radio]")
+                .prop("checked", "")
+                .end();
+        })
+
+        $('#edit_Modal').on('hidden.bs.modal', function(e) {
             $(this)
                 .find("input,textarea,select")
                 .val('')
@@ -122,7 +167,6 @@ return tanpatitik;
                 sZeroRecords: "Tidak ada Data..."
             },
             "searching": false,
-            "deferRender": true,
             "order": [],
             "processing": true,
             "serverSide": true,
@@ -159,11 +203,14 @@ return tanpatitik;
                 },
                 {
                     title: "Harga Satuan",
-                    data: "harga_satuan",
+                    data : "hargasatuan",
                     searching: true,
                     targets: 3,
                     render: function(data, type, full, meta) {
-                        return formatRupiah(data, 'Rp.');
+                        
+                        var display1 =  formatRupiah(data.harga_satuan, 'Rp.');
+                        var display2 = display1 + " / " + data.satuan;
+                        return display2;
                     }
                 },
                 {
@@ -172,8 +219,10 @@ return tanpatitik;
                     searching: true,
                     targets: 4,
                     render: function(data, type, full, meta) {
-                        var display = '<a type="button" class="btn btn-icon waves-effect waves-light btn-success btn-sm" href="<?= base_url('manajemen_barang/masterstock/detail_stock/'); ?>' + data + '" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i></a>';
-                        return display;
+                        var display1 = '<a type="button" class="btn btn-icon waves-effect waves-light btn-success btn-sm" href="<?= base_url('manajemen_barang/masterpersediaan/detail_persediaan/'); ?>' + data + '" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
+                        var display2 = '<a type="button" onClick = "show_edit_modal(\''+ data+'\')"" data-button="'+data+'" class="btn btn-icon waves-effect waves-light btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Edit Data"><i class="fa fa-edit" ></i> </a>';
+                        var display3 = '<a type="button" onClick = "warning_delete(\''+ data+'\')" data-button="'+data+'" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
+                        return display1 +" " + display2+" " + display3;
                     }
                 }
             ],
@@ -264,8 +313,10 @@ return tanpatitik;
                             searching: true,
                             targets: 4,
                             render: function(data, type, full, meta) {
-                                var display = '<button type="button" class="btn btn-icon waves-effect waves-light btn-success btn-sm" onclick="warningDelete(' + data + ')" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i></button>';
-                                return display;
+                                var display1 = '<a type="button" class="btn btn-icon waves-effect waves-light btn-success btn-sm" href="<?= base_url('manajemen_barang/masterpersediaan/detail_persediaan/'); ?>' + data + '" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
+                        var display2 = '<a type="button" class="btn btn-icon waves-effect waves-light btn-primary btn-sm" data-target="#edit_Modal" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Edit Data"><i class="fa fa-edit" ></i> </a>';
+                        var display3 = '<a type="button" onClick = "warning_delete(\''+ data+'\')" data-button="'+data+'" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
+                        return display1 +" " + display2+" " + display3;
                             }
                         }
                     ],
@@ -288,28 +339,156 @@ return tanpatitik;
     $(document).ready(function() {
         $('#submitForm').submit(function(e) {
             e.preventDefault();
-            var kode_barang = $('#kode_barang').val();
-            var nama_barang = $('#nama_barang').val();
-            var harga_satuan = $('#harga_satuan').val();
-            var satuan = $('#satuan').val();
-            var gambar = $('#gambar').val();
+            // var kode_barang = $('#kode_barang').val();
+            // var nama_barang = $('#nama_barang').val();
+            // var harga_satuan = $('#harga_satuan').val();
+            // var satuan = $('#satuan').val();
+            // var gambar =$('#gambar').val();
+            var data = new FormData(document.getElementById("submitForm"));
             $.ajax({
                 url: "<?= Base_url('manajemen_barang/masterbarang/tambah_data'); ?>",
                 type: "post",
-                data: {
-                    kode_barang: kode_barang,
-                    nama_barang: nama_barang,
-                    harga_satuan: harga_satuan,
-                    satuan: satuan,
-                    gambar: gambar
-                },
-                cache: false,
+                data: data,
                 async: false,
-                success: function(data) {
-                    $('#datatable-master-barang').DataTable().ajax.reload();
-                    $('#addModal').modal('hide');
-                }
-            })
-        });
-    });
+                processData: false,
+                contentType: false,
+                                success: function(data) {
+                                    $('#datatable-master-barang').DataTable().ajax.reload();
+                                    $('#add_Modal').modal('hide');
+                                }
+                            })
+                        });
+                    });
 </script>
+
+<!-- Script Delete Data -->
+
+<script type="text/javascript">
+
+function warning_delete(kode_barang) {
+    swal({
+        title: 'Apa anda yakin akan hapus data ini?',
+        text: "Semua Data Persediaan dengan kode " + kode_barang + " juga akan terhapus",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4fa7f3',
+        cancelButtonColor: '#d57171',
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function() {
+        deleteData(kode_barang);
+        swal(
+            'Deleted!',
+            'Data '+kode_barang+' telah dihapus!',
+            'success'
+        )
+    });
+}
+
+function deleteData(kode_barang) {
+    $.ajax({
+        url: "<?= base_url('manajemen_barang/masterbarang/delete_data/'); ?>" + kode_barang,
+        async: false,
+        success: function(data) {
+            $('#datatable-master-barang').DataTable().ajax.reload();
+        }
+    });
+}
+</script>
+
+<!-- Script Edit Modal -->
+<script type="text/javascript">
+function show_edit_modal(kode_barang){
+    fetchdata(kode_barang);
+
+}
+
+function fetchdata(kode_barang){
+    var edit_data_label = $('#edit_data_label');
+    var edit_kode_barang = $('#edit_kode_barang');
+    var edit_nama_barang = $('#edit_nama_barang');
+    var edit_harga_satuan_dummy = $('#edit_harga_satuan_dummy');
+    var edit_harga_satuan = $('#edit_harga_satuan');
+    var edit_satuan = $('#edit_satuan');
+    var edit_tanggal_input = $('#edit_tanggal_input');
+    var edit_image = $('#edit_gambar_dropfy');
+    //var edit_image = $('#edit_image');
+
+    $.ajax({
+        url: '<?= base_url("manajemen_barang/MasterBarang/view_edit_data/"); ?>' + kode_barang,
+        type: "POST",
+        dataType: "JSON",
+        async: false,
+        success: function(data) {
+            rupiah = formatRupiah(data.harga_satuan, 'Rp.');
+            edit_data_label.text("Edit Data Barang Kode :" + data.kode_barang);
+            edit_kode_barang.val(data.kode_barang);
+            edit_nama_barang.val(data.nama_barang);
+            edit_harga_satuan_dummy.val(rupiah);
+            edit_harga_satuan.val(data.harga_satuan);
+            edit_satuan.val(data.satuan);
+            edit_tanggal_input.text(data.tanggal_input);
+            edit_image.attr('data-default-file',"<?=base_url('assets/images/barang/');?>"+data.gambar);
+            //edit_image.attr('src',"<?= base_url('assets/images/barang/');?>" + data.gambar);
+            $('#edit_Modal').modal('show');
+        }
+    });
+}
+
+// Edit Harga Satuan
+
+    var edit_rupiah = document.getElementById('edit_harga_satuan_dummy');
+    edit_rupiah.addEventListener('keyup', function(e) {
+        var data = $('#edit_harga_satuan_dummy').val();
+        // tambahkan 'Rp.' pada saat form di ketik
+        // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
+        edit_rupiah.value = formatRupiah(this.value, 'Rp. ');
+        $('#edit_harga_satuan').val(normalrupiah(data));
+    });
+
+// submit edit data
+$(document).ready(function() {
+
+function warning_edit(kode_barang) {
+    swal({
+        title: 'Apa anda yakin akan mengubah data ini?',
+        text: "Semua Data Persediaan dengan kode " + kode_barang + " juga akan terubah",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4fa7f3',
+        cancelButtonColor: '#d57171',
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function() {
+        editData(kode_barang);
+        swal(
+            'Edited!!!',
+            'Data '+kode_barang+' telah diubah!',
+            'success'
+        )
+    });
+}
+
+function editData(kode_barang) {
+    var data = new FormData(document.getElementById("edit_form"));
+            $.ajax({
+                url: "<?= Base_url('manajemen_barang/masterbarang/edit_data/'); ?>" + kode_barang,
+                type: "post",
+                data: data,
+                async: false,
+                processData: false,
+                contentType: false,
+                                success: function(data) {
+                                    $('#datatable-master-barang').DataTable().ajax.reload();
+                                    $('#edit_Modal').modal('hide');
+                                }
+                            })
+
+}
+        $('#edit_form').submit(function(e) {
+            var kode_barang = $('#edit_kode_barang').val();
+            e.preventDefault();
+            warning_edit(kode_barang);
+            });
+
+                });
+</script>
+
