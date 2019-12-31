@@ -9,7 +9,7 @@
         <li class="has_sub">
             <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-view-list"></i> <span> Manajemen Barang </span> <span class="menu-arrow"></span></a>
             <ul class="list-unstyled">
-                <li><a href="<?= base_url('manajemen_barang/masterstock'); ?>">Master Persediaan Barang</a></li>
+                <li><a href="<?= base_url('manajemen_barang/masterpersediaan'); ?>">Master Persediaan Barang</a></li>
                 <li><a href="<?= base_url('manajemen_barang/masterbarang'); ?>">Master Data Barang</a></li>
                 <li><a href="<?= base_url('manajemen_barang/mastersupplier'); ?>">Master Data Supplier </a></li>
             </ul>

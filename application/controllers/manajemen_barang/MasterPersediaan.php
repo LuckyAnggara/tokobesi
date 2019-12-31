@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class MasterStock extends CI_Controller
+class MasterPersediaan extends CI_Controller
 {
 
 	function __construct()
@@ -9,54 +9,54 @@ class MasterStock extends CI_Controller
 		parent::__construct();
 		$this->load->library('ssp');
 		$this->load->library('datatables');
-		$this->load->model('manajemen_barang/modelMasterStock', 'modelStock');
-		$this->load->model('manajemen_barang/modelDetailStock', 'detailStock');
+		$this->load->model('manajemen_barang/modelMasterpersediaan', 'modelpersediaan');
+		$this->load->model('manajemen_barang/modelDetailpersediaan', 'detailpersediaan');
 	}
 
 	public function index()
 	{
-		$data['css'] = $this->load->view('manajemen_barang/master_stock/master_stock_css');
+		$data['css'] = $this->load->view('manajemen_barang/master_persediaan/master_persediaan_css');
 		$data['title'] = "Master Persediaan Barang";
 		$this->load->view('template/template_header', $data);
 		$this->load->view('template/template_menu');
-		$this->load->view('manajemen_barang/master_stock/master_stock');
+		$this->load->view('manajemen_barang/master_persediaan/master_persediaan');
 		$this->load->view('template/template_right');
 		$this->load->view('template/template_js');
 		$this->load->view('template/template_app_js');
-		$this->load->view('manajemen_barang/master_stock/master_stock_js');
+		$this->load->view('manajemen_barang/master_persediaan/master_persediaan_js');
 	}
 
 	public function cek($kode_barang)
 	{
-		$data = $this->detailStock->get_data($kode_barang);
+		$data = $this->detailpersediaan->get_data($kode_barang);
 
 		print_r($data);
 	}
 
-	public function Detail_Stock($kode_barang)
+	public function Detail_persediaan($kode_barang)
 	{
-		$data['stock'] = $this->detailStock->get_data($kode_barang);
-		$data['css'] = $this->load->view('manajemen_barang/master_stock/master_stock_css');
-		$data['title'] = "Detail Stock Barang dengan Kode : " . $kode_barang;
+		$data['persediaan'] = $this->detailpersediaan->get_data($kode_barang);
+		$data['css'] = $this->load->view('manajemen_barang/master_persediaan/master_persediaan_css');
+		$data['title'] = "Detail persediaan Barang dengan Kode : " . $kode_barang;
 		$this->load->view('template/template_header', $data);
 		$this->load->view('template/template_menu');
-		$this->load->view('manajemen_barang/master_stock/detail_stock', $data);
+		$this->load->view('manajemen_barang/master_persediaan/detail_persediaan', $data);
 		$this->load->view('template/template_right');
 		$this->load->view('template/template_js');
 		$this->load->view('template/template_app_js');
-		$this->load->view('manajemen_barang/master_stock/detail_stock_js');
-		//$this->load->view('manajemen_barang/master_stock/master_stock_js');
+		$this->load->view('manajemen_barang/master_persediaan/detail_persediaan_js');
+		//$this->load->view('manajemen_barang/master_persediaan/master_persediaan_js');
 	}
 
 	public function getDataV2()
 	{
-		echo $this->modelStock->get_data_all();
+		echo $this->modelpersediaan->get_data_all();
 	}
 
 	public function getData($string = null)
 	{
 		$string = str_replace("%20", " ", $string);
-		$database = $this->modelStock->get_data($string);
+		$database = $this->modelpersediaan->get_data($string);
 
 		$data = $database->result_array();
 		$output = array(

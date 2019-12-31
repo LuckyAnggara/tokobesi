@@ -36,7 +36,7 @@
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": '<?= base_url("manajemen_barang/MasterStock/getData"); ?>',
+                        "url": '<?= base_url("manajemen_barang/MasterPersediaan/getData"); ?>',
                         "type": "POST",
                     },
                     "columnDefs": [{

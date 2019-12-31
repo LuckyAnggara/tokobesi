@@ -4,8 +4,8 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <div class="card-box table-responsive">
-                        <button name="contoh" id="contoh" data-target="#addModal" data-toggle="modal" class="btn btn-success btn-rounded w-md waves-effect waves-light m-b-20">
+                    <div class="card-box">
+                        <button name="contoh" id="contoh" data-target="#add_Modal" data-toggle="modal" class="btn btn-success btn-rounded w-md waves-effect waves-light m-b-20">
                             <i class="fa fa-plus"></i>
                             <span>Tambah Data</span>
                         </button>
@@ -15,7 +15,7 @@
                                 <input type="text" class="form-control" id="searchInput" placeholder="Kata Kunci..">
                             </div>
                         </div>
-                        <table id="datatable-master-barang" class="table table-striped table-bordered" width="100%">
+                        <table id="datatable-master-barang" class="table table-striped table-bordered" cellspacing="0" width="100%">
                         </table>
                     </div>
                 </div>
@@ -28,7 +28,7 @@
 </div>
 
 <!-- modal tambah data -->
-<div id="addModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+<div id="add_Modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -40,7 +40,7 @@
                     <div class="form-group row">
                         <label class="col-3 col-form-label">Kode Barang</label>
                         <div class="col-9">
-                            <input name="kode_barang" id="kode_barang" type="text" class="form-control" placeholder="Generate otomatis oleh sistem" Disabled required>
+                            <input name="kode_barang" id="kode_barang" type="text" class="form-control" placeholder="Generate otomatis oleh sistem" readonly required>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -52,8 +52,8 @@
                     <div class="form-group row">
                         <label class="col-3 col-form-label">Satuan Harga</label>
                         <div class="col-5">
-                            <input type="text" id="harga_satuan_dummy" placeholder="Input harga barang, hanya angka" class="form-control" required>
-                            <input type="text" id="harga_satuan" placeholder="Input harga barang, hanya angka" class="form-control" hidden>
+                            <input type="text" id="harga_satuan_dummy" name="harga_satuan_dummy" placeholder="Input harga barang, hanya angka" class="form-control" required>
+                            <input type="text" name="harga_satuan" id="harga_satuan" placeholder="Input harga barang, hanya angka" class="form-control" hidden>
                         </div>
                         <label class="col-1 col-form-label">Satuan</label>
                         <div class="col-3">
@@ -70,7 +70,7 @@
                     <div class="form-group row">
                         <label class="col-3 col-form-label">Gambar Produk</label>
                         <div class="col-5">
-                            <input name="gambar" id="gambar" type="file" />
+                            <input data-allowed-file-extensions="png jpg jpeg" data-max-file-size="3M" name="gambar" id="gambar" type="file" />
                         </div>
                     </div>
                     <div class="col-12">
@@ -86,20 +86,56 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div id="addLampiran" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+<div id="edit_Modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Upload Lampiran</h4>
+                <h4 class="modal-title" id="edit_data_label"></h4>
                 <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> -->
             </div>
             <div class="modal-body">
-                <form data-parsley-validate novalidate autocomplete="off" id="submitUpload" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                    <form data-parsley-validate novalidate autocomplete="off" id="edit_form" method="post" enctype="multipart/form-data">
+                                        
+                                        <div class="profile-info-name">
+                                            <img id="edit_image" src="<?= base_url('assets/');?>/images/barang/default.jpg"
+                                             class="img-thumbnail" alt="profile-image">
+                                        <div class="profile-info-detail">
+                                            <h4 class="m-0" id="edit_data_label"></h4>
+                                            <div class="form-group row">
+                                            <label class="col-4 col-form-label">Kode Barang</label>
+                                            <div class="col-8">
+                                                <input id="edit_kode_barang" type="text" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-4 col-form-label">Nama Barang</label>
+                                            <div class="col-8">
+                                                <input id="edit_nama_barang" type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-4 col-form-label">Harga Jual</label>
+                                            <div class="col-8">
+                                                <input id="edit_harga_satuan" type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group pull-right">
+                                            <h6 class="text-muted col-12">Terakhir Edit : <i id="edit_tanggal_input"> </i></h6>
+                                        </div>
+                                            
+                                        </div>
+</div>
+                                        <div class="modal-footer">
+                <button id="edit_button-close" name="edit_button-close" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                <button type="submit" name="edit_button-add" class="btn btn-primary waves-effect waves-light">Submit</button>
+            </div>
+                                    </form>
+
+
+                <!-- <form data-parsley-validate novalidate autocomplete="off" id="submitUpload" method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="form-group row">
                         <label class="col-3 col-form-label">Lampiran*</label>
                         <div class="col-5">
-                            <!-- <input type="file" name="my-pond" id="my-pond" class="my-pond" data-max-file-size="10MB"
-                                data-max-files="3"> -->
                             <input name="file" id="file" type="file" />
                         </div>
                     </div>
@@ -110,7 +146,7 @@
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
             </div>
-            </form>
+            </form> -->
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal --
