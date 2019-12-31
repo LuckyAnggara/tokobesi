@@ -97,28 +97,46 @@
                                     <form data-parsley-validate novalidate autocomplete="off" id="edit_form" method="post" enctype="multipart/form-data">
                                         
                                         <div class="profile-info-name">
-                                            <img id="edit_image" src="<?= base_url('assets/');?>/images/barang/default.jpg"
-                                             class="img-thumbnail" alt="profile-image">
+                                            <!-- <img id="edit_image" src="<?= base_url('assets/');?>/images/barang/default.jpg"
+                                             class="img-thumbnail" alt="profile-image"> -->
                                         <div class="profile-info-detail">
                                             <h4 class="m-0" id="edit_data_label"></h4>
                                             <div class="form-group row">
                                             <label class="col-4 col-form-label">Kode Barang</label>
                                             <div class="col-8">
-                                                <input id="edit_kode_barang" type="text" class="form-control" readonly>
+                                                <input id="edit_kode_barang" name="edit_kode_barang" type="text" class="form-control" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-4 col-form-label">Nama Barang</label>
                                             <div class="col-8">
-                                                <input id="edit_nama_barang" type="text" class="form-control">
+                                                <input id="edit_nama_barang" name="edit_nama_barang" type="text" class="form-control">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-4 col-form-label">Harga Jual</label>
-                                            <div class="col-8">
-                                                <input id="edit_harga_satuan" type="text" class="form-control">
+                                            <div class="col-4">
+                                                <input id="edit_harga_satuan_dummy" name="edit_harga_satuan_dummy"type="text" class="form-control">
+                                                <input id="edit_harga_satuan" hidden name="edit_harga_satuan" type="text" class="form-control" readonly>
                                             </div>
-                                        </div>
+                        <div class="col-4">
+                            <select id="edit_satuan" name="edit_satuan" class="form-control">
+                                <option value="0" selected disabled>-- Satuan Barang --</option>
+                                <option value="pieces">Pieces</option>
+                                <option value="meter">Meter</option>
+                                <option value="gram">Gram</option>
+                                <option value="kilogram">Kilogram</option>
+                                <option value="ton">Ton</option>
+                            </select>
+                        </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label">Nama Barang</label>
+                            <div class="col-8">
+                                <input data-default-file="" data-allowed-file-extensions="png jpg jpeg" data-max-file-size="3M" name="edit_gambar_dropfy" id="edit_gambar_dropfy" type="file" />
+                            </div>
+                        </div>
+                                        
                                         <div class="form-group pull-right">
                                             <h6 class="text-muted col-12">Terakhir Edit : <i id="edit_tanggal_input"> </i></h6>
                                         </div>
