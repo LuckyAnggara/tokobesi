@@ -14,6 +14,14 @@
                 <li><a href="<?= base_url('manajemen_barang/mastersupplier'); ?>">Master Data Supplier </a></li>
             </ul>
         </li>
+        <li class="has_sub">
+            <a href="javascript:void(0);" class="waves-effect"><i class=" mdi mdi-cart"></i> <span> Manajemen Penjualan </span> <span class="menu-arrow"></span></a>
+            <ul class="list-unstyled">
+                <li><a href="<?= base_url('manajemen_penjualan/penjualanbarang'); ?>">Penjualan Barang</a></li>
+                <li><a href="<?= base_url('manajemen_barang/masterbarang'); ?>">Master Data Barang</a></li>
+                <li><a href="<?= base_url('manajemen_barang/mastersupplier'); ?>">Master Data Supplier </a></li>
+            </ul>
+        </li>
 
     </ul>
     <div class="clearfix"></div>
