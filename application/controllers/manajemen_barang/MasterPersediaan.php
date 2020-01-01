@@ -15,7 +15,7 @@ class MasterPersediaan extends CI_Controller
 
 	public function index()
 	{
-		$data['css'] = $this->load->view('manajemen_barang/master_persediaan/master_persediaan_css');
+		$data['css'] = 'manajemen_barang/master_persediaan/master_persediaan_css';
 		$data['title'] = "Master Persediaan Barang";
 		$this->load->view('template/template_header', $data);
 		$this->load->view('template/template_menu');

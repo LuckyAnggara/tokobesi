@@ -19,9 +19,9 @@ class ModelMasterPersediaan extends CI_Model
 
     {
         if ($string == null) {
-            $this->db->select('master_barang.*, master_persediaan.id, master_persediaan.jumlah_persediaan');
-            $this->db->from('master_barang');
-            $this->db->join('master_persediaan', 'master_persediaan.kode_barang = master_barang.kode_barang', 'left');
+            $this->db->select('master_persediaan.*, master_barang.*');
+            $this->db->from('master_persediaan');
+            $this->db->join('master_barang', 'master_barang.kode_barang = master_persediaan.kode_barang', 'left');
             $output = $this->db->get();
 
 
