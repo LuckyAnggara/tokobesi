@@ -17,7 +17,7 @@ class MasterBarang extends CI_Controller
     {
         $data['satuan'] = $this->modelBarang->get_data_satuan();
         $data['css'] = 'manajemen_barang/master_barang/master_barang_css';
-        $data['title'] = "Master Data Barang";
+        $data['title'] = "Data Barang";
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_barang/master_barang/master_barang');

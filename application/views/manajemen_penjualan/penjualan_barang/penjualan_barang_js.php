@@ -15,8 +15,73 @@
   <script src="<?= base_url('assets/'); ?>plugins/fuse-js/fuse.js" type="text/javascript"></script>
 
 
-  <!-- script sendiri -->
+  <!-- script sendiri   // script Radio Fitur Simple dan Adnvace
+  // init hide advance search -->
   <script>
+
+    $( document ).ready(function() {
+        console.log(sessionStorage.getItem("no_order"));
+        console.log( "ready!" );
+        $.ajax({
+          url: '<?= base_url("manajemen_penjualan/penjualanbarang/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
+        });
+    });
+    $('#cari_barang').hide();
+    $('#simple').change(function(){
+         $("#select_nama_barang").select2({
+        ajax: {
+          url: '<?= base_url("manajemen_penjualan/penjualanbarang/get_data_barang_versi_select2"); ?>',
+          type: "post",
+          dataType: 'json',
+          delay: 250,
+          data: function(params) {
+            return {
+              search_term: params.term
+            };
+          },
+          processResults: function(data) {
+            var results = [];
+            for (var i in data.data) {
+              results.push({
+                "id": data.data[i].kode_barang + ' -  ' + data.data[i].nama_barang + ' -  ' + data.data[i].satuan+ ' -  ' + data.data[i].jumlah_persediaan,
+                "text": data.data[i].kode_barang + ' -  ' + data.data[i].nama_barang
+              });
+            };
+            return {
+              results: results
+            };
+          },
+
+          cache: true
+        },
+        minimumInputLength: 3,
+        placeholder: "Pencarian Barang, menggunakan Nama Barang atau Kode Barang .."
+      }).show().on('select2:select', function(evt) {
+        var data = $("#select_nama_barang option:selected").val();
+        str = data.split("-");
+        var kode_barang = str[0];
+        var nama_barang = str[1];
+        var satuan = str[2];
+        var jumlah_persediaan = str[3];
+        if(jumlah_persediaan == 0){
+        console.log(jumlah_persediaan);
+        persediaan_habis(nama_barang, satuan, jumlah_persediaan);
+        }else{
+        quantityalert(kode_barang, satuan, jumlah_persediaan, jumlah_keranjang);
+        }
+      });
+      $('#cari_barang').hide();
+       $("#result_page").empty();
+              display_none = '<div class="col-12 text-center"><p>Cari Data Barang di Kolom Pencarian</p></div>';
+              $("#result_page").append(display_none);
+    });
+    $('#advance').change(function(){
+      $("#select_nama_barang").select2('destroy').hide();
+      $('#select_nama_barang').val(null).trigger('change');
+      $('#cari_barang').show();
+    });
+
+    // script formatRupiah
     function formatRupiah(angka, prefix) {
       var number_string = angka.replace(/[^,\d]/g, '').toString(),
         split = number_string.split(','),
@@ -112,12 +177,15 @@
       return kalimat + " Rupiah";
     }
 
-    function quantityalert(kode_barang, satuan) {
+    function quantityalert(kode_barang, satuan, sisa_persediaan, jumlah_keranjang) {
+      console.log(sisa_persediaan)
       const {
         value: jumlah
       } = Swal.fire({
         title: 'Berapa ' + satuan + ' ?',
         input: 'text',
+        html:
+          'Sisa persediaan sebanyak <b>'+ sisa_persediaan+' '+satuan +'</b>',
         showCancelButton: true,
         inputValidator: (value) => {
           if (!value) {
@@ -126,14 +194,29 @@
             if (isNaN(value)) {
               return 'Hanya Input Angka!!'
             } else {
+              value = parseInt(value);
+              sisa_persediaan = parseInt(sisa_persediaan);
+              console.log(value >= sisa_persediaan);
+              if(value <= sisa_persediaan){
               push_keranjang_belanja(value, kode_barang);
+              push_persediaan_temporary_tambah(value, kode_barang);
+              set_data_session_no_order_sebelumnya($('#no_order').text());
               $('#select_nama_barang').val(null).trigger('change');
+              $('#cari_barang').val('');
+               $("#result_page").empty();
+              display_none = '<div class="col-12 text-center"><p>Cari Data Barang di Kolom Pencarian</p></div>';
+              $("#result_page").append(display_none);
+              }else{
+                return 'Sisa barang tidak cukup dengan jumlah pembelian!!'
+              }
             }
           }
         }
       });
 
     }
+
+    
   </script>
 
 
@@ -209,7 +292,7 @@
 
               $("#result_page").empty();
               for (var i in data.data) {
-                var display = '<div id="result" class="col-md-6 col-lg-3"><div class="card m-b-20"><a id="wawa" onclick="quantityalert(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].satuan + '\')"><div class="card-body"><h5 class="card-title">' + data.data[i].nama_barang + '</h5></div><img class="img-fluid" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Card image cap"><div class="card-body"><p class="card-text">Some </p></div></div></a></div>'
+                var display = '<div id="result" class="col-md-6 col-lg-3"><div class="card m-b-20"><a id="wawa" onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].nama_barang + '\',\'' + data.data[i].satuan + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].jumlah_keranjang + '\')"><div class="card-body"><h5 class="card-title">' + data.data[i].nama_barang + '</h5></div><img class="img-fluid" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Card image cap"><div class="card-body"><p class="card-text">Some </p></div></div></a></div>'
                 $('#result_page').append(display).fadeIn('slow');
               }
 
@@ -226,7 +309,64 @@
         $("#result_page").append(display_none);
       }
     }
+
+    function choose_barang(kode_barang, nama_barang, satuan, jumlah_persediaan, jumlah_keranjang ){
+      if(jumlah_persediaan == 0){
+        persediaan_habis(nama_barang, satuan, jumlah_persediaan);
+        }else{
+        quantityalert(kode_barang, satuan, jumlah_persediaan, jumlah_keranjang);
+        }    
+    }
     // script Input Jumlah Pembelian
+  </script>
+
+    <!-- Script Pencarian Barang Fitur Select2 -->
+  <script>
+    $(document).ready(function() {
+      $('#select_nama_barang').select2({
+        ajax: {
+          url: '<?= base_url("manajemen_penjualan/penjualanbarang/get_data_barang_versi_select2"); ?>',
+          type: "post",
+          dataType: 'json',
+          delay: 250,
+          data: function(params) {
+            return {
+              search_term: params.term
+            };
+          },
+          processResults: function(data) {
+            var results = [];
+            for (var i in data.data) {
+              results.push({
+                "id": data.data[i].kode_barang + ' -  ' + data.data[i].nama_barang + ' -  ' + data.data[i].satuan+ ' -  ' + data.data[i].jumlah_persediaan + ' -  ' + data.data[i].jumlah_keranjang,
+                "text": data.data[i].kode_barang + ' -  ' + data.data[i].nama_barang
+              });
+            };
+            return {
+              results: results
+            };
+          },
+
+          cache: true
+        },
+        minimumInputLength: 3,
+        placeholder: "Pencarian Barang, menggunakan Nama Barang atau Kode Barang .."
+      }).on('select2:select', function(evt) {
+        var data = $("#select_nama_barang option:selected").val();
+        str = data.split("-");
+        var kode_barang = str[0];
+        var nama_barang = str[1];
+        var satuan = str[2];
+        var jumlah_persediaan = str[3];
+        var jumlah_keranjang = str[4];
+        if(jumlah_persediaan == 0){
+        persediaan_habis(nama_barang, satuan, jumlah_persediaan);
+        }else{
+        quantityalert(kode_barang, satuan, jumlah_persediaan, jumlah_keranjang);
+        }    
+       
+      });
+    });
   </script>
 
   <!-- input ke keranjang belanjaan -->
@@ -234,10 +374,12 @@
   <script>
     function push_keranjang_belanja(jumlah, kode_barang) {
       var id_pelanggan = $('#id_pelanggan').val();
+      var no_order = $('#no_order').text();
       $.ajax({
         url: "<?= Base_url('manajemen_penjualan/penjualanbarang/push_data_barang'); ?>",
         type: "post",
         data: {
+          no_order : no_order,
           id_pelanggan: id_pelanggan,
           jumlah_pembelian: jumlah,
           kode_barang: kode_barang
@@ -252,16 +394,58 @@
       })
     }
 
+    function set_data_session_no_order_sebelumnya(no_order)
+    {
+     sessionStorage.setItem("no_order", no_order);
+     console.log(sessionStorage.getItem("no_order"));
+    }
+
+    function push_persediaan_temporary_tambah(jumlah_pembelian, kode_barang){
+      $.ajax({
+        url: "<?= Base_url('manajemen_penjualan/penjualanbarang/persediaan_temp_tambah/'); ?>",
+        type: "post",
+        data: {
+          kode_barang : kode_barang,
+          jumlah_pembelian: jumlah_pembelian,
+        },
+        cache: false,
+        async: false,
+        success: function(data) {
+        }
+      })
+    }
+
+    function push_persediaan_temporary_batal(id){
+      $.ajax({
+        url: "<?= Base_url('manajemen_penjualan/penjualanbarang/persediaan_temp_batal/'); ?>",
+        type: "post",
+        data: {
+          id : id,
+        },
+        cache: false,
+        async: false,
+        success: function(data) {
+        }
+      })
+    }
+
     function total_harga_keranjang() {
       $.ajax({
-        url: "<?= base_url("manajemen_penjualan/penjualanbarang/get_sum_keranjang"); ?>",
+        url: "<?= base_url("manajemen_penjualan/penjualanbarang/get_sum_keranjang/"); ?>"+ $('#no_order').text(),
         type: "post",
         dataType: "JSON",
         async: false,
         success: function(data) {
+          if(data.harga_total == null)
+          {
+          total = 0;
+          $('#terbilang_keranjang').text('Nol Rupiah');
+          }else{
           total = formatRupiah(data.harga_total, 'Rp.');
-          $('#total_keranjang').text(total);
           $('#terbilang_keranjang').text(terbilang(data.harga_total));
+          }
+          $('#total_keranjang').text(total);
+          
         }
       })
     }
@@ -296,7 +480,7 @@
         "lengthChange": false,
         "paging": false,
         "ajax": {
-          "url": '<?= base_url("manajemen_penjualan/penjualanbarang/get_data_keranjang"); ?>',
+          "url": '<?= base_url("manajemen_penjualan/penjualanbarang/get_data_keranjang/"); ?>' + $('#no_order').text(),
           "type": "POST",
         },
         "columnDefs": [{
@@ -381,55 +565,55 @@
 
     })
   </script>
+<!-- fungsi alert persediaan abis dan hapus data di keranjang -->
 
-  <!-- Script Pencarian Barang Fitur Select2 -->
-
-  <script>
-    $(document).ready(function() {
-      $('#select_nama_barang').select2({
-        ajax: {
-          url: '<?= base_url("manajemen_penjualan/penjualanbarang/get_data_barang_versi_select2"); ?>',
-          type: "post",
-          dataType: 'json',
-          delay: 250,
-          data: function(params) {
-            return {
-              search_term: params.term
-            };
-          },
-          processResults: function(data) {
-            var results = [];
-            for (var i in data.data) {
-              results.push({
-                "id": data.data[i].kode_barang + ' -  ' + data.data[i].satuan,
-                "text": data.data[i].kode_barang + ' -  ' + data.data[i].nama_barang,
-                'data-satuan': data.data[i].satuan
-              });
-            };
-            return {
-              results: results
-            };
-            console.log(results);
-            // $.each(data, function(index, item) {
-            //   console.log(data.data[item]);
-
-            // });
-            // return {
-            //   results: results
-            // };
-          },
-
-          cache: true
-        },
-        minimumInputLength: 3,
-        placeholder: "Pencarian Barang, menggunakan Nama Barang atau Kode Barang .."
-      }).on('select2:select', function(evt) {
-        var data = $("#select_nama_barang option:selected").val();
-        str = data.split("-");
-        var kode_barang = str[0];
-        var satuan = str[1];
-        // var satuan = $("#select_nama_barang option:selected").attr("data-satuan");
-        quantityalert(kode_barang, satuan);
-      });
+<script>
+  function persediaan_habis(nama_barang, satuan, jumlah_persediaan){
+    Swal.fire({
+  icon: 'error',
+  title: 'Oops...',
+  text: 'Persediaan! '+ nama_barang + ' Habis!',
     });
-  </script>
+    $('#select_nama_barang').val(null).trigger('change');
+  }
+
+ function warning_delete(id) {
+        swal.fire({
+            title: 'Apa anda yakin akan hapus data ini dari Keranjang Belanja?',
+            text: "Data akan di hapus dari Keranjang Belanja..",
+            icon: 'warning',
+            showCancelButton: true,
+             confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+  if (result.value) {
+    swal.fire(
+                'Deleted!',
+                'Data telah dihapus!',
+                'success'
+            )
+            push_persediaan_temporary_batal(id);
+            deleteData_keranjang(id);
+            total_harga_keranjang();
+            
+  }
+        });
+    }
+    function deleteData_keranjang(id) {
+        $.ajax({
+            url: "<?= base_url('manajemen_penjualan/penjualanbarang/delete_data_keranjang/'); ?>" + id,
+            async: false,
+            success: function(data) {
+                $('#datatable-keranjang-penjualan').DataTable().ajax.reload();
+                total_harga_keranjang();
+            }
+        });
+    }
+ </script>
+
+ <!-- Fungsi Checkout -->
+
+ <script>
+
+ </script>
