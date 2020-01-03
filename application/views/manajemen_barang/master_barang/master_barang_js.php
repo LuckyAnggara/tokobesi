@@ -226,7 +226,7 @@
                     }
                 },
                 {
-                    title: "Harga Satuan",
+                    title: "Harga Jual",
                     data: "hargasatuan",
                     searching: true,
                     targets: 3,

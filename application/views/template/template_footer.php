@@ -1,3 +1,3 @@
 <footer class="footer text-right">
-    AWAWAW
+    2020 © Fi
 </footer>

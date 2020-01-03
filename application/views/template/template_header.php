@@ -9,13 +9,13 @@
 
     <link rel="shortcut icon" href="<?= base_url('assets/'); ?>images/favicon.ico">
 
-    <title>Adminto - Responsive Admin Dashboard Template</title>
+    <title>Toko Besi</title>
     <?php $this->load->view($css); ?>
     <!-- App css -->
+    <link href="<?= base_url('assets/'); ?>css/all.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/'); ?>css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/'); ?>css/icons.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/'); ?>css/style.css" rel="stylesheet" type="text/css" />
-
 
 
     <script src="<?= base_url('assets/'); ?>js/modernizr.min.js"></script>

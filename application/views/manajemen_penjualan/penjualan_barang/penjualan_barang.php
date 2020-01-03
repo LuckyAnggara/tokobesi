@@ -15,11 +15,13 @@
                             <label class="col-sm-4 col-sm-form-label">ID Pelanggan</label>
 
                             <div class="col-sm-6">
-                                <input id="id_pelanggan" name="id_pelanggan" type="text" class="form-control" placeholder="Isi ID Pelanggan, jika ada">
+                                <input id="id_pelanggan" autocomplete="off" name="id_pelanggan" type="text" class="form-control" placeholder="Isi ID Pelanggan, jika ada">
                                 <small id="id_pelanggan_help" class="form-text text-muted">Kosong kan jika tidak ada ID Pelanggan</small>
                             </div>
                             <div class="col-sm-2">
-                                <button id="cari-button" name="cari-button" type="button" class="btn btn-rounded btn-primary waves-effect"><i class="fa fa-search"></i> Cari</button>
+                  
+                        <button id="cari-button" name="cari-button" class="btn btn-icon waves-effect btn-success m-b-5"> <i class="fa fa-search"></i> </button>
+                                <!-- <button id="cari-button" name="cari-button" type="button" class="btn btn-rounded btn-primary waves-effect"><i class="fa fa-search"></i> Cari</button> -->
                             </div>
                         </div>
                         <div class="form-group row">

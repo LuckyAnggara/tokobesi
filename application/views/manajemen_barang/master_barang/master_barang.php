@@ -50,7 +50,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-3 col-form-label">Satuan Harga</label>
+                        <label class="col-3 col-form-label">Harga Jual</label>
                         <div class="col-5">
                             <input type="text" id="harga_satuan_dummy" name="harga_satuan_dummy" placeholder="Input harga barang, hanya angka" class="form-control" required>
                             <input type="text" name="harga_satuan" id="harga_satuan" placeholder="Input harga barang, hanya angka" class="form-control" hidden>
@@ -78,7 +78,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <span>*Upload Gambar Produk jika Ada.. (Tidak Mandatory)</span>
+                        <span>*Upload Gambar Produk jika Ada.. (optional)</span>
                     </div>
             </div>
             <div class="modal-footer">
