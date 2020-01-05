@@ -2,7 +2,7 @@
 <!-- Validation js (Parsleyjs) -->
 <script type="text/javascript" src="<?= base_url('assets/'); ?>plugins/parsleyjs/dist/parsley.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/jquery-mask/jquery.mask.min.js"></script>
 
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
@@ -21,10 +21,6 @@
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
 
 
-
-
-
-
 <!-- script Uploader -->
 <script type="text/javascript">
     $('#gambar').dropify({
@@ -39,7 +35,7 @@
             'imageFormat': 'Format Gambar tidak Support, hanya ({{ value }} saja).'
         }
     });
-    $('#edit_gambar_dropfy').dropify({
+    $('#edit_gambar').dropify({
         messages: {
             'default': 'Drag dan drop Gambar Barang disini',
             'replace': 'Drag dan drop gambar untuk mengganti',
@@ -56,18 +52,41 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#submitForm').parsley();
+        $('.select2').select2({
+            minimumResultsForSearch: -1
+        });
+
+        $('#satuan').select2().on('select2:select', function() {
+            var data = $("#satuan option:selected").text()
+            $('#satuan_minimum').val(data);
+        })
+
+        var harga_satuan = document.getElementById('persediaan_minimum');
+        harga_satuan.addEventListener('keyup', function(e) {
+            var data = $('#persediaan_minimum').val();
+            harga_satuan.value = this.value.replace(/[^,\d]/g, '').toString();
+        });
     });
 </script>
 
 <!-- Script Nominal Harga Formater -->
 <script type="text/javascript">
-    var rupiah = document.getElementById('harga_satuan_dummy');
-    rupiah.addEventListener('keyup', function(e) {
+    var harga_satuan = document.getElementById('harga_satuan_dummy');
+    harga_satuan.addEventListener('keyup', function(e) {
         var data = $('#harga_satuan_dummy').val();
         // tambahkan 'Rp.' pada saat form di ketik
         // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
-        rupiah.value = formatRupiah(this.value, 'Rp. ');
+        harga_satuan.value = formatRupiah(this.value, 'Rp. ');
         $('#harga_satuan').val(normalrupiah(data));
+    });
+
+    var harga_pokok = document.getElementById('harga_pokok_dummy');
+    harga_pokok.addEventListener('keyup', function(e) {
+        var data = $('#harga_pokok_dummy').val();
+        // tambahkan 'Rp.' pada saat form di ketik
+        // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
+        harga_pokok.value = formatRupiah(this.value, 'Rp. ');
+        $('#harga_pokok').val(normalrupiah(data));
     });
 
     /* Fungsi formatRupiah */
@@ -115,7 +134,7 @@
         // tambah lagi if untuk string dibawah 1
 
         $.ajax({
-            url: '<?= base_url("manajemen_barang/MasterBarang/cekData/"); ?>' + string,
+            url: '<?= base_url("Manajemen_Barang/MasterBarang/cekData/"); ?>' + string,
             success: function(result) {
                 data = result;
             }
@@ -195,7 +214,7 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": '<?= base_url("manajemen_barang/MasterBarang/getData"); ?>',
+                "url": '<?= base_url("Manajemen_Barang/MasterBarang/getData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
@@ -219,7 +238,6 @@
                 {
                     title: "Nama Barang",
                     data: "nama_barang",
-                    searching: true,
                     targets: 2,
                     render: function(data, type, full, meta) {
                         return data;
@@ -227,13 +245,11 @@
                 },
                 {
                     title: "Harga Jual",
-                    data: "hargasatuan",
-                    searching: true,
+                    data: "hargajual",
                     targets: 3,
                     render: function(data, type, full, meta) {
-
                         var display1 = formatRupiah(data.harga_satuan, 'Rp.');
-                        var display2 = display1 + " / " + data.satuan;
+                        var display2 = display1 + " / " + data.nama_satuan;
                         return display2;
                     }
                 },
@@ -292,7 +308,7 @@
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": '<?= base_url("manajemen_barang/MasterBarang/getData/"); ?>' + input,
+                        "url": '<?= base_url("Manajemen_Barang/MasterBarang/getData/"); ?>' + input,
                         "type": "POST",
                     },
                     "columnDefs": [{
@@ -337,7 +353,7 @@
                             searching: true,
                             targets: 4,
                             render: function(data, type, full, meta) {
-                                var display1 = '<a type="button" class="btn btn-icon waves-effect waves-light btn-success btn-sm" href="<?= base_url('manajemen_barang/masterpersediaan/detail_persediaan/'); ?>' + data + '" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
+                                var display1 = '<a type="button" class="btn btn-icon waves-effect waves-light btn-success btn-sm" href="<?= base_url('Manajemen_Barang/masterpersediaan/detail_persediaan/'); ?>' + data + '" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
                                 var display2 = '<a type="button" class="btn btn-icon waves-effect waves-light btn-primary btn-sm" data-target="#edit_Modal" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Edit Data"><i class="fa fa-edit" ></i> </a>';
                                 var display3 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
                                 return display1 + " " + display2 + " " + display3;
@@ -365,7 +381,7 @@
             e.preventDefault();
             var data = new FormData(document.getElementById("submitForm"));
             $.ajax({
-                url: "<?= Base_url('manajemen_barang/masterbarang/tambah_data'); ?>",
+                url: "<?= Base_url('Manajemen_Barang/MasterBarang/tambah_data'); ?>",
                 type: "post",
                 data: data,
                 async: false,
@@ -404,7 +420,7 @@
 
     function deleteData(kode_barang) {
         $.ajax({
-            url: "<?= base_url('manajemen_barang/masterbarang/delete_data/'); ?>" + kode_barang,
+            url: "<?= base_url('Manajemen_Barang/MasterBarang/delete_data/'); ?>" + kode_barang,
             async: false,
             success: function(data) {
                 $('#datatable-master-barang').DataTable().ajax.reload();
@@ -432,7 +448,7 @@
         //var edit_image = $('#edit_image');
 
         $.ajax({
-            url: '<?= base_url("manajemen_barang/MasterBarang/view_edit_data/"); ?>' + kode_barang,
+            url: '<?= base_url("Manajemen_Barang/MasterBarang/view_edit_data/"); ?>' + kode_barang,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -488,7 +504,7 @@
         function editData(kode_barang) {
             var data = new FormData(document.getElementById("edit_form"));
             $.ajax({
-                url: "<?= Base_url('manajemen_barang/masterbarang/edit_data/'); ?>" + kode_barang,
+                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data/'); ?>" + kode_barang,
                 type: "post",
                 data: data,
                 async: false,
@@ -510,15 +526,6 @@
     });
 </script>
 
-<!-- Script select2 option satuan -->
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        $("#satuan").select2({
-            minimumResultsForSearch: -1
-        })
-    });
-</script>
 
 <!-- Script View Modal -->
 
@@ -535,13 +542,13 @@
         var view_nama_barang = $('#view_nama_barang');
         var view_harga_satuan_dummy = $('#view_harga_satuan_dummy');
         var view_harga_satuan = $('#view_harga_satuan');
-        var view_satuan = $('#view_satuan');
+        var view_satuan = $('#view_satuan select');
         var view_tanggal_input = $('#view_tanggal_input');
         var view_image = $('#view_image');
         //var edit_image = $('#edit_image');
 
         $.ajax({
-            url: '<?= base_url("manajemen_barang/MasterBarang/view_edit_data/"); ?>' + kode_barang,
+            url: '<?= base_url("Manajemen_Barang/MasterBarang/view_edit_data/"); ?>' + kode_barang,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -552,7 +559,7 @@
                 view_nama_barang.val(data.nama_barang);
                 view_harga_satuan_dummy.val(rupiah);
                 view_harga_satuan.val(data.harga_satuan);
-                view_satuan.val(data.satuan);
+                $('#view_satuan').val(data.satuan).attr('selected', 'selected');
                 view_tanggal_input.text(data.tanggal_input);
                 //view_image.attr('data-default-file', "<?= base_url('assets/images/barang/'); ?>" + data.gambar);
                 view_image.attr('src', "<?= base_url('assets/images/barang/'); ?>" + data.gambar);

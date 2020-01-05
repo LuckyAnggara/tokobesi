@@ -7,7 +7,7 @@ class MasterSupplier extends CI_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model('manajemen_barang/modelMasterSupplier', 'modelSupplier');
+        $this->load->model('Manajemen_Barang/Model_Master_Supplier', 'modelSupplier');
     }
 
     public function index()
@@ -34,16 +34,6 @@ class MasterSupplier extends CI_Controller
             "recordsFiltered"  => $database->num_rows(),
             "data" => $data
         );
-
-        // foreach ($data as $value) {
-        //     $this->db->select("harga_satuan,satuan");
-        //     $this->db->from("master_supplier");
-        //     $this->db->where("kode_barang", $value['kode_barang']);
-        //     $data2 = $this->db->get()->row_array();
-        //     $value['hargasatuan'] = $data2;
-        //     $output['data'][] = $value;
-        // }
-
 
         $output = json_encode($output);
         echo $output;

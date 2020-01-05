@@ -7,10 +7,8 @@ class MasterPersediaan extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->library('ssp');
-		$this->load->library('datatables');
-		$this->load->model('manajemen_barang/modelMasterpersediaan', 'modelpersediaan');
-		$this->load->model('manajemen_barang/modelDetailpersediaan', 'detailpersediaan');
+		$this->load->model('Manajemen_Barang/Model_Master_Persediaan', 'modelpersediaan');
+		$this->load->model('Manajemen_Barang/Model_Detail_Persediaan', 'detailpersediaan');
 	}
 
 	public function index()

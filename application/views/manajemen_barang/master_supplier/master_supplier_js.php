@@ -2,8 +2,6 @@
 <!-- Validation js (Parsleyjs) -->
 <script type="text/javascript" src="<?= base_url('assets/'); ?>plugins/parsleyjs/dist/parsley.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
-
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
@@ -15,10 +13,13 @@
 <script src="<?= base_url('assets/'); ?>plugins/chart.js/Chart.bundle.min.js"></script>
 
 <!-- Sweet Alert Js  -->
-<script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
 
 <!-- Select2 js -->
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
+<!-- Input Mask Js dan Max Length-->
+<script src="<?= base_url('assets/'); ?>plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
+<script src="<?= base_url('assets/'); ?>plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
 
 
 <!-- script validasi -->
@@ -33,34 +34,39 @@
     var nama_supplier = $('#nama_supplier');
     var kode_supplier = $('#kode_supplier');
     nama_supplier.focusout(function() {
-    $.ajax({
-            url: '<?= base_url("manajemen_barang/MasterSupplier/generate_kode_supplier/"); ?>',
+        $.ajax({
+            url: '<?= base_url("Manajemen_Barang/MasterSatuan/generate_kode_supplier/"); ?>',
             success: function(result) {
                 kode_supplier.val(result);
                 console.log(result);
             }
         });
     });
-
 </script>
 
 <!-- script format NPWP -->
 
 <script>
-var npwp = $('#npwp');
+    jQuery(document).ready(function() {
+        $('input#npwp').maxlength({
+            warningClass: "badge badge-success",
+            limitReachedClass: "badge badge-danger"
+        });
+    })
+    // var npwp = $('#npwp');
 
-npwp.focusout(function() {
-    no_npwp = npwp.val();
-    no_npwp = formatNpwp(no_npwp);
-    no_npwp = no_npwp.substring(0, 20);
-    npwp.val(no_npwp);
-});
+    // npwp.focusout(function() {
+    //     no_npwp = npwp.val();
+    //     no_npwp = formatNpwp(no_npwp);
+    //     no_npwp = no_npwp.substring(0, 20);
+    //     npwp.val(no_npwp);
+    // });
 
-function formatNpwp(value) {
-  if (typeof value === 'string') {
-    return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
-  }
-}
+    // function formatNpwp(value) {
+    //     if (typeof value === 'string') {
+    //         return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+    //     }
+    // }
 </script>
 
 <!-- script close modal reset data -->
@@ -131,7 +137,7 @@ function formatNpwp(value) {
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": '<?= base_url("manajemen_barang/MasterSupplier/getData"); ?>',
+                "url": '<?= base_url("Manajemen_Barang/MasterSupplier/getData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
@@ -168,7 +174,7 @@ function formatNpwp(value) {
                     targets: 3,
                     render: function(data, type, full, meta) {
 
-                            return data;
+                        return data;
                     }
                 },
                 {
@@ -209,58 +215,58 @@ function formatNpwp(value) {
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": '<?= base_url("manajemen_barang/mastersupplier/getData/"); ?>' + input,
+                        "url": '<?= base_url("Manajemen_Barang/MasterSupplier/getData/"); ?>' + input,
                         "type": "POST",
                     },
                     "columnDefs": [{
-                    title: "No",
-                    data: "kode_supplier",
-                    searching: true,
-                    targets: 0,
-                    render: function(data, type, full, meta) {
-                        return data;
-                    }
-                },
-                {
-                    title: "Kode Supplier",
-                    data: "kode_supplier",
-                    searching: true,
-                    targets: 1,
-                    render: function(data, type, full, meta) {
-                        return data;
-                    }
-                },
-                {
-                    title: "Nama Supplier",
-                    data: "nama_supplier",
-                    searching: true,
-                    targets: 2,
-                    render: function(data, type, full, meta) {
-                        return data;
-                    }
-                },
-                {
-                    title: "Nomor Telepon",
-                    data: "nomor_telepon",
-                    searching: true,
-                    targets: 3,
-                    render: function(data, type, full, meta) {
-                        return data;
-                    }
-                },
-                {
-                    title: "Action",
-                    data: "kode_supplier",
-                    searching: true,
-                    targets: 4,
-                    render: function(data, type, full, meta) {
-                        var display1 = '<a type="button" onClick = "show_view_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
-                        var display2 = '<a type="button" onClick = "show_edit_modal(\'' + data + '\')"" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Edit Data"><i class="fa fa-edit" ></i> </a>';
-                        var display3 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
-                        return display1 + " " + display2 + " " + display3;
-                    }
-                }
-            ],
+                            title: "No",
+                            data: "kode_supplier",
+                            searching: true,
+                            targets: 0,
+                            render: function(data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        {
+                            title: "Kode Supplier",
+                            data: "kode_supplier",
+                            searching: true,
+                            targets: 1,
+                            render: function(data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        {
+                            title: "Nama Supplier",
+                            data: "nama_supplier",
+                            searching: true,
+                            targets: 2,
+                            render: function(data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        {
+                            title: "Nomor Telepon",
+                            data: "nomor_telepon",
+                            searching: true,
+                            targets: 3,
+                            render: function(data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        {
+                            title: "Action",
+                            data: "kode_supplier",
+                            searching: true,
+                            targets: 4,
+                            render: function(data, type, full, meta) {
+                                var display1 = '<a type="button" onClick = "show_view_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
+                                var display2 = '<a type="button" onClick = "show_edit_modal(\'' + data + '\')"" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Edit Data"><i class="fa fa-edit" ></i> </a>';
+                                var display3 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
+                                return display1 + " " + display2 + " " + display3;
+                            }
+                        }
+                    ],
                     "rowCallback": function(row, data, iDisplayIndex) {
                         var info = this.fnPagingInfo();
                         var page = info.iPage;
@@ -282,7 +288,7 @@ function formatNpwp(value) {
             e.preventDefault();
             var data = new FormData(document.getElementById("submitForm"));
             $.ajax({
-                url: "<?= Base_url('manajemen_barang/MasterSupplier/tambah_data'); ?>",
+                url: "<?= Base_url('Manajemen_Barang/MasterSupplier/tambah_data'); ?>",
                 type: "post",
                 data: data,
                 async: false,
@@ -291,6 +297,12 @@ function formatNpwp(value) {
                 success: function(data) {
                     $('#datatable-master-supplier').DataTable().ajax.reload();
                     $('#add_Modal').modal('hide');
+                    Swal.fire(
+                        'Sukses!',
+                        'Gambar telah di Upload.',
+                        'success'
+                    );
+
                 }
             })
         });
@@ -301,27 +313,29 @@ function formatNpwp(value) {
 
 <script type="text/javascript">
     function warning_delete(kode_supplier) {
-        swal({
+        swal.fire({
             title: 'Apa anda yakin akan hapus data ini?',
             text: "Semua Data Persediaan dengan kode " + kode_supplier + " juga akan terhapus",
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#4fa7f3',
-            cancelButtonColor: '#d57171',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
-        }).then(function() {
-            deleteData(kode_supplier);
-            swal(
-                'Deleted!',
-                'Data ' + kode_supplier + ' telah dihapus!',
-                'success'
-            )
+        }).then((result) => {
+            if (result.value) {
+                deleteData(kode_supplier);
+                swal.fire(
+                    'Deleted!',
+                    'Data ' + kode_supplier + ' telah dihapus!',
+                    'success'
+                )
+            }
         });
     }
 
     function deleteData(kode_supplier) {
         $.ajax({
-            url: "<?= base_url('manajemen_barang/MasterSupplier/delete_data/'); ?>" + kode_supplier,
+            url: "<?= base_url('Manajemen_Barang/MasterSupplier/delete_data/'); ?>" + kode_supplier,
             async: false,
             success: function(data) {
                 $('#datatable-master-supplier').DataTable().ajax.reload();
@@ -333,9 +347,10 @@ function formatNpwp(value) {
 <!-- Script Edit Data -->
 <script type="text/javascript">
     function show_edit_modal(kode_supplier) {
-        fetchdata(kode_supplier);
+        fetchdata_edit_modal(kode_supplier);
     }
-    function fetchdata(kode_supplier) {
+
+    function fetchdata_edit_modal(kode_supplier) {
         var edit_data_label = $('#edit_data_label');
         var edit_kode_supplier = $('#edit_kode_supplier');
         var edit_nama_supplier = $('#edit_nama_supplier');
@@ -348,14 +363,13 @@ function formatNpwp(value) {
         var edit_keterangan = $('#edit_keterangan');
         var edit_tanggal_input = $('#edit_tanggal_input');
         $.ajax({
-            url: '<?= base_url("manajemen_barang/MasterSupplier/view_edit_data/"); ?>' + kode_supplier,
+            url: '<?= base_url("Manajemen_Barang/MasterSupplier/view_edit_data/"); ?>' + kode_supplier,
             type: "POST",
             dataType: "JSON",
             async: false,
             success: function(data) {
                 // split rekening
                 var bank = data.nomor_rekening.split("-");
-                console.log(bank);
                 // set data ke view
                 edit_data_label.text("Edit Data Supplier Kode :" + data.kode_supplier);
                 edit_kode_supplier.val(data.kode_supplier);
@@ -375,9 +389,8 @@ function formatNpwp(value) {
 
     // submit edit data
     $(document).ready(function() {
-
         function warning_edit(kode_supplier) {
-            swal({
+            swal.fire({
                 title: 'Apa anda yakin akan mengubah data ini?',
                 text: "Semua Data Supplier dengan kode " + kode_supplier + " juga akan terubah",
                 type: 'warning',
@@ -385,20 +398,22 @@ function formatNpwp(value) {
                 confirmButtonColor: '#4fa7f3',
                 cancelButtonColor: '#d57171',
                 confirmButtonText: 'Ya, Ubah ini!'
-            }).then(function() {
-                editData(kode_supplier);
-                swal(
-                    'Edited!!!',
-                    'Data ' + kode_supplier + ' telah diubah!',
-                    'success'
-                )
+            }).then((result) => {
+                if (result.value) {
+                    editData(kode_supplier);
+                    swal.fire(
+                        'Edited!!!',
+                        'Data ' + kode_supplier + ' telah diubah!',
+                        'success'
+                    )
+                }
             });
         }
 
         function editData(kode_supplier) {
             var data = new FormData(document.getElementById("edit_form"));
             $.ajax({
-                url: "<?= Base_url('manajemen_barang/MasterSupplier/edit_data/'); ?>" + kode_supplier,
+                url: "<?= Base_url('Manajemen_Barang/MasterSupplier/edit_data/'); ?>" + kode_supplier,
                 type: "post",
                 data: data,
                 async: false,
@@ -430,29 +445,29 @@ function formatNpwp(value) {
         var view_data_label = $('#view_data_label');
         var view_kode_supplier = $('#view_kode_supplier');
         var view_nama_supplier = $('#view_nama_supplier');
-        var view_harga_satuan_dummy = $('#view_harga_satuan_dummy');
-        var view_harga_satuan = $('#view_harga_satuan');
-        var view_satuan = $('#view_satuan');
+        var view_alamat = $('#view_alamat');
+        var view_nomor_telepon = $('#view_nomor_telepon');
+        var view_npwp = $('#view_npwp');
+        var view_bank_rekening = $('#view_bank_rekening');
+        var view_keterangan = $('#view_keterangan');
         var view_tanggal_input = $('#view_tanggal_input');
-        var view_image = $('#view_image');
-        //var edit_image = $('#edit_image');
-
+        var histori_tanggal_input = $('#histori_tanggal_input');
         $.ajax({
-            url: '<?= base_url("manajemen_barang/MasterSupplier/view_edit_data/"); ?>' + kode_supplier,
+            url: '<?= base_url("Manajemen_Barang/MasterSupplier/view_edit_data/"); ?>' + kode_supplier,
             type: "POST",
             dataType: "JSON",
             async: false,
             success: function(data) {
-                // rupiah = formatRupiah(data.harga_satuan, 'Rp.');
-                view_data_label.text("View Data Barang Kode :" + data.kode_supplier);
+                view_data_label.text("Edit Data Supplier Kode :" + data.kode_supplier);
                 view_kode_supplier.val(data.kode_supplier);
                 view_nama_supplier.val(data.nama_supplier);
-                view_harga_satuan_dummy.val(rupiah);
-                view_harga_satuan.val(data.harga_satuan);
-                view_satuan.val(data.satuan);
+                view_alamat.val(data.alamat);
+                view_nomor_telepon.val(data.nomor_telepon);
+                view_npwp.val(data.npwp);
+                view_bank_rekening.val(data.nomor_rekening);
+                view_keterangan.val(data.keterangan);
                 view_tanggal_input.text(data.tanggal_input);
-                //view_image.attr('data-default-file', "<?= base_url('assets/images/barang/'); ?>" + data.gambar);
-                view_image.attr('src', "<?= base_url('assets/images/barang/'); ?>" + data.gambar);
+                histori_tanggal_input.text(data.tanggal_input);
                 $('#view_Modal').modal('show');
             }
         });

@@ -37,7 +37,7 @@
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": '<?= base_url("manajemen_barang/MasterPersediaan/getData"); ?>',
+                        "url": '<?= base_url("Manajemen_Barang/MasterPersediaan/getData"); ?>',
                         "type": "POST",
                     },
                     "columnDefs": [{
@@ -77,10 +77,19 @@
                             },
                         },
                         {
+                            title: "Jumlah di Keranjang",
+                            data: "jumlah_persediaan",
+                            searching: true,
+                            targets: 4,
+                            render: function(data, type, full, meta) {
+                                return data;
+                            },
+                        },
+                        {
                             title: "Harga Satuan",
                             data: "harga_satuan",
                             searching: true,
-                            targets: 4,
+                            targets: 5,
                             render: function(data, type, full, meta) {
                                 return formatRupiah(data, 'Rp.');
                             }
@@ -89,9 +98,9 @@
                             title: "Action",
                             data: "kode_barang",
                             searching: true,
-                            targets: 5,
+                            targets: 6,
                             render: function(data, type, full, meta) {
-                                var display = '<a type="button" class="btn btn-icon waves-effect waves-light btn-success btn-sm" href="<?= base_url('manajemen_barang/masterpersediaan/detail_persediaan/'); ?>' + data + '" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i></a>';
+                                var display = '<a type="button" class="btn btn-icon waves-effect waves-light btn-success btn-sm" href="<?= base_url('Manajemen_Barang/MasterPersediaan/detail_persediaan/'); ?>' + data + '" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i></a>';
                                 return display;
                             }
                         }
@@ -138,7 +147,7 @@
                             "processing": true,
                             "serverSide": true,
                             "ajax": {
-                                "url": '<?= base_url("manajemen_barang/Masterpersediaan/getData/"); ?>' + input,
+                                "url": '<?= base_url("Manajemen_Barang/MasterPersediaan/getData/"); ?>' + input,
                                 "type": "POST",
                             },
                             "columnDefs": [{
@@ -178,10 +187,19 @@
                                     },
                                 },
                                 {
+                                    title: "Jumlah di Keranjang",
+                                    data: "jumlah_persediaan",
+                                    searching: true,
+                                    targets: 4,
+                                    render: function(data, type, full, meta) {
+                                        return data;
+                                    },
+                                },
+                                {
                                     title: "Harga Satuan",
                                     data: "harga_satuan",
                                     searching: true,
-                                    targets: 4,
+                                    targets: 5,
                                     render: function(data, type, full, meta) {
                                         return formatRupiah(data, 'Rp.');
                                     }
@@ -190,9 +208,9 @@
                                     title: "Action",
                                     data: "kode_barang",
                                     searching: true,
-                                    targets: 5,
+                                    targets: 6,
                                     render: function(data, type, full, meta) {
-                                        var display = '<button type="button" class="btn btn-icon waves-effect waves-light btn-success btn-sm" onclick="warningDelete(' + data + ')" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i></button>';
+                                        var display = '<a type="button" class="btn btn-icon waves-effect waves-light btn-success btn-sm" href="<?= base_url('Manajemen_Barang/MasterPersediaan/detail_persediaan/'); ?>' + data + '" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i></a>';
                                         return display;
                                     }
                                 }
