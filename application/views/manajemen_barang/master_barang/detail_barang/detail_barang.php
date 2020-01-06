@@ -51,13 +51,18 @@
                             </li>
                             <li class="nav-item">
                                 <a href="#settings2" data-toggle="tab" aria-expanded="false" class="nav-link">
+                                    Statisktik Penjualan
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#settings2" data-toggle="tab" aria-expanded="false" class="nav-link">
                                     Lain - Lain
                                 </a>
                             </li>
                         </ul>
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade show active" id="data_umum">
-                                <form data-parsley-validate novalidate autocomplete="off" id="submitForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <form data-parsley-validate novalidate autocomplete="off" id="form_umum" method="post" enctype="multipart/form-data" class="form-horizontal">
                                     <div>
                                         <div class="form-group row">
                                             <label class="col-3 col-form-label">Tipe Barang</label>
@@ -129,71 +134,72 @@
                                         </div>
                                         <div id="edit_button_umum_div" hidden>
                                             <button id="edit_batal_umum" name="edit_batal_umum" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancel</button>
-
-                                            <button type="submit_batal_umum" name="submit_batal_umum" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i> Submit</button>
+                                            <button type="submit" id="submit_batal_umum" name="submit_batal_umum" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i> Submit</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="profile2">
-                                <div>
-                                    <div class="form-group row">
-                                        <label class="col-3 col-form-label">Harga Pokok</label>
-                                        <div class="col-9">
-                                            <input readonly type="text" id="edit_harga_pokok_dummy" name="edit_harga_pokok_dummy" placeholder="Hanya Angka" class="form-control" required>
-                                            <input type="text" name="harga_pokok" id="harga_pokok" placeholder="Hanya Angka" class="form-control" hidden>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-3 col-form-label">Harga Jual</label>
-                                        <div class="col-9">
-                                            <input readonly type="text" id="edit_harga_satuan_dummy" name="edit_harga_satuan_dummy" placeholder="Hanya Angka" class="form-control" required>
-                                            <input type="text" name="harga_satuan" id="harga_satuan" placeholder="Hanya Angka" class="form-control" hidden>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-3 col-form-label">Satuan Dasar</label>
-                                        <div class="col-9">
-                                            <select name="edit_satuan" id="edit_satuan" class="form-control" placeholder="ssss" required disabled>
-                                                <!-- <option value="0" selected disabled hidden>-- Satuan Barang --</option> -->
-                                                <?php foreach ($satuan as $value) : ?>
-                                                    <option value=<?= $value['kode_satuan']; ?>><?= $value['nama_satuan']; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-3 col-form-label">Persediaan Minimum</label>
-                                        <div class="col-5">
-                                            <input readonly type="text" id="edit_persediaan_minimum" name="edit_persediaan_minimum" placeholder="Hanya Angka" class="form-control" required>
-                                        </div>
-                                        <label class="col-1 col-form-label">/</label>
-                                        <div class="col-3">
-                                            <input type="text" id="edit_satuan_minimum" name="edit_satuan_minimum" class="form-control" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-3 col-form-label">Status Jual</label>
-                                        <div class="col-9">
-                                            <select name="edit_status_jual" id="edit_status_jual" class="form-control select2" placeholder="ssss" required disabled>
-                                                <option value="0" selected disabled hidden>-Status-</option>
-                                                <option value="1">Dijual</option>
-                                                <option value="1">Tidak Dijual</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer">
+                                <form data-parsley-validate novalidate autocomplete="off" id="form_harga" method="post" enctype="multipart/form-data" class="form-horizontal">
                                     <div>
-                                        <button type="submit" id="edit_trigger_harga" name="edit_trigger_umum" class="btn btn-success waves-effect waves-light"><i class="fa fa-edit"></i> Edit</button>
-                                    </div>
-                                    <div id="edit_button_harga_div" hidden>
-                                        <button id="edit_batal_harga" name="edit_batal_harga" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancel</button>
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label">Harga Pokok</label>
+                                            <div class="col-9">
+                                                <input readonly type="text" id="edit_harga_pokok_dummy" name="edit_harga_pokok_dummy" placeholder="Hanya Angka" class="form-control" required>
+                                                <input type="text" name="edit_harga_pokok" id="edit_harga_pokok" placeholder="Hanya Angka" class="form-control" hidden>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label">Harga Jual</label>
+                                            <div class="col-9">
+                                                <input readonly type="text" id="edit_harga_satuan_dummy" name="edit_harga_satuan_dummy" placeholder="Hanya Angka" class="form-control" required>
+                                                <input type="text" name="edit_harga_satuan" id="edit_harga_satuan" placeholder="Hanya Angka" class="form-control" hidden>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label">Satuan Dasar</label>
+                                            <div class="col-9">
+                                                <select name="edit_satuan" id="edit_satuan" class="form-control" placeholder="ssss" required disabled>
+                                                    <!-- <option value="0" selected disabled hidden>-- Satuan Barang --</option> -->
+                                                    <?php foreach ($satuan as $value) : ?>
+                                                        <option value=<?= $value['id_satuan']; ?>><?= $value['nama_satuan']; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label">Persediaan Minimum</label>
+                                            <div class="col-5">
+                                                <input readonly type="text" id="edit_persediaan_minimum" name="edit_persediaan_minimum" placeholder="Hanya Angka" class="form-control" required>
+                                            </div>
+                                            <label class="col-1 col-form-label">/</label>
+                                            <div class="col-3">
+                                                <input type="text" id="edit_satuan_minimum" name="edit_satuan_minimum" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label">Status Jual</label>
+                                            <div class="col-9">
+                                                <select name="edit_status_jual" id="edit_status_jual" class="form-control select2" placeholder="ssss" required disabled>
+                                                    <option value="0" selected disabled hidden>-Status-</option>
+                                                    <option value="1">Dijual</option>
+                                                    <option value="1">Tidak Dijual</option>
+                                                </select>
+                                            </div>
+                                        </div>
 
-                                        <button type="submit_batal_harga" name="submit_batal_harga" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i> Submit</button>
                                     </div>
-                                </div>
+
+                                    <div class="modal-footer">
+                                        <div>
+                                            <button type="button" id="edit_trigger_harga" name="edit_trigger_umum" class="btn btn-success waves-effect waves-light"><i class="fa fa-edit"></i> Edit</button>
+                                        </div>
+                                        <div id="edit_button_harga_div" hidden>
+                                            <button id="edit_batal_harga" name="edit_batal_harga" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancel</button>
+                                            <button type="submit" id="submit_batal_harga" name="submit_batal_harga" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i> Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="messages2">
                                 <p>Etsy mixtape wayfarers, ethical

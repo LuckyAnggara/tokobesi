@@ -57,7 +57,7 @@
         });
 
         $('#edit_satuan').select2().on('select2:select', function() {
-            var data = $("#satuan option:selected").text()
+            var data = $("#edit_satuan option:selected").text()
             $('#edit_satuan_minimum').val(data);
         })
 
@@ -211,46 +211,95 @@
 
     // submit edit data
     $(document).ready(function() {
-
-        function warning_edit(kode_barang) {
-            swal({
+        function warning_edit_umum(kode_barang) {
+            swal.fire({
                 title: 'Apa anda yakin akan mengubah data ini?',
                 text: "Semua Data Persediaan dengan kode " + kode_barang + " juga akan terubah",
-                type: 'warning',
+                icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#4fa7f3',
                 cancelButtonColor: '#d57171',
                 confirmButtonText: 'Ya, Ubah ini!'
-            }).then(function() {
-                editData(kode_barang);
-                swal(
-                    'Edited!!!',
-                    'Data ' + kode_barang + ' telah diubah!',
-                    'success'
-                )
+            }).then((result) => {
+                if (result.value) {
+                    $('#edit_button_umum_div').attr("hidden", true);
+                    $('#edit_trigger_umum').attr("hidden", false);
+                    edit_Data_Umum(kode_barang);
+                    setData(kode_barang);
+                    set_readonly('umum', true);
+                    swal.fire(
+                        'Edited!!!',
+                        'Data Umum ' + kode_barang + ' telah diubah!',
+                        'success'
+                    );
+                }
             });
         }
 
-        function editData(kode_barang) {
-            var data = new FormData(document.getElementById("edit_form"));
+        function edit_Data_Umum(kode_barang) {
+            var data = new FormData(document.getElementById("form_umum"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data/'); ?>" + kode_barang,
+                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data_umum/'); ?>" + kode_barang,
                 type: "post",
                 data: data,
                 async: false,
                 processData: false,
                 contentType: false,
                 success: function(data) {
-                    $('#datatable-master-barang').DataTable().ajax.reload();
-                    $('#edit_Modal').modal('hide');
+
+                }
+            });
+        }
+        $('#form_umum').submit(function(e) {
+            var kode_barang = $('#hide_kode_barang').text();
+            e.preventDefault();
+            warning_edit_umum(kode_barang);
+        });
+
+        function warning_edit_harga(kode_barang) {
+            swal.fire({
+                title: 'Apa anda yakin akan mengubah data ini?',
+                text: "Semua Data Persediaan dengan kode " + kode_barang + " juga akan terubah",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#4fa7f3',
+                cancelButtonColor: '#d57171',
+                confirmButtonText: 'Ya, Ubah ini!'
+            }).then((result) => {
+                if (result.value) {
+                    $('#edit_button_harga_div').attr("hidden", true);
+                    $('#edit_trigger_harga').attr("hidden", false);
+                    edit_Data_Harga(kode_barang);
+                    setData(kode_barang);
+                    set_readonly('harga', true);
+                    swal.fire(
+                        'Edited!!!',
+                        'Data Harga ' + kode_barang + ' telah diubah!',
+                        'success'
+                    );
+                }
+            });
+        }
+
+        function edit_Data_Harga(kode_barang) {
+            var data = new FormData(document.getElementById("form_harga"));
+            $.ajax({
+                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data_harga/'); ?>" + kode_barang,
+                type: "post",
+                data: data,
+                async: false,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+
                 }
             })
 
         }
-        $('#edit_form').submit(function(e) {
-            var kode_barang = $('#edit_kode_barang').val();
+        $('#form_harga').submit(function(e) {
+            var kode_barang = $('#hide_kode_barang').text();
             e.preventDefault();
-            warning_edit(kode_barang);
+            warning_edit_harga(kode_barang);
         });
 
     });
@@ -280,7 +329,6 @@
                 success: function(data) {
                     $('#edit_gambar_modal').modal('hide');
                     setGambarBaru(kode_barang);
-
                 }
             })
         });
@@ -292,32 +340,22 @@
                 dataType: "JSON",
                 async: false,
                 success: function(data) {
-
                     var drEvent = $('#edit_gambar').dropify();
                     drEvent = drEvent.data('dropify');
                     drEvent.resetPreview();
                     drEvent.clearElement();
-                    $('#div_gambar').fadeOut(1000, function() {
-                        // $('#gambar_barang').attr('src', "<?= base_url('assets/images/barang/'); ?>" + data.gambar);
-                        $('#gambar_barang').remove();
-                        display = '<img id="gambar_barang" src="<?= base_url('assets/images/barang/'); ?>' + data.gambar + '" class="img-thumbnail" alt="profile-image">';
-                        $('#div_gambar').append(display)
-                        $('#div_gambar').fadeIn(1000);
+                    $('#gambar_barang').fadeOut(2000, function() {
+                        // $('#gambar_barang').remove();
+                        // display = '<img id="gambar_barang" src="<?= base_url('assets/images/barang/'); ?>' + data.gambar + '" class="img-thumbnail" alt="profile-image">';
+                        $('#gambar_barang').attr('src', "<?= base_url('assets/images/barang/'); ?>" + data.gambar)
+                        // $('#div_gambar').append(display)
+                        $('#gambar_barang').fadeIn(2000);
                     });
                     Swal.fire(
                         'Sukses!',
                         'Data Supplier telah berhasil di tambahkan.',
                         'success'
                     );
-
-                    // $('#div_gambar').fadeOut(2000, function() {
-                    //     //form.html(msg).fadeIn().delay(2000);
-
-
-                    //     // $('#div_gambar').load('http://localhost/tob/Manajemen_Barang/MasterBarang/Detail_Barang/B001 #div_gambar');
-                    //     $('#div_gambar').fadeIn(2000);
-                    // });
-
                 }
             });
 
@@ -349,6 +387,7 @@
             edit_button_umum_div.attr("hidden", true);
             edit_button_umum.attr("hidden", false);
             set_readonly('umum', true);
+            setData($('#hide_kode_barang').text());
         });
 
         // HARGA - CLICK EDIT
@@ -362,110 +401,96 @@
             edit_button_harga_div.attr("hidden", true);
             edit_button_harga.attr("hidden", false);
             set_readonly('harga', true);
+            setData($('#hide_kode_barang').text());
         });
         // Fungsi Set Kolom Jadi Not Readonly
-        function set_readonly(div, bol) {
-            if (div == "umum") {
-                if (bol == false) {
-                    $('#edit_tipe_barang').attr("disabled", bol);
-                    $('#edit_jenis_barang').attr("disabled", bol);
-                    $('#edit_merek_barang').attr("disabled", bol);
-                    $('#edit_nama_barang').attr("readonly", bol);
-                    $('#edit_kode_supplier').attr("disabled", bol);
-                    $('#edit_keterangan').attr("readonly", bol);
-                } else {
-                    $('#edit_tipe_barang').attr("disabled", bol);
-                    $('#edit_jenis_barang').attr("disabled", bol);
-                    $('#edit_merek_barang').attr("disabled", bol);
-                    $('#edit_nama_barang').attr("readonly", bol);
-                    $('#edit_nama_supplier').attr("disabled", bol);
-                    $('#edit_keterangan').attr("readonly", bol);
-                    // CLEAR AREA INPUT
-                    // $('#edit_tipe_barang').val(0);
-                    // $('#edit_jenis_barang').val(0);
-                    // $('#edit_merek_barang').val(0);
-                    // $('#edit_nama_barang').val('');
-                    // $('#edit_nama_supplier').val(0);
-                    // $('#edit_keterangan').val('');
-                }
+    });
+
+    function set_readonly(div, bol) {
+        if (div == "umum") {
+            if (bol == false) {
+                $('#edit_tipe_barang').attr("disabled", bol);
+                $('#edit_jenis_barang').attr("disabled", bol);
+                $('#edit_merek_barang').attr("disabled", bol);
+                $('#edit_nama_barang').attr("readonly", bol);
+                $('#edit_kode_supplier').attr("disabled", bol);
+                $('#edit_keterangan').attr("readonly", bol);
             } else {
-                if (bol == false) {
-                    $('#edit_harga_pokok_dummy').attr("readonly", bol);
-                    $('#edit_harga_satuan_dummy').attr("readonly", bol);
-                    $('#edit_satuan').attr("disabled", bol);
-                    $('#edit_persediaan_minimum').attr("readonly", bol);
-                    $('#edit_satuan').attr("disabled", bol);
-                    $('#edit_status_jual').attr("disabled", bol);
-                } else {
-                    $('#edit_harga_pokok_dummy').attr("readonly", bol);
-                    $('#edit_harga_satuan_dummy').attr("readonly", bol);
-                    $('#edit_satuan').attr("disabled", bol);
-                    $('#edit_persediaan_minimum').attr("readonly", bol);
-                    $('#edit_satuan').attr("disabled", bol);
-                    $('#edit_status_jual').attr("disabled", bol);
-                    // CLEAR AREA INPUT
-                    // $('#edit_harga_pokok_dummy').val('');
-                    // $('#edit_harga_satuan_dummy').val('');
-                    // $('#edit_satuan').val(0);
-                    // $('#edit_persediaan_minimum').val('');
-                    // $('#edit_satuan').val(0);
-                    // $('#edit_status_jual').val(0);
-                }
+                $('#edit_tipe_barang').attr("disabled", bol);
+                $('#edit_jenis_barang').attr("disabled", bol);
+                $('#edit_merek_barang').attr("disabled", bol);
+                $('#edit_nama_barang').attr("readonly", bol);
+                $('#edit_kode_supplier').attr("disabled", bol);
+                $('#edit_keterangan').attr("readonly", bol);
+            }
+        } else {
+            if (bol == false) {
+                $('#edit_harga_pokok_dummy').attr("readonly", bol);
+                $('#edit_harga_satuan_dummy').attr("readonly", bol);
+                $('#edit_satuan').attr("disabled", bol);
+                $('#edit_persediaan_minimum').attr("readonly", bol);
+                $('#edit_satuan').attr("disabled", bol);
+                $('#edit_status_jual').attr("disabled", bol);
+            } else {
+                $('#edit_harga_pokok_dummy').attr("readonly", bol);
+                $('#edit_harga_satuan_dummy').attr("readonly", bol);
+                $('#edit_satuan').attr("disabled", bol);
+                $('#edit_persediaan_minimum').attr("readonly", bol);
+                $('#edit_satuan').attr("disabled", bol);
+                $('#edit_status_jual').attr("disabled", bol);
             }
         }
+    }
 
-        set_data($('#hide_kode_barang').text());
-        // Fungsi Set Data Ke Kolom Pertama Kali
-        function set_data(kode_barang) {
-            var edit_tipe_barang = $('#edit_tipe_barang');
-            var edit_jenis_barang = $('#edit_jenis_barang');
-            var edit_merek_barang = $('#edit_merek_barang');
-            var edit_kode_barang = $('#edit_kode_barang');
-            var edit_nama_barang = $('#edit_nama_barang');
-            var edit_kode_supplier = $('#edit_kode_supplier');
-            var edit_keterangan = $('#edit_keterangan');
-            var edit_harga_pokok_dummy = $('#edit_harga_pokok_dummy');
-            var edit_harga_pokok = $('#edit_harga_pokok');
-            var edit_harga_satuan_dummy = $('#edit_harga_satuan_dummy');
-            var edit_harga_satuan = $('#edit_harga_satuan');
-            var edit_satuan = $('#edit_satuan');
-            var edit_persediaan_minimum = $('#edit_persediaan_minimum');
-            var edit_satuan_minimum = $('#edit_satuan_minimum');
-            var edit_status_jual = $('#edit_status_jual');
-            var edit_tanggal_input = $('#edit_tanggal_input');
-            //var edit_image = $('#edit_image');
+    setData($('#hide_kode_barang').text());
+    // Fungsi Set Data Ke Kolom Pertama Kali
+    function setData(kode_barang) {
+        var edit_tipe_barang = $('#edit_tipe_barang');
+        var edit_jenis_barang = $('#edit_jenis_barang');
+        var edit_merek_barang = $('#edit_merek_barang');
+        var edit_kode_barang = $('#edit_kode_barang');
+        var edit_nama_barang = $('#edit_nama_barang');
+        var edit_kode_supplier = $('#edit_kode_supplier');
+        var edit_keterangan = $('#edit_keterangan');
+        var edit_harga_pokok_dummy = $('#edit_harga_pokok_dummy');
+        var edit_harga_pokok = $('#edit_harga_pokok');
+        var edit_harga_satuan_dummy = $('#edit_harga_satuan_dummy');
+        var edit_harga_satuan = $('#edit_harga_satuan');
+        var edit_satuan = $('#edit_satuan');
+        var edit_persediaan_minimum = $('#edit_persediaan_minimum');
+        var edit_satuan_minimum = $('#edit_satuan_minimum');
+        var edit_status_jual = $('#edit_status_jual');
+        var edit_tanggal_input = $('#edit_tanggal_input');
+        //var edit_image = $('#edit_image');
 
-            $.ajax({
-                url: '<?= base_url("Manajemen_Barang/MasterBarang/get_data_for_detail/"); ?>' + kode_barang,
-                type: "POST",
-                dataType: "JSON",
-                async: false,
-                success: function(data) {
-                    rupiahJual = formatRupiah(data.harga_satuan, 'Rp.');
-                    rupiahPokok = formatRupiah(data.harga_pokok, 'Rp.');
-                    edit_tipe_barang.val(data.tipe_barang).trigger('change');
-                    edit_jenis_barang.val(data.tipe_barang).trigger('change');
-                    edit_merek_barang.val(data.tipe_barang).trigger('change');
-                    edit_kode_barang.val(data.kode_barang);
-                    edit_nama_barang.val(data.nama_barang);
-                    edit_kode_supplier.val(data.kode_supplier).trigger('change');
-                    edit_keterangan.val(data.keterangan);
-                    edit_harga_pokok_dummy.val(rupiahPokok);
-                    edit_harga_pokok.val(data.harga_pokok);
-                    edit_harga_satuan_dummy.val(rupiahJual);
-                    edit_harga_satuan.val(data.harga_satuan);
-                    edit_satuan.val(data.kode_satuan).trigger('change');
-                    edit_persediaan_minimum.val(data.persediaan_minimum);
-                    edit_satuan_minimum.val(edit_satuan.text());
-                    edit_status_jual.val(data.status_jual).trigger('change');
-                    edit_tanggal_input.text(data.tanggal_input);
-                    // edit_image.attr('data-default-file', "<?= base_url('assets/images/barang/'); ?>" + data.gambar);
-                    //edit_image.attr('src',"<?= base_url('assets/images/barang/'); ?>" + data.gambar);
-                }
-            });
-        }
-
-
-    });
+        $.ajax({
+            url: '<?= base_url("Manajemen_Barang/MasterBarang/get_data_for_detail/"); ?>' + kode_barang,
+            type: "POST",
+            dataType: "JSON",
+            async: false,
+            success: function(data) {
+                rupiahJual = formatRupiah(data.harga_satuan, 'Rp.');
+                rupiahPokok = formatRupiah(data.harga_pokok, 'Rp.');
+                edit_tipe_barang.val(data.tipe_barang).trigger('change');
+                edit_jenis_barang.val(data.tipe_barang).trigger('change');
+                edit_merek_barang.val(data.tipe_barang).trigger('change');
+                edit_kode_barang.val(data.kode_barang);
+                edit_nama_barang.val(data.nama_barang);
+                edit_kode_supplier.val(data.kode_supplier).trigger('change');
+                edit_keterangan.val(data.keterangan);
+                edit_harga_pokok_dummy.val(rupiahPokok);
+                edit_harga_pokok.val(data.harga_pokok);
+                edit_harga_satuan_dummy.val(rupiahJual);
+                edit_harga_satuan.val(data.harga_satuan);
+                edit_satuan.val(data.kode_satuan).trigger('change');
+                edit_persediaan_minimum.val(data.persediaan_minimum);
+                edit_satuan_minimum.val($('#edit_satuan option:selected').text());
+                edit_status_jual.val(data.status_jual).trigger('change');
+                edit_tanggal_input.text(data.tanggal_input);
+                // edit_image.attr('data-default-file', "<?= base_url('assets/images/barang/'); ?>" + data.gambar);
+                //edit_image.attr('src',"<?= base_url('assets/images/barang/'); ?>" + data.gambar);
+            }
+        });
+    }
 </script>
 <!-- Set Data Ke Tampilan -->

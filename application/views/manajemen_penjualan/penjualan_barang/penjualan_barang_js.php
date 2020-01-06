@@ -292,7 +292,8 @@
             if (data.jumlah_data > 0) {
               $("#result_page").empty();
               for (var i in data.data) {
-                var display2 = '<div id="result" class="col-md-6 col-lg-3"><div class="card gal-detail thumb"><a id="wawa"onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].nama_barang + '\',\'' + data.data[i].satuan + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].jumlah_keranjang + '\')">     <img class="img-thumbnail img-responsive" alt="profile-image" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Tidak ada Gambar"><h4 >' + data.data[i].nama_barang + '</h4><p class="card-text">' + data.data[i].keterangan + '</p></a></div></div>';
+                console.log(data.data[i]);
+                var display2 = '<div id="result"  class="col-md-6 col-lg-3"><div class="card gal-detail thumb"><a type="button" id="wawa" onclick="choose_barang(\'' + data.data[i].tipe_barang + '\',\'' + data.data[i].kode_barang + '\',\'' + data.data[i].nama_barang + '\',\'' + data.data[i].nama_satuan + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].jumlah_keranjang + '\',\'' + data.data[i].status_jual + '\')" ><img class="img-thumbnail img-responsive" alt="profile-image" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Tidak ada Gambar"><h5 >' + data.data[i].nama_barang + '</h4><p class="card-text">' + data.data[i].keterangan + '</p></a></div></div>';
                 // var display = '<div id="result" class="col-md-6 col-lg-3"><div class="card"><a id="wawa" onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].nama_barang + '\',\'' + data.data[i].satuan + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].jumlah_keranjang + '\')"><img class="card-img-top img-fluid" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Tidak ada Gambar"><div class="card-body"><h4 class="card-title">' + data.data[i].nama_barang + '</h4></div><div class="card-body"><p class="card-text">' + data.data[i].keterangan + '</p></div></div></a></div>'
                 $('#result_page').append(display2).fadeIn('slow');
               }
@@ -311,12 +312,28 @@
       }
     }
 
-    function choose_barang(kode_barang, nama_barang, satuan, jumlah_persediaan, jumlah_keranjang) {
-      if (jumlah_persediaan == 0) {
-        persediaan_habis(nama_barang, satuan, jumlah_persediaan);
-      } else {
-        quantityalert(kode_barang, satuan, jumlah_persediaan, jumlah_keranjang);
+    // "choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].nama_barang + '\',\'' + data.data[i].satuan + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].jumlah_keranjang + '\')"
+
+
+    function choose_barang(tipe_barang, kode_barang, nama_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang, status_jual ) {
+      console.log(tipe_barang);
+      console.log(status_jual);
+      if(status_jual == 0){
+        persediaan_habis(nama_barang, nama_satuan, jumlah_persediaan);  
+      }else{
+        if(tipe_barang == 3 ){
+          quantityalert(kode_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang);
+        }else{
+          if (jumlah_persediaan == 0) {
+            persediaan_habis(nama_barang, nama_satuan, jumlah_persediaan);
+          } else {
+          quantityalert(kode_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang);
       }
+           
+      }
+       
+      }
+      
     }
     // script Input Jumlah Pembelian
   </script>

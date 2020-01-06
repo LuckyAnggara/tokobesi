@@ -41,15 +41,17 @@ class Model_Penjualan_Barang extends CI_Model
 
     {
         if ($string == null) {
-            $this->db->select('master_persediaan.*, master_barang.*');
+            $this->db->select('master_persediaan.*, master_barang.*, master_satuan_barang.nama_satuan');
             $this->db->from('master_persediaan');
             $this->db->join('master_barang', 'master_barang.kode_barang = master_persediaan.kode_barang');
+            $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
             $output = $this->db->get();
             return $output;
         } else {
-            $this->db->select('master_persediaan.*, master_barang.*');
+            $this->db->select('master_persediaan.*, master_barang.*, master_satuan_barang.nama_satuan');
             $this->db->from('master_persediaan');
             $this->db->join('master_barang', 'master_barang.kode_barang = master_persediaan.kode_barang');
+            $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
             $this->db->like("master_persediaan.kode_barang", $string);
             $this->db->or_like("nama_barang", $string);
             $output = $this->db->get();
