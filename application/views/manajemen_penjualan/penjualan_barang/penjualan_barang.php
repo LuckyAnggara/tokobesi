@@ -14,8 +14,8 @@
                             <div class="col-sm-8">
                                 <div class="input-group">
                                     <input id="id_pelanggan" autocomplete="off" name="id_pelanggan" type="text" class="form-control" placeholder="Isi ID Pelanggan, jika ada">
-                                    <div class="input-group-append">
-                                        <button id="cari-button" name="cari-button" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-search"></i></button>
+                                    <div class="input-group-append" id="div_cari-button">
+                                        <button id="cari-button" name="cari-button" onClick="cari_pelanggan();" class=" btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-search"></i></button>
                                     </div>
                                 </div>
                                 <small id="id_pelanggan_help" class="form-text text-muted">Kosong kan jika tidak ada ID Pelanggan</small>
@@ -30,13 +30,13 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-sm-form-label">Alamat</label>
                             <div class="col-sm-8">
-                                <textarea id="alamat" name="alamat" type="text" class="form-control"></textarea>
+                                <textarea id="alamat" name="alamat" type="text" class="form-control" placeholder="Optional"></textarea>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 col-sm-form-label">No Telepon</label>
                             <div class="col-sm-8">
-                                <input id="nomor_telepon" name="nomor_telepon" type="text" class="form-control">
+                                <input placeholder="Optional" id="nomor_telepon" name="nomor_telepon" type="text" class="form-control">
                             </div>
                         </div>
                         <small id="data_pelanggan_help" class="form-text text-muted">Silahkan gunakan fitur Cari, jika Pelanggan memiliki ID.</small>
@@ -87,7 +87,7 @@
                                 <h4 id="no_order" hidden><?= $no_order; ?></h4>
                             </div>
                             <div class="col-6">
-                                <button disabled type="submit" class="btn btn-success waves-effect waves-light pull-right"><i class="fa fa-check"></i> Simpan</button>
+                                <button disabled type="submit" id="simpan_checkout" name="simpan_checkout" class="btn btn-success waves-effect waves-light pull-right"><i class="fa fa-check"></i> Simpan</button>
                             </div>
                         </div>
                         <hr>
@@ -157,7 +157,7 @@
                         <div class="input-group">
                             <input id="promo_code" autocomplete="off" name="promo_code" type="text" class="form-control">
                             <div class="input-group-append">
-                                <button id="cari-button" name="cari-button" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-search"></i></button>
+                                <button id="promo-cari-button" name="promo-cari-button" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
                         <small id="id_pelanggan_help" class="form-text text-muted">Input Kode Promo, Jika Ada</small>
@@ -173,14 +173,14 @@
                 <div class="form-group row">
                     <label class="col-5 col-form-label m-t-5">Grand Total</label>
                     <div class="col-7">
-                        <h3 id="checkout_grand_total">Rp. 0,-</h3>
+                        <h2 id="checkout_grand_total">Rp. 0,-</h2>
                         <p id="checkout_grand_total_terbilang">( Nol Rupiah )</p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="edit-md-close" name="button-close" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Simpan</button>
-                <button type="submit" name="button-add" class="btn btn-primary waves-effect waves-light">Bayar</button>
+                <button id="batal_checkout" name="batal_checkout" type="button" data-dismiss="modal" class="btn btn-default waves-effect">Batal</button>
+                <button type="submit" id="bayar_checkout" name="bayar_checkout" class="btn btn-primary waves-effect waves-light">Bayar</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

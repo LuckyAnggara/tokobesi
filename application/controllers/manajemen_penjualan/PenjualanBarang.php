@@ -154,4 +154,9 @@ class PenjualanBarang extends CI_Controller
         $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang_js');
         $this->load->view('template/template_app_js');
     }
+
+    function simpan_order(){
+        $post = $this->input->post();
+        $this->modelPenjualan->simpan_order($post);
+    }
 }

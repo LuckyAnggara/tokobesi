@@ -157,4 +157,17 @@ class Model_Penjualan_Barang extends CI_Model
         $this->db->where('no_order', $no_order);
         $this->db->delete('tabel_keranjang_temp');
     }
+
+    function simpan_order($post)
+    {
+        
+        $data = array(
+            'no_order' => $post['no_order'],
+            'id_pelanggan' => '',
+            'status' => 0 // belum di proses masih di keranjang unpaid.
+        );
+
+        $this->db->insert('tabel_daftar_belanja', $data);
+        $this->db->query('INSERT INTO `tabel_keranjang_belanja`(`no_order`, `kode_barang`, `jumlah_pembelian`, `harga_total`) SELECT `no_order`, `kode_barang`, `jumlah_pembelian`, `harga_total` FROM tabel_keranjang_temp WHERE no_order = '. $post['no_order'].'');
+    }
 }

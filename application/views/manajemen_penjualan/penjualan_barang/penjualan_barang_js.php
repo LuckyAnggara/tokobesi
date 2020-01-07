@@ -221,7 +221,30 @@
 
   <!-- fetch data ke id pelanggan, jika pake fitur cari -->
   <script>
-    $('#cari-button').click(function() {
+    function batal_pelanggan() {
+      console.log('asdasd');
+      $('#id_pelanggan').attr('disabled', false).val('');
+      $('#nama_pelanggan').attr('disabled', false).val('');
+      $('#alamat').attr('disabled', false).val('');
+      $('#nomor_telepon').attr('disabled', false).val('');
+      $('#div_cari-button').empty();
+      $('#id_pelanggan_help').text('Kosong kan jika tidak ada ID Pelanggan');
+      display = '<button id="cari-button" name="cari-button" onClick="cari_pelanggan();" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-search"></i></button>'
+      $('#div_cari-button').append(display);
+    };
+
+    function tutup_tombol_cari() {
+      $('#id_pelanggan').attr('disabled', true);
+      $('#nama_pelanggan').attr('disabled', true);
+      $('#alamat').attr('disabled', true);
+      $('#nomor_telepon').attr('disabled', true);
+      $('#div_cari-button').empty();
+      $('#id_pelanggan_help').text('');
+      display = '<button id="cari-edit" onClick="batal_pelanggan();" name="cari-edit" class="btn btn-success waves-effect waves-light" type="button"><i class="fa  fa-edit "></i></button>'
+      $('#div_cari-button').append(display);
+    }
+
+    function cari_pelanggan() {
       var id_pelanggan = $('#id_pelanggan');
       var nama_pelanggan = $('#nama_pelanggan');
       var alamat = $('#alamat');
@@ -237,6 +260,7 @@
               nama_pelanggan.val(data.nama_pelanggan);
               alamat.val(data.alamat);
               nomor_telepon.val(data.nomor_telepon);
+              tutup_tombol_cari();
             } else {
               alert_data_pelanggan("tidak_ada");
               nama_pelanggan.val(null);
@@ -250,7 +274,7 @@
         // alert_data_pelanggan("kosong");
       }
 
-    });
+    };
 
     function alert_data_pelanggan(status) {
       switch (status) {
@@ -315,25 +339,25 @@
     // "choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].nama_barang + '\',\'' + data.data[i].satuan + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].jumlah_keranjang + '\')"
 
 
-    function choose_barang(tipe_barang, kode_barang, nama_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang, status_jual ) {
+    function choose_barang(tipe_barang, kode_barang, nama_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang, status_jual) {
       console.log(tipe_barang);
       console.log(status_jual);
-      if(status_jual == 0){
-        persediaan_habis(nama_barang, nama_satuan, jumlah_persediaan);  
-      }else{
-        if(tipe_barang == 3 ){
-          quantityalert(kode_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang);
-        }else{
+      if (status_jual == 0) {
+        status_jual_alert(nama_barang, status_jual);
+      } else {
+        if (tipe_barang == 3) {
+          quantityalert(kode_barang, "", 9999);
+        } else {
           if (jumlah_persediaan == 0) {
             persediaan_habis(nama_barang, nama_satuan, jumlah_persediaan);
           } else {
-          quantityalert(kode_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang);
+            quantityalert(kode_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang);
+          }
+
+        }
+
       }
-           
-      }
-       
-      }
-      
+
     }
     // script Input Jumlah Pembelian
   </script>
@@ -390,6 +414,8 @@
     function push_keranjang_belanja(jumlah, kode_barang) {
       var id_pelanggan = $('#id_pelanggan').val();
       var no_order = $('#no_order').text();
+      
+      $('#simpan_checkout').attr('disabled',false);
       $.ajax({
         url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/push_data_barang'); ?>",
         type: "post",
@@ -588,6 +614,15 @@
       $('#select_nama_barang').val(null).trigger('change');
     }
 
+    function status_jual_alert(nama_barang, status_jual) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Status Barang ' + nama_barang + ' Tidak Dijual!',
+      });
+      $('#select_nama_barang').val(null).trigger('change');
+    }
+
     function warning_delete(id) {
       swal.fire({
         title: 'Apa anda yakin akan hapus data ini dari Keranjang Belanja?',
@@ -607,7 +642,7 @@
           push_persediaan_temporary_batal(id);
           deleteData_keranjang(id);
           total_harga_keranjang();
-
+          p
         }
       });
     }
@@ -628,40 +663,46 @@
 
   <script>
     $('#checkout').on('click', function() {
-      console.log('aaa');
       var data_label_chekcout = $('#data_label_chekcout');
+      var nama_pelanggan = $('#nama_pelanggan');
       var total_checkout = $('#total_checkout');
       var total_checkout_terbilang = $('#total_checkout_terbilang');
       var checkout_grand_total = $('#checkout_grand_total');
       var checkout_grand_total_terbilang = $('#checkout_grand_total_terbilang');
       var chekcout_discount = $('#chekcout_discount');
-      if ($('#total_keranjang').text() !== "Rp. 0") {
-
-        data_label_chekcout.text('Checkout Nomor Order : ' + $('#no_order').text())
-        // untuk grand total
-        var total = $('#total_keranjang').text().replace('Rp.', '');
-        total = total.split(".").join("");
-        total = total.split("-").join("");
-        var diskon = chekcout_discount.text().replace('Rp.', '');
-        diskon = diskon.split(".").join("");
-        diskon = diskon.split("-").join("");
-        grand_total = parseInt(total) - parseInt(diskon);
-
-        console.log(total);
-        console.log(diskon);
-
-        console.log(grand_total);
-
-        total_checkout.text($('#total_keranjang').text() + ",-");
-        total_checkout_terbilang.text("( " + $('#terbilang_keranjang').text() + " )");
-        checkout_grand_total.text(formatRupiah(grand_total.toString(), 'Rp.'));
-        checkout_grand_total_terbilang.text(terbilang(grand_total.toString()));
-        $('#checkout_modal').modal('show');
+      if (nama_pelanggan.val() !== "") {
+        if ($('#total_keranjang').text() !== "Rp. 0") {
+          data_label_chekcout.text('Checkout Nomor Order : ' + $('#no_order').text())
+          // untuk grand total
+          var total = $('#total_keranjang').text().replace('Rp.', '');
+          total = total.split(".").join("");
+          total = total.split("-").join("");
+          var diskon = chekcout_discount.text().replace('Rp.', '');
+          diskon = diskon.split(".").join("");
+          diskon = diskon.split("-").join("");
+          grand_total = parseInt(total) - parseInt(diskon);
+          total_checkout.text($('#total_keranjang').text() + ",-");
+          total_checkout_terbilang.text("( " + $('#terbilang_keranjang').text() + " )");
+          checkout_grand_total.text(formatRupiah(grand_total.toString(), 'Rp.'));
+          checkout_grand_total_terbilang.text(terbilang(grand_total.toString()));
+          $('#checkout_modal').modal('show');
+        } else {
+          warning_keranjang_kosong();
+        }
       } else {
-
-        warning_keranjang_kosong();
+        warning_pelanggan_kosong();
       }
+
     });
+
+    function warning_pelanggan_kosong() {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Data Pelanggan Masih Kosong!',
+        // footer: '<a href>Why do I have this issue?</a>'
+      })
+    }
 
     function warning_keranjang_kosong() {
       Swal.fire({
@@ -669,6 +710,34 @@
         title: 'Oops...',
         text: 'Keranjang Belanjaan Masih Kosong!',
         // footer: '<a href>Why do I have this issue?</a>'
+      })
+    }
+  </script>
+
+  <!-- script simpan dan bayar chekcout -->
+
+  <script>
+    $('#simpan_checkout').on('click', function() {
+      console.log('sss');
+      var no_order = $('#no_order').text();
+      simpan_order(no_order);
+      $('#checkout_modal').modal('hide');
+    });
+
+    function simpan_order(no_order) {
+      $.ajax({
+        url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/simpan_order/'); ?>",
+        type: "post",
+        data: {
+          no_order: no_order,
+          id_pelanggan: '0',
+          status: 0,
+        },
+        cache: false,
+        async: false,
+        success: function(data) {
+          alert('suksess');
+        }
       })
     }
   </script>

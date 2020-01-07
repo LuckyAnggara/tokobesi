@@ -214,7 +214,7 @@
         function warning_edit_umum(kode_barang) {
             swal.fire({
                 title: 'Apa anda yakin akan mengubah data ini?',
-                text: "Semua Data Persediaan dengan kode " + kode_barang + " juga akan terubah",
+                text: "Semua Data Barang dengan kode " + kode_barang + " juga akan terubah",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#4fa7f3',
@@ -259,7 +259,7 @@
         function warning_edit_harga(kode_barang) {
             swal.fire({
                 title: 'Apa anda yakin akan mengubah data ini?',
-                text: "Semua Data Persediaan dengan kode " + kode_barang + " juga akan terubah",
+                text: "Semua Data Barang dengan kode " + kode_barang + " juga akan terubah",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#4fa7f3',
