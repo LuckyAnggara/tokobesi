@@ -6,7 +6,7 @@ class Model_Penjualan_Barang extends CI_Model
     function __construct()
     {
         parent::__construct();
-        $this->load->helper(array('form', 'url'));
+        $this->load->helper(array('form', 'url','string'));
     }
 
     function get_data_by_id($id_pelanggan)
@@ -160,14 +160,46 @@ class Model_Penjualan_Barang extends CI_Model
 
     function simpan_order($post)
     {
-        
+        if($post['id_pelanggan'] == ""){
+            $id = $this->_createPelangganDummy($post);
+        }else{
+            $id = $post['id_pelanggan'];
+        }
         $data = array(
             'no_order' => $post['no_order'],
-            'id_pelanggan' => '',
+            'id_pelanggan' => $id,
             'status' => 0 // belum di proses masih di keranjang unpaid.
-        );
-
-        $this->db->insert('tabel_daftar_belanja', $data);
+        );    
+        
+        $cek = $this->_cekNoOrderTabel($post['no_order']);
+        if($cek < 1){
+            $this->db->insert('tabel_daftar_belanja', $data);
+        }
+        $this->db->query('DELETE From tabel_keranjang_belanja Where no_order = '.$post['no_order']);
+      
         $this->db->query('INSERT INTO `tabel_keranjang_belanja`(`no_order`, `kode_barang`, `jumlah_pembelian`, `harga_total`) SELECT `no_order`, `kode_barang`, `jumlah_pembelian`, `harga_total` FROM tabel_keranjang_temp WHERE no_order = '. $post['no_order'].'');
+    }
+
+    // cek nomor order apa udhh terddaftar di tabel, in case 2x klik simpan
+    private function _cekNoOrderTabel($no_order){
+        $this->db->select('*');
+        $this->db->from('tabel_daftar_belanja'); 
+        $this->db->where('no_order', $no_order);
+        return $this->db->get()->num_rows();
+    }
+
+
+    private function _createPelangganDummy($post)
+    {
+        $id = random_string('alnum', 16);
+        $data = array(
+            'id_pelanggan' => $id,
+            'nama_pelanggan' => $post['nama_pelanggan'],
+            'alamat' => $post['alamat'],
+            'nomor_telepon' => $post['nomor_telepon'],
+            'status' => 1 // dummy id.
+        );
+        $this->db->insert('tabel_pelanggan', $data);
+        return $id;
     }
 }

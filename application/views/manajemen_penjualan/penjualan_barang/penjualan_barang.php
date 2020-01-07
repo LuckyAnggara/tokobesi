@@ -170,6 +170,23 @@
                         <h4 id="chekcout_discount">Rp. 0,-</h4>
                     </div>
                 </div>
+                <div  id="div_checkout_pajak"class="form-group row">
+                    <label class="col-5 col-form-label m-t-5">Pajak <span>(PPN 10%)</span></label>
+                    <div class="col-7">
+                        <h4 id="checkout_pajak">Rp. 0,-</h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group row">
+
+                        <label class="col-5 col-form-label m-t-5">Ongkos Kirim</label>
+                        <div class="col-7">
+                        <input id="ongkir" autocomplete="off" name="promo_code" type="text" class="form-control" val="Rp. 0,-">
+                        <small id="id_pelanggan_help" class="form-text text-muted">Input Ongkos Kirim, Jika Ada</small>
+                        </div>
+                        
+                    </div>
+                    <hr>
                 <div class="form-group row">
                     <label class="col-5 col-form-label m-t-5">Grand Total</label>
                     <div class="col-7">
@@ -178,6 +195,12 @@
                     </div>
                 </div>
             </div>
+            <!-- dummy input -->
+            <small hidden id="total_checkout_dummy" class="form-text text-muted"></small>
+            <small hidden id="chekcout_discount_dummy" class="form-text text-muted"></small>
+            <small hidden id="checkout_pajak_dummy" class="form-text text-muted"></small>
+            <small hidden id="ongkir_dummy" class="form-text text-muted"></small>
+            <small hidden id="grand_total_dummy" class="form-text text-muted"></small>
             <div class="modal-footer">
                 <button id="batal_checkout" name="batal_checkout" type="button" data-dismiss="modal" class="btn btn-default waves-effect">Batal</button>
                 <button type="submit" id="bayar_checkout" name="bayar_checkout" class="btn btn-primary waves-effect waves-light">Bayar</button>

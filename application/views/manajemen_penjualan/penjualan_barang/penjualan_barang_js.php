@@ -46,31 +46,32 @@
             var results = [];
             for (var i in data.data) {
               results.push({
-                "id": data.data[i].kode_barang + ' -  ' + data.data[i].nama_barang + ' -  ' + data.data[i].satuan + ' -  ' + data.data[i].jumlah_persediaan,
-                "text": data.data[i].kode_barang + ' -  ' + data.data[i].nama_barang
+                "id":  data.data[i].tipe_barang + '- ' + data.data[i].kode_barang + '-' + data.data[i].nama_barang + '-' + data.data[i].nama_satuan + '-' + data.data[i].jumlah_persediaan + '-' + data.data[i].jumlah_keranjang + '-' + data.data[i].status_jual,
+                "text": data.data[i].kode_barang + '  - ' + data.data[i].nama_barang
               });
             };
             return {
               results: results
             };
           },
-
-          cache: true
         },
         placeholder: "Pencarian Barang, menggunakan Nama Barang atau Kode Barang .."
-      }).show().on('select2:select', function(evt) {
+      }).on('select2:select', function(evt) {
         var data = $("#select_nama_barang option:selected").val();
         str = data.split("-");
-        var kode_barang = str[0];
-        var nama_barang = str[1];
-        var satuan = str[2];
-        var jumlah_persediaan = str[3];
-        if (jumlah_persediaan == 0) {
-          console.log(jumlah_persediaan);
-          persediaan_habis(nama_barang, satuan, jumlah_persediaan);
-        } else {
-          quantityalert(kode_barang, satuan, jumlah_persediaan, jumlah_keranjang);
-        }
+        var tipe_barang = str[0]
+        var kode_barang = str[1];
+        var nama_barang = str[2];
+        var nama_satuan = str[3];
+        var jumlah_persediaan = str[4];
+        var jumlah_keranjang = str[5];
+        var status_jual = str[6];
+
+        console.log(data);
+
+
+        choose_barang(tipe_barang, kode_barang, nama_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang, status_jual);
+
       });
       $('#cari_barang').hide();
       $("#result_page").empty();
@@ -84,6 +85,17 @@
     });
 
     // script formatRupiah
+
+          
+    function normalrupiah(angka) {
+
+        var tanparp = angka.replace(/[^0-9]+/g, "");
+        var tanparp = tanparp.replace("Rp", "");
+        var tanparp = tanparp.replace(",-", "");
+        var tanpatitik = tanparp.split(".").join("");
+        return tanpatitik;
+    }
+
     function formatRupiah(angka, prefix) {
       var number_string = angka.replace(/[^,\d]/g, '').toString(),
         split = number_string.split(','),
@@ -336,12 +348,8 @@
       }
     }
 
-    // "choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].nama_barang + '\',\'' + data.data[i].satuan + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].jumlah_keranjang + '\')"
-
 
     function choose_barang(tipe_barang, kode_barang, nama_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang, status_jual) {
-      console.log(tipe_barang);
-      console.log(status_jual);
       if (status_jual == 0) {
         status_jual_alert(nama_barang, status_jual);
       } else {
@@ -380,8 +388,8 @@
             var results = [];
             for (var i in data.data) {
               results.push({
-                "id": data.data[i].kode_barang + ' -  ' + data.data[i].nama_barang + ' -  ' + data.data[i].satuan + ' -  ' + data.data[i].jumlah_persediaan + ' -  ' + data.data[i].jumlah_keranjang,
-                "text": data.data[i].kode_barang + ' -  ' + data.data[i].nama_barang
+                "id":  data.data[i].tipe_barang + '-' + data.data[i].kode_barang + '-' + data.data[i].nama_barang + '-' + data.data[i].nama_satuan + '-' + data.data[i].jumlah_persediaan + '-' + data.data[i].jumlah_keranjang + '-' + data.data[i].status_jual,
+                "text": data.data[i].kode_barang + ' - ' + data.data[i].nama_barang
               });
             };
             return {
@@ -393,16 +401,23 @@
       }).on('select2:select', function(evt) {
         var data = $("#select_nama_barang option:selected").val();
         str = data.split("-");
-        var kode_barang = str[0];
-        var nama_barang = str[1];
-        var satuan = str[2];
-        var jumlah_persediaan = str[3];
-        var jumlah_keranjang = str[4];
-        if (jumlah_persediaan == 0) {
-          persediaan_habis(nama_barang, satuan, jumlah_persediaan);
-        } else {
-          quantityalert(kode_barang, satuan, jumlah_persediaan, jumlah_keranjang);
-        }
+        var tipe_barang = str[0]
+        var kode_barang = str[1];
+        var nama_barang = str[2];
+        var nama_satuan = str[3];
+        var jumlah_persediaan = str[4];
+        var jumlah_keranjang = str[5];
+        var status_jual = str[6];
+
+        console.log(data);
+
+
+        choose_barang(tipe_barang, kode_barang, nama_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang, status_jual);
+        // if (jumlah_persediaan == 0) {
+        //   persediaan_habis(nama_barang, satuan, jumlah_persediaan);
+        // } else {
+        //   quantityalert(kode_barang, satuan, jumlah_persediaan, jumlah_keranjang);
+        // }
 
       });
     });
@@ -427,9 +442,9 @@
         },
         cache: false,
         async: false,
-        async: false,
         success: function(data) {
           $('#datatable-keranjang-penjualan').DataTable().ajax.reload();
+          console.log('hmm');
           total_harga_keranjang();
         }
       })
@@ -670,6 +685,10 @@
       var checkout_grand_total = $('#checkout_grand_total');
       var checkout_grand_total_terbilang = $('#checkout_grand_total_terbilang');
       var chekcout_discount = $('#chekcout_discount');
+      var checkout_pajak = $('#chekcout_pajak');
+
+      var ongkir = $('#ongkir');
+      
       if (nama_pelanggan.val() !== "") {
         if ($('#total_keranjang').text() !== "Rp. 0") {
           data_label_chekcout.text('Checkout Nomor Order : ' + $('#no_order').text())
@@ -693,7 +712,27 @@
         warning_pelanggan_kosong();
       }
 
+      // var dummy angka sebenarnya
+
+      var total_checkout_dummy = normalrupiah(total_checkout.text());
+      var diskon_checkout_dummy = normalrupiah(chekcout_discount.text());
+      var pajak_checkout_dummy = normalrupiah(checkout_pajak.text());
+      var ongkir_dummy = normalrupiah(ongkir.val());
+
+      console.log(total_checkout_dummy + ',' + diskon_checkout_dummy + ',' + pajak_checkout_dummy + ',' + ongkir_dummy);
+
+
+
     });
+
+    $('#ongkir').on('keyup', function(){
+      // var number_string = $('#ongkir').val().replace(/[^,\d]/g, '').toString();
+      // return number_string;
+      var grand_total_dummy = normalrupiah($('#checkout_grand_total').text());
+      var totalSetelahOngkir = parseInt(grand_total_dummy) - parseInt($('#ongkir').val());
+      $('#checkout_grand_total').text(formatRupiah(totalSetelahOngkir.toString(), "Rp"));
+      $('#checkout_grand_total_terbilang').text(terbilang(totalSetelahOngkir.toString()))
+    })
 
     function warning_pelanggan_kosong() {
       Swal.fire({
@@ -720,17 +759,36 @@
     $('#simpan_checkout').on('click', function() {
       console.log('sss');
       var no_order = $('#no_order').text();
-      simpan_order(no_order);
-      $('#checkout_modal').modal('hide');
+      var nama_pelanggan = $('#nama_pelanggan').val();
+      var id_pelanggan = $('#nama_pelanggan').val()
+      var alamat = $('#alamat').val()
+      var nomor_telepon = $('#nomor_telepon').val()
+      var isDisabled = $('#id_pelanggan').is(':disabled');
+      if(nama_pelanggan == ""){
+        warning_pelanggan_kosong();
+      }else{
+        if(isDisabled == false){
+        simpan_order(no_order,'',nama_pelanggan,alamat,nomor_telepon);
+        }else{
+        simpan_order(no_order,id_pelanggan);
+      }
+      }
+    
+      
+      // simpan_order(no_order);
+      // $('#checkout_modal').modal('hide');
     });
 
-    function simpan_order(no_order) {
+    function simpan_order(no_order,id_pelanggan,nama_pelanggan,alamat,nomor_telepon) {
       $.ajax({
         url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/simpan_order/'); ?>",
         type: "post",
         data: {
           no_order: no_order,
-          id_pelanggan: '0',
+          id_pelanggan: id_pelanggan,
+          nama_pelanggan : nama_pelanggan,
+          alamat : alamat,
+          nomor_telepon:nomor_telepon,          
           status: 0,
         },
         cache: false,
@@ -738,6 +796,7 @@
         success: function(data) {
           alert('suksess');
         }
-      })
+      
+      });
     }
   </script>
