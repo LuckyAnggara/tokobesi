@@ -202,4 +202,17 @@ class Model_Penjualan_Barang extends CI_Model
         $this->db->insert('tabel_pelanggan', $data);
         return $id;
     }
+
+    function push_total_perhitungan($post)
+    {
+        $data = array(
+            'no_order' => $post['nama_pelanggan'],
+            'total_keranjang' => $post['nama_pelanggan'],
+            'diskon' => $post['nama_pelanggan'],
+            'pajak' => $$post['nama_pelanggan'],
+            'ongkir' => $post['nama_pelanggan'],
+            'grand_total' => $post['nama_pelanggan']
+        );
+        $this->db->insert('tabel_pelanggan', $data);
+    }
 }

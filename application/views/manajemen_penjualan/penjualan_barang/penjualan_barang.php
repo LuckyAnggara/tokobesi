@@ -84,7 +84,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <h4 class="m-t-0 header-title">Keranjang Belanja</h4>
-                                <h4 id="no_order" hidden><?= $no_order; ?></h4>
+                                <h4>Nomor Order : <span id="no_order"><?= $no_order; ?></span></h4>
                             </div>
                             <div class="col-6">
                                 <button disabled type="submit" id="simpan_checkout" name="simpan_checkout" class="btn btn-success waves-effect waves-light pull-right"><i class="fa fa-check"></i> Simpan</button>
@@ -145,7 +145,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group row">
-                    <label class="col-5 col-form-label m-t-5">Total</label>
+                    <label class="col-5 col-form-label m-t-5">Total Order</label>
                     <div class="col-7">
                         <h4 id="total_checkout">Rp. 100.000.0000,-</h4>
                         <small id="total_checkout_terbilang" class="form-text text-muted">(Seratus Juta Rupiah)</small>
@@ -170,7 +170,7 @@
                         <h4 id="chekcout_discount">Rp. 0,-</h4>
                     </div>
                 </div>
-                <div  id="div_checkout_pajak"class="form-group row">
+                <div id="div_checkout_pajak" class="form-group row">
                     <label class="col-5 col-form-label m-t-5">Pajak <span>(PPN 10%)</span></label>
                     <div class="col-7">
                         <h4 id="checkout_pajak">Rp. 0,-</h4>
@@ -178,15 +178,27 @@
                 </div>
                 <hr>
                 <div class="form-group row">
-
-                        <label class="col-5 col-form-label m-t-5">Ongkos Kirim</label>
-                        <div class="col-7">
-                        <input id="ongkir" autocomplete="off" name="promo_code" type="text" class="form-control" val="Rp. 0,-">
-                        <small id="id_pelanggan_help" class="form-text text-muted">Input Ongkos Kirim, Jika Ada</small>
-                        </div>
-                        
+                    <label class="col-5 col-form-label m-t-5">Total</label>
+                    <div class="col-7">
+                        <h4 id="total_setalah_pajak">Rp. 0,-</h4>
+                        <small id="total_setelah_pajak_terbilang" class="form-text text-muted">(Seratus Juta Rupiah)</small>
                     </div>
-                    <hr>
+                </div>
+                <div class="form-group row">
+
+                    <label class="col-5 colform-label m-t-5">Ongkos Kirim</label>
+                    <div class="col-7">
+                        <div class="input-group">
+                            <input id="ongkir" autocomplete="off" name="ongkir" type="text" class="form-control">
+                            <div class="input-group-append">
+                                <button id="apply_ongkir" name="apply_ongkir" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-check"></i></button>
+                            </div>
+                        </div>
+                        <small id="id_pelanggan_help" class="form-text text-muted">Input ongkos kirim jika ada dan centang ceklist</small>
+                    </div>
+                </div>
+
+                <hr>
                 <div class="form-group row">
                     <label class="col-5 col-form-label m-t-5">Grand Total</label>
                     <div class="col-7">
@@ -225,46 +237,4 @@
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-</div>
-
-
-<!-- Modal -->
-<div id="custom-modal" class="modal-demo">
-    <button type="button" class="close" onclick="Custombox.close();">
-        <span>&times;</span><span class="sr-only">Close</span>
-    </button>
-    <h4 class="custom-modal-title" id="checkout_label">Chekcout No Order : xxxxx</h4>
-    <div class="custom-modal-text">
-        <form data-parsley-validate novalidate autocomplete="off" id="submitForm" method="post" enctype="multipart/form-data" class="form-horizontal">
-            <div class="form-group row">
-                <label class="col-6 col-form-label">Total</label>
-                <div class="col-6">
-                    <input name="total_checkout" id="total_checkout" type="text" class="form-control" readonly>
-                </div>
-            </div>
-            <div class="form-group col-12">
-                <label class="col-form-label">Promo Code</label>
-                <input name="" id="" type="text" class="form-control">
-            </div>
-            <div class="form-group row">
-                <label class="col-3 col-form-label">Promo Code</label>
-                <div class="col-9">
-                    <input name="" id="promo_code_chekout" type="text" class="form-control" placeholder="">
-                </div>
-            </div>
-            <hr>
-            <div class="form-group row">
-                <label class="col-6 col-form-label">Keterangan</label>
-                <div class="col-6">
-                    <textarea type="text" id="keterangan" name="keterangan" rows="2" class="form-control" placeholder="(optional)"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="md-close" name="button-close" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Batal</button>
-                <button type="submit" name="button-add" class="btn btn-primary waves-effect waves-light">Bayar</button>
-            </div>
-        </form>
-
-    </div>
-
 </div>
