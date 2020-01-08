@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 4.7.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 05, 2020 at 04:13 PM
--- Server version: 10.4.10-MariaDB
--- PHP Version: 7.3.12
+-- Generation Time: Jan 08, 2020 at 10:18 AM
+-- Server version: 10.1.29-MariaDB
+-- PHP Version: 7.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -32,15 +32,15 @@ USE `tob`;
 
 CREATE TABLE `master_barang` (
   `kode_barang` varchar(255) NOT NULL,
-  `tipe_barang` int(11) DEFAULT 0,
-  `jenis_barang` int(11) DEFAULT 0,
-  `merek_barang` int(11) DEFAULT 0,
+  `tipe_barang` int(11) DEFAULT '0',
+  `jenis_barang` int(11) DEFAULT '0',
+  `merek_barang` int(11) DEFAULT '0',
   `kode_supplier` varchar(128) DEFAULT NULL,
   `nama_barang` varchar(255) NOT NULL,
   `harga_pokok` double NOT NULL,
   `harga_satuan` double NOT NULL,
-  `kode_satuan` int(11) DEFAULT 0,
-  `persediaan_minimum` int(11) NOT NULL DEFAULT 0,
+  `kode_satuan` int(11) DEFAULT '0',
+  `persediaan_minimum` int(11) NOT NULL DEFAULT '0',
   `gambar` varchar(255) NOT NULL,
   `keterangan` text NOT NULL,
   `status_jual` tinyint(4) NOT NULL,
@@ -52,8 +52,10 @@ CREATE TABLE `master_barang` (
 --
 
 INSERT INTO `master_barang` (`kode_barang`, `tipe_barang`, `jenis_barang`, `merek_barang`, `kode_supplier`, `nama_barang`, `harga_pokok`, `harga_satuan`, `kode_satuan`, `persediaan_minimum`, `gambar`, `keterangan`, `status_jual`, `tanggal_input`) VALUES
-('B001', 1, 0, 0, 'EKO076', 'BESI BETON', 100000, 150000, 0, 10, 'B001.jpg', '', 1, '2020-01-05 16:10:04'),
-('S001', 1, NULL, 1, NULL, 'SPANDEK', 0, 100000, 1, 0, 'default.jpg', 'asdasdasd', 1, '2020-01-05 00:00:00');
+('B001', 1, 1, 1, 'EKO076', 'BESI BETON', 100000, 180000, 0, 10, 'B001.jpg', 'gdfgdfgdfg', 0, '2020-01-07 02:18:32'),
+('J001', 3, 0, 0, 'EKO076', 'JASA PENGIRIMAN MAKS 10 KM', 15000, 15000, 0, 0, 'J001.png', '', 1, '2020-01-07 02:30:31'),
+('S001', 1, NULL, NULL, NULL, 'SPANDEK V2', 0, 100000, 1, 0, 'default.jpg', 'asdasdasd', 1, '2020-01-05 00:00:00'),
+('S002', 1, 0, 0, 'EKO076', 'SPANDEK', 100000, 120000, 0, 10, 'S002.jpg', '', 1, '2020-01-07 07:42:46');
 
 -- --------------------------------------------------------
 
@@ -121,7 +123,9 @@ CREATE TABLE `master_persediaan` (
 --
 
 INSERT INTO `master_persediaan` (`id`, `kode_barang`, `jumlah_persediaan`, `jumlah_keranjang`, `jumlah_persediaan_sementara`, `tanggal_input`, `no_order_terakhir`) VALUES
-(9, 'B001', 0, 0, 0, '2020-01-05 09:39:46', '');
+(9, 'B001', 0, 0, 0, '2020-01-05 09:39:46', ''),
+(10, 'J001', 0, 0, 0, '2020-01-07 02:30:31', ''),
+(11, 'S002', 99, 1, 0, '2020-01-07 07:42:46', '');
 
 -- --------------------------------------------------------
 
@@ -198,31 +202,128 @@ INSERT INTO `master_tipe_barang` (`id_tipe`, `nama_tipe`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tabel_daftar_belanja`
+-- Table structure for table `notif`
 --
 
-CREATE TABLE `tabel_daftar_belanja` (
-  `no_keranjang` int(20) NOT NULL,
-  `id_pelanggan` varchar(255) NOT NULL,
-  `total_belanja` double NOT NULL,
-  `status` int(1) NOT NULL
+CREATE TABLE `notif` (
+  `id` int(11) NOT NULL,
+  `ket` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `notif`
+--
+
+INSERT INTO `notif` (`id`, `ket`) VALUES
+(22, 'blablablabla'),
+(23, 'blablablabla'),
+(24, 'blablablabla'),
+(25, 'blablablabla'),
+(26, 'blablablabla'),
+(27, 'blablablabla'),
+(28, 'blablablabla'),
+(29, 'blablablabla'),
+(30, 'blablablabla'),
+(31, 'blablablabla'),
+(32, 'blablablabla'),
+(33, 'blablablabla'),
+(34, 'blablablabla'),
+(35, 'blablablabla');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tabel_keranjang`
+-- Table structure for table `setting`
 --
 
-CREATE TABLE `tabel_keranjang` (
+CREATE TABLE `setting` (
   `id` int(11) NOT NULL,
+  `nama` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `setting`
+--
+
+INSERT INTO `setting` (`id`, `nama`, `status`) VALUES
+(1, 'PAJAK', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tabel_daftar_belanja`
+--
+
+CREATE TABLE `tabel_daftar_belanja` (
   `no_order` varchar(255) NOT NULL,
   `id_pelanggan` varchar(255) NOT NULL,
+  `no_faktur` varchar(255) NOT NULL,
+  `status` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tabel_daftar_belanja`
+--
+
+INSERT INTO `tabel_daftar_belanja` (`no_order`, `id_pelanggan`, `no_faktur`, `status`) VALUES
+('0875416329', '', '', 0),
+('3075169284', '', '', 0),
+('4561798032', '', '', 0),
+('5368720914', 'EBvRN8HfInbOQjmr', '', 0),
+('8374169052', '', '', 0),
+('9410532876', 'pJH3GtjYyxCEPcK9', '', 0),
+('9803125467', '', '', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tabel_diskon`
+--
+
+CREATE TABLE `tabel_diskon` (
+  `id` int(11) NOT NULL,
+  `kode_diskon` varchar(15) NOT NULL,
+  `potongan` int(11) NOT NULL,
+  `jumlah_diskon` int(11) NOT NULL,
+  `keterangan` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tabel_diskon`
+--
+
+INSERT INTO `tabel_diskon` (`id`, `kode_diskon`, `potongan`, `jumlah_diskon`, `keterangan`) VALUES
+(1, 'HAYU10', 10, 10, 'POTONGAN DISKON 10 Persen');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tabel_keranjang_belanja`
+--
+
+CREATE TABLE `tabel_keranjang_belanja` (
+  `id` int(11) NOT NULL,
+  `no_order` varchar(255) NOT NULL,
   `kode_barang` varchar(255) NOT NULL,
   `jumlah_pembelian` double NOT NULL,
   `harga_total` double NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tabel_keranjang_belanja`
+--
+
+INSERT INTO `tabel_keranjang_belanja` (`id`, `no_order`, `kode_barang`, `jumlah_pembelian`, `harga_total`, `timestamp`) VALUES
+(6, '0875416329', 'J001', 1000, 15000000, '2020-01-07 03:27:05'),
+(7, '3075169284', 'J001', 11, 165000, '2020-01-07 05:50:19'),
+(8, '9803125467', 'J001', 1, 15000, '2020-01-07 05:52:11'),
+(9, '4561798032', 'J001', 11, 165000, '2020-01-07 05:55:48'),
+(10, '8374169052', 'S002', 5, 600000, '2020-01-07 06:59:15'),
+(11, '5368720914', 'S002', 11, 1320000, '2020-01-08 05:58:38'),
+(12, '5368720914', 'J001', 12, 180000, '2020-01-08 05:58:38'),
+(15, '9410532876', 'S002', 11, 1320000, '2020-01-08 06:43:02');
 
 -- --------------------------------------------------------
 
@@ -233,20 +334,20 @@ CREATE TABLE `tabel_keranjang` (
 CREATE TABLE `tabel_keranjang_temp` (
   `id` int(11) NOT NULL,
   `no_order` varchar(255) NOT NULL,
-  `no_keranjang` int(20) NOT NULL,
   `id_pelanggan` varchar(255) NOT NULL,
   `kode_barang` varchar(255) NOT NULL,
   `jumlah_pembelian` double NOT NULL,
   `harga_total` double NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tabel_keranjang_temp`
 --
 
-INSERT INTO `tabel_keranjang_temp` (`id`, `no_order`, `no_keranjang`, `id_pelanggan`, `kode_barang`, `jumlah_pembelian`, `harga_total`, `timestamp`) VALUES
-(57, '0916235847', 0, '4545', 'B002 ', 50, 250000, '2020-01-03 00:38:00');
+INSERT INTO `tabel_keranjang_temp` (`id`, `no_order`, `id_pelanggan`, `kode_barang`, `jumlah_pembelian`, `harga_total`, `timestamp`) VALUES
+(57, '0916235847', '4545', 'B002 ', 50, 250000, '2020-01-03 00:38:00'),
+(93, '9852034617', '0', 'S002', 1, 120000, '2020-01-08 08:49:08');
 
 -- --------------------------------------------------------
 
@@ -258,15 +359,33 @@ CREATE TABLE `tabel_pelanggan` (
   `id_pelanggan` varchar(255) NOT NULL,
   `nama_pelanggan` varchar(255) NOT NULL,
   `alamat` text NOT NULL,
-  `nomor_telepon` varchar(255) NOT NULL
+  `nomor_telepon` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tabel_pelanggan`
 --
 
-INSERT INTO `tabel_pelanggan` (`id_pelanggan`, `nama_pelanggan`, `alamat`, `nomor_telepon`) VALUES
-('4545', 'Lucky Anggara', 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', '082116562811');
+INSERT INTO `tabel_pelanggan` (`id_pelanggan`, `nama_pelanggan`, `alamat`, `nomor_telepon`, `status`) VALUES
+('4545', 'Lucky Anggara', 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', '082116562811', 0),
+('EBvRN8HfInbOQjmr', '455', '', '', 1),
+('pJH3GtjYyxCEPcK9', 'Lucky', 'Jl Angrek 2 no 10 RT 09 RW 02 Kel. Karet Kuningan Kec. Setiabudi', '082116562811', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tabel_perhitungan_order`
+--
+
+CREATE TABLE `tabel_perhitungan_order` (
+  `no_order` varchar(255) NOT NULL,
+  `total_keranjang` double NOT NULL,
+  `diskon` double NOT NULL,
+  `pajak` double NOT NULL,
+  `ongkir` double NOT NULL,
+  `grand_total` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Indexes for dumped tables
@@ -322,16 +441,35 @@ ALTER TABLE `master_tipe_barang`
   ADD PRIMARY KEY (`id_tipe`);
 
 --
+-- Indexes for table `notif`
+--
+ALTER TABLE `notif`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `setting`
+--
+ALTER TABLE `setting`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tabel_daftar_belanja`
 --
 ALTER TABLE `tabel_daftar_belanja`
-  ADD PRIMARY KEY (`no_keranjang`);
+  ADD PRIMARY KEY (`no_order`);
 
 --
--- Indexes for table `tabel_keranjang`
+-- Indexes for table `tabel_diskon`
 --
-ALTER TABLE `tabel_keranjang`
+ALTER TABLE `tabel_diskon`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tabel_keranjang_belanja`
+--
+ALTER TABLE `tabel_keranjang_belanja`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `no_order` (`no_order`);
 
 --
 -- Indexes for table `tabel_keranjang_temp`
@@ -346,6 +484,12 @@ ALTER TABLE `tabel_pelanggan`
   ADD PRIMARY KEY (`id_pelanggan`);
 
 --
+-- Indexes for table `tabel_perhitungan_order`
+--
+ALTER TABLE `tabel_perhitungan_order`
+  ADD PRIMARY KEY (`no_order`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -353,7 +497,7 @@ ALTER TABLE `tabel_pelanggan`
 -- AUTO_INCREMENT for table `master_jenis_barang`
 --
 ALTER TABLE `master_jenis_barang`
-  MODIFY `id_jenis_barang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_jenis_barang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `master_merek_barang`
@@ -365,13 +509,13 @@ ALTER TABLE `master_merek_barang`
 -- AUTO_INCREMENT for table `master_persediaan`
 --
 ALTER TABLE `master_persediaan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `master_satuan_barang`
 --
 ALTER TABLE `master_satuan_barang`
-  MODIFY `id_satuan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_satuan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `master_tipe_barang`
@@ -380,16 +524,34 @@ ALTER TABLE `master_tipe_barang`
   MODIFY `id_tipe` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `tabel_keranjang`
+-- AUTO_INCREMENT for table `notif`
 --
-ALTER TABLE `tabel_keranjang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `notif`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- AUTO_INCREMENT for table `setting`
+--
+ALTER TABLE `setting`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `tabel_diskon`
+--
+ALTER TABLE `tabel_diskon`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `tabel_keranjang_belanja`
+--
+ALTER TABLE `tabel_keranjang_belanja`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `tabel_keranjang_temp`
 --
 ALTER TABLE `tabel_keranjang_temp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- Constraints for dumped tables
@@ -410,6 +572,12 @@ ALTER TABLE `master_barang`
 --
 ALTER TABLE `master_persediaan`
   ADD CONSTRAINT `master_persediaan_ibfk_1` FOREIGN KEY (`kode_barang`) REFERENCES `master_barang` (`kode_barang`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tabel_keranjang_belanja`
+--
+ALTER TABLE `tabel_keranjang_belanja`
+  ADD CONSTRAINT `no_order_join` FOREIGN KEY (`no_order`) REFERENCES `tabel_daftar_belanja` (`no_order`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
