@@ -18,9 +18,9 @@ class PenjualanBarang extends CI_Controller
         $no_order_dummy = random_string('numeric', 10);
         $this->session->set_userdata('no_order_dummy', $no_order_dummy);
     }
-    public function clear_keranjang_belanja($no_order)
+    public function clear_keranjang_belanja($no_order_lama)
     {
-        $this->modelPenjualan->get_data_keranjang_clear($no_order);
+        $this->modelPenjualan->get_data_keranjang_clear($no_order_lama);
     }
 
     public function cekcek()
@@ -158,5 +158,28 @@ class PenjualanBarang extends CI_Controller
     function simpan_order(){
         $post = $this->input->post();
         $this->modelPenjualan->simpan_order($post);
+    }
+
+    function push_total_perhitungan(){
+        $post = $this->input->post();
+        $this->modelPenjualan->push_total_perhitungan($post);
+    }
+
+    function get_total_perhitungan($no_order){
+        $data = $this->modelPenjualan->get_total_perhitungan($no_order);
+        $output = json_encode($data);
+        echo $output;
+    }
+
+    function get_diskon($kode_diskon){
+        $data = $this->modelPenjualan->get_diskon($kode_diskon);
+        $output = json_encode($data);
+        echo $output;
+    }
+
+    function bayar_checkout($no_order){
+        $data = $this->modelPenjualan->bayar_checkout($no_order);
+        $output = json_encode($data);
+        echo $output;
     }
 }

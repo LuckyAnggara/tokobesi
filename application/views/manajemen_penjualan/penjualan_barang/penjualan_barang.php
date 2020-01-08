@@ -157,17 +157,17 @@
                         <div class="input-group">
                             <input id="promo_code" autocomplete="off" name="promo_code" type="text" class="form-control">
                             <div class="input-group-append">
-                                <button id="promo-cari-button" name="promo-cari-button" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-search"></i></button>
+                                <button id="apply_promo" name="apply_promo" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
-                        <small id="id_pelanggan_help" class="form-text text-muted">Input Kode Promo, Jika Ada</small>
+                        <small id="promo_help" class="form-text text-muted">Input Kode Promo, Jika Ada</small>
                     </div>
                 </div>
                 <hr>
                 <div class="form-group row">
                     <label class="col-5 col-form-label m-t-5">Discount <span>(0%)</span></label>
                     <div class="col-7">
-                        <h4 id="chekcout_discount">Rp. 0,-</h4>
+                        <h4 id="checkout_discount">Rp. 0,-</h4>
                     </div>
                 </div>
                 <div id="div_checkout_pajak" class="form-group row">
@@ -180,7 +180,7 @@
                 <div class="form-group row">
                     <label class="col-5 col-form-label m-t-5">Total</label>
                     <div class="col-7">
-                        <h4 id="total_setalah_pajak">Rp. 0,-</h4>
+                        <h4 id="total_setelah_pajak">Rp. 0,-</h4>
                         <small id="total_setelah_pajak_terbilang" class="form-text text-muted">(Seratus Juta Rupiah)</small>
                     </div>
                 </div>
@@ -189,7 +189,7 @@
                     <label class="col-5 colform-label m-t-5">Ongkos Kirim</label>
                     <div class="col-7">
                         <div class="input-group">
-                            <input id="ongkir" autocomplete="off" name="ongkir" type="text" class="form-control">
+                            <input id="ongkir" autocomplete="off" name="ongkir" type="text" class="form-control" val="0">
                             <div class="input-group-append">
                                 <button id="apply_ongkir" name="apply_ongkir" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-check"></i></button>
                             </div>

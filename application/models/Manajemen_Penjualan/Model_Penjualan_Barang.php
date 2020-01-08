@@ -118,10 +118,9 @@ class Model_Penjualan_Barang extends CI_Model
 
     public function persediaan_temp_batal($input = null)
     {
+       
         if ($input !== null) {
             $post = $input;
-        } else
-            $post = $this->input->post(); {
             $this->db->select('*');
             $this->db->from('tabel_keranjang_temp');
             $this->db->where('id', $post['id']);
@@ -139,12 +138,23 @@ class Model_Penjualan_Barang extends CI_Model
 
             $this->db->where('kode_barang', $output_keranjang['kode_barang']);
             $this->db->update('master_persediaan', $data);
+        }else{
+
         }
     }
 
     public function get_data_keranjang_clear($no_order)
-    {
+    {   
+        //  cek dulu apakah sudah di save apa blm
 
+        $this->db->select('*');
+        $this->db->from('tabel_daftar_belanja'); 
+        $this->db->where('no_order', $no_order);
+        $cek = $this->db->get()->num_rows();
+
+        if($cek > 0){
+
+        }else{
         $this->db->select('*');
         $this->db->from('tabel_keranjang_temp');
         $this->db->where('no_order', $no_order);
@@ -153,9 +163,12 @@ class Model_Penjualan_Barang extends CI_Model
         foreach ($data as $value) {
             $this->persediaan_temp_batal($value);
         }
+        }
 
         $this->db->where('no_order', $no_order);
         $this->db->delete('tabel_keranjang_temp');
+
+        
     }
 
     function simpan_order($post)
@@ -168,7 +181,8 @@ class Model_Penjualan_Barang extends CI_Model
         $data = array(
             'no_order' => $post['no_order'],
             'id_pelanggan' => $id,
-            'status' => 0 // belum di proses masih di keranjang unpaid.
+            'status' => 0, // belum di proses masih di keranjang unpaid.
+            'tanggal_input' => date("Y-m-d H:i:s"),
         );    
         
         $cek = $this->_cekNoOrderTabel($post['no_order']);
@@ -205,14 +219,67 @@ class Model_Penjualan_Barang extends CI_Model
 
     function push_total_perhitungan($post)
     {
+
+        $this->db->select('*');
+        $this->db->from('tabel_perhitungan_order'); 
+        $this->db->where('no_order', $post['no_order']);
+        $cek = $this->db->get()->num_rows();
+
         $data = array(
-            'no_order' => $post['nama_pelanggan'],
-            'total_keranjang' => $post['nama_pelanggan'],
-            'diskon' => $post['nama_pelanggan'],
-            'pajak' => $$post['nama_pelanggan'],
-            'ongkir' => $post['nama_pelanggan'],
-            'grand_total' => $post['nama_pelanggan']
+            'no_order' => $post['no_order'],
+            'total_keranjang' => $post['total_keranjang'],
+            'diskon' => $post['diskon'],
+            'pajak' => $post['pajak'],
+            'ongkir' => $post['ongkir'],
+            'grand_total' => $post['grand_total']
         );
-        $this->db->insert('tabel_pelanggan', $data);
+
+        if($cek < 1){
+        $this->db->insert('tabel_perhitungan_order', $data);
+        }else{
+        $this->db->query('DELETE From tabel_perhitungan_order Where no_order = '.$post['no_order']); // delete dulu
+        $this->db->insert('tabel_perhitungan_order', $data); // lalu tambah
+        }
+    }
+
+    function get_total_perhitungan($no_order)
+    {
+       $this->db->select('*');
+       $this->db->from('tabel_perhitungan_order');
+       $this->db->where('no_order', $no_order);
+       $output = $this->db->get()->row_array();
+       return $output;
+    }
+
+    function get_diskon($kode_diskon)
+    {
+       $this->db->select('*');
+       $this->db->from('tabel_diskon');
+       $this->db->where('kode_diskon', $kode_diskon);
+       $output = $this->db->get()->row_array();
+       return $output;
+    }
+
+    function bayar_checkout($no_order)
+    {
+
+      $no_faktur =  $this->_generate_no_faktur();
+
+      $this->db->query('UPDATE tabel_daftar_belanja INNER JOIN tabel_perhitungan_order ON tabel_perhitungan_order.no_order = tabel_daftar_belanja.no_order SET tabel_daftar_belanja.total_keranjang = tabel_perhitungan_order.total_keranjang, tabel_daftar_belanja.diskon = tabel_perhitungan_order.diskon, tabel_daftar_belanja.pajak = tabel_perhitungan_order.pajak, tabel_daftar_belanja.ongkir = tabel_perhitungan_order.ongkir, tabel_daftar_belanja.grand_total = tabel_perhitungan_order.grand_total where  tabel_perhitungan_order.no_order =  '.$no_order );
+       
+      $data = [
+            'no_faktur' => $no_faktur,
+            'status' =>1
+        ];
+        $this->db->where('no_order', $no_order);
+        $this->db->update('tabel_daftar_belanja', $data);
+    }
+
+    private function _generate_no_faktur()
+    {
+        $alpha = random_string('alpha', 3);
+        $number = random_string('numeric', 7);
+
+        return strtoupper($alpha).$number;
     }
 }
