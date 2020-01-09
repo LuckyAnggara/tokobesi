@@ -9,6 +9,7 @@ class PenjualanBarang extends CI_Controller
         parent::__construct();
         $this->load->helper('string');
         $this->load->model('Manajemen_Penjualan/Model_Penjualan_Barang', 'modelPenjualan');
+        $this->load->model('Manajemen_Penjualan/Model_Invoice', 'modelInvoice');
     }
 
     public function init_setting()
@@ -182,4 +183,23 @@ class PenjualanBarang extends CI_Controller
         $output = json_encode($data);
         echo $output;
     }
+
+    function invoice($no_order)
+    {
+        $data['nama_perusahaan'] = 'PT. BERKAH BAJA MAKMUR';
+        $data['no_faktur'] = 'CRG123124';
+        $data['data_order'] = $this->modelInvoice->get_data_order($no_order);
+        $data['detail_order'] = $this->modelInvoice->get_detail_order($no_order);
+        $data['css'] = 'manajemen_penjualan/penjualan_barang/penjualan_barang_css';
+        $data['title'] = "Nomor Faktur";
+        $this->load->view('template/template_header', $data);
+        $this->load->view('template/template_menu');
+        $this->load->view('manajemen_penjualan/invoice/invoice', $data);
+        $this->load->view('template/template_right');
+        $this->load->view('template/template_js');
+        // $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang_js');
+        $this->load->view('template/template_app_js');
+    }
+
+
 }

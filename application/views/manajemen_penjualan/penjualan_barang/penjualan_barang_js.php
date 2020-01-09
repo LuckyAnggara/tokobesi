@@ -682,11 +682,11 @@
       var nama_pelanggan = $('#nama_pelanggan');
       var total_keranjang = normalrupiah($('#total_keranjang').text());
       var no_order = $('#no_order').text();
-      
+
       if (nama_pelanggan.val() !== "") {
         if ($('#total_keranjang').text() !== "Rp. 0") {
           data_label_chekcout.text('Checkout Nomor Order : ' + no_order);
-          push_total_perhitungan(no_order, total_keranjang, 0,0,0, total_keranjang);
+          push_total_perhitungan(no_order, total_keranjang, 0, 0, 0, total_keranjang);
           $('#checkout_modal').modal('show');
         } else {
           warning_keranjang_kosong();
@@ -696,8 +696,7 @@
       }
     });
 
-    function push_total_perhitungan(no_order, total_keranjang, diskon, pajak, ongkir, grand_total) 
-    {
+    function push_total_perhitungan(no_order, total_keranjang, diskon, pajak, ongkir, grand_total) {
       $.ajax({
         url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/push_total_perhitungan'); ?>",
         type: "post",
@@ -706,7 +705,7 @@
           total_keranjang: total_keranjang,
           diskon: diskon,
           pajak: pajak,
-          ongkir : ongkir,
+          ongkir: ongkir,
           grand_total: grand_total
         },
         cache: false,
@@ -718,48 +717,48 @@
 
     }
 
-    function view_modal_checkout(no_order){
-        var total_checkout = $('#total_checkout'); // text
-        var total_diskon = $('#checkout_discount'); // text
-        var total_pajak = $('#checkout_pajak'); // text
-        var total_ongkir = $('#ongkir'); // val
-        var total_setelah_pajak =$('#total_setelah_pajak'); //total setelah diskon dan pajak
-        var grand_total = $('#checkout_grand_total'); // text
-        var terbilang_total_checkout = $('#total_checkout_terbilang');
-        var terbilang_setelah_pajak = $('#total_setelah_pajak_terbilang');
-        var terbilang_grand_total = $('#checkout_grand_total_terbilang');
+    function view_modal_checkout(no_order) {
+      var total_checkout = $('#total_checkout'); // text
+      var total_diskon = $('#checkout_discount'); // text
+      var total_pajak = $('#checkout_pajak'); // text
+      var total_ongkir = $('#ongkir'); // val
+      var total_setelah_pajak = $('#total_setelah_pajak'); //total setelah diskon dan pajak
+      var grand_total = $('#checkout_grand_total'); // text
+      var terbilang_total_checkout = $('#total_checkout_terbilang');
+      var terbilang_setelah_pajak = $('#total_setelah_pajak_terbilang');
+      var terbilang_grand_total = $('#checkout_grand_total_terbilang');
 
-        $.ajax({
-          url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/get_total_perhitungan/"); ?>' + no_order,
-          type: "POST",
-          dataType: "JSON",
-          async: false,
-          success: function(data) {
-            // matematika
-            // total order - diskon
-            var total1 = parseInt(data.total_keranjang) - parseInt(data.diskon) // data total setelah diskon
-            var total2 = total1 + parseInt(data.pajak) // data total setalah di tambah pajak 10%
-            var total3 = total2 + parseInt(data.ongkir) // data grand_total setalah Pajak
-            console.log(total1);
-            console.log(total2);
-            console.log(total3);
+      $.ajax({
+        url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/get_total_perhitungan/"); ?>' + no_order,
+        type: "POST",
+        dataType: "JSON",
+        async: false,
+        success: function(data) {
+          // matematika
+          // total order - diskon
+          var total1 = parseInt(data.total_keranjang) - parseInt(data.diskon) // data total setelah diskon
+          var total2 = total1 + parseInt(data.pajak) // data total setalah di tambah pajak 10%
+          var total3 = total2 + parseInt(data.ongkir) // data grand_total setalah Pajak
+          console.log(total1);
+          console.log(total2);
+          console.log(total3);
 
 
-            total_checkout.text(formatRupiah(data.total_keranjang, 'Rp.'));
-            total_diskon.text(formatRupiah(data.diskon, 'Rp.'));
-            total_pajak.text(formatRupiah(data.pajak, 'Rp.'));
-            total_ongkir.val(formatRupiah(data.ongkir, 'Rp.'));
-            total_setelah_pajak.text(formatRupiah(total2.toString(), 'Rp.'));
-            grand_total.text(formatRupiah(total3.toString(), 'Rp.'));
+          total_checkout.text(formatRupiah(data.total_keranjang, 'Rp.'));
+          total_diskon.text(formatRupiah(data.diskon, 'Rp.'));
+          total_pajak.text(formatRupiah(data.pajak, 'Rp.'));
+          total_ongkir.val(formatRupiah(data.ongkir, 'Rp.'));
+          total_setelah_pajak.text(formatRupiah(total2.toString(), 'Rp.'));
+          grand_total.text(formatRupiah(total3.toString(), 'Rp.'));
 
-            // terbilang
+          // terbilang
 
-            terbilang_total_checkout.text(terbilang(data.total_keranjang));
-            terbilang_setelah_pajak.text(terbilang(total2.toString()));
-            terbilang_grand_total.text(terbilang(total3.toString()));
+          terbilang_total_checkout.text(terbilang(data.total_keranjang));
+          terbilang_setelah_pajak.text(terbilang(total2.toString()));
+          terbilang_grand_total.text(terbilang(total3.toString()));
 
-          }
-        });
+        }
+      });
     }
 
     var ongkir_satuan = document.getElementById('ongkir');
@@ -772,17 +771,17 @@
       var ongkir = document.getElementById('ongkir');
       if (ongkir.value !== "") {
 
-      // push ker tabel total perhitungan untuk ditambah kan ongkir
+        // push ker tabel total perhitungan untuk ditambah kan ongkir
 
-      var no_order = $('#no_order').text();
-      var total_diskon = normalrupiah($('#checkout_discount').text());
-      var total_ongkir = normalrupiah($('#ongkir').val());
-      var total_keranjang = normalrupiah($('#total_keranjang').text());
-      var grand_total = parseInt(total_keranjang) - parseInt(total_ongkir);
-        
-      
-      push_total_perhitungan(no_order, total_keranjang, total_diskon,0,total_ongkir, grand_total);
-      view_modal_checkout(no_order);
+        var no_order = $('#no_order').text();
+        var total_diskon = normalrupiah($('#checkout_discount').text());
+        var total_ongkir = normalrupiah($('#ongkir').val());
+        var total_keranjang = normalrupiah($('#total_keranjang').text());
+        var grand_total = parseInt(total_keranjang) + parseInt(total_ongkir);
+
+
+        push_total_perhitungan(no_order, total_keranjang, total_diskon, 0, total_ongkir, grand_total);
+        view_modal_checkout(no_order);
 
       } else {
         Swal.fire({
@@ -810,55 +809,55 @@
       })
     }
 
-    $('#apply_promo').on('click', function(){
-    var kode_diskon = $('#promo_code').val();
+    $('#apply_promo').on('click', function() {
+      var kode_diskon = $('#promo_code').val();
 
-    if(kode_diskon !== "" ){
-      $.ajax({
+      if (kode_diskon !== "") {
+        $.ajax({
           url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/get_diskon/"); ?>' + kode_diskon,
           type: "POST",
           dataType: "JSON",
           async: false,
           success: function(data) {
-            if(data == null){
+            if (data == null) {
 
               Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Kode Promo / Diskon Salah!!!',
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Kode Promo / Diskon Salah!!!',
               });
 
-            var no_order = $('#no_order').text();
-            var total_diskon = normalrupiah($('#checkout_discount').text());
-            var total_ongkir = normalrupiah($('#ongkir').val());
-            var total_keranjang = normalrupiah($('#total_keranjang').text());
-            var grand_total = parseInt(total_keranjang) - parseInt(total_ongkir);
-              
-            push_total_perhitungan(no_order, total_keranjang, 0,0,total_ongkir, grand_total);
-            view_modal_checkout(no_order);
+              var no_order = $('#no_order').text();
+              var total_diskon = normalrupiah($('#checkout_discount').text());
+              var total_ongkir = normalrupiah($('#ongkir').val());
+              var total_keranjang = normalrupiah($('#total_keranjang').text());
+              var grand_total = parseInt(total_keranjang) - parseInt(total_ongkir);
+
+              push_total_perhitungan(no_order, total_keranjang, 0, 0, total_ongkir, grand_total);
+              view_modal_checkout(no_order);
 
 
-            }else{
-            var no_order = $('#no_order').text();
-            var total_ongkir = normalrupiah($('#ongkir').val());
-            var total_keranjang = normalrupiah($('#total_keranjang').text());
-            var grand_total = parseInt(total_keranjang) - parseInt(total_ongkir);
-            var total_diskon = parseInt(total_keranjang) * (parseInt(data.potongan)/100)
-              
-            push_total_perhitungan(no_order, total_keranjang, total_diskon,0,total_ongkir, grand_total);
-            view_modal_checkout(no_order);
+            } else {
+              var no_order = $('#no_order').text();
+              var total_ongkir = normalrupiah($('#ongkir').val());
+              var total_keranjang = normalrupiah($('#total_keranjang').text());
+              var grand_total = parseInt(total_keranjang) - parseInt(total_ongkir);
+              var total_diskon = parseInt(total_keranjang) * (parseInt(data.potongan) / 100)
+
+              push_total_perhitungan(no_order, total_keranjang, total_diskon, 0, total_ongkir, grand_total);
+              view_modal_checkout(no_order);
             }
-            
-          }
-      })
 
-    }else{
-      Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'Kode Promo Belum di Isi!!!',
-      });
-    }
+          }
+        })
+
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Kode Promo Belum di Isi!!!',
+        });
+      }
 
     })
   </script>
@@ -909,24 +908,24 @@
   <!-- bayar_checkout -->
 
   <script>
-  $('#bayar_checkout').on('click',function () {
-    var no_order = $('#no_order').text();
-    var nama_pelanggan = $('#nama_pelanggan').val();
-    var id_pelanggan = $('#id_pelanggan').val()
-    var alamat = $('#alamat').val()
-    var nomor_telepon = $('#nomor_telepon').val()
-    var isDisabled = $('#id_pelanggan').is(':disabled');
-    if (nama_pelanggan == "") {
+    $('#bayar_checkout').on('click', function() {
+      var no_order = $('#no_order').text();
+      var nama_pelanggan = $('#nama_pelanggan').val();
+      var id_pelanggan = $('#id_pelanggan').val()
+      var alamat = $('#alamat').val()
+      var nomor_telepon = $('#nomor_telepon').val()
+      var isDisabled = $('#id_pelanggan').is(':disabled');
+      if (nama_pelanggan == "") {
         warning_pelanggan_kosong();
-    } else {
-      if (isDisabled == false) {
-        simpan_order(no_order, '', nama_pelanggan, alamat, nomor_telepon);
       } else {
-        simpan_order(no_order, id_pelanggan);
+        if (isDisabled == false) {
+          simpan_order(no_order, '', nama_pelanggan, alamat, nomor_telepon);
+        } else {
+          simpan_order(no_order, id_pelanggan);
+        }
       }
-    }
 
-    $.ajax({
+      $.ajax({
         url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/bayar_checkout/'); ?>" + no_order,
         type: "post",
         data: {
@@ -935,9 +934,9 @@
         cache: false,
         async: false,
         success: function(data) {
-          alert('suksess');
+          
+          window.location.replace("<?= base_url('Manajemen_Penjualan/PenjualanBarang/Invoice/');?>" + no_order)
         }
-
       });
-  })
+    })
   </script>
