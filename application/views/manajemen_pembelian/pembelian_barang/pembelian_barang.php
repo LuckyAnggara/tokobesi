@@ -3,14 +3,40 @@
     <div class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-6">
                     <div class="card-box">
                         <div class="form-group row">
-                            <h4 class="m-t-0 header-title">Data Pelanggan</h4>
+                            <h4 class="m-t-0 header-title">Data Pembelian</h4>
                         </div>
                         <hr>
                         <div class="form-group row">
-                            <label class="col-sm-4 col-sm-form-label">ID Pelanggan</label>
+                            <label class="col-sm-4 col-sm-form-label">Nomor Transaksi</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="id_pelanggan" autocomplete="off" name="id_pelanggan" type="text" class="form-control" placeholder="Isi ID Pelanggan, jika ada">
+                                    <div class="input-group-append" id="div_cari-button">
+                                        <button id="cari-button" name="cari-button" onClick="cari_pelanggan();" class=" btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-check"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-sm-form-label">Tanggal Transaksi</label>
+                            <div class="col-sm-8">
+                                <input id="nama_pelanggan" name="nama_pelanggan" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card-box">
+                        <div class="form-group row">
+                            <h4 class="m-t-0 header-title">Data Supplier</h4>
+                        </div>
+                        <hr>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-sm-form-label">ID Supplier</label>
                             <div class="col-sm-8">
                                 <div class="input-group">
                                     <input id="id_pelanggan" autocomplete="off" name="id_pelanggan" type="text" class="form-control" placeholder="Isi ID Pelanggan, jika ada">
@@ -18,34 +44,18 @@
                                         <button id="cari-button" name="cari-button" onClick="cari_pelanggan();" class=" btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-search"></i></button>
                                     </div>
                                 </div>
-                                <small id="id_pelanggan_help" class="form-text text-muted">Kosong kan jika tidak ada ID Pelanggan</small>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-4 col-sm-form-label">Nama Pelanggan</label>
+                            <label class="col-sm-4 col-sm-form-label">Nama Supplier</label>
                             <div class="col-sm-8">
                                 <input id="nama_pelanggan" name="nama_pelanggan" type="text" class="form-control">
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-sm-form-label">Alamat</label>
-                            <div class="col-sm-8">
-                                <textarea id="alamat" name="alamat" type="text" class="form-control" placeholder="Optional"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-sm-form-label">No Telepon</label>
-                            <div class="col-sm-8">
-                                <input placeholder="Optional" id="nomor_telepon" name="nomor_telepon" type="text" class="form-control">
-                            </div>
-                        </div>
-                        <small id="data_pelanggan_help" class="form-text text-muted">Silahkan gunakan fitur Cari, jika Pelanggan memiliki ID.</small>
-
-
                         <div class="clearfix"></div>
                     </div>
                 </div>
-                <div class="col-sm-8">
+                <div class="col-12">
                     <div class="card-box">
                         <div class="form-group row">
 
@@ -84,7 +94,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <h4 class="m-t-0 header-title">Keranjang Belanja</h4>
-                                <h4>Nomor Order : <span id="no_order"><?= $no_order; ?></span></h4>
+
                             </div>
                             <div class="col-6">
                                 <button disabled type="submit" id="simpan_checkout" name="simpan_checkout" class="btn btn-success waves-effect waves-light pull-right"><i class="fa fa-check"></i> Simpan</button>

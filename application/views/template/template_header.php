@@ -74,12 +74,12 @@
                                 <!-- End Notification bar -->
                             </li>
 
-                            <li class="hide-phone">
+                            <!-- <li class="hide-phone">
                                 <form class="app-search">
                                     <input type="text" placeholder="Search..." class="form-control">
                                     <button type="submit"><i class="fa fa-search"></i></button>
                                 </form>
-                            </li>
+                            </li> -->
 
                         </ul>
                     </nav>

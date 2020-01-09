@@ -18,6 +18,9 @@
   <script src="<?= base_url('assets/'); ?>plugins/custombox/dist/custombox.min.js"></script>
   <script src="<?= base_url('assets/'); ?>plugins/custombox/dist/legacy.min.js"></script>
 
+  <!-- Toastr js -->
+  <script src="<?= base_url('assets/'); ?>plugins/toastr/toastr.min.js"></script>
+
 
   <!-- script sendiri   // script Radio Fitur Simple dan Adnvace
   // init hide advance search -->
@@ -727,6 +730,7 @@
       var terbilang_total_checkout = $('#total_checkout_terbilang');
       var terbilang_setelah_pajak = $('#total_setelah_pajak_terbilang');
       var terbilang_grand_total = $('#checkout_grand_total_terbilang');
+      var diskon_text = $('#diskon_text');
 
       $.ajax({
         url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/get_total_perhitungan/"); ?>' + no_order,
@@ -739,9 +743,8 @@
           var total1 = parseInt(data.total_keranjang) - parseInt(data.diskon) // data total setelah diskon
           var total2 = total1 + parseInt(data.pajak) // data total setalah di tambah pajak 10%
           var total3 = total2 + parseInt(data.ongkir) // data grand_total setalah Pajak
-          console.log(total1);
-          console.log(total2);
-          console.log(total3);
+
+          var diskon = (parseInt(data.diskon)/parseInt(data.total_keranjang))*100;
 
 
           total_checkout.text(formatRupiah(data.total_keranjang, 'Rp.'));
@@ -750,6 +753,7 @@
           total_ongkir.val(formatRupiah(data.ongkir, 'Rp.'));
           total_setelah_pajak.text(formatRupiah(total2.toString(), 'Rp.'));
           grand_total.text(formatRupiah(total3.toString(), 'Rp.'));
+          diskon_text.text(diskon);
 
           // terbilang
 
@@ -777,11 +781,11 @@
         var total_diskon = normalrupiah($('#checkout_discount').text());
         var total_ongkir = normalrupiah($('#ongkir').val());
         var total_keranjang = normalrupiah($('#total_keranjang').text());
-        var grand_total = parseInt(total_keranjang) + parseInt(total_ongkir);
+        var grand_total = parseInt(total_keranjang)  -  parseInt(total_diskon);
+        grand_total = grand_total + parseInt(total_ongkir);
 
 
         push_total_perhitungan(no_order, total_keranjang, total_diskon, 0, total_ongkir, grand_total);
-        view_modal_checkout(no_order);
 
       } else {
         Swal.fire({
@@ -831,21 +835,22 @@
               var total_diskon = normalrupiah($('#checkout_discount').text());
               var total_ongkir = normalrupiah($('#ongkir').val());
               var total_keranjang = normalrupiah($('#total_keranjang').text());
-              var grand_total = parseInt(total_keranjang) - parseInt(total_ongkir);
+              var grand_total = parseInt(total_keranjang)  -  parseInt(total_diskon);
+                  grand_total = grand_total + parseInt(total_ongkir);
 
               push_total_perhitungan(no_order, total_keranjang, 0, 0, total_ongkir, grand_total);
-              view_modal_checkout(no_order);
 
 
             } else {
               var no_order = $('#no_order').text();
               var total_ongkir = normalrupiah($('#ongkir').val());
               var total_keranjang = normalrupiah($('#total_keranjang').text());
-              var grand_total = parseInt(total_keranjang) - parseInt(total_ongkir);
+              var grand_total = parseInt(total_keranjang) + parseInt(total_ongkir);
               var total_diskon = parseInt(total_keranjang) * (parseInt(data.potongan) / 100)
+              var grand_total = parseInt(total_keranjang)  -  parseInt(total_diskon);
+                  grand_total = grand_total + parseInt(total_ongkir);
 
               push_total_perhitungan(no_order, total_keranjang, total_diskon, 0, total_ongkir, grand_total);
-              view_modal_checkout(no_order);
             }
 
           }
@@ -857,6 +862,12 @@
           title: 'Oops...',
           text: 'Kode Promo Belum di Isi!!!',
         });
+        var no_order = $('#no_order').text();
+        var total_ongkir = normalrupiah($('#ongkir').val());
+        var total_keranjang = normalrupiah($('#total_keranjang').text());
+        var grand_total = parseInt(total_keranjang) + parseInt(total_ongkir);
+
+        push_total_perhitungan(no_order, total_keranjang, 0, 0, total_ongkir, grand_total);
       }
 
     })
@@ -878,7 +889,7 @@
         if (isDisabled == false) {
           simpan_order(no_order, '', nama_pelanggan, alamat, nomor_telepon);
         } else {
-          simpan_order(no_order, id_pelanggan);
+          simpan_order(no_order, id_pelanggan);        
         }
       }
     });
@@ -898,7 +909,25 @@
         cache: false,
         async: false,
         success: function(data) {
-          alert('suksess');
+          // toastr.success('Data Belanja Telah tersimpan #' + no_order);
+          Command: toastr["success"]('Nomor Order Telah tersimpan #' + no_order)
+          toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+          }
         }
 
       });
@@ -934,8 +963,22 @@
         cache: false,
         async: false,
         success: function(data) {
+
+         Swal.fire({
+          title: 'Paid!!',
+          text: "Order " + no_order + " telah di bayar!",
+          icon: 'success',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Cetak Faktur ?'
+        }).then((result) => {
+          if (result.value) {
+             window.location.replace("<?= base_url('Manajemen_Penjualan/PenjualanBarang/Invoice/');?>" + no_order)
+          }
+        })
           
-          window.location.replace("<?= base_url('Manajemen_Penjualan/PenjualanBarang/Invoice/');?>" + no_order)
+         
         }
       });
     })

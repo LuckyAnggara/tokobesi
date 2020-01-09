@@ -14,14 +14,14 @@ class Model_Master_Satuan extends CI_Model
     {
         if ($string == null) {
             $this->db->select('*');
-            $this->db->from('master_satuan');
+            $this->db->from('master_satuan_barang');
             $output = $this->db->get();
 
             return $output;
         } else {
             $this->db->select('*');
-            $this->db->from('master_satuan');
-            $this->db->like("master_satuan.kode_satuan", $string);
+            $this->db->from('master_satuan_barang');
+            $this->db->like("master_satuan_barang.kode_satuan", $string);
             $this->db->or_like("nama_satuan", $string);
             $output = $this->db->get();
             return $output;
@@ -31,7 +31,7 @@ class Model_Master_Satuan extends CI_Model
     function Cek_Kode_Satuan_Input($string)
     {
         $this->db->select('*');
-        $this->db->from('master_satuan');
+        $this->db->from('master_satuan_barang');
         $this->db->where('kode_satuan', $string);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
@@ -44,7 +44,7 @@ class Model_Master_Satuan extends CI_Model
     function view_edit_data($id_satuan)
     {
         $this->db->select('*');
-        $this->db->from('master_satuan');
+        $this->db->from('master_satuan_barang');
         $this->db->where('id_satuan', $id_satuan);
         $query = $this->db->get()->row_array();
         return $query;
@@ -60,7 +60,7 @@ class Model_Master_Satuan extends CI_Model
             'tanggal_input' => date("Y-m-d H:i:s"),
         ];
         $this->db->where('id_satuan', $id_satuan);
-        $this->db->update('master_satuan', $data);
+        $this->db->update('master_satuan_barang', $data);
     }
 
     function tambah_data()
@@ -73,13 +73,13 @@ class Model_Master_Satuan extends CI_Model
             'keterangan' => $post['keterangan'],
             'tanggal_input' => date("Y-m-d H:i:s"),
         ];
-        $this->db->insert('master_satuan', $data);
+        $this->db->insert('master_satuan_barang', $data);
     }
 
     function delete_data($id_satuan)
     {
         $this->db->where('id_satuan', $id_satuan);
-        $this->db->delete('master_satuan');
+        $this->db->delete('master_satuan_barang');
     }
 
     function get_kode_satuan()

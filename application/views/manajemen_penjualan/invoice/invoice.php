@@ -41,7 +41,7 @@
                                             </div>
                                             <div class="col-6">
                                                 <div class="pull-right">
-                                                    <p><strong>Tanggal Order: </strong> Jan 17, 2016</p>
+                                                    <p><strong>Tanggal Order: </strong> <?=$data_order['tanggal_input']; ?></p>
                                                     <p><strong>Status Pembayaran: </strong> <span class="label label-pink">Lunas</span></p>
                                                     <p><strong>Nomor Faktur: </strong> #<?= $data_order['no_faktur']; ?></p>
                                                 </div>
@@ -180,8 +180,8 @@
                                         <hr>
                                         <div class="d-print-none">
                                             <div class="pull-right">
-                                                <a href="javascript:window.print()" class="btn btn-inverse waves-effect waves-light"><i class="fa fa-print"></i></a>
-                                                <a href="#" class="btn btn-primary waves-effect waves-light">Submit</a>
+                                                <!-- <a href="javascript:window.print()" class="btn btn-inverse waves-effect waves-light"><i class="fa fa-print"></i></a> -->
+                                                <a href="#" class="btn btn-primary waves-effect waves-light"><i class="fa fa-print"></i> Print</a>
                                             </div>
                                             <div class="clearfix"></div>
                                         </div>

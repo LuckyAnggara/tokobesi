@@ -187,11 +187,10 @@ class PenjualanBarang extends CI_Controller
     function invoice($no_order)
     {
         $data['nama_perusahaan'] = 'PT. BERKAH BAJA MAKMUR';
-        $data['no_faktur'] = 'CRG123124';
         $data['data_order'] = $this->modelInvoice->get_data_order($no_order);
         $data['detail_order'] = $this->modelInvoice->get_detail_order($no_order);
         $data['css'] = 'manajemen_penjualan/penjualan_barang/penjualan_barang_css';
-        $data['title'] = "Nomor Faktur";
+        $data['title'] = "Cetak Faktur";
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_penjualan/invoice/invoice', $data);

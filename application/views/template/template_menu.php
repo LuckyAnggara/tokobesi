@@ -41,7 +41,7 @@
                     <a href="javascript:void(0);" class="waves-effect"><i class=" mdi mdi-cart"></i> <span> Manajemen Penjualan </span> <span class="menu-arrow"></span></a>
                     <ul class="list-unstyled">
                         <li><a href="<?= base_url('Manajemen_Penjualan/PenjualanBarang'); ?>">Penjualan Barang</a></li>
-                        <li><a href="<?= base_url('Manajemen_Barang/'); ?>">Daftar Belanja</a></li>
+                        <li><a href="<?= base_url('Manajemen_Barang/'); ?>">Daftar Order</a></li>
                     </ul>
                 </li>
                 <li class="has_sub">
