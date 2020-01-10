@@ -88,8 +88,6 @@
     });
 
     // script formatRupiah
-
-
     function normalrupiah(angka) {
 
       var tanparp = angka.replace(/[^0-9]+/g, "");

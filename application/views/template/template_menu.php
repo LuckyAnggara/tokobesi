@@ -45,8 +45,9 @@
                     </ul>
                 </li>
                 <li class="has_sub">
-                    <a href="javascript:void(0);" class="waves-effect"><i class=" mdi mdi-cart"></i> <span> Manajemen Pembelian </span> <span class="menu-arrow"></span></a>
+                    <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-shopping-bag"></i> <span> Manajemen Pembelian </span> <span class="menu-arrow"></span></a>
                     <ul class="list-unstyled">
+                        <li><a href="<?= base_url('Manajemen_Pembelian/PembelianBarang'); ?>">Pembelian Barang</a></li>
                     </ul>
                 </li>
                 <hr>

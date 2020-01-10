@@ -33,21 +33,43 @@
                                         <hr>
                                         <div class="row">
                                             <div class="col-6">
-                                                <div class="pull-left">
-                                                    <p><strong>Nama Pelanggan: </strong> <?= $data_order['nama_pelanggan']; ?></p>
-                                                    <p><strong>Alamat: </strong> <span class="label label-pink"><?= $data_order['alamat']; ?></span></p>
-                                                    <p><strong>Cashier: </strong> Udin</p>
+                                                <div class="clearfix row m-t-10">
+                                                    <ul class="col-3" style="list-style-type:none">
+                                                        <li class="text-left m-b-3">Nama Pelanggan</li>
+                                                        <li class="text-left m-b-3">Alamat</li>
+                                                    </ul>
+                                                    <ul class="col-1" style="list-style-type:none">
+                                                        <li class="text-center m-b-3"> : </li>
+                                                        <li class="text-center m-b-3"> : </li>
+                                                    </ul>
+                                                    <ul class="col-8" style="list-style-type:none">
+                                                        <li class="text-left m-b-3"><?= $data_order['nama_pelanggan']; ?></li>
+                                                        <li class="text-left m-b-3"><?= $data_order['alamat']; ?></li>
+                                                    </ul>
                                                 </div>
+                                                <!-- end row -->
                                             </div>
-                                            <div class="col-6">
-                                                <div class="pull-right">
-                                                    <p><strong>Tanggal Order: </strong> <?=$data_order['tanggal_input']; ?></p>
-                                                    <p><strong>Status Pembayaran: </strong> <span class="label label-pink">Lunas</span></p>
-                                                    <p><strong>Nomor Faktur: </strong> #<?= $data_order['no_faktur']; ?></p>
+                                            <div class="col-2">
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="clearfix row m-t-10">
+                                                    <ul class="col-4" style="list-style-type:none">
+                                                        <li class="text-left m-b-3">Nomor Faktur</li>
+                                                        <li class="text-left m-b-3">Tanggal</li>
+                                                    </ul>
+                                                    <ul class="col-1" style="list-style-type:none">
+                                                        <li class="text-left m-b-3"> : </li>
+                                                        <li class="text-left m-b-3"> : </li>
+                                                    </ul>
+                                                    <ul class="col-7" style="list-style-type:none">
+                                                        <li class="text-left m-b-3">#<?= $data_order['no_faktur']; ?></li>
+                                                        <li class="text-left m-b-3"><?= $data_order['tanggal_input']; ?></li>
+                                                    </ul>
                                                 </div>
-                                            </div><!-- end col -->
+                                                <!-- end row -->
+                                            </div>
                                         </div>
-                                        <!-- end row -->
+
 
                                         <div class="m-h-10"></div>
 
@@ -63,7 +85,7 @@
                                             if ($x < 12)
                                                 return " " . $abil[$x];
                                             elseif ($x < 20)
-                                                return Terbilang($x - 10) . "Belas";
+                                                return Terbilang($x - 10) . " Belas";
                                             elseif ($x < 100)
                                                 return Terbilang($x / 10) . " Puluh" . Terbilang($x % 10);
                                             elseif ($x < 200)
@@ -82,8 +104,8 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="table-responsive">
-                                                    <table class="table m-t-10">
-                                                        <thead>
+                                                    <table class="table m-t-10 table-striped table-bordered">
+                                                        <thead class="thead-dark">
                                                             <tr>
                                                                 <th>#</th>
                                                                 <th>Kode Barang</th>
@@ -114,49 +136,44 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-6">
-                                                <div class="clearfix m-t-20">
+                                                <div class="clearfix m-t-10">
                                                     <h5 class="small text-inverse font-600">Note</h5>
                                                     <small>
-                                                        Pembayaran Transfer Melalui <br>
-                                                        BCA : xxxxxxxxxxxxxxxx <br>
-                                                        BNI : xxxxxxxxxxxxxxxx <br>
-                                                        BRI : xxxxxxxxxxxxxxxx <br>
-                                                        BCA : xxxxxxxxxxxxxxxx
+                                                        Desain Sendiri ..
                                                     </small>
                                                 </div>
                                             </div>
                                             <div class="col-6">
-                                                <div class="clearfix m-t-20 row">
-                                                    <div class="col-5">
-                                                        <p class="text-right"><b>Sub-total</b></p>
-                                                        <p class="text-right">Diskon</p>
-                                                        <p class="text-right">Pajak</p>
-                                                        <p class="text-right">Ongkos Kirim</p>
-                                                    </div>
-                                                    <div class="col-1">
-                                                        <p class="text-right"><b> : </b></p>
-                                                        <p class="text-right"> : </p>
-                                                        <p class="text-right"> : </p>
-                                                        <p class="text-right"> : </p>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <p class="text-right"><?= rupiah($data_order['total_keranjang']); ?> </p>
-                                                        <p class="text-right">(<?= rupiah($data_order['diskon']); ?>)</p>
-                                                        <p class="text-right"><?= rupiah($data_order['pajak']); ?></p>
-                                                        <p class="text-right"><?= rupiah($data_order['ongkir']); ?></p>
-                                                    </div>
+                                                <div class="clearfix row m-t-10">
+                                                    <ul class="col-5" style="list-style-type:none">
+                                                        <li class="text-right m-b-3"><b>Sub-total</b></li>
+                                                        <li class="text-right m-b-3">Diskon</li>
+                                                        <li class="text-right m-b-3">Pajak (PPN 10%)</li>
+                                                        <li class="text-right m-b-3">Ongkos Kirim</li>
+                                                    </ul>
+                                                    <ul class="col-1" style="list-style-type:none">
+                                                        <li class="text-right m-b-3"><b> : </b></li>
+                                                        <li class="text-right m-b-3"> : </li>
+                                                        <li class="text-right m-b-3"> : </li>
+                                                        <li class="text-right m-b-3"> : </li>
+                                                    </ul>
+                                                    <ul class="col-4" style="list-style-type:none">
+                                                        <li class="text-right m-b-3"><?= rupiah($data_order['total_keranjang']); ?> </li>
+                                                        <li class="text-right m-b-3">(<?= rupiah($data_order['diskon']); ?>)</li>
+                                                        <li class="text-right m-b-3"><?= rupiah($data_order['pajak']); ?></li>
+                                                        <li class="text-right m-b-3"><?= rupiah($data_order['ongkir']); ?></li>
+                                                    </ul>
                                                 </div>
                                                 <hr>
                                                 <div class="clearfix row">
                                                     <div class="col-5">
-                                                        <h3 class="text-right"><b>Grand-Total</b></h3>
+                                                        <h4 class="text-right"><b>Grand-Total</b></h4>
                                                     </div>
                                                     <div class="col-1">
-                                                        <h3 class="text-right"><b> : </b></h3>
+                                                        <h4 class="text-right"><b> : </b></h4>
                                                     </div>
                                                     <div class="col-5">
-                                                        <h3 class="text-right"><?= rupiah($data_order['grand_total']); ?></h3>
-
+                                                        <h4 class="text-right"><?= rupiah($data_order['grand_total']); ?></h4>
                                                     </div>
                                                 </div>
                                                 <div class="clearfix row">
@@ -169,13 +186,13 @@
                                         <hr>
                                         <div class="row text-center">
                                             <div class="col-6">
-                                                <p>Cashier</p> <br><br>
+                                                <p>Cashier</p> <br>
                                                 <p>( Udin )</p>
                                             </div>
-                                            <div class="col-6">
+                                            <!-- <div class="col-6">
                                                 <p>Pelanggan</p><br><br>
                                                 <p>( <?= $data_order['nama_pelanggan']; ?> )</p>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <hr>
                                         <div class="d-print-none">

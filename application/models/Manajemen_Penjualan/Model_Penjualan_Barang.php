@@ -38,7 +38,6 @@ class Model_Penjualan_Barang extends CI_Model
     }
 
     function get_data_barang($string)
-
     {
         if ($string == null) {
             $this->db->select('master_persediaan.*, master_barang.*, master_satuan_barang.nama_satuan');
