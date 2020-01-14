@@ -389,6 +389,7 @@
   function push_keranjang_pembelian(jumlah, harga, kode_barang) {
     var kode_supplier = $('#select_nama_supplier  option:selected').val();
     var no_order_pembelian = $('#no_order_pembelian').text();
+    var tanggal_transaksi = $('#tanggal_transaksi').val();
 
     $('#confim_button').attr('disabled', false);
     $('#grand_total_div').attr('hidden', false);
@@ -398,6 +399,7 @@
       data: {
         no_order_pembelian: no_order_pembelian,
         kode_barang: kode_barang,
+        tanggal_transaksi: tanggal_transaksi,
         jumlah_pembelian: jumlah,
         harga_beli: harga,
       },

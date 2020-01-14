@@ -624,7 +624,7 @@
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Persediaan! ' + nama_barang + ' Habis!',
+        text: 'PERSEDIAAN! ' + nama_barang + ' KOSONG!',
       });
       $('#select_nama_barang').val(null).trigger('change');
     }

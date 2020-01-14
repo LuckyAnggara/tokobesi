@@ -20,7 +20,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-3 col-sm-form-label">Nama Barang</label>
+                                    <label class="col-3 col-sm-form-label ">Nama Barang</label>
                                     <div class="col-9">
                                         <p>asdasdasdkasldalskjdlaksjldkjaskl</p>
                                     </div>
@@ -28,15 +28,15 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-group row">
-                                    <label class="col-3 col-sm-form-label">Kode Barang</label>
+                                    <label class="col-3 col-sm-form-label m-t-5">Metode</label>
                                     <div class="col-9">
-                                        <select id="select_nama_supplier" name="select_nama_supplier" type="text" class="form-control"></select>
+                                        <input type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-3 col-sm-form-label">Nama Barang</label>
+                                    <label class="col-3 col-sm-form-label">Satuan</label>
                                     <div class="col-9">
-                                        <p>asdasdasdkasldalskjdlaksjldkjaskl</p>
+                                        <input type="text" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -48,26 +48,57 @@
                 <div class="col-12">
                     <div class="card-box">
                         <div class="row">
-                            <div class="col-6">
-                                <h4 class="m-t-0 header-title">Keranjang Belanja</h4>
-                                <span hidden id="no_order_pembelian"><?= $no_order_pembelian; ?></span>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
                             <div class="col-sm-12">
                                 <div class="table-responsive">
-                                    <table id="datatable-keranjang-pembelian" class="table table-bordered table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Nama Barang</th>
-                                                <th>Harga Beli</th>
-                                                <th>Jumlah Pembelian</th>
-                                                <th>Total Harga</th>
-                                                <th>Action</th>
+                                    <table id="datatable-kartu-persediaan" class="cell-border table-striped table table-bordered dt-responsive nowrap" width="100%">
+                                        <thead class="thead-light text-center">
+                                            <tr class="text-center">
+                                                <th rowspan="2">Tanggal</th>
+                                                <th rowspan="2">No Transaksi</th>
+                                                <th colspan="3">Masuk</th>
+                                                <th colspan="3">Keluar</th>
+                                                <th colspan="3">Saldo</th>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <th>Qty</th>
+                                                <th>Harga</th>
+                                                <th>Total</th>
+                                                <th>Qty</th>
+                                                <th>Harga</th>
+                                                <th>Total</th>
+                                                <th>Qty</th>
+                                                <th>Harga</th>
+                                                <th>Total</th>
                                             </tr>
                                         </thead>
+                                        <!-- <tbody>
+                                            <tr>
+                                                <td>01 Januari 2019</td>
+                                                <td>ITJ/1/2/3/1</td>
+                                                <td>10</td>
+                                                <td>8.000</td>
+                                                <td>80.000</td>
+                                                <td>10</td>
+                                                <td>8.000</td>
+                                                <td>80.000</td>
+                                                <td>10</td>
+                                                <td>8.000</td>
+                                                <td>80.000</td>
+                                            </tr>
+                                            <tr>
+                                                <td>01 Januari 2019</td>
+                                                <td>ITJ/1/2/3/1</td>
+                                                <td>10</td>
+                                                <td>8.000</td>
+                                                <td>80.000</td>
+                                                <td>10</td>
+                                                <td>8.000</td>
+                                                <td>80.000</td>
+                                                <td>10</td>
+                                                <td>8.000</td>
+                                                <td>80.000</td>
+                                            </tr>
+                                            </tbody> -->
                                     </table>
                                 </div>
                             </div>
