@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 10, 2020 at 11:29 AM
+-- Generation Time: Jan 14, 2020 at 12:36 PM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.1.12
 
@@ -52,7 +52,9 @@ CREATE TABLE `master_barang` (
 --
 
 INSERT INTO `master_barang` (`kode_barang`, `tipe_barang`, `jenis_barang`, `merek_barang`, `kode_supplier`, `nama_barang`, `harga_pokok`, `harga_satuan`, `kode_satuan`, `persediaan_minimum`, `gambar`, `keterangan`, `status_jual`, `tanggal_input`) VALUES
-('B001', 1, 1, 1, 'EKO076', 'BESI BETON', 100000, 180000, 0, 10, 'B001.jpg', 'gdfgdfgdfg', 1, '2020-01-09 06:07:39'),
+('B001', 1, 1, 1, 'EKO076', 'BESI BETON', 100000, 150000, 0, 10, '4ncH9fP3EgXaRBQU.jpg', 'gdfgdfgdfg', 1, '2020-01-14 04:32:43'),
+('B002', 1, 1, 6, 'EKO076', 'BRIGHT GAS 10KG', 90000, 100000, 0, 10, 'B002.jpg', '', 1, '2020-01-13 07:52:25'),
+('O001', 1, 1, 1, 'QHQ851', 'OTANI PAPER 57X224', 10000, 15000, 0, 10, 'default.jpg', '', 1, '2020-01-13 05:41:12'),
 ('S001', 1, NULL, NULL, NULL, 'SPANDEK V2', 0, 100000, 1, 0, 'default.jpg', 'asdasdasd', 1, '2020-01-05 00:00:00'),
 ('S002', 1, 1, 1, 'EKO076', 'BAJA', 100000, 120000, 1, 10, 'S002.jpg', '', 1, '2020-01-10 07:44:35');
 
@@ -104,6 +106,44 @@ INSERT INTO `master_merek_barang` (`id_merek_barang`, `kode_merek_barang`, `nama
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `master_pembelian`
+--
+
+CREATE TABLE `master_pembelian` (
+  `no_order_pembelian` varchar(255) NOT NULL,
+  `nomor_transaksi` varchar(255) NOT NULL,
+  `kode_supplier` varchar(255) NOT NULL,
+  `total_pembelian` double NOT NULL,
+  `diskon` double NOT NULL,
+  `pajak_keluaran` double NOT NULL,
+  `ongkir` double NOT NULL,
+  `grand_total` double NOT NULL,
+  `status` int(1) NOT NULL,
+  `tanggal_input` date NOT NULL,
+  `user_input` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `master_pembelian`
+--
+
+INSERT INTO `master_pembelian` (`no_order_pembelian`, `nomor_transaksi`, `kode_supplier`, `total_pembelian`, `diskon`, `pajak_keluaran`, `ongkir`, `grand_total`, `status`, `tanggal_input`, `user_input`) VALUES
+('cweUjIYVA6OmM7ug', '142', 'QHQ851', 121, 0, 0, 0, 121, 0, '0000-00-00', 'udin'),
+('g7VaID5qyekKmSnR', '3', 'QHQ851', 10, 0, 0, 0, 10, 0, '0000-00-00', 'udin'),
+('hWjPp0Gyo8mBN7eI', '152', 'EKO076', 12000, 0, 0, 0, 12000, 0, '0000-00-00', 'udin'),
+('HY7mOIEZMdWSXjLy', '1424', 'EKO076', 100000, 0, 10000, 0, 110000, 0, '0000-00-00', 'udin'),
+('MHf95LBn70DaUAKd', '4', 'QHQ851', 160, 0, 0, 0, 160, 0, '0000-00-00', 'udin'),
+('Oh8vZ3W9cDbisQxm', '12', 'EKO076', 1, 0, 0, 0, 1, 0, '0000-00-00', 'udin'),
+('piPhj3WelYDavmOz', 'uaoudasiudo', 'EKO076', 95000000, 0, 9500000, 0, 104500000, 0, '0000-00-00', 'udin'),
+('UkneNuBDYy6odrh8', '15', 'QHQ851', 0, 0, 0, 0, 0, 0, '0000-00-00', 'udin'),
+('unP5jGqKkMtIxEYB', 'hyuyhuy', 'EKO076', 700000, 0, 70000, 0, 770000, 0, '0000-00-00', 'udin'),
+('uQR70EFvfasmUNCM', '1', 'EKO076', 0, 0, 0, 0, 0, 0, '0000-00-00', 'udin'),
+('VpGEZkbrCjR1AlLz', '2', 'QHQ851', 0, 0, 0, 0, 0, 0, '0000-00-00', 'udin'),
+('YKHvJ3wzZNtMmlnW', 'ITJASJF', 'EKO076', 1200000, 0, 0, 0, 1200000, 0, '0000-00-00', 'udin');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `master_persediaan`
 --
 
@@ -122,8 +162,10 @@ CREATE TABLE `master_persediaan` (
 --
 
 INSERT INTO `master_persediaan` (`id`, `kode_barang`, `jumlah_persediaan`, `jumlah_keranjang`, `jumlah_persediaan_sementara`, `tanggal_input`, `no_order_terakhir`) VALUES
-(9, 'B001', 0, 0, 0, '2020-01-05 09:39:46', ''),
-(11, 'S002', 19, 81, 0, '2020-01-07 07:42:46', '');
+(9, 'B001', 9, 7, 0, '2020-01-14 04:31:00', ''),
+(11, 'S002', 5, 0, 0, '2020-01-07 07:42:46', ''),
+(12, 'O001', 90, 10, 0, '2020-01-13 05:26:11', ''),
+(13, 'B002', 910, 90, 0, '2020-01-13 07:55:04', '');
 
 -- --------------------------------------------------------
 
@@ -272,15 +314,21 @@ CREATE TABLE `tabel_daftar_belanja` (
 --
 
 INSERT INTO `tabel_daftar_belanja` (`no_order`, `id_pelanggan`, `no_faktur`, `total_keranjang`, `diskon`, `pajak`, `ongkir`, `grand_total`, `status`, `tanggal_input`) VALUES
+('0576891342', '4545', 'SAP2417569', 600000, 60000, 0, 10000, 550000, 1, '2020-01-12'),
 ('0875416329', '', '', 0, 0, 0, 0, 0, 0, '0000-00-00'),
 ('1836970425', 'axh4DCyH08YUwLdn', 'VYT6091524', 1080000, 108000, 0, 10000, 1090000, 1, '2020-01-09'),
 ('3075169284', '', '', 0, 0, 0, 0, 0, 0, '0000-00-00'),
 ('4105798326', '4545', 'VUP8650792', 1440000, 144000, 0, 15000, 1425000, 1, '2020-01-09'),
 ('4561798032', '', '', 0, 0, 0, 0, 0, 0, '0000-00-00'),
+('4670213895', '4545', 'FSQ8107263', 900000, 90000, 0, 0, 810000, 1, '2020-01-14'),
 ('5368720914', 'EBvRN8HfInbOQjmr', '', 0, 0, 0, 0, 0, 0, '0000-00-00'),
 ('6250378419', 'qT4Mw9RBYQ6IU0g7', 'DVA8956203', 4320000, 432000, 0, 15000, 4335000, 1, '2020-01-09'),
+('7620398451', '5NY1mgZO04jeqAzR', 'WXO3196547', 1080000, 108000, 0, 200000, 1172000, 1, '2020-01-11'),
+('7853160429', '4545', 'ZRD2596871', 360000, 36000, 0, 10000, 334000, 1, '2020-01-13'),
 ('8159627340', '4545', 'DIT5926478', 2400000, 0, 0, 15000, 2415000, 1, '2020-01-10'),
 ('8374169052', '', '', 0, 0, 0, 0, 0, 0, '0000-00-00'),
+('8913450276', '4545', 'RGX9753810', 9000000, 0, 0, 0, 9000000, 1, '2020-01-13'),
+('9082164735', '4545', 'UHX6154903', 150000, 15000, 0, 10000, 145000, 1, '2020-01-13'),
 ('9410532876', 'pJH3GtjYyxCEPcK9', '', 0, 0, 0, 0, 0, 0, '0000-00-00'),
 ('9567418032', '4545', 'CQU0372481', 120000, 12000, 0, 0, 120000, 1, '2020-01-09'),
 ('9803125467', '', '', 0, 0, 0, 0, 0, 0, '0000-00-00'),
@@ -342,7 +390,13 @@ INSERT INTO `tabel_keranjang_belanja` (`id`, `no_order`, `kode_barang`, `jumlah_
 (24, '6250378419', 'S002', 20, 2400000, '2020-01-09 05:10:10'),
 (26, '1836970425', 'S002', 9, 1080000, '2020-01-09 05:12:20'),
 (27, '8159627340', 'S002', 10, 1200000, '2020-01-10 06:45:05'),
-(28, '8159627340', 'S002', 10, 1200000, '2020-01-10 06:45:05');
+(28, '8159627340', 'S002', 10, 1200000, '2020-01-10 06:45:05'),
+(29, '7620398451', 'S002', 9, 1080000, '2020-01-11 05:46:20'),
+(30, '0576891342', 'S002', 5, 600000, '2020-01-12 09:21:16'),
+(31, '7853160429', 'B001', 2, 360000, '2020-01-13 02:41:25'),
+(32, '9082164735', 'O001', 10, 150000, '2020-01-13 04:27:57'),
+(33, '8913450276', 'B002', 90, 9000000, '2020-01-13 06:56:02'),
+(34, '4670213895', 'B001', 5, 900000, '2020-01-14 03:28:05');
 
 -- --------------------------------------------------------
 
@@ -369,7 +423,13 @@ INSERT INTO `tabel_keranjang_temp` (`id`, `no_order`, `id_pelanggan`, `kode_bara
 (93, '9852034617', '0', 'S002', 1, 120000, '2020-01-08 08:49:08'),
 (96, '9861243570', '4545', 'S002', 1, 120000, '2020-01-09 05:04:25'),
 (99, '1836970425', '0', 'S002', 9, 1080000, '2020-01-09 05:11:22'),
-(102, '1063425987', '4545', 'S002', 1, 120000, '2020-01-10 07:05:08');
+(102, '1063425987', '4545', 'S002', 1, 120000, '2020-01-10 07:05:08'),
+(103, '7620398451', '0', 'S002', 9, 1080000, '2020-01-11 05:46:01'),
+(107, '0576891342', '4545', 'S002', 5, 600000, '2020-01-12 09:21:06'),
+(108, '7853160429', '0', 'B001', 2, 360000, '2020-01-13 02:40:34'),
+(109, '5943720681', '0', 'B001', 2, 360000, '2020-01-13 03:04:48'),
+(111, '8913450276', '4545', 'B002', 90, 9000000, '2020-01-13 06:55:40'),
+(112, '4670213895', '4545', 'B001', 5, 900000, '2020-01-14 03:25:55');
 
 -- --------------------------------------------------------
 
@@ -391,6 +451,7 @@ CREATE TABLE `tabel_pelanggan` (
 
 INSERT INTO `tabel_pelanggan` (`id_pelanggan`, `nama_pelanggan`, `alamat`, `nomor_telepon`, `status`) VALUES
 ('4545', 'Lucky Anggara', 'Jl Angrek 2 no 10 RT 09 RW 02 Kel. Karet Kuningan Kec. Setiabudi', '082116562811', 0),
+('5NY1mgZO04jeqAzR', 'Desi Bau', 'oasjdkasjdl', '131231', 1),
 ('axh4DCyH08YUwLdn', 'novaz', 'l.koko', '123556', 1),
 ('EBvRN8HfInbOQjmr', '455', '', '', 1),
 ('hEtVpMjr9u8SZGL5', 'novaz', 'jl koko', '123456', 1),
@@ -409,21 +470,23 @@ CREATE TABLE `tabel_perhitungan_order` (
   `diskon` double NOT NULL,
   `pajak` double NOT NULL,
   `ongkir` double NOT NULL,
-  `grand_total` double NOT NULL
+  `grand_total` double NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tabel_perhitungan_order`
 --
 
-INSERT INTO `tabel_perhitungan_order` (`no_order`, `total_keranjang`, `diskon`, `pajak`, `ongkir`, `grand_total`) VALUES
-('1063425987', 120000, 0, 0, 0, 120000),
-('1836970425', 1080000, 108000, 0, 10000, 1090000),
-('4105798326', 1440000, 144000, 0, 15000, 1425000),
-('6250378419', 4320000, 432000, 0, 15000, 4335000),
-('8159627340', 2400000, 0, 0, 15000, 2415000),
-('9567418032', 120000, 12000, 0, 0, 120000),
-('9861243570', 120000, 0, 0, 15000, 105000);
+INSERT INTO `tabel_perhitungan_order` (`no_order`, `total_keranjang`, `diskon`, `pajak`, `ongkir`, `grand_total`, `timestamp`) VALUES
+('0576891342', 600000, 60000, 0, 10000, 550000, '2020-01-12 09:21:15'),
+('4670213895', 900000, 90000, 0, 0, 810000, '2020-01-14 03:27:06'),
+('7853160429', 360000, 36000, 0, 10000, 334000, '2020-01-13 02:41:23'),
+('8913450276', 9000000, 0, 0, 0, 9000000, '2020-01-13 06:55:59'),
+('9082164735', 150000, 15000, 0, 10000, 145000, '2020-01-13 04:27:54'),
+('hWjPp0Gyo8mBN7eI', 12000, 0, 0, 0, 12000, '2020-01-12 15:28:12'),
+('piPhj3WelYDavmOz', 95000000, 0, 9500000, 0, 104500000, '2020-01-13 06:54:36'),
+('unP5jGqKkMtIxEYB', 700000, 0, 70000, 0, 770000, '2020-01-14 03:30:51');
 
 -- --------------------------------------------------------
 
@@ -448,9 +511,9 @@ CREATE TABLE `temp_tabel_keranjang_pembelian` (
 
 INSERT INTO `temp_tabel_keranjang_pembelian` (`id`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`, `harga_beli`, `diskon`, `total_harga`, `tanggal_input`) VALUES
 (1, '22', 'B001', 1, 10000, 0, 10000, '2020-01-10'),
-(2, '22', 'B001', 1, 1200, 0, 1200, '2020-01-10'),
-(3, '22', 'S002', 10, 10000, 0, 100000, '2020-01-10'),
-(4, '22', 'S002', 1, 10000, 0, 10000, '2020-01-10');
+(116, 'hWjPp0Gyo8mBN7eI', 'B001', 12, 1000, 1000, 11000, '2020-01-12'),
+(118, 'piPhj3WelYDavmOz', 'B002', 1000, 95000, 0, 95000000, '2020-01-13'),
+(119, 'unP5jGqKkMtIxEYB', 'B001', 5, 140000, 0, 700000, '2020-01-14');
 
 --
 -- Indexes for dumped tables
@@ -479,6 +542,13 @@ ALTER TABLE `master_jenis_barang`
 --
 ALTER TABLE `master_merek_barang`
   ADD PRIMARY KEY (`id_merek_barang`);
+
+--
+-- Indexes for table `master_pembelian`
+--
+ALTER TABLE `master_pembelian`
+  ADD PRIMARY KEY (`no_order_pembelian`),
+  ADD UNIQUE KEY `nomor_transaksi` (`nomor_transaksi`);
 
 --
 -- Indexes for table `master_persediaan`
@@ -580,7 +650,7 @@ ALTER TABLE `master_merek_barang`
 -- AUTO_INCREMENT for table `master_persediaan`
 --
 ALTER TABLE `master_persediaan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `master_satuan_barang`
@@ -616,19 +686,19 @@ ALTER TABLE `tabel_diskon`
 -- AUTO_INCREMENT for table `tabel_keranjang_belanja`
 --
 ALTER TABLE `tabel_keranjang_belanja`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `tabel_keranjang_temp`
 --
 ALTER TABLE `tabel_keranjang_temp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT for table `temp_tabel_keranjang_pembelian`
 --
 ALTER TABLE `temp_tabel_keranjang_pembelian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- Constraints for dumped tables

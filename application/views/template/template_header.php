@@ -16,8 +16,6 @@
     <link href="<?= base_url('assets/'); ?>css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/'); ?>css/icons.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/'); ?>css/style.css" rel="stylesheet" type="text/css" />
-
-
     <script src="<?= base_url('assets/'); ?>js/modernizr.min.js"></script>
 
 </head>
@@ -33,7 +31,7 @@
 
             <!-- LOGO -->
             <div class="topbar-left">
-                <a href="index.html" class="logo"><span>Toko<span> Besi</span></span><i class="mdi mdi-layers"></i></a>
+                <a href="index.html" class="logo"><span>Baja<span> Makmur</span></span><i class="mdi mdi-layers"></i></a>
             </div>
 
             <!-- Button mobile view to collapse sidebar menu -->

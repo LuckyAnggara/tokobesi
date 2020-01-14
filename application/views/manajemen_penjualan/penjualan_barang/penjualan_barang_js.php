@@ -445,7 +445,6 @@
         async: false,
         success: function(data) {
           $('#datatable-keranjang-penjualan').DataTable().ajax.reload();
-          console.log('hmm');
           total_harga_keranjang();
         }
       })
@@ -658,7 +657,7 @@
           push_persediaan_temporary_batal(id);
           deleteData_keranjang(id);
           total_harga_keranjang();
-          p
+        
         }
       });
     }
@@ -980,4 +979,5 @@
         }
       });
     })
+    
   </script>

@@ -9,6 +9,17 @@ class Model_Pembelian_Barang extends CI_Model
         $this->load->helper(array('form', 'url', 'string'));
     }
 
+    public function get_data_keranjang_clear($no_order)
+    {
+        //  cek dulu apakah sudah di save apa blm
+
+        $this->db->where('no_order_pembelian', $no_order);
+        $this->db->delete('temp_tabel_keranjang_pembelian');
+
+        $this->db->where('no_order', $no_order);
+        $this->db->delete('tabel_perhitungan_order');
+    }
+
     function get_data_supplier()
     {
         $this->db->select('*');
@@ -54,11 +65,97 @@ class Model_Pembelian_Barang extends CI_Model
 
     function get_data_keranjang($no_order_pembelian)
     {
-        $this->db->select('temp_tabel_keranjang_pembelian.*, master_barang.*');
+        $this->db->select('temp_tabel_keranjang_pembelian.harga_beli,temp_tabel_keranjang_pembelian.jumlah_pembelian,temp_tabel_keranjang_pembelian.total_harga,temp_tabel_keranjang_pembelian.id, master_barang.kode_barang,master_barang.nama_barang');
         $this->db->from('temp_tabel_keranjang_pembelian');
         $this->db->join('master_barang', 'master_barang.kode_barang = temp_tabel_keranjang_pembelian.kode_barang');
         $this->db->where('no_order_pembelian', $no_order_pembelian);
         $output = $this->db->get();
         return $output;
     }
+
+    function delete_data_keranjang($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('temp_tabel_keranjang_pembelian');
+    }
+
+    function push_grand_total($post)
+    {
+        $this->db->select('*');
+        $this->db->from('tabel_perhitungan_order');
+        $this->db->where('no_order', $post['no_order_pembelian']);
+        $cek = $this->db->get()->num_rows();
+
+        $data = array(
+            'no_order' => $post['no_order_pembelian'],
+            'total_keranjang' => $post['total_pembelian'],
+            'diskon' => $post['diskon'],
+            'pajak' => $post['pajak_keluaran'],
+            'ongkir' => 0,
+            'grand_total' => $post['grand_total']
+        );
+
+        if ($cek < 1) {
+            $this->db->insert('tabel_perhitungan_order', $data);
+        } else {
+            $this->db->query("DELETE From tabel_perhitungan_order Where no_order = '" . $post['no_order_pembelian']. "'"); // delete dulu
+            $this->db->insert('tabel_perhitungan_order', $data); // lalu tambah
+        }
+    }
+
+    function get_total_perhitungan($no_order)
+    {
+        $this->db->select('*');
+        $this->db->from('tabel_perhitungan_order');
+        $this->db->where('no_order', $no_order);
+        $output = $this->db->get()->row_array();
+        return $output;
+    }
+
+    function proses_pembelian($post)
+    {
+        // input data baru
+
+
+        $data = array(
+            'no_order_pembelian' => $post['no_order_pembelian'],
+            'nomor_transaksi' => $post['nomor_transaksi'],
+            'kode_supplier' => $post['kode_supplier'],
+            'tanggal_input' => $post['tanggal_transaksi'],
+            'status' => 0, // 0 untuk lunas 1 untuk nyicil cashbon
+            'user_input' =>'udin',
+        );
+
+        $this->db->insert('master_pembelian', $data);
+
+        // update data total pembelian
+        $this->db->query("UPDATE master_pembelian INNER JOIN tabel_perhitungan_order ON tabel_perhitungan_order.no_order = master_pembelian.no_order_pembelian SET master_pembelian.total_pembelian = tabel_perhitungan_order.total_keranjang, master_pembelian.diskon = tabel_perhitungan_order.diskon, master_pembelian.pajak_keluaran = tabel_perhitungan_order.pajak, master_pembelian.ongkir = tabel_perhitungan_order.ongkir, master_pembelian.grand_total = tabel_perhitungan_order.grand_total where  tabel_perhitungan_order.no_order = '" . $post['no_order_pembelian']."'");
+
+        $this->_tambah_data_persediaan($post);
+
+    }
+
+    private function _tambah_data_persediaan($post)
+    {
+        $this->db->select('*');
+        $this->db->from('temp_tabel_keranjang_pembelian');
+        $this->db->where('no_order_pembelian', $post['no_order_pembelian']);
+        $data = $this->db->get()->result_array();
+
+        foreach ($data as $key => $value) {
+            $this->db->select('*');
+            $this->db->from('master_persediaan');
+            $this->db->where('kode_barang', $value['kode_barang']);
+            $jumlah_lama = $this->db->get()->row_array();
+
+            $update = [
+                'jumlah_persediaan' => $value['jumlah_pembelian'] + $jumlah_lama['jumlah_persediaan'],
+                'tanggal_input' => date("Y-m-d H:i:s"),
+            ];
+            $this->db->where('kode_barang', $value['kode_barang']);
+            $this->db->update('master_persediaan', $update);
+        }
+
+    }
+
 }

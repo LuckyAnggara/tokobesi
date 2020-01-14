@@ -78,7 +78,7 @@
                         },
                         {
                             title: "Jumlah di Keranjang",
-                            data: "jumlah_persediaan",
+                            data: "jumlah_keranjang",
                             searching: true,
                             targets: 4,
                             render: function(data, type, full, meta) {

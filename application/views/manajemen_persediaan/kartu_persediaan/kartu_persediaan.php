@@ -3,95 +3,49 @@
     <div class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-6">
+                <div class="col-12">
                     <div class="card-box">
-                        <div class="form-group row">
-                            <h4 class="m-t-0 header-title">Data Pembelian</h4>
-                        </div>
-                        <hr>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-sm-form-label">Nomor Transaksi</label>
-                            <div class="col-sm-8">
-                                <input id="nomor_transaksi" autocomplete="off" name="nomor_transaksi" type="text" class="form-control" placeholder="">
+                        <div class="row">
+                            <div class="col-6">
+                                <h4 class="m-t-0 header-title">Data Barang</h4>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-sm-form-label">Tanggal Transaksi</label>
-                            <div class="col-sm-8">
-                                <div class="input-group">
-                                    <input type="text" autocomplete= "off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal_transaksi">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="ti-calendar"></i></span>
+                        <hr>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group row">
+                                    <label class="col-3 col-sm-form-label m-t-5">Kode Barang</label>
+                                    <div class="col-9">
+                                        <select id="select_nama_supplier" name="select_nama_supplier" type="text" class="form-control"></select>
                                     </div>
-                                </div><!-- input-group -->
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="card-box">
-                        <div class="form-group row">
-                            <h4 class="m-t-0 header-title">Data Supplier</h4>
-                        </div>
-                        <hr>
-                        <!-- <div class="form-group row">
-                            <label class="col-sm-4 col-sm-form-label">ID Supplier</label>
-                            <div class="col-sm-8">
-                                <div class="input-group">
-                                    <input id="id_pelanggan" autocomplete="off" name="id_pelanggan" type="text" class="form-control" placeholder="Isi ID Pelanggan, jika ada">
-                                    <div class="input-group-append" id="div_cari-button">
-                                        <button id="cari-button" name="cari-button" onClick="cari_pelanggan();" class=" btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-search"></i></button>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-sm-form-label">Nama Barang</label>
+                                    <div class="col-9">
+                                        <p>asdasdasdkasldalskjdlaksjldkjaskl</p>
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-sm-form-label">Nama Supplier</label>
-                            <div class="col-sm-8">
-                                <select id="select_nama_supplier" name="select_nama_supplier" type="text" class="form-control"></select>
+                            <div class="col-6">
+                                <div class="form-group row">
+                                    <label class="col-3 col-sm-form-label">Kode Barang</label>
+                                    <div class="col-9">
+                                        <select id="select_nama_supplier" name="select_nama_supplier" type="text" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-sm-form-label">Nama Barang</label>
+                                    <div class="col-9">
+                                        <p>asdasdasdkasldalskjdlaksjldkjaskl</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="clearfix"></div>
+
                     </div>
+
                 </div>
                 <div class="col-12">
-                    <div class="card-box">
-                        <div class="form-group row">
-                            <h4 class="col-4 m-t-0 header-title">Data Barang</h4>
-                            <div class="col-8 text-right">
-                                <!-- <div class="radio radio-info form-check-inline">
-                                    <input type="radio" id="simple" value="option1" name="radioInline" checked>
-                                    <label for="inlineRadio1"> Simple </label>
-                                </div> -->
-                                <label for="inlineRadio1"> Simple </label>
-                                <input id="check_type" type="checkbox" data-plugin="switchery" data-color="#1AB394" data-secondary-color="#ED5565" />
-                                <label for="inlineRadio2"> Advance </label>
-                                <!-- <div class="radio form-check-inline">
-                                    <input type="radio" id="advance" value="option2" name="radioInline">
-                                    <label for="inlineRadio2"> Advance </label>
-                                </div> -->
-                            </div>
-                        </div>
-
-                        <hr>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-sm-form-label">Cari Nama Barang</label>
-                            <div class="col-sm-10">
-                                <select name="select_nama_barang" id="select_nama_barang" class="form-control">
-                                </select>
-                                <input autocomplete="off" placeholder="Kolom Pencarian Barang.." id="cari_barang" name="cari_barang" type="text" class="form-control">
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row" id="result_page">
-                            <div class="col-12 text-center">
-                                <p>Cari Data Barang di Kolom Pencarian</p>
-                            </div>
-                        </div>
-
-                        <div class="clearfix"></div>
-                    </div>
                     <div class="card-box">
                         <div class="row">
                             <div class="col-6">

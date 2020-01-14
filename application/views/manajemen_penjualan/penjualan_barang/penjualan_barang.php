@@ -84,7 +84,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <h4 class="m-t-0 header-title">Keranjang Belanja</h4>
-                                <h4>Nomor Order : <span id="no_order"><?= $no_order; ?></span></h4>
+                                <h4>Nomor Order : <span id="no_order"><?= $no_order;?></span></h4>
                             </div>
                             <div class="col-6">
                                 <button disabled type="submit" id="simpan_checkout" name="simpan_checkout" class="btn btn-success waves-effect waves-light pull-right"><i class="fa fa-check"></i> Simpan</button>
