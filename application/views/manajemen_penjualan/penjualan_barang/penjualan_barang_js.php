@@ -5,6 +5,10 @@
   <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.responsive.min.js"></script>
   <script src="<?= base_url('assets/'); ?>plugins/datatables/responsive.bootstrap4.min.js"></script>
 
+  <!-- bootstrap touchspin -->
+
+  <script src="<?= base_url('assets/'); ?>plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
+
   <!-- Sweet Alert Js  -->
   <script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
 
@@ -26,8 +30,40 @@
   // init hide advance search -->
   <script>
     $(document).ready(function() {
-      console.log(sessionStorage.getItem("no_order"));
-      console.log("ready!");
+
+      $('#modal_detail_penjualan').on('hidden.bs.modal', function(e) {
+        $(this)
+          .find("input,textarea,select")
+          .end()
+          .find("input[type=checkbox], input[type=radio]")
+          .prop("checked", "")
+          .end();
+        $('#dummy_harga_jual').attr('readonly',true);
+        $('#qty').val(1);
+      });
+
+      $('#modal_password').on('hidden.bs.modal', function(e) {
+        $(this)
+          .find("input,textarea,select")
+          .val('')
+          .end()
+          .find("input[type=checkbox], input[type=radio]")
+          .prop("checked", "")
+          .end();
+      });
+
+
+      $("#qty").TouchSpin({
+        buttondown_class: "btn btn-primary",
+        buttonup_class: "btn btn-primary"
+      });
+
+      $("#qty").keyup(function() {
+        console.log('ss');
+        var value = $("#qty").val();
+        $("#qty").val(value.replace(/[^,\d]/g, '').toString());
+      });
+
       $.ajax({
         url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
       });
@@ -49,7 +85,7 @@
             var results = [];
             for (var i in data.data) {
               results.push({
-                "id": data.data[i].tipe_barang + '-' + data.data[i].kode_barang + '-' + data.data[i].nama_barang + '-' + data.data[i].nama_satuan + '-' + data.data[i].jumlah_persediaan + '-' + data.data[i].jumlah_keranjang + '-' + data.data[i].status_jual,
+                "id": data.data[i].kode_barang + '-' + data.data[i].harga_satuan,
                 "text": data.data[i].kode_barang + ' - ' + data.data[i].nama_barang
               });
             };
@@ -62,18 +98,11 @@
       }).on('select2:select', function(evt) {
         var data = $("#select_nama_barang option:selected").val();
         str = data.split("-");
-        var tipe_barang = str[0]
-        var kode_barang = str[1];
-        var nama_barang = str[2];
-        var nama_satuan = str[3];
-        var jumlah_persediaan = str[4];
-        var jumlah_keranjang = str[5];
-        var status_jual = str[6];
+        var kode_barang = str[0]
+        var harga_jual = str[1];
+        choose_barang(harga_jual);
 
-        console.log(data);
-
-
-        choose_barang(tipe_barang, kode_barang, nama_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang, status_jual);
+        //choose_barang(tipe_barang, kode_barang, nama_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang, status_jual);
 
       });
       $('#cari_barang').hide();
@@ -284,7 +313,6 @@
         });
       } else {
         $('#pelanggan_modal').modal('show');
-        // alert_data_pelanggan("kosong");
       }
 
     };
@@ -330,11 +358,9 @@
               $("#result_page").empty();
               for (var i in data.data) {
                 console.log(data.data[i]);
-                var display2 = '<div id="result"  class="col-md-6 col-lg-3"><div class="card gal-detail thumb"><a type="button" id="wawa" onclick="choose_barang(\'' + data.data[i].tipe_barang + '\',\'' + data.data[i].kode_barang + '\',\'' + data.data[i].nama_barang + '\',\'' + data.data[i].nama_satuan + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].jumlah_keranjang + '\',\'' + data.data[i].status_jual + '\')" ><img class="img-thumbnail img-responsive" alt="profile-image" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Tidak ada Gambar"><h5 >' + data.data[i].nama_barang + '</h4><p class="card-text">' + data.data[i].keterangan + '</p></a></div></div>';
-                // var display = '<div id="result" class="col-md-6 col-lg-3"><div class="card"><a id="wawa" onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].nama_barang + '\',\'' + data.data[i].satuan + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].jumlah_keranjang + '\')"><img class="card-img-top img-fluid" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Tidak ada Gambar"><div class="card-body"><h4 class="card-title">' + data.data[i].nama_barang + '</h4></div><div class="card-body"><p class="card-text">' + data.data[i].keterangan + '</p></div></div></a></div>'
+                var display2 = '<div id="result"  class="col-md-6 col-lg-3"><div class="card gal-detail thumb"><a type="button" id="wawa" onclick="choose_barang(\'' + data.data[i].harga_satuan + '\')" ><img class="img-thumbnail img-responsive" alt="profile-image" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Tidak ada Gambar"><h5 >' + data.data[i].nama_barang + '</h4><p class="card-text">' + data.data[i].keterangan + '</p></a></div></div>';
                 $('#result_page').append(display2).fadeIn('slow');
               }
-
             } else {
               $("#result_page").empty();
               display_none = '<div class="col-12 text-center"><p>Data Barang ' + kata_kunci + ' tidak ditemukan </p></div>';
@@ -350,7 +376,7 @@
     }
 
 
-    function choose_barang(tipe_barang, kode_barang, nama_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang, status_jual) {
+    function choose_barang2(tipe_barang, kode_barang, nama_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang, status_jual) {
       if (status_jual == 0) {
         status_jual_alert(nama_barang, status_jual);
       } else {
@@ -368,7 +394,54 @@
       }
 
     }
-    // script Input Jumlah Pembelian
+
+    $('#dummy_harga_jual').on('keyup', function() {
+      var input_harga_jual = $('#dummy_harga_jual');
+      input_harga_jual.val(formatRupiah(input_harga_jual.val().toString(), 'Rp.'));
+      $('#harga_jual').val(normalrupiah(input_harga_jual.val()));
+    });
+
+    $('#dummy_diskon').on('keyup', function() {
+      var diskon = $('#dummy_diskon');
+      diskon.val(formatRupiah(diskon.val().toString(), 'Rp.'));
+      $('#diskon').val(normalrupiah(diskon.val()));
+    });
+
+    function choose_barang(harga_jual) {
+      var input_harga_jual = $('#dummy_harga_jual');
+      input_harga_jual.val(formatRupiah(harga_jual.toString(), 'Rp.'));
+      $('#harga_jual').val(harga_jual);
+      $('#dummy_diskon').val(formatRupiah('0', 'Rp.'));
+      $('#modal_detail_penjualan').modal('show');
+    }
+
+    function overide_harga() {
+      $('#modal_password').modal('show');
+    }
+
+    $('#button-password-add').on('click', function() {
+      var password = $('#password_input').val();
+      $.ajax({
+        url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/cekPasswordDirektur'); ?>",
+        type: "post",
+        data: {
+          password: password
+        },
+        cache: false,
+        async: false,
+        success: function(data) {
+          if (data == 0) {
+            Swal.fire(
+              'Password Salah',
+              'Silahkan Ulangi',
+              'error'
+            )
+          } else {
+            $('#dummy_harga_jual').attr('readonly', false);
+          }
+        }
+      });
+    })
   </script>
 
   <!-- Script Pencarian Barang Fitur Select2 -->
@@ -389,7 +462,7 @@
             var results = [];
             for (var i in data.data) {
               results.push({
-                "id": data.data[i].tipe_barang + '-' + data.data[i].kode_barang + '-' + data.data[i].nama_barang + '-' + data.data[i].nama_satuan + '-' + data.data[i].jumlah_persediaan + '-' + data.data[i].jumlah_keranjang + '-' + data.data[i].status_jual,
+                "id": data.data[i].kode_barang + '-' + data.data[i].harga_satuan,
                 "text": data.data[i].kode_barang + ' - ' + data.data[i].nama_barang
               });
             };
@@ -402,18 +475,11 @@
       }).on('select2:select', function(evt) {
         var data = $("#select_nama_barang option:selected").val();
         str = data.split("-");
-        var tipe_barang = str[0]
-        var kode_barang = str[1];
-        var nama_barang = str[2];
-        var nama_satuan = str[3];
-        var jumlah_persediaan = str[4];
-        var jumlah_keranjang = str[5];
-        var status_jual = str[6];
+        var kode_barang = str[0]
+        var harga_jual = str[1];
+        choose_barang(harga_jual);
 
-        console.log(data);
-
-
-        choose_barang(tipe_barang, kode_barang, nama_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang, status_jual);
+        //choose_barang(tipe_barang, kode_barang, nama_barang, nama_satuan, jumlah_persediaan, jumlah_keranjang, status_jual);
         // if (jumlah_persediaan == 0) {
         //   persediaan_habis(nama_barang, satuan, jumlah_persediaan);
         // } else {
@@ -436,7 +502,7 @@
         url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/push_data_barang'); ?>",
         type: "post",
         data: {
-          no_order: no_order,
+          no_order_penjualan: no_order,
           id_pelanggan: id_pelanggan,
           jumlah_pembelian: jumlah,
           kode_barang: kode_barang
@@ -489,12 +555,12 @@
         dataType: "JSON",
         async: false,
         success: function(data) {
-          if (data.harga_total == null) {
+          if (data.total_harga == null) {
             total = 0;
             $('#terbilang_keranjang').text('Nol Rupiah');
           } else {
-            total = formatRupiah(data.harga_total, 'Rp.');
-            $('#terbilang_keranjang').text(terbilang(data.harga_total));
+            total = formatRupiah(data.total_harga, 'Rp.');
+            $('#terbilang_keranjang').text(terbilang(data.total_harga));
           }
           $('#total_keranjang').text(total);
 
@@ -536,7 +602,6 @@
           "type": "POST",
         },
         "columnDefs": [{
-            title: "No",
             data: "kode_barang",
             targets: 0,
             render: function(data, type, full, meta) {
@@ -544,7 +609,6 @@
             }
           },
           {
-            title: "Nama Barang",
             data: "nama_barang",
             targets: 1,
             render: function(data, type, full, meta) {
@@ -552,7 +616,6 @@
             }
           },
           {
-            title: "Harga Satuan",
             data: "harga_satuan",
             targets: 2,
             render: function(data, type, full, meta) {
@@ -561,7 +624,6 @@
             }
           },
           {
-            title: "Jumlah",
             data: "jumlah_pembelian",
             targets: 3,
             render: function(data, type, full, meta) {
@@ -570,8 +632,7 @@
             }
           },
           {
-            title: "Total",
-            data: "harga_total",
+            data: "total_harga",
             targets: 4,
             render: function(data, type, full, meta) {
               var display = formatRupiah(data, 'Rp.');
@@ -579,7 +640,6 @@
             }
           },
           {
-            title: "Action",
             data: "id",
             targets: 5,
             render: function(data, type, full, meta) {
@@ -657,7 +717,7 @@
           push_persediaan_temporary_batal(id);
           deleteData_keranjang(id);
           total_harga_keranjang();
-        
+
         }
       });
     }
@@ -701,7 +761,7 @@
         url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/push_total_perhitungan'); ?>",
         type: "post",
         data: {
-          no_order: no_order,
+          no_order_penjualan: no_order,
           total_keranjang: total_keranjang,
           diskon: diskon,
           pajak: pajak,
@@ -714,7 +774,6 @@
           view_modal_checkout(no_order);
         }
       })
-
     }
 
     function view_modal_checkout(no_order) {
@@ -741,7 +800,7 @@
           var total2 = total1 + parseInt(data.pajak) // data total setalah di tambah pajak 10%
           var total3 = total2 + parseInt(data.ongkir) // data grand_total setalah Pajak
 
-          var diskon = (parseInt(data.diskon)/parseInt(data.total_keranjang))*100;
+          var diskon = (parseInt(data.diskon) / parseInt(data.total_keranjang)) * 100;
 
 
           total_checkout.text(formatRupiah(data.total_keranjang, 'Rp.'));
@@ -778,7 +837,7 @@
         var total_diskon = normalrupiah($('#checkout_discount').text());
         var total_ongkir = normalrupiah($('#ongkir').val());
         var total_keranjang = normalrupiah($('#total_keranjang').text());
-        var grand_total = parseInt(total_keranjang)  -  parseInt(total_diskon);
+        var grand_total = parseInt(total_keranjang) - parseInt(total_diskon);
         grand_total = grand_total + parseInt(total_ongkir);
 
 
@@ -832,8 +891,8 @@
               var total_diskon = normalrupiah($('#checkout_discount').text());
               var total_ongkir = normalrupiah($('#ongkir').val());
               var total_keranjang = normalrupiah($('#total_keranjang').text());
-              var grand_total = parseInt(total_keranjang)  -  parseInt(total_diskon);
-                  grand_total = grand_total + parseInt(total_ongkir);
+              var grand_total = parseInt(total_keranjang) - parseInt(total_diskon);
+              grand_total = grand_total + parseInt(total_ongkir);
 
               push_total_perhitungan(no_order, total_keranjang, 0, 0, total_ongkir, grand_total);
 
@@ -844,8 +903,8 @@
               var total_keranjang = normalrupiah($('#total_keranjang').text());
               var grand_total = parseInt(total_keranjang) + parseInt(total_ongkir);
               var total_diskon = parseInt(total_keranjang) * (parseInt(data.potongan) / 100)
-              var grand_total = parseInt(total_keranjang)  -  parseInt(total_diskon);
-                  grand_total = grand_total + parseInt(total_ongkir);
+              var grand_total = parseInt(total_keranjang) - parseInt(total_diskon);
+              grand_total = grand_total + parseInt(total_ongkir);
 
               push_total_perhitungan(no_order, total_keranjang, total_diskon, 0, total_ongkir, grand_total);
             }
@@ -886,7 +945,7 @@
         if (isDisabled == false) {
           simpan_order(no_order, '', nama_pelanggan, alamat, nomor_telepon);
         } else {
-          simpan_order(no_order, id_pelanggan);        
+          simpan_order(no_order, id_pelanggan);
         }
       }
     });
@@ -896,7 +955,7 @@
         url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/simpan_order/'); ?>",
         type: "post",
         data: {
-          no_order: no_order,
+          no_order_penjualan: no_order,
           id_pelanggan: id_pelanggan,
           nama_pelanggan: nama_pelanggan,
           alamat: alamat,
@@ -961,23 +1020,22 @@
         async: false,
         success: function(data) {
 
-         Swal.fire({
-          title: 'Paid!!',
-          text: "Order " + no_order + " telah di bayar!",
-          icon: 'success',
-          showCancelButton: false,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Cetak Faktur ?'
-        }).then((result) => {
-          if (result.value) {
-             window.location.replace("<?= base_url('Manajemen_Penjualan/PenjualanBarang/Invoice/');?>" + no_order)
-          }
-        })
-          
-         
+          Swal.fire({
+            title: 'Paid!!',
+            text: "Order " + no_order + " telah di bayar!",
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Cetak Faktur ?'
+          }).then((result) => {
+            if (result.value) {
+              window.location.replace("<?= base_url('Manajemen_Penjualan/PenjualanBarang/Invoice/'); ?>" + no_order)
+            }
+          })
+
+
         }
       });
     })
-    
   </script>

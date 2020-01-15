@@ -201,4 +201,12 @@ class PenjualanBarang extends CI_Controller
     }
 
 
+    function cekPasswordDirektur()
+    {
+        $post = $this->input->post();
+        $output = $this->modelPenjualan->cekPasswordDirektur($post);
+        echo $output;
+
+    }
+
 }

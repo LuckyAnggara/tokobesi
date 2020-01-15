@@ -61,17 +61,17 @@ class Model_Penjualan_Barang extends CI_Model
     function push_data_barang()
     {
         $post = $this->input->post();
-        if ($post['id_pelanggan'] == null) {
-            $post['id_pelanggan'] = 0;
-        }
         $data = [
             'id_pelanggan' => $post['id_pelanggan'],
-            'no_order' => $post['no_order'],
+            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+            'no_order_penjualan' => $post['no_order_penjualan'],
             'kode_barang' => $post['kode_barang'],
             'jumlah_pembelian' => $post["jumlah_pembelian"],
-            'harga_total' => $this->_hitung_total($post['kode_barang'], $post['jumlah_pembelian']),
+            'harga_jual' => $post["harga_jual"],
+            'diskon' => $post["diskon"],
+            'total_harga' => $post["harga_jual"] * $post['jumlah_pembelian'],
         ];
-        $this->db->insert('tabel_keranjang_temp', $data);
+        $this->db->insert('temp_tabel_keranjang_penjualan', $data);
     }
 
     private function _hitung_total($kode_barang, $jumlah_pembelian)
@@ -86,10 +86,10 @@ class Model_Penjualan_Barang extends CI_Model
 
     function get_data_keranjang($no_order)
     {
-        $this->db->select('tabel_keranjang_temp.*, master_barang.*');
-        $this->db->from('tabel_keranjang_temp');
-        $this->db->join('master_barang', 'master_barang.kode_barang = tabel_keranjang_temp.kode_barang');
-        $this->db->where('no_order', $no_order);
+        $this->db->select('temp_tabel_keranjang_penjualan.*, master_barang.*');
+        $this->db->from('temp_tabel_keranjang_penjualan');
+        $this->db->join('master_barang', 'master_barang.kode_barang = temp_tabel_keranjang_penjualan.kode_barang');
+        $this->db->where('no_order_penjualan', $no_order);
         $output = $this->db->get();
         return $output;
     }
@@ -97,7 +97,7 @@ class Model_Penjualan_Barang extends CI_Model
     function delete_data_keranjang($id)
     {
         $this->db->where('id', $id);
-        $this->db->delete('tabel_keranjang_temp');
+        $this->db->delete('temp_tabel_keranjang_penjualan');
     }
 
     public function persediaan_temp_tambah()
@@ -121,7 +121,7 @@ class Model_Penjualan_Barang extends CI_Model
         if ($input !== null) {
             $post = $input;
             $this->db->select('*');
-            $this->db->from('tabel_keranjang_temp');
+            $this->db->from('temp_tabel_keranjang_penjualan');
             $this->db->where('id', $post['id']);
             $output_keranjang = $this->db->get()->row_array();
 
@@ -147,16 +147,16 @@ class Model_Penjualan_Barang extends CI_Model
         //  cek dulu apakah sudah di save apa blm
 
         $this->db->select('*');
-        $this->db->from('tabel_daftar_belanja'); 
-        $this->db->where('no_order', $no_order);
+        $this->db->from('temp_tabel_keranjang_penjualan'); 
+        $this->db->where('no_order_penjualan', $no_order);
         $cek = $this->db->get()->num_rows();
 
         if($cek > 0){
 
         }else{
         $this->db->select('*');
-        $this->db->from('tabel_keranjang_temp');
-        $this->db->where('no_order', $no_order);
+        $this->db->from('temp_tabel_keranjang_penjualan');
+        $this->db->where('no_order_penjualan', $no_order);
         $data = $this->db->get()->result_array();
 
         foreach ($data as $value) {
@@ -164,8 +164,8 @@ class Model_Penjualan_Barang extends CI_Model
         }
         }
 
-        $this->db->where('no_order', $no_order);
-        $this->db->delete('tabel_keranjang_temp');
+        $this->db->where('no_order_penjualan', $no_order);
+        $this->db->delete('temp_tabel_keranjang_penjualan');
 
         
     }
@@ -178,26 +178,26 @@ class Model_Penjualan_Barang extends CI_Model
             $id = $post['id_pelanggan'];
         }
         $data = array(
-            'no_order' => $post['no_order'],
+            'no_order_penjualan' => $post['no_order_penjualan'],
             'id_pelanggan' => $id,
             'status' => 0, // belum di proses masih di keranjang unpaid.
             'tanggal_input' => date("Y-m-d H:i:s"),
         );    
         
-        $cek = $this->_cekNoOrderTabel($post['no_order']);
+        $cek = $this->_cekNoOrderTabel($post['no_order_penjualan']);
         if($cek < 1){
-            $this->db->insert('tabel_daftar_belanja', $data);
+            $this->db->insert('temp_tabel_keranjang_penjualan', $data);
         }
-        $this->db->query('DELETE From tabel_keranjang_belanja Where no_order = '.$post['no_order']);
+        $this->db->query('DELETE From detail_penjualan Where no_order_penjualan = '.$post['no_order_penjualan']);
       
-        $this->db->query('INSERT INTO `tabel_keranjang_belanja`(`no_order`, `kode_barang`, `jumlah_pembelian`, `harga_total`) SELECT `no_order`, `kode_barang`, `jumlah_pembelian`, `harga_total` FROM tabel_keranjang_temp WHERE no_order = '. $post['no_order'].'');
+        $this->db->query('INSERT INTO `detail_penjualan`(`no_order_penjualan`, `kode_barang`, `jumlah_pembelian`, `total_harga`) SELECT `no_order_penjualan`, `kode_barang`, `jumlah_pembelian`, `total_harga` FROM temp_tabel_keranjang_penjualan WHERE no_order_penjualan = '. $post['no_order_penjualan'].'');
     }
 
     // cek nomor order apa udhh terddaftar di tabel, in case 2x klik simpan
     private function _cekNoOrderTabel($no_order){
         $this->db->select('*');
-        $this->db->from('tabel_daftar_belanja'); 
-        $this->db->where('no_order', $no_order);
+        $this->db->from('temp_tabel_keranjang_penjualan'); 
+        $this->db->where('no_order_penjualan', $no_order);
         return $this->db->get()->num_rows();
     }
 
@@ -221,11 +221,11 @@ class Model_Penjualan_Barang extends CI_Model
 
         $this->db->select('*');
         $this->db->from('tabel_perhitungan_order'); 
-        $this->db->where('no_order', $post['no_order']);
+        $this->db->where('no_order_penjualan', $post['no_order_penjualan']);
         $cek = $this->db->get()->num_rows();
 
         $data = array(
-            'no_order' => $post['no_order'],
+            'no_order_penjualan' => $post['no_order_penjualan'],
             'total_keranjang' => $post['total_keranjang'],
             'diskon' => $post['diskon'],
             'pajak' => $post['pajak'],
@@ -236,7 +236,7 @@ class Model_Penjualan_Barang extends CI_Model
         if($cek < 1){
         $this->db->insert('tabel_perhitungan_order', $data);
         }else{
-        $this->db->query('DELETE From tabel_perhitungan_order Where no_order = '.$post['no_order']); // delete dulu
+        $this->db->query('DELETE From tabel_perhitungan_order Where no_order_penjualan = '.$post['no_order_penjualan']); // delete dulu
         $this->db->insert('tabel_perhitungan_order', $data); // lalu tambah
         }
     }
@@ -245,7 +245,7 @@ class Model_Penjualan_Barang extends CI_Model
     {
        $this->db->select('*');
        $this->db->from('tabel_perhitungan_order');
-       $this->db->where('no_order', $no_order);
+       $this->db->where('no_order_penjualan', $no_order);
        $output = $this->db->get()->row_array();
        return $output;
     }
@@ -259,19 +259,19 @@ class Model_Penjualan_Barang extends CI_Model
        return $output;
     }
 
-    function bayar_checkout($no_order)
+    function bayar_checkout($no_order_penjualan)
     {
 
       $no_faktur =  $this->_generate_no_faktur();
 
-      $this->db->query('UPDATE tabel_daftar_belanja INNER JOIN tabel_perhitungan_order ON tabel_perhitungan_order.no_order = tabel_daftar_belanja.no_order SET tabel_daftar_belanja.total_keranjang = tabel_perhitungan_order.total_keranjang, tabel_daftar_belanja.diskon = tabel_perhitungan_order.diskon, tabel_daftar_belanja.pajak = tabel_perhitungan_order.pajak, tabel_daftar_belanja.ongkir = tabel_perhitungan_order.ongkir, tabel_daftar_belanja.grand_total = tabel_perhitungan_order.grand_total where  tabel_perhitungan_order.no_order =  '.$no_order );
+      $this->db->query('UPDATE temp_tabel_keranjang_penjualan INNER JOIN tabel_perhitungan_order ON tabel_perhitungan_order.no_order_penjualan = temp_tabel_keranjang_penjualan.no_order_penjualan SET temp_tabel_keranjang_penjualan.total_keranjang = tabel_perhitungan_order.total_keranjang, temp_tabel_keranjang_penjualan.diskon = tabel_perhitungan_order.diskon, temp_tabel_keranjang_penjualan.pajak = tabel_perhitungan_order.pajak, temp_tabel_keranjang_penjualan.ongkir = tabel_perhitungan_order.ongkir, temp_tabel_keranjang_penjualan.grand_total = tabel_perhitungan_order.grand_total where  tabel_perhitungan_order.no_order_penjualan =  '.$no_order );
        
       $data = [
             'no_faktur' => $no_faktur,
             'status' =>1
         ];
-        $this->db->where('no_order', $no_order);
-        $this->db->update('tabel_daftar_belanja', $data);
+        $this->db->where('no_order_penjualan', $no_order);
+        $this->db->update('temp_tabel_keranjang_penjualan', $data);
     }
 
     private function _generate_no_faktur()
@@ -280,5 +280,20 @@ class Model_Penjualan_Barang extends CI_Model
         $number = random_string('numeric', 7);
 
         return strtoupper($alpha).$number;
+    }
+
+    function cekPasswordDirektur($post)
+    {
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('jabatan', 'Direktur');
+        $this->db->where('password', $post['password']);
+        $data = $this->db->get()->num_rows();
+        
+        if($data >0){
+            return 1;
+        }else{
+            return 0;
+        }
     }
 }
