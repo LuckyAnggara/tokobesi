@@ -103,16 +103,38 @@ class PenjualanBarang extends CI_Controller
 
     public function get_sum_keranjang($no_order)
     {
+        // if (empty($no_order)) {
+        //     $output = array(
+        //         "total_harga" => '0'
+        //     );
+        //     $output = json_encode($output);
+        //     echo $output;
+        // } else {
+        //     $this->db->select_sum('total_harga');
+        //     $this->db->where('no_order_penjualan', $no_order);
+        //     $output = $this->db->get('temp_tabel_keranjang_penjualan')->row();
+        //     $output = json_encode($output);
+        //     echo $output;
+        // }
+
+        $output = $this->modelPenjualan->get_sum_keranjang($no_order);
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
+    public function get_sum_diskon($no_order)
+    {
         if (empty($no_order)) {
             $output = array(
-                "harga_total" => '0'
+                "diskon" => '0'
             );
             $output = json_encode($output);
             echo $output;
         } else {
-            $this->db->select_sum('harga_total');
-            $this->db->where('no_order', $no_order);
-            $output = $this->db->get('tabel_keranjang_temp')->row();
+            $this->db->select_sum('diskon');
+            $this->db->where('no_order_penjualan', $no_order);
+            $output = $this->db->get('temp_tabel_keranjang_penjualan')->row();
             $output = json_encode($output);
             echo $output;
         }
@@ -178,10 +200,9 @@ class PenjualanBarang extends CI_Controller
         echo $output;
     }
 
-    function bayar_checkout($no_order){
-        $data = $this->modelPenjualan->bayar_checkout($no_order);
-        $output = json_encode($data);
-        echo $output;
+    function bayar_checkout(){
+        $post = $this->input->post();
+        $data = $this->modelPenjualan->proses_penjualan($post);
     }
 
     function invoice($no_order)
