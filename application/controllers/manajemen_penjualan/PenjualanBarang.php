@@ -40,6 +40,8 @@ class PenjualanBarang extends CI_Controller
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang', $data);
         $this->load->view('template/template_right');
+        $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_modal');
+        $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
         $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang_js');
         $this->load->view('template/template_app_js');
@@ -165,19 +167,6 @@ class PenjualanBarang extends CI_Controller
 
     // checkout penjualan
 
-    public function checkout_order($no_order)
-    {
-        $data['css'] = 'manajemen_penjualan/penjualan_barang/penjualan_barang_css';
-        $data['title'] = "Checkout Order";
-        $this->load->view('template/template_header', $data);
-        $this->load->view('template/template_menu');
-        $this->load->view('manajemen_penjualan/checkout_order/checkout_order', $data);
-        $this->load->view('template/template_right');
-        $this->load->view('template/template_js');
-        $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang_js');
-        $this->load->view('template/template_app_js');
-    }
-
     function simpan_order(){
         $post = $this->input->post();
         $this->modelPenjualan->simpan_order($post);
@@ -208,16 +197,16 @@ class PenjualanBarang extends CI_Controller
     function invoice($no_order)
     {
         $data['nama_perusahaan'] = 'PT. BERKAH BAJA MAKMUR';
-        $data['data_order'] = $this->modelInvoice->get_data_order($no_order);
-        $data['detail_order'] = $this->modelInvoice->get_detail_order($no_order);
+        //$data['data_order'] = $this->modelInvoice->get_data_order($no_order);
+        //$data['detail_order'] = $this->modelInvoice->get_detail_order($no_order);
         $data['css'] = 'manajemen_penjualan/penjualan_barang/penjualan_barang_css';
         $data['title'] = "Cetak Faktur";
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_penjualan/invoice/invoice', $data);
         $this->load->view('template/template_right');
+        $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
-        // $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang_js');
         $this->load->view('template/template_app_js');
     }
 

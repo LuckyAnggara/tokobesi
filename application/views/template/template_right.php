@@ -21,7 +21,7 @@
             <li class="list-group-item">
                 <a href="#" class="user-list-item">
                     <div class="icon bg-info">
-                        <i class="dripicons-cart"></i>
+                        <i class="mdi mdi-account"></i>
                     </div>
                     <div class="user-desc">
                         <span class="name">New Signup</span>
@@ -73,4 +73,4 @@
 <!-- /Right-bar -->
 
 </div>
-<!-- END wrapper -->
+<!-- end wrapper -->

@@ -20,13 +20,14 @@ class MasterBarang extends CI_Controller
         $data['merek'] = $this->modelBarang->get_data_tjms('master_merek_barang');
         $data['satuan'] = $this->modelBarang->get_data_tjms('master_satuan_barang');
         $data['supplier'] = $this->modelBarang->get_data_tjms('master_supplier');
-
         $data['css'] = 'manajemen_barang/master_barang/master_barang_css';
         $data['title'] = "Data Barang";
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_barang/master_barang/master_barang');
         $this->load->view('template/template_right');
+        $this->load->view('manajemen_barang/master_barang/master_barang_modal');
+        $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
         $this->load->view('manajemen_barang/master_barang/master_barang_js');
         $this->load->view('manajemen_barang/master_barang/master_barang_chart_js');
@@ -120,6 +121,8 @@ class MasterBarang extends CI_Controller
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_barang/master_barang/detail_barang/detail_barang', $data);
         $this->load->view('template/template_right');
+        $this->load->view('manajemen_barang/master_barang/detail_barang/detail_barang_modal');
+        $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
         $this->load->view('manajemen_barang/master_barang/detail_barang/detail_barang_js');
         $this->load->view('template/template_app_js');
