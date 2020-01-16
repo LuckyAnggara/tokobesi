@@ -20,6 +20,7 @@ class PembelianBarang extends CI_Controller
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_pembelian/pembelian_barang/pembelian_barang', $data);
         $this->load->view('template/template_right');
+        $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
         $this->load->view('manajemen_pembelian/pembelian_barang/pembelian_barang_js');
         $this->load->view('template/template_app_js');

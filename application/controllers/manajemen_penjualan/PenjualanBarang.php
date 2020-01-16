@@ -105,20 +105,6 @@ class PenjualanBarang extends CI_Controller
 
     public function get_sum_keranjang($no_order)
     {
-        // if (empty($no_order)) {
-        //     $output = array(
-        //         "total_harga" => '0'
-        //     );
-        //     $output = json_encode($output);
-        //     echo $output;
-        // } else {
-        //     $this->db->select_sum('total_harga');
-        //     $this->db->where('no_order_penjualan', $no_order);
-        //     $output = $this->db->get('temp_tabel_keranjang_penjualan')->row();
-        //     $output = json_encode($output);
-        //     echo $output;
-        // }
-
         $output = $this->modelPenjualan->get_sum_keranjang($no_order);
 
         $output = json_encode($output);
@@ -217,6 +203,12 @@ class PenjualanBarang extends CI_Controller
         $output = $this->modelPenjualan->cekPasswordDirektur($post);
         echo $output;
 
+    }
+
+    function get_data_persediaan($kode_barang)
+    {
+        $output = $this->modelPenjualan->get_data_persediaan($kode_barang);
+        echo $output;
     }
 
 }

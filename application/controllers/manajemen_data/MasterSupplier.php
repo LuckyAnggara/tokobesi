@@ -7,19 +7,20 @@ class MasterSupplier extends CI_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Manajemen_Barang/Model_Master_Supplier', 'modelSupplier');
+        $this->load->model('Manajemen_Data/Model_Master_Supplier', 'modelSupplier');
     }
 
     public function index()
     {
-        $data['css'] = 'manajemen_barang/master_supplier/master_supplier_css';
-        $data['title'] = "Data Supplier";
+        $data['css'] = 'manajemen_data/master_supplier/master_supplier_css';
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
-        $this->load->view('manajemen_barang/master_supplier/master_supplier');
+        $this->load->view('manajemen_data/master_supplier/master_supplier');
         $this->load->view('template/template_right');
+        $this->load->view('manajemen_data/master_supplier/master_supplier_modal');
+        $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
-        $this->load->view('manajemen_barang/master_supplier/master_supplier_js');
+        $this->load->view('manajemen_data/master_supplier/master_supplier_js');
         $this->load->view('template/template_app_js');
     }
 

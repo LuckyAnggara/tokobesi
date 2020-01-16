@@ -44,7 +44,10 @@
                             <ul class="submenu">
                                 <li>
                                     <ul>
-                                        <li><a href="<?= base_url('Manajemen_Barang/MasterSupplier'); ?>">Master Data Supplier </a></li>
+                                    
+                                        <li><a href="<?= base_url('Manajemen_Data/MasterPelanggan'); ?>">Master Data Pelanggan </a></li>
+                                        <li><a href="<?= base_url('Manajemen_Data/MasterSupplier'); ?>">Master Data Supplier </a></li>
+                                        <hr>
                                         <li><a href="<?= base_url('Manajemen_Data/MasterJenisBarang'); ?>">Master Data Jenis Barang </a></li>
                                         <li><a href="<?= base_url('Manajemen_Data/MasterMerekBarang'); ?>">Master Data Merk Barang </a></li>
                                         <li><a href="<?= base_url('Manajemen_Data/MasterSatuan'); ?>">Master Data Satuan </a></li>

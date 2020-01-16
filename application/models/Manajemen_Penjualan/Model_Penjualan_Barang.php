@@ -12,7 +12,7 @@ class Model_Penjualan_Barang extends CI_Model
     function get_data_by_id($id_pelanggan)
     {
         $this->db->select('*');
-        $this->db->from('tabel_pelanggan');
+        $this->db->from('master_pelanggan');
         $this->db->where('id_pelanggan', $id_pelanggan);
 
         return $this->db->get()->row_array();
@@ -96,8 +96,20 @@ class Model_Penjualan_Barang extends CI_Model
 
     function delete_data_keranjang($id)
     {
+
+        $this->db->select('*');
+        $this->db->from('temp_tabel_keranjang_penjualan');
+        $this->db->where('id', $id);
+        $data = $this->db->get()->result_array();
+
+        foreach ($data as $value) {
+            $this->persediaan_temp_batal($value);
+        }
+
         $this->db->where('id', $id);
         $this->db->delete('temp_tabel_keranjang_penjualan');
+
+
     }
 
     public function persediaan_temp_tambah()
@@ -162,11 +174,7 @@ class Model_Penjualan_Barang extends CI_Model
         $this->db->delete('temp_tabel_keranjang_penjualan');
         }else{
         
-        }
-
-        
-
-        
+        }  
     }
 
     function simpan_order($post)
@@ -211,7 +219,7 @@ class Model_Penjualan_Barang extends CI_Model
             'nomor_telepon' => $post['nomor_telepon'],
             'status' => 1 // dummy id.
         );
-        $this->db->insert('tabel_pelanggan', $data);
+        $this->db->insert('master_pelanggan', $data);
         return $id;
     }
 
@@ -397,5 +405,14 @@ class Model_Penjualan_Barang extends CI_Model
 
         }
 
+    }
+
+    function get_data_persediaan($kode_barang)
+    {
+        $this->db->select('*');
+        $this->db->from('master_persediaan');
+        $this->db->where('kode_barang', $kode_barang);
+        $data = $this->db->get()->row_array();
+        return $data['jumlah_persediaan'];
     }
 }

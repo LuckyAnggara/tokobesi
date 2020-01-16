@@ -1,7 +1,11 @@
-<div class="content-page">
-    <!-- Start content -->
-    <div class="content">
+
         <div class="container-fluid">
+            <!-- Page-Title -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="page-title">Transaksi Pembelian</h4>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-6">
                     <div class="card-box">
@@ -178,13 +182,5 @@
                     </div>
                 </div>
             </div>
-
-
         </div> <!-- container -->
 
-    </div> <!-- content -->
-
-    <?php $this->view('template/template_footer'); ?>
-
-
-</div>
