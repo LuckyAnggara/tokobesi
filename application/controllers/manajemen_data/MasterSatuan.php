@@ -16,10 +16,12 @@ class MasterSatuan extends CI_Controller
         $data['title'] = "Data Satuan";
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
-        $this->load->view('manajemen_data/master_Satuan/master_satuan');
+        $this->load->view('manajemen_data/master_satuan/master_satuan');
         $this->load->view('template/template_right');
+        $this->load->view('manajemen_data/master_satuan/master_satuan_modal');
+        $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
-        $this->load->view('manajemen_data/master_Satuan/master_satuan_js');
+        $this->load->view('manajemen_data/master_satuan/master_satuan_js');
         $this->load->view('template/template_app_js');
     }
 

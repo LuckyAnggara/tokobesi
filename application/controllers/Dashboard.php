@@ -22,12 +22,12 @@ class Dashboard extends CI_Controller
 	public function index()
 	{
 		$data['css'] = 'dashboard/dashboard_css';
-		$data['title'] = "Dashboard";
 		$this->load->view('template/template_header', $data);
 		$this->load->view('template/template_menu');
 		$this->load->view('dashboard/dashboard');
-		$this->load->view('template/template_right');
-		$this->load->view('template/template_js');
+		 $this->load->view('template/template_right');
+        $this->load->view('template/template_footer');
+        $this->load->view('template/template_js');
 		$this->load->view('dashboard/dashboard_js');
 		$this->load->view('template/template_app_js');
 	}

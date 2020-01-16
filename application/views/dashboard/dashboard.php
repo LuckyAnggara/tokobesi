@@ -1,11 +1,12 @@
             <!-- ============================================================== -->
             <!-- Start right Content here -->
             <!-- ============================================================== -->
-            <div class="content-page">
-                <!-- Start content -->
-                <div class="content">
                     <div class="container-fluid">
-
+                    <div class="row">
+                            <div class="col-sm-12">
+                                <h4 class="page-title">Dashboard Executive</h4>
+                            </div>
+                        </div>
                         <div class="row">
 
                             <div class="col-xl-3 col-md-6">
@@ -87,7 +88,6 @@
 
                         </div>
                         <!-- end row -->
-
                         <div class="row">
                             
 
@@ -128,12 +128,4 @@
 
                         </div>
                         <!-- end row -->
-
-
                     </div> <!-- container -->
-
-                </div> <!-- content -->
-
-                <?php $this->view('template/template_footer'); ?>
-
-            </div>

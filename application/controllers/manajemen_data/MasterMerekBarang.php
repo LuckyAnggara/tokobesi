@@ -16,10 +16,12 @@ class MasterMerekBarang extends CI_Controller
         $data['title'] = "Data Merek Barang";
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
-        $this->load->view('manajemen_data/master_Merek_Barang/master_merek_barang');
-        $this->load->view('template/template_right');
+        $this->load->view('manajemen_data/master_merek_barang/master_merek_barang');
+       $this->load->view('template/template_right');
+        $this->load->view('manajemen_data/master_merek_barang/master_merek_barang_modal');
+        $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
-        $this->load->view('manajemen_data/master_Merek_Barang/master_merek_barang_js');
+        $this->load->view('manajemen_data/master_merek_barang/master_merek_barang_js');
         $this->load->view('template/template_app_js');
     }
 
