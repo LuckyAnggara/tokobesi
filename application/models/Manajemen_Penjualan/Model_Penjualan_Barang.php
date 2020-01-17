@@ -186,6 +186,7 @@ class Model_Penjualan_Barang extends CI_Model
         }
         $data = array(
             'no_order_penjualan' => $post['no_order_penjualan'],
+            'tipe_pelanggan'=>'dummy',
             'id_pelanggan' => $id,
             'status' => 0, // belum di proses masih di keranjang unpaid.
             'tanggal_input' => date("Y-m-d H:i:s"),
