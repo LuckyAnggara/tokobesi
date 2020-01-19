@@ -16,6 +16,7 @@ class Model_Pembelian_Barang extends CI_Model
         $this->db->where('no_order_pembelian', $no_order);
         $this->db->delete('temp_tabel_keranjang_pembelian');
 
+
         $this->db->where('no_order', $no_order);
         $this->db->delete('tabel_perhitungan_order');
     }
@@ -48,25 +49,62 @@ class Model_Pembelian_Barang extends CI_Model
         }
     }
 
-    function push_data_barang($post)
+    function push_data_barang()
     {
-        $harga_total = $post['jumlah_pembelian']*$post['harga_beli'];
+        $post = $this->input->post();
         $data = [
             'no_order_pembelian' => $post['no_order_pembelian'],
-            'tanggal_transaksi' => date('Y-m-d H:i:s',strtotime($post['tanggal_transaksi'])),
+            'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
             'kode_barang' => $post['kode_barang'],
             'jumlah_pembelian' => $post["jumlah_pembelian"],
             'harga_beli' => $post["harga_beli"],
-            'diskon' => 0,
-            'total_harga' => $harga_total,
+            'diskon' => $post["diskon"],
+            'total_harga' => $post["harga_beli"] * $post['jumlah_pembelian'] - $post['diskon'],
             'tanggal_input' => date("Y-m-d H:i:s"),
         ];
         $this->db->insert('temp_tabel_keranjang_pembelian', $data);
     }
 
+    function push_total_perhitungan($post)
+    {
+
+        $this->db->select_sum('diskon');
+        $this->db->where('no_order_pembelian', $post['no_order_pembelian']);
+        $diskon = $this->db->get('temp_tabel_keranjang_pembelian')->row_array();
+
+        $this->db->select_sum('total_harga');
+        $this->db->where('no_order_pembelian', $post['no_order_pembelian']);
+        $total_harga = $this->db->get('temp_tabel_keranjang_pembelian')->row_array();
+
+        $total_keranjang = $total_harga['total_harga'] + $diskon['diskon'];
+
+        $grand_total = (($total_keranjang - $diskon['diskon']) + $post['pajak']) + $post['ongkir'];
+
+        $this->db->select('*');
+        $this->db->from('tabel_perhitungan_order');
+        $this->db->where('no_order', $post['no_order_pembelian']);
+        $cek = $this->db->get()->num_rows();
+
+        $data = array(
+            'no_order' => $post['no_order_pembelian'],
+            'total_keranjang' => $total_keranjang,
+            'diskon' => $diskon['diskon'],
+            'pajak' => $post['pajak'],
+            'ongkir' => $post['ongkir'],
+            'grand_total' => $grand_total
+        );
+
+        if ($cek < 1) {
+            $this->db->insert('tabel_perhitungan_order', $data);
+        } else {
+            $this->db->query("DELETE From tabel_perhitungan_order Where no_order = '" . $post['no_order_pembelian'] . "'"); // delete dulu
+            $this->db->insert('tabel_perhitungan_order', $data); // lalu tambah
+        }
+    }
+
     function get_data_keranjang($no_order_pembelian)
     {
-        $this->db->select('temp_tabel_keranjang_pembelian.harga_beli,temp_tabel_keranjang_pembelian.jumlah_pembelian,temp_tabel_keranjang_pembelian.total_harga,temp_tabel_keranjang_pembelian.id, master_barang.kode_barang,master_barang.nama_barang');
+        $this->db->select('temp_tabel_keranjang_pembelian.*, master_barang.*');
         $this->db->from('temp_tabel_keranjang_pembelian');
         $this->db->join('master_barang', 'master_barang.kode_barang = temp_tabel_keranjang_pembelian.kode_barang');
         $this->db->where('no_order_pembelian', $no_order_pembelian);
@@ -97,7 +135,7 @@ class Model_Pembelian_Barang extends CI_Model
         if ($cek < 1) {
             $this->db->insert('tabel_perhitungan_order', $data);
         } else {
-            $this->db->query("DELETE From tabel_perhitungan_order Where no_order = '" . $post['no_order_pembelian']. "'"); // delete dulu
+            $this->db->query("DELETE From tabel_perhitungan_order Where no_order = '" . $post['no_order_pembelian'] . "'"); // delete dulu
             $this->db->insert('tabel_perhitungan_order', $data); // lalu tambah
         }
     }
@@ -111,46 +149,114 @@ class Model_Pembelian_Barang extends CI_Model
         return $output;
     }
 
-    function proses_pembelian($post)
+    function get_sum_keranjang($no_order)
     {
-        // input data baru
+        $this->db->select_sum('diskon');
+        $this->db->where('no_order_pembelian', $no_order);
+        $diskon = $this->db->get('temp_tabel_keranjang_pembelian')->row_array();
 
+        $this->db->select_sum('total_harga');
+        $this->db->where('no_order_pembelian', $no_order);
+        $total_harga = $this->db->get('temp_tabel_keranjang_pembelian')->row_array();
+        $output = array(
+            "total_pembelian" => $total_harga['total_harga'] + $diskon['diskon'],
+            "diskon" => $diskon['diskon'],
+            "total_harga" => $total_harga['total_harga']
+        );
+
+        return $output;
+    }
+
+
+    function proses_tunai($post)
+    {
         $data = array(
             'no_order_pembelian' => $post['no_order_pembelian'],
             'nomor_transaksi' => $post['nomor_transaksi'],
-            'tanggal_transaksi' => date('Y-m-d H:i:s',strtotime($post['tanggal_transaksi'])),
+            'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
             'kode_supplier' => $post['kode_supplier'],
             'tanggal_input' =>  date("Y-m-d H:i:s"),
-            'status' => 0, // 0 untuk lunas 1 untuk nyicil cashbon
-            'user_input' =>'udin',
+            'status_bayar' => 1, // 1 untuk lunas 0 untuk nyicil cashbon
+            'user_input' => 'udin',
         );
 
         $this->db->insert('master_pembelian', $data);
 
         // update data total pembelian
-        $this->db->query("UPDATE master_pembelian INNER JOIN tabel_perhitungan_order ON tabel_perhitungan_order.no_order = master_pembelian.no_order_pembelian SET master_pembelian.total_pembelian = tabel_perhitungan_order.total_keranjang, master_pembelian.diskon = tabel_perhitungan_order.diskon, master_pembelian.pajak_keluaran = tabel_perhitungan_order.pajak, master_pembelian.ongkir = tabel_perhitungan_order.ongkir, master_pembelian.grand_total = tabel_perhitungan_order.grand_total where  tabel_perhitungan_order.no_order = '" . $post['no_order_pembelian']."'");
+        $this->db->query("UPDATE master_pembelian INNER JOIN tabel_perhitungan_order ON tabel_perhitungan_order.no_order = master_pembelian.no_order_pembelian SET master_pembelian.total_pembelian = tabel_perhitungan_order.total_keranjang, master_pembelian.diskon = tabel_perhitungan_order.diskon, master_pembelian.pajak_keluaran = tabel_perhitungan_order.pajak, master_pembelian.ongkir = tabel_perhitungan_order.ongkir, master_pembelian.grand_total = tabel_perhitungan_order.grand_total where  tabel_perhitungan_order.no_order = '" . $post['no_order_pembelian'] . "'");
 
-        $this->_tambah_data_persediaan($post);
+
         $this->_tambah_detail_pembelian($post);
+        $this->_tambah_data_persediaan($post);
+        $this->_delete_detail_pembelian_temp($post);
+    }
 
+    function proses_kredit($post)
+    {
+        $data = array(
+            'no_order_pembelian' => $post['no_order_pembelian'],
+            'nomor_transaksi' => $post['nomor_transaksi'],
+            'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
+            'kode_supplier' => $post['kode_supplier'],
+            'tanggal_input' =>  date("Y-m-d H:i:s"),
+            'status_bayar' => 0, // 1 untuk lunas 0 untuk nyicil cashbon
+            'user_input' => 'udin',
+        );
+
+        $this->db->insert('master_pembelian', $data);
+
+        // update data total pembelian
+        $this->db->query("UPDATE master_pembelian INNER JOIN tabel_perhitungan_order ON tabel_perhitungan_order.no_order = master_pembelian.no_order_pembelian SET master_pembelian.total_pembelian = tabel_perhitungan_order.total_keranjang, master_pembelian.diskon = tabel_perhitungan_order.diskon, master_pembelian.pajak_keluaran = tabel_perhitungan_order.pajak, master_pembelian.ongkir = tabel_perhitungan_order.ongkir, master_pembelian.grand_total = tabel_perhitungan_order.grand_total where  tabel_perhitungan_order.no_order = '" . $post['no_order_pembelian'] . "'");
+
+
+        $this->_tambah_detail_pembelian($post);
+        $this->_delete_detail_pembelian_temp($post);
+        $this->_tambah_data_persediaan($post);
+        $this->_proses_kredit($post);
+    }
+
+
+    private function _proses_kredit($post)
+    {
+        $this->db->select('grand_total');
+        $this->db->from('master_pembelian');
+        $this->db->where('nomor_transaksi', $post['nomor_transaksi']);
+        $grand_total = $this->db->get()->row_array();
+        $sisa_pembayaran = $grand_total['grand_total'] - $post['down_payment'];
+
+        $data = array(
+            'nomor_transaksi' => $post['nomor_transaksi'],
+            'tanggal_jatuh_tempo' => date('Y-m-d H:i:s', strtotime($post['tanggal_jatuh_tempo'])),
+            'down_payment' => $post['down_payment'],
+            'sisa_pembayaran' => $sisa_pembayaran,
+            'tanggal_input' =>  date("Y-m-d H:i:s"),
+            'user' => 'usn',
+        );
+        $this->db->insert('master_hutang', $data);
     }
 
     private function _tambah_detail_pembelian($post)
     {
-        $this->db->query("INSERT INTO `detail_pembelian`(`tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input`) SELECT `tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input` FROM temp_tabel_keranjang_pembelian WHERE no_order_pembelian = '" . $post['no_order_pembelian']."'");
+        $this->db->query("INSERT INTO `detail_pembelian`(`tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input`) SELECT `tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input` FROM temp_tabel_keranjang_pembelian WHERE no_order_pembelian = '" . $post['no_order_pembelian'] . "'");
 
-        
+
         $update = [
-                'nomor_transaksi' => $post['nomor_transaksi']
+            'nomor_transaksi' => $post['nomor_transaksi']
         ];
         $this->db->where('no_order_pembelian', $post['no_order_pembelian']);
         $this->db->update('detail_pembelian', $update);
     }
 
+    private function _delete_detail_pembelian_temp($post)
+    {
+        $this->db->where('no_order_pembelian', $post['no_order_pembelian']);
+        $this->db->delete('temp_tabel_keranjang_pembelian');
+    }
+
     private function _tambah_data_persediaan($post)
     {
         $this->db->select('*');
-        $this->db->from('temp_tabel_keranjang_pembelian');
+        $this->db->from('detail_pembelian');
         $this->db->where('no_order_pembelian', $post['no_order_pembelian']);
         $data = $this->db->get()->result_array();
 
@@ -167,7 +273,5 @@ class Model_Pembelian_Barang extends CI_Model
             $this->db->where('kode_barang', $value['kode_barang']);
             $this->db->update('master_persediaan', $update);
         }
-
     }
-
 }

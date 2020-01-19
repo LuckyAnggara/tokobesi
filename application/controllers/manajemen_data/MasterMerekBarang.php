@@ -8,16 +8,17 @@ class MasterMerekBarang extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Manajemen_Data/Model_Master_Merek_Barang', 'modelMerek_Barang');
+        $this->load->model('Setting/Model_Setting', 'modelSetting');
     }
 
     public function index()
     {
         $data['css'] = 'manajemen_data/master_merek_barang/master_merek_barang_css';
-        $data['title'] = "Data Merek Barang";
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_data/master_merek_barang/master_merek_barang');
-       $this->load->view('template/template_right');
+        $this->load->view('template/template_right');
         $this->load->view('manajemen_data/master_merek_barang/master_merek_barang_modal');
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');

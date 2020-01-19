@@ -9,12 +9,13 @@ class MasterPersediaan extends CI_Controller
 		parent::__construct();
 		$this->load->model('Manajemen_Barang/Model_Master_Persediaan', 'modelpersediaan');
 		$this->load->model('Manajemen_Barang/Model_Detail_Persediaan', 'detailpersediaan');
+		$this->load->model('Setting/Model_Setting', 'modelSetting');
 	}
 
 	public function index()
 	{
 		$data['css'] = 'manajemen_barang/master_persediaan/master_persediaan_css';
-		$data['title'] = "Persediaan Barang";
+		$data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
 		$this->load->view('template/template_header', $data);
 		$this->load->view('template/template_menu');
 		$this->load->view('manajemen_barang/master_persediaan/master_persediaan');

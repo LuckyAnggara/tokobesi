@@ -12,7 +12,9 @@
                                 <li>
                                     <ul>
                                         <li><a href="<?= base_url('Manajemen_Penjualan/PenjualanBarang'); ?>">Penjualan Barang</a></li>
-                                        <li><a href="<?= base_url('Manajemen_Barang/'); ?>">Daftar Order</a></li>
+                                        <hr>
+                                        <li><a href="<?= base_url('Manajemen_Penjualan/DaftarTransaksiPenjualan'); ?>">Daftar Transaksi</a></li>
+                                        <li><a href="<?= base_url('Manajemen_Penjualan/ReturPenjualan'); ?>">Retur Transaksi Penjualan</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -23,6 +25,8 @@
                                 <li>
                                     <ul>
                                         <li><a href="<?= base_url('Manajemen_Pembelian/PembelianBarang'); ?>">Pembelian Barang</a></li>
+                                        <hr>
+                                        <li><a href="<?= base_url('Manajemen_Pembelian/DaftarTransaksiPembelian'); ?>">Daftar Transaksi</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -33,7 +37,8 @@
                                 <li>
                                     <ul>
                                         <li><a href="<?= base_url('Manajemen_Barang/MasterPersediaan'); ?>">Master Persediaan</a></li>
-                                        <li><a href="<?= base_url('Manajemen_Barang/MasterBarang'); ?>">Master Barang</a></li>
+                                        <li><a href="<?= base_url('Manajemen_Persediaan/KartuPersediaan'); ?>">Kartu Persediaan</a></li>
+
                                     </ul>
                                 </li>
                             </ul>
@@ -44,7 +49,8 @@
                             <ul class="submenu">
                                 <li>
                                     <ul>
-                                    
+                                        <li><a href="<?= base_url('Manajemen_Barang/MasterBarang'); ?>">Master Barang</a></li>
+                                        <hr>
                                         <li><a href="<?= base_url('Manajemen_Data/MasterPelanggan'); ?>">Master Data Pelanggan </a></li>
                                         <li><a href="<?= base_url('Manajemen_Data/MasterSupplier'); ?>">Master Data Supplier </a></li>
                                         <hr>

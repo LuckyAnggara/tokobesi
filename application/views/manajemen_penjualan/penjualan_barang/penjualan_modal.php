@@ -69,25 +69,30 @@
                 </div>
                 <hr>
                 <div hidden id="kredit_div">
-                 <div class="form-group row">
-                    <label class="col-5 colform-label m-t-5">Down Payment (DP)</label>
-                    <div class="col-7">
-                        <div class="input-group">
-                            <input id="dummy_dp" autocomplete="off" name="ongkir" type="text" class="form-control" val="0">
-                            <input hidden id="dp" autocomplete="off" name="ongkir" type="text" class="form-control" val="0">
-                            <div class="input-group-append">
-                                <button id="apply_dp" name="apply_dp" class="btn btn-dark waves-effect waves-light" type="button">30%</button>
+                    <div class="form-group row">
+                        <label class="col-5 colform-label m-t-5">Down Payment (DP)</label>
+                        <div class="col-7">
+                            <div class="input-group">
+                                <input id="dummy_dp" autocomplete="off" name="ongkir" type="text" class="form-control" val="0">
+                                <input hidden id="dp" autocomplete="off" name="ongkir" type="text" class="form-control" val="0">
+                                <div class="input-group-append">
+                                    <button id="apply_dp" name="apply_dp" class="btn btn-dark waves-effect waves-light" type="button">0%</button>
+                                </div>
                             </div>
+                            <small id="id_pelanggan_help" class="form-text text-muted">Input ongkos kirim jika ada dan centang ceklist</small>
                         </div>
-                        <small id="id_pelanggan_help" class="form-text text-muted">Input ongkos kirim jika ada dan centang ceklist</small>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-5 col-form-label m-t-5">Tanggal Jatuh Tempo</label>
-                    <div class="col-7">
-                        <input type="text" id="tanggal_jatuh_tempo">
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label m-t-5">Tanggal Jatuh Tempo</label>
+                        <div class="col-sm-7">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="mm/dd/yyyy" id="tanggal_jatuh_tempo">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="ti-calendar"></i></span>
+                                </div>
+                            </div><!-- input-group -->
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
             <!-- dummy input -->
@@ -97,14 +102,14 @@
             <small hidden id="ongkir_dummy" class="form-text text-muted"></small>
             <small hidden id="grand_total_dummy" class="form-text text-muted"></small>
             <div class="modal-footer">
-                <div class="col-6 text-left">
+                <div id="div_tombol_kredit" hidden class="col-6 text-left">
                     <label for="inlineRadio1"> Tunai </label>
-                    <input id="check_pembayaran" type="checkbox" data-plugin="switchery" data-color="#ED5565" data-secondary-color="#00b845"  />
+                    <input id="check_pembayaran" type="checkbox" data-plugin="switchery" data-color="#ED5565" data-secondary-color="#00b845" />
                     <label for="inlineRadio2"> Kredit </label>
                 </div>
                 <div class="col-6 text-right">
-                <button id="batal_checkout" name="batal_checkout" type="button" data-dismiss="modal" class="btn btn-default waves-effect">Batal</button>
-                <button type="submit" id="bayar_checkout" name="bayar_checkout" class="btn btn-primary waves-effect waves-light">Bayar</button>
+                    <button id="batal_checkout" name="batal_checkout" type="button" data-dismiss="modal" class="btn btn-default waves-effect">Batal</button>
+                    <button type="submit" id="bayar_checkout" name="bayar_checkout" class="btn btn-primary waves-effect waves-light">Bayar</button>
                 </div>
             </div>
         </div><!-- /.modal-content -->
@@ -121,14 +126,14 @@
                 <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> -->
             </div>
             <div class="modal-body">
-                            <table id="datatable-master-pelanggan" class="table table-striped table-bordered  dt-responsive nowrap" cellspacing="0" width="100%">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>Kode Pelanggan</th>
-                                        <th>Nama Pelanggan</th>
-                                    </tr>
-                                </thead>
-                            </table>
+                <table id="datatable-master-pelanggan" class="table table-striped table-bordered  dt-responsive nowrap" cellspacing="0" width="100%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Kode Pelanggan</th>
+                            <th>Nama Pelanggan</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
             <div class="modal-footer">
                 <button id="pelanggan-md-close" name="button-close" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>

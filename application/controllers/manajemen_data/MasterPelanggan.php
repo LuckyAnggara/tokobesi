@@ -8,11 +8,13 @@ class MasterPelanggan extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Manajemen_Data/Model_Master_Pelanggan', 'modelPelanggan');
+        $this->load->model('Setting/Model_Setting', 'modelSetting');
     }
 
     public function index()
     {
         $data['css'] = 'manajemen_data/master_pelanggan/master_pelanggan_css';
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_data/master_pelanggan/master_pelanggan');

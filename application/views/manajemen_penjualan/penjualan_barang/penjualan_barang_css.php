@@ -21,5 +21,4 @@
         <link href="<?= base_url('assets/'); ?>plugins/switchery/switchery.min.css" rel="stylesheet" />
 
         <!-- swtichery -->
-
         <link href="<?= base_url('assets/'); ?>plugins/switchery/switchery.min.css" rel="stylesheet" />

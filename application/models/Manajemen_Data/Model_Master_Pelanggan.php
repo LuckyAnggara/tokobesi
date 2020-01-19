@@ -15,14 +15,14 @@ class Model_Master_Pelanggan extends CI_Model
         if ($string == null) {
             $this->db->select('*');
             $this->db->from('master_pelanggan');
-            $this->db->where('status',0);
+            $this->db->where('status_pelanggan', 0);
             $output = $this->db->get();
 
             return $output;
         } else {
             $this->db->select('*');
             $this->db->from('master_pelanggan');
-            $this->db->where('status',0);
+            $this->db->where('status_pelanggan', 0);
             $this->db->like("master_pelanggan.id_pelanggan", $string);
             $this->db->or_like("nama_pelanggan", $string);
             $output = $this->db->get();
@@ -47,8 +47,7 @@ class Model_Master_Pelanggan extends CI_Model
         $str = random_string('alpha', 3);
         // cek takut double
 
-        return $str.$num;
-        
+        return $str . $num;
     }
 
     private function _cek_id($id)
@@ -77,6 +76,7 @@ class Model_Master_Pelanggan extends CI_Model
             'tipe_pelanggan' => $post['edit_tipe_pelanggan'],
             'nama_pelanggan' => strtoupper($post['edit_nama_pelanggan']),
             'alamat' => $post["edit_alamat"],
+            'email' => $post["edit_email"],
             'nomor_telepon' => $post['edit_nomor_telepon'],
             'npwp' => $post['edit_npwp'],
             'nomor_rekening' => $nomor_rekening,
@@ -97,10 +97,11 @@ class Model_Master_Pelanggan extends CI_Model
             'tipe_pelanggan' => $post['tipe_pelanggan'],
             'nama_pelanggan' => strtoupper($post['nama_pelanggan']),
             'alamat' => $post["alamat"],
+            'email' => $post["email"],
             'nomor_telepon' => $post['nomor_telepon'],
             'npwp' => $post['npwp'],
             'nomor_rekening' => $nomor_rekening,
-            'status' => 0,
+            'status_pelanggan' => 0,
             'tanggal_input' => date("Y-m-d H:i:s"),
             'user' => 1000,
         ];
@@ -118,11 +119,10 @@ class Model_Master_Pelanggan extends CI_Model
         $id = $this->_generate_id_pelanggan();
 
         $cek = $this->_cek_id(strtoupper($id));
-        if($cek > 1){
+        if ($cek > 1) {
             $this->_generate_id_pelanggan();
-        }else{
+        } else {
             return strtoupper($id);
         }
-        
     }
 }

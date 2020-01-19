@@ -213,10 +213,10 @@
                                              <div class="clearfix m-t-10">
                                                  <h4 class="text-inverse"><b><u>Note</u></b></h4>
                                                  <p>
-                                                     <!-- Tanggal Jatuh Tempo : <b><u><?= $tanggal_jatuh_tempo; ?></u></b><br><br>
+                                                     Tanggal Jatuh Tempo : <b><u><?= $tanggal_jatuh_tempo; ?></u></b><br><br>
                                                      Pembayaran dapat dilakukan secara 3 (tiga) kali.<br>
 
-                                                     Pembayaran di Transfer ke .........xxxx -->
+                                                     Pembayaran di Transfer ke .........xxxx
                                                  </p>
                                              </div>
                                          </div>
@@ -247,8 +247,14 @@
                                                      <li class="text-right">
                                                          <b>Grand-Total</b>
                                                      </li>
+                                                     <li class="text-right">
+                                                         <b>Down Payment (DP)</b>
+                                                     </li>
                                                  </ul>
                                                  <ul class="col-1" style="list-style-type:none">
+                                                     <li class="text-right">
+                                                         <b> : </b>
+                                                     </li>
                                                      <li class="text-right">
                                                          <b> : </b>
                                                      </li>
@@ -257,7 +263,32 @@
                                                      <li class="text-right">
                                                          <b><?= rupiah($data_order['grand_total']); ?></b>
                                                      </li>
-
+                                                     <li class="text-right">
+                                                         <b><?= rupiah($data_order['down_payment']); ?></b>
+                                                     </li>
+                                                 </ul>
+                                             </div>
+                                             <hr>
+                                             <div class="clearfix row">
+                                                 <ul class="col-5" style="list-style-type:none">
+                                                     <li class="text-right">
+                                                         <h4 class="text-right"><b>Sisa Pembayaran</b></h4>
+                                                     </li>
+                                                 </ul>
+                                                 <ul class="col-1" style="list-style-type:none">
+                                                     <li class="text-right">
+                                                         <h4 class="text-right"><b> : </b></h4>
+                                                     </li>
+                                                 </ul>
+                                                 <ul class="col-4" style="list-style-type:none">
+                                                     <li class="text-right">
+                                                         <h4 class="text-right"><b><?= rupiah($data_order['sisa_pembayaran']); ?></h4></b>
+                                                     </li>
+                                                 </ul>
+                                                 <ul class="col-10" style="list-style-type:none">
+                                                     <li class="text-right">
+                                                         <h4 class="text-right"><b>( <?= terbilang($data_order['sisa_pembayaran']); ?> Rupiah )</b></h4>
+                                                     </li>
                                                  </ul>
                                              </div>
                                          </div>

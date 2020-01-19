@@ -34,6 +34,12 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-3 col-form-label">Email</label>
+                        <div class="col-9">
+                            <input name="email" id="email" type="email" class="form-control" placeholder="Optional">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-3 col-form-label">Nomor Telepon</label>
                         <div class="col-9">
                             <input name="nomor_telepon" id="nomor_telepon" type="text" class="form-control" placeholder="" required>
@@ -83,13 +89,13 @@
                     <div class="form-group row">
                         <label class="col-3 col-form-label">Kode Pelanggan</label>
                         <div class="col-9">
-                        <div class="input-group">
-                            <input name="edit_id_pelanggan" id="edit_id_pelanggan" type="text" class="form-control" placeholder="Generate otomatis oleh sistem" required>
-                            <input name="dummy_edit_id_pelanggan" id="dummy_edit_id_pelanggan" type="text" hidden>
-                            <div class="input-group-append">
-                                <button id="generate_id" name="generate_id" class=" btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-braille"></i> Generate ID</button>
+                            <div class="input-group">
+                                <input name="edit_id_pelanggan" id="edit_id_pelanggan" type="text" class="form-control" placeholder="Generate otomatis oleh sistem" required>
+                                <input name="dummy_edit_id_pelanggan" id="dummy_edit_id_pelanggan" type="text" hidden>
+                                <div class="input-group-append">
+                                    <button id="generate_id" name="generate_id" class=" btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-braille"></i> Generate ID</button>
+                                </div>
                             </div>
-                        </div>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -109,6 +115,12 @@
                         <label class="col-3 col-form-label">Alamat</label>
                         <div class="col-9">
                             <textarea type="text" id="edit_alamat" name="edit_alamat" rows="2" placeholder="" class="form-control" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">Email</label>
+                        <div class="col-9">
+                            <input name="edit_email" id="edit_email" type="email" class="form-control" placeholder="Optional">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -197,6 +209,12 @@
                                 <label class="col-3 col-form-label">Alamat</label>
                                 <div class="col-9">
                                     <textarea readonly type="text" id="view_alamat" name="view_alamat" rows="2" placeholder="" class="form-control" required></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Email</label>
+                                <div class="col-9">
+                                    <input name="view_email" id="view_email" type="email" class="form-control" placeholder="Optional">
                                 </div>
                             </div>
                             <div class="form-group row">
