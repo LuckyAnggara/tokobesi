@@ -187,7 +187,11 @@ class Model_Pembelian_Barang extends CI_Model
 
 
         $this->_tambah_detail_pembelian($post);
+
         $this->_tambah_data_persediaan($post);
+
+        $this->_tambah_detail_persediaan($post);
+
         $this->_delete_detail_pembelian_temp($post);
     }
 
@@ -212,6 +216,7 @@ class Model_Pembelian_Barang extends CI_Model
         $this->_tambah_detail_pembelian($post);
         $this->_delete_detail_pembelian_temp($post);
         $this->_tambah_data_persediaan($post);
+        $this->_tambah_detail_persediaan($post);
         $this->_proses_kredit($post);
     }
 
@@ -237,14 +242,9 @@ class Model_Pembelian_Barang extends CI_Model
 
     private function _tambah_detail_pembelian($post)
     {
-        $this->db->query("INSERT INTO `detail_pembelian`(`tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input`) SELECT `tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input` FROM temp_tabel_keranjang_pembelian WHERE no_order_pembelian = '" . $post['no_order_pembelian'] . "'");
+        $nomor_transaksi = $post['nomor_transaksi'];
 
-
-        $update = [
-            'nomor_transaksi' => $post['nomor_transaksi']
-        ];
-        $this->db->where('no_order_pembelian', $post['no_order_pembelian']);
-        $this->db->update('detail_pembelian', $update);
+        $this->db->query("INSERT INTO `detail_pembelian`(`nomor_transaksi`,`tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input`) SELECT '" .  $nomor_transaksi . "', `tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input` FROM temp_tabel_keranjang_pembelian WHERE no_order_pembelian = '" . $post['no_order_pembelian'] . "'");
     }
 
     private function _delete_detail_pembelian_temp($post)
@@ -273,5 +273,10 @@ class Model_Pembelian_Barang extends CI_Model
             $this->db->where('kode_barang', $value['kode_barang']);
             $this->db->update('master_persediaan', $update);
         }
+    }
+
+    private function _tambah_detail_persediaan($post)
+    {
+        $this->db->query("INSERT INTO `detail_persediaan`(`tanggal_transaksi`, `nomor_transaksi`, `kode_barang`, `jumlah`,`harga_beli`,`saldo`) SELECT `tanggal_transaksi`, `nomor_transaksi`, `kode_barang`, `jumlah_pembelian`,`harga_beli`, `jumlah_pembelian` FROM detail_pembelian WHERE nomor_transaksi = '" . $post['nomor_transaksi'] . "'");
     }
 }

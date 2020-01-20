@@ -37,7 +37,7 @@ class Model_Penjualan_Barang extends CI_Model
         }
     }
 
-    function get_data_barang($string)
+    function getget_data_barang($string)
     {
         if ($string == null) {
             $this->db->select('master_persediaan.*, master_barang.*, master_satuan_barang.nama_satuan');
@@ -52,6 +52,26 @@ class Model_Penjualan_Barang extends CI_Model
             $this->db->join('master_barang', 'master_barang.kode_barang = master_persediaan.kode_barang');
             $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
             $this->db->like("master_persediaan.kode_barang", $string);
+            $this->db->or_like("nama_barang", $string);
+            $output = $this->db->get();
+            return $output;
+        }
+    }
+
+    function get_data_barang($string)
+    {
+        if ($string == null) {
+            $this->db->select('master_barang.*, master_satuan_barang.nama_satuan');
+            $this->db->from('master_barang');
+            $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
+            $output = $this->db->get();
+            return $output;
+        } else {
+            $this->db->select('master_barang.*, master_satuan_barang.nama_satuan');
+            $this->db->from('master_barang');
+            $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
+            $output = $this->db->get();
+            $this->db->like("master_barang.kode_barang", $string);
             $this->db->or_like("nama_barang", $string);
             $output = $this->db->get();
             return $output;
@@ -182,7 +202,7 @@ class Model_Penjualan_Barang extends CI_Model
         }
         $data = array(
             'no_order_penjualan' => $post['no_order_penjualan'],
-            'tipe_pelanggan'=>'dummy',
+            'tipe_pelanggan' => 'dummy',
             'id_pelanggan' => $id,
             'status_bayar' => 0, // belum di proses masih di keranjang unpaid.
             'tanggal_input' => date("Y-m-d H:i:s"),
@@ -456,65 +476,65 @@ class Model_Penjualan_Barang extends CI_Model
 
     function coba_coba($post)
     {
+        $kode_barang = $post['kode_barang'];
+        $qty_penjualan = $post['jumlah_penjualan'];
+        // total kan persediaan
         $this->db->select_sum('sisa');
-        $this->db->where('kode_barang', $post['kode_barang']);
-        $all_qty = $this->db->get('harga_detail_pembelian');
+        $this->db->where('kode_barang', $kode_barang);
+        $total_persediaan = $this->db->get('harga_detail_pembelian');
 
         $this->db->select('*');
         $this->db->from('harga_detail_pembelian');
-        $this->db->where('kode_barang', $post['kode_barang']);
-        $this->db->order_by('tanggal_transaksi', 'DESC'); // FIFO 'DESC' , LIFO 'ASC'
-        $data = $this->db->get()->result_array();
+        $this->db->where('kode_barang', $kode_barang);
+        $this->db->order_by('tanggal_transaksi', 'ASC');
+        $data_barang = $this->db->get()->result_array();
 
-        $qty_penjualan = $post['jumlah_penjualan']; //10
-        $harga_jual = $post['harga_jual'];
-        $kode_barang = $post['kode_barang'];
-        $no_faktur = $post['nomor_faktur'];
 
-        if($qty_penjualan <= $all_qty){
-            foreach ($data as $key => $value) {
+
+        if ($qty_penjualan < $total_persediaan) {
+
+            foreach ($data_barang as $key => $value) {
+
                 $tgl = $value['tanggal_transaksi'];
-                $sisa = $value['sisa'];
-                $harga = $value['harga'];
+                $stok = $value['sisa'];
 
-                if ($qty_penjualan < $sisa) {
-                    $penjualan = $qty_penjualan;
-                } else {
-                    $penjualan = $penjualan - $sisa;
-                }
+                if ($qty_penjualan !== 0) {
 
-                $data = [
-                    "no_faktur" => $no_faktur,
-                    "kode_barang" => $kode_barang,
-                    "qty" => $penjualan,
-                    "harga_pokok" => $harga,
-                    "harga_jual" => $harga_jual
-                ];
-                $this->db->insert('harga_detail_penjualan', $data);
-
-
-                if ($qty_penjualan > 0) {
-
-                    $temp = $qty_penjualan;
-
-                    $qty = $qty_penjualan - $sisa;
-
-                    if ($qty > 0) {
-                        $stok_update = 0;
+                    echo $qty_penjualan . '<br>';
+                    if ($qty_penjualan >= $stok) { // jika 7 => 5 maka yess
+                        $qty_penjualan = $qty_penjualan - $stok; // qty_penjualan = 7 - 5 = 2
+                        $stok_update = 0; // stok jadi 0
+                        $jual = $stok; // untuk update jual posisi ga bisa asal
+                        echo "yang ini <br>";
                     } else {
-                        $stok_update = $sisa - $temp;
+
+                        $stok_update = $stok - $qty_penjualan;
+                        $jual = $qty_penjualan; // untuk update jual posisi ga bisa asal
+                        $qty_penjualan = $qty_penjualan - $qty_penjualan;
+                        echo "yang itu <br>";
                     }
-                    $this->db->query("UPDATE harga_detail_pembelian SET sisa = $stok_update WHERE kode_barang ='" . $post['kode_barang'] . "' AND tanggal_transaksi = '$tgl'");
+                    echo $jual . 'dijual <br>';
+
+                    $data = [
+                        'kode_barang' => $kode_barang,
+                        'qty' => $jual,
+                        'harga_pokok' => $value['harga'],
+                        'harga_jual' => $post['harga_jual'],
+                    ];
+                    $this->db->insert('harga_detail_penjualan', $data);
+                    $this->db->query("UPDATE harga_detail_pembelian SET sisa = $stok_update WHERE kode_barang = '$kode_barang' AND tanggal_transaksi = '$tgl'");
+                } else {
+
+                    echo "udaaahan udh abis";
+                    break;
                 }
             }
+        } else {
+            echo "stok barang kurang";
         }
-
-        // 10 <= 100
-        
     }
 
-    function coba_coba2($post)
+    function coba_penjualan($post)
     {
-        
     }
 }

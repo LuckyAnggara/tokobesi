@@ -15,4 +15,11 @@ class Model_Persediaan_Barang extends CI_Model
 
         return $query->result_array();
     }
+
+    function get_data_persediaan($kode_barang)
+    {
+        $qty = $this->db->query("SELECT SUM(`saldo`) AS `saldo` FROM `detail_persediaan` WHERE `kode_barang` = '" . $kode_barang . "'");
+
+        return $qty->row_array();
+    }
 }

@@ -9,6 +9,7 @@ class PenjualanBarang extends CI_Controller
         parent::__construct();
         $this->load->helper('string');
         $this->load->model('Manajemen_Penjualan/Model_Penjualan_Barang', 'modelPenjualan');
+        $this->load->model('Manajemen_Persediaan/Model_Persediaan_Barang', 'modelPersediaan');
         $this->load->model('Manajemen_Penjualan/Model_Invoice', 'modelInvoice');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
     }
@@ -83,8 +84,14 @@ class PenjualanBarang extends CI_Controller
         $output = array(
             "recordsTotal" => $this->db->count_all_results(),
             "jumlah_data"  => $database->num_rows(),
-            "data" => $data
+            "data" => array()
         );
+
+        foreach ($data as $value) {
+            $qty = $this->modelPersediaan->get_data_persediaan($value['kode_barang']);
+            $value['jumlah_persediaan'] = $qty['saldo'];
+            $output['data'][] = $value;
+        }
 
         $output = json_encode($output);
         echo $output;

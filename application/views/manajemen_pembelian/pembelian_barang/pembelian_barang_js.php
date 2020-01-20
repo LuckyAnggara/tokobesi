@@ -803,9 +803,9 @@
                 'Pembelian Barang telah di Proses',
                 'success'
               )
-              setTimeout(function() {
-                location.reload();
-              }, 2000);
+              // setTimeout(function() {
+              //   location.reload();
+              // }, 2000);
             }
           })
 
@@ -896,9 +896,9 @@
             'Data telah di Proses.',
             'success'
           )
-          setTimeout(function() {
-            location.reload();
-          }, 2000);
+          // setTimeout(function() {
+          //   location.reload();
+          // }, 2000);
         }
       }
     })
