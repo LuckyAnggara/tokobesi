@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 20, 2020 at 09:53 AM
--- Server version: 10.1.29-MariaDB
--- PHP Version: 7.1.12
+-- Generation Time: Jan 20, 2020 at 04:29 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -48,10 +48,8 @@ CREATE TABLE `detail_pembelian` (
 --
 
 INSERT INTO `detail_pembelian` (`id`, `no_order_pembelian`, `tanggal_transaksi`, `nomor_transaksi`, `kode_barang`, `jumlah_pembelian`, `harga_beli`, `diskon`, `total_harga`, `tanggal_input`) VALUES
-(17, 'AsnGN04Q29dOa7PZ', '2020-01-01', 'IN.191293', 'P001', 200, 1600000, 0, 320000000, '2020-01-19'),
-(18, 's18nYcxUTr4Bi5Ig', '2020-01-02', 'IN22', 'P001', 10, 1600000, 0, 16000000, '2020-01-19'),
-(19, 'ghKyux6fq0OSpJV9', '2020-01-03', 'IN20', 'P001', 30, 1750000, 0, 52500000, '2020-01-19'),
-(20, 'GItYuFki0SpPKgq8', '2020-01-20', 'ccc', 'P001', 1000, 20000, 0, 20000000, '2020-01-20');
+(25, 'ji7GkcnzHK08lgdx', '2020-01-01', 'aa', 'P001', 5, 10000, 0, 50000, '2020-01-20'),
+(26, 'PNsWpzhBJr90SvMl', '2020-01-02', 'q', 'P001', 10, 2000, 0, 20000, '2020-01-20');
 
 -- --------------------------------------------------------
 
@@ -72,31 +70,29 @@ CREATE TABLE `detail_penjualan` (
   `tanggal_input` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `detail_penjualan`
+-- Table structure for table `detail_persediaan`
 --
 
-INSERT INTO `detail_penjualan` (`id`, `no_order_penjualan`, `tanggal_transaksi`, `nomor_faktur`, `kode_barang`, `jumlah_penjualan`, `harga_jual`, `diskon`, `total_harga`, `tanggal_input`) VALUES
-(50, 'OUT2549136', '2020-01-19', 'SAY9542867', 'P001', 10, 2000000, 0, 20000000, '2020-01-19'),
-(51, 'OUT0169275', '2020-01-20', 'LDQ3519028', 'P001', 2, 2000000, 5000, 3995000, '2020-01-20'),
-(52, 'OUT2031946', '2020-01-20', 'FAU0839176', 'P001', 5, 2000000, 0, 10000000, '2020-01-20'),
-(53, 'OUT4912587', '2020-01-20', 'KLO3692741', 'P001', 50, 2000000, 0, 100000000, '2020-01-20'),
-(54, 'OUT2465831', '2020-01-20', 'WMU4593167', 'P001', 30, 2000000, 0, 60000000, '2020-01-20'),
-(55, 'OUT0769812', '2020-01-20', 'IGZ5764280', 'P001', 50, 2000000, 0, 100000000, '2020-01-20'),
-(56, 'OUT7861425', '2020-01-20', 'TSA7380415', 'P001', 20, 15000, 0, 300000, '2020-01-20'),
-(57, 'OUT2856397', '2020-01-20', 'LDD7921048', 'P001', 50, 2000000, 0, 100000000, '2020-01-20'),
-(58, 'OUT2856397', '2020-01-20', 'LDD7921048', 'P001', 20, 2000000, 0, 40000000, '2020-01-20'),
-(60, 'OUT7852691', '2020-01-20', 'TUR6245037', 'P001', 6, 2000000, 0, 12000000, '2020-01-20'),
-(61, 'OUT7852691', '2020-01-20', 'TUR6245037', 'P001', 2, 2000000, 0, 4000000, '2020-01-20'),
-(63, 'OUT8136072', '2020-01-20', 'GYD0964325', 'P001', 7, 2000000, 0, 14000000, '2020-01-20'),
-(64, 'OUT5923874', '2020-01-20', 'GIT4596728', 'P001', 4, 2000000, 0, 8000000, '2020-01-20'),
-(65, 'OUT5923874', '2020-01-20', 'GIT4596728', 'P001', 4, 2000000, 0, 8000000, '2020-01-20'),
-(67, 'OUT1809374', '2020-01-20', 'XGY0126483', 'P001', 10, 2000000, 0, 20000000, '2020-01-20'),
-(68, 'OUT5406982', '2020-01-20', 'KJN5126894', 'P001', 5, 2000000, 0, 10000000, '2020-01-20'),
-(69, 'OUT2651084', '2020-01-20', 'FTC2410368', 'P001', 5, 2000000, 0, 10000000, '2020-01-20'),
-(70, 'OUT7281406', '2020-01-20', 'ZDS7125063', 'P001', 5, 2000000, 0, 10000000, '2020-01-20'),
-(71, 'OUT2091736', '2020-01-20', 'UHB6532841', 'P001', 5, 2000000, 0, 10000000, '2020-01-20'),
-(72, 'OUT9127056', '2020-01-20', 'SWD0268513', 'P001', 7, 2000000, 0, 14000000, '2020-01-20');
+CREATE TABLE `detail_persediaan` (
+  `id` int(11) NOT NULL,
+  `tanggal_transaksi` date NOT NULL,
+  `nomor_transaksi` varchar(255) NOT NULL,
+  `kode_barang` varchar(255) NOT NULL,
+  `jumlah` double NOT NULL,
+  `harga_beli` double NOT NULL,
+  `saldo` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `detail_persediaan`
+--
+
+INSERT INTO `detail_persediaan` (`id`, `tanggal_transaksi`, `nomor_transaksi`, `kode_barang`, `jumlah`, `harga_beli`, `saldo`) VALUES
+(1, '2020-01-01', 'aa', 'P001', 5, 10000, 5),
+(2, '2020-01-02', 'q', 'P001', 10, 2000, 10);
 
 -- --------------------------------------------------------
 
@@ -119,8 +115,11 @@ CREATE TABLE `harga_detail_pembelian` (
 --
 
 INSERT INTO `harga_detail_pembelian` (`id`, `tanggal_transaksi`, `nomor_transaksi`, `kode_barang`, `qty`, `harga`, `sisa`) VALUES
-(1, '2020-01-19', 'A', 'P001', 5, 1, 5),
-(2, '2020-01-20', 'b', 'P001', 5, 2, 5);
+(1, '2020-01-19', 'A', 'P001', 5, 1, 0),
+(2, '2020-01-20', 'A', 'P001', 5, 2, 0),
+(3, '2020-01-14', 'b', 'B001', 5, 1, 5),
+(4, '2020-01-22', 'b', 'B001', 5, 2, 0),
+(5, '2020-01-21', 'a', 'P001', 5, 3, 10);
 
 -- --------------------------------------------------------
 
@@ -137,6 +136,15 @@ CREATE TABLE `harga_detail_penjualan` (
   `harga_jual` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `harga_detail_penjualan`
+--
+
+INSERT INTO `harga_detail_penjualan` (`id`, `no_faktur`, `kode_barang`, `qty`, `harga_pokok`, `harga_jual`) VALUES
+(55, '', 'P001', 5, 1, 2000000),
+(56, '', 'P001', 5, 2, 2000000),
+(57, '', 'P001', 1, 3, 2000000);
+
 -- --------------------------------------------------------
 
 --
@@ -145,15 +153,15 @@ CREATE TABLE `harga_detail_penjualan` (
 
 CREATE TABLE `master_barang` (
   `kode_barang` varchar(255) NOT NULL,
-  `tipe_barang` int(11) DEFAULT '0',
-  `jenis_barang` int(11) DEFAULT '0',
-  `merek_barang` int(11) DEFAULT '0',
+  `tipe_barang` int(11) DEFAULT 0,
+  `jenis_barang` int(11) DEFAULT 0,
+  `merek_barang` int(11) DEFAULT 0,
   `kode_supplier` varchar(128) DEFAULT NULL,
   `nama_barang` varchar(255) NOT NULL,
   `harga_pokok` double NOT NULL,
   `harga_satuan` double NOT NULL,
-  `kode_satuan` int(11) DEFAULT '0',
-  `persediaan_minimum` int(11) NOT NULL DEFAULT '0',
+  `kode_satuan` int(11) DEFAULT 0,
+  `persediaan_minimum` int(11) NOT NULL DEFAULT 0,
   `gambar` varchar(255) NOT NULL,
   `keterangan` text NOT NULL,
   `status_jual` tinyint(4) NOT NULL,
@@ -165,6 +173,7 @@ CREATE TABLE `master_barang` (
 --
 
 INSERT INTO `master_barang` (`kode_barang`, `tipe_barang`, `jenis_barang`, `merek_barang`, `kode_supplier`, `nama_barang`, `harga_pokok`, `harga_satuan`, `kode_satuan`, `persediaan_minimum`, `gambar`, `keterangan`, `status_jual`, `tanggal_input`) VALUES
+('B001', 1, 1, 1, 'EKZ372', 'BESI', 15000, 20000, 0, 10, 'B001.jpg', '', 1, '2020-01-20 13:46:26'),
 ('P001', 1, 1, 1, 'EKZ372', 'PIPA BESI', 1500000, 2000000, 0, 10, 'P001.jpg', '', 1, '2020-01-19 12:01:40');
 
 -- --------------------------------------------------------
@@ -177,8 +186,8 @@ CREATE TABLE `master_hutang` (
   `id` int(11) NOT NULL,
   `nomor_transaksi` varchar(255) NOT NULL,
   `tanggal_jatuh_tempo` date NOT NULL,
-  `down_payment` double NOT NULL DEFAULT '0',
-  `sisa_pembayaran` double NOT NULL DEFAULT '0',
+  `down_payment` double NOT NULL DEFAULT 0,
+  `sisa_pembayaran` double NOT NULL DEFAULT 0,
   `tanggal_input` date NOT NULL,
   `user` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -280,38 +289,73 @@ CREATE TABLE `master_pelanggan` (
 INSERT INTO `master_pelanggan` (`id_pelanggan`, `tipe_pelanggan`, `nama_pelanggan`, `alamat`, `email`, `nomor_telepon`, `npwp`, `nomor_rekening`, `status_pelanggan`, `tanggal_input`, `user`) VALUES
 ('0qmMHT73CRnvVYZF', '', 'Lucky', '', '', '', '', '', 1, '0000-00-00', ''),
 ('0RkolLHMyST6zQrx', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('15PUBvwLyKE0WDlj', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('2erbhNsg0VnjZmI5', '', 'asd', 'asdasd', '', 'asdasdad', '', '', 1, '0000-00-00', ''),
+('2rnTCYigPcE38fZH', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('37f0VxohtwDXSQiI', '', 's', '', '', '', '', '', 1, '0000-00-00', ''),
+('3CMAwRYdbnQsJioG', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('3D9SLwtOM4PvoY7f', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('5CVDdqlTjaiSzbhs', '', '4', '', '', '', '', '', 1, '0000-00-00', ''),
 ('5GmrF34ZUbyBoLIt', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('5iHwbjPSxgWFVtRh', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('7LJeN3WE1jAgq4nV', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('bO4K0hxkpD1RWGnZ', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('CGjBh5uwYgpJE74M', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('CsbwuW5qvJpMDi6L', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('CxYQdtbijfo4H5qK', '', 'aa', '', '', '', '', '', 1, '0000-00-00', ''),
 ('d3J7sjXyeCLGK4aM', '', 's', '', '', '', '', '', 1, '0000-00-00', ''),
 ('DNL6124', 'general', 'LUCKY', 'asd', '', '120491204', '12.222.222.2-222.222', 'a-a-a', 0, '2020-01-16', '1000'),
+('e1mdf5sX6VRpDk3l', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('eBDi80pqt6l93W4y', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('eq6LR8gZhrcf5zDE', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('eWTm7KiUwVdn4Yqu', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('F70vjqwJCGID1nox', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('fa3sCnmcTX56WUwH', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('gQhVk9PMzwcEH3up', '', 'RED', 'AA', '', 'AA', '', '', 1, '0000-00-00', ''),
 ('h9tc7QlRayJGMEAH', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('hCizX3f6GLBs5YvP', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('HiZzSDOtmELdlVrk', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('HoiPpwTOt9Id1mk8', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('JMimYthwOKdAnvP7', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('JZ1K3VYjIGvpmgP6', '', 's', '', '', '', '', '', 1, '0000-00-00', ''),
 ('K2uQDrPMyxJBvq5R', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('L4lI6mVBsjUwpEK8', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('Lf4k2o8DWgpBsSwd', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('LimIMTgnOqzDNfkY', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('LpK5vNUyOP0TjHwl', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('MK7Aj8JYWVtTxcyu', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('nAokKCbZs5NIL7zw', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('nUVoEvkfydg0NYxK', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('nxuIGo9egTQ2Ky45', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('o2iY3WQ0g5JGsOmb', '', 'asdasd', '', '', '', '', '', 1, '0000-00-00', ''),
+('oO56X1rVs89vEnT4', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('ORsQX3np6TNk2u5w', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('pcbt6YuHCjLySGkn', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('PCjViRn8Xk31hpmd', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('Qn5YkIDPLlxj9gqG', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('qnwcGf6lu3eBTWdS', '', 's', '', '', '', '', '', 1, '0000-00-00', ''),
 ('rAHVIgPqSvbCKtNL', '', 'ss', '', '', '', '', '', 1, '0000-00-00', ''),
+('RPw8o5nzD4vymYSr', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('rvy7ShaG19pPqdxc', '', 's', '', '', '', '', '', 1, '0000-00-00', ''),
+('SQia5jFYgRxmd8oy', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('TFtYbkIJB4EUOMAy', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('UDY3572', 'rekanan', 'DESI EVILIA', 'Limbangan', 'kerjaan.desi@qmail.com', '082116562811', '92.912.959.1-028.509', 'BCA-91509125-Desi Evilia', 0, '2020-01-18', '1000'),
 ('uQqUxCanR58Jho6y', '', 'aa', '', '', '', '', '', 1, '0000-00-00', ''),
+('UREK973T1XkyuChA', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('V51XL63QJdCRSFfo', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('VbBMo29UwzGTEukg', '', 'aa', '', '', '', '', '', 1, '0000-00-00', ''),
+('VIWSdHCh4igBxosz', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('vX7lyAO0hmcNjMu2', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('WFI6032', 'rekanan', 'LUCKY ANGGARA', 'Pasir Honje No 37 RT 02 RW 14', '', '082116562811', '70.313.243.2-400.000', 'BNI-0468995561-Lucky Anggara', 0, '2020-01-16', '1000'),
 ('wGf4sSa9kCOtx6KT', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('Xo3zZ0By2SlIfVtu', '', 'as', '', '', '', '', '', 1, '0000-00-00', ''),
+('y1GShsvgClbX9Wae', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('yvhMtUmgXfRZwYkP', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('Z3BvrbywPX9Yhenx', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('z48UQSGksIWe1ibx', '', '4', '', '', '', '', '', 1, '0000-00-00', ''),
 ('zDEOaH58oVXd2lP0', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('zrxnY4Uwha7QijBu', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
+('Zu6AyCSI5OhBVTrt', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('ZXu2DhVlBTyHLN7b', '', 'a', '', '', '', '', '', 1, '0000-00-00', ''),
 ('zYRx6V07SIj2EG1r', '', '4', '', '', '', '', '', 1, '0000-00-00', '');
 
@@ -341,10 +385,9 @@ CREATE TABLE `master_pembelian` (
 --
 
 INSERT INTO `master_pembelian` (`no_order_pembelian`, `nomor_transaksi`, `tanggal_transaksi`, `kode_supplier`, `total_pembelian`, `diskon`, `pajak_keluaran`, `ongkir`, `grand_total`, `status_bayar`, `tanggal_input`, `user_input`) VALUES
-('AsnGN04Q29dOa7PZ', 'IN.191293', '2020-01-01', 'EKZ372', 320000000, 0, 32000000, 0, 352000000, 1, '2020-01-19', 'udin'),
-('ghKyux6fq0OSpJV9', 'IN20', '2020-01-03', 'EKZ372', 52500000, 0, 5250000, 0, 57750000, 1, '2020-01-19', 'udin'),
-('GItYuFki0SpPKgq8', 'ccc', '2020-01-20', 'EKZ372', 20000000, 0, 0, 0, 20000000, 1, '2020-01-20', 'udin'),
-('s18nYcxUTr4Bi5Ig', 'IN22', '2020-01-02', 'EKZ372', 16000000, 0, 1600000, 0, 17600000, 1, '2020-01-19', 'udin');
+('ji7GkcnzHK08lgdx', 'aa', '2020-01-01', 'EKZ372', 50000, 0, 0, 0, 50000, 1, '2020-01-20', 'udin'),
+('PNsWpzhBJr90SvMl', 'q', '2020-01-02', 'EKO076', 20000, 0, 0, 0, 20000, 1, '2020-01-20', 'udin'),
+('yzp0tCkaKQbZswRA', 'a', '2020-01-01', 'EKO076', 50000, 0, 0, 0, 50000, 1, '2020-01-20', 'udin');
 
 -- --------------------------------------------------------
 
@@ -357,39 +400,16 @@ CREATE TABLE `master_penjualan` (
   `tanggal_transaksi` date NOT NULL,
   `no_faktur` varchar(255) NOT NULL,
   `id_pelanggan` varchar(255) NOT NULL,
-  `total_penjualan` double NOT NULL DEFAULT '0',
-  `diskon` double DEFAULT '0',
-  `pajak_masukan` double NOT NULL DEFAULT '0',
-  `ongkir` double NOT NULL DEFAULT '0',
-  `grand_total` double NOT NULL DEFAULT '0',
+  `total_penjualan` double NOT NULL DEFAULT 0,
+  `diskon` double DEFAULT 0,
+  `pajak_masukan` double NOT NULL DEFAULT 0,
+  `ongkir` double NOT NULL DEFAULT 0,
+  `grand_total` double NOT NULL DEFAULT 0,
   `status_bayar` int(1) NOT NULL,
   `tanggal_jatuh_tempo` date DEFAULT NULL,
   `tanggal_input` date NOT NULL,
   `user` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `master_penjualan`
---
-
-INSERT INTO `master_penjualan` (`no_order_penjualan`, `tanggal_transaksi`, `no_faktur`, `id_pelanggan`, `total_penjualan`, `diskon`, `pajak_masukan`, `ongkir`, `grand_total`, `status_bayar`, `tanggal_jatuh_tempo`, `tanggal_input`, `user`) VALUES
-('OUT0169275', '2020-01-20', 'LDQ3519028', 'DNL6124', 4000000, 5000, 0, 0, 3995000, 1, NULL, '2020-01-20', 'usn'),
-('OUT0769812', '2020-01-20', 'IGZ5764280', 'UDY3572', 100000000, 0, 0, 0, 100000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT1809374', '2020-01-20', 'XGY0126483', 'DNL6124', 20000000, 0, 0, 0, 20000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT2031946', '2020-01-20', 'FAU0839176', 'DNL6124', 10000000, 0, 0, 0, 10000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT2091736', '2020-01-20', 'UHB6532841', 'TFtYbkIJB4EUOMAy', 10000000, 0, 0, 0, 10000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT2465831', '2020-01-20', 'WMU4593167', 'DNL6124', 60000000, 0, 0, 0, 60000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT2549136', '2020-01-19', 'SAY9542867', 'UDY3572', 20000000, 0, 2000000, 0, 22000000, 1, NULL, '2020-01-19', 'usn'),
-('OUT2651084', '2020-01-20', 'FTC2410368', 'eWTm7KiUwVdn4Yqu', 10000000, 0, 0, 0, 10000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT2856397', '2020-01-20', 'LDD7921048', 'UDY3572', 140000000, 0, 0, 0, 140000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT4912587', '2020-01-20', 'KLO3692741', 'UDY3572', 100000000, 0, 0, 0, 100000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT5406982', '2020-01-20', 'KJN5126894', 'a', 10000000, 0, 0, 0, 10000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT5923874', '2020-01-20', 'GIT4596728', 'VbBMo29UwzGTEukg', 16000000, 0, 0, 0, 16000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT7281406', '2020-01-20', 'ZDS7125063', 'ZXu2DhVlBTyHLN7b', 10000000, 0, 0, 0, 10000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT7852691', '2020-01-20', 'TUR6245037', 'UDY3572', 16000000, 0, 0, 0, 16000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT7861425', '2020-01-20', 'TSA7380415', 'DNL6124', 300000, 0, 0, 0, 300000, 1, NULL, '2020-01-20', 'usn'),
-('OUT8136072', '2020-01-20', 'GYD0964325', 'o2iY3WQ0g5JGsOmb', 14000000, 0, 0, 0, 14000000, 1, NULL, '2020-01-20', 'usn'),
-('OUT9127056', '2020-01-20', 'SWD0268513', '5GmrF34ZUbyBoLIt', 14000000, 0, 0, 0, 14000000, 1, NULL, '2020-01-20', 'usn');
 
 -- --------------------------------------------------------
 
@@ -412,7 +432,8 @@ CREATE TABLE `master_persediaan` (
 --
 
 INSERT INTO `master_persediaan` (`id`, `kode_barang`, `jumlah_persediaan`, `jumlah_keranjang`, `jumlah_persediaan_sementara`, `tanggal_input`, `no_order_terakhir`) VALUES
-(15, 'P001', 993, 0, 0, '2020-01-20 09:35:10', '');
+(15, 'P001', 26, -11, 0, '2020-01-20 15:58:42', ''),
+(16, 'B001', 0, 0, 0, '2020-01-20 13:47:07', '');
 
 -- --------------------------------------------------------
 
@@ -424,8 +445,8 @@ CREATE TABLE `master_piutang` (
   `id` int(11) NOT NULL,
   `no_faktur` varchar(255) NOT NULL,
   `tanggal_jatuh_tempo` date NOT NULL,
-  `down_payment` double NOT NULL DEFAULT '0',
-  `sisa_pembayaran` double NOT NULL DEFAULT '0',
+  `down_payment` double NOT NULL DEFAULT 0,
+  `sisa_pembayaran` double NOT NULL DEFAULT 0,
   `tanggal_input` date NOT NULL,
   `user` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -596,7 +617,7 @@ CREATE TABLE `tabel_keranjang_belanja` (
   `kode_barang` varchar(255) NOT NULL,
   `jumlah_pembelian` double NOT NULL,
   `harga_total` double NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -612,7 +633,7 @@ CREATE TABLE `tabel_perhitungan_order` (
   `pajak` double NOT NULL,
   `ongkir` double NOT NULL,
   `grand_total` double NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -620,13 +641,26 @@ CREATE TABLE `tabel_perhitungan_order` (
 --
 
 INSERT INTO `tabel_perhitungan_order` (`no_order`, `total_keranjang`, `diskon`, `pajak`, `ongkir`, `grand_total`, `timestamp`) VALUES
+('5JP9AuaLDK8bwI0h', 50000, 0, 0, 0, 50000, '2020-01-20 14:43:39'),
 ('AsnGN04Q29dOa7PZ', 320000000, 0, 32000000, 0, 352000000, '2020-01-19 11:08:45'),
+('cnwEHCsmvW9GkQNM', 50000, 0, 0, 0, 50000, '2020-01-20 14:50:36'),
+('DIN4H2SyJTtlVd5R', 50000, 0, 0, 0, 50000, '2020-01-20 14:44:22'),
 ('ghKyux6fq0OSpJV9', 52500000, 0, 5250000, 0, 57750000, '2020-01-19 11:19:48'),
 ('GItYuFki0SpPKgq8', 20000000, 0, 0, 0, 20000000, '2020-01-20 08:35:02'),
+('hZM953iENxnbwvjO', 0, 0, 0, 0, 0, '2020-01-20 14:45:13'),
+('ji7GkcnzHK08lgdx', 50000, 0, 0, 0, 50000, '2020-01-20 14:54:38'),
+('kd7G1Oxg0SrQ8yfj', 50000, 0, 0, 0, 50000, '2020-01-20 14:42:22'),
+('LbtpEsNo6m18idrA', 15000000, 0, 0, 0, 15000000, '2020-01-20 12:47:03'),
+('OUT0361294', 12000000, 0, 0, 0, 12000000, '2020-01-20 12:59:32'),
+('OUT0748253', 14000000, 0, 0, 0, 14000000, '2020-01-20 13:01:27'),
+('OUT1540986', 14000000, 0, 0, 0, 14000000, '2020-01-20 12:59:59'),
 ('OUT2091736', 10000000, 0, 0, 0, 10000000, '2020-01-20 08:33:37'),
+('OUT4735690', 14000000, 0, 0, 0, 14000000, '2020-01-20 13:02:10'),
 ('OUT5406982', 10000000, 0, 0, 0, 10000000, '2020-01-20 08:17:18'),
 ('OUT9127056', 14000000, 0, 0, 0, 14000000, '2020-01-20 08:36:24'),
-('s18nYcxUTr4Bi5Ig', 16000000, 0, 1600000, 0, 17600000, '2020-01-19 11:17:07');
+('PNsWpzhBJr90SvMl', 20000, 0, 0, 0, 20000, '2020-01-20 14:58:38'),
+('s18nYcxUTr4Bi5Ig', 16000000, 0, 1600000, 0, 17600000, '2020-01-19 11:17:07'),
+('yzp0tCkaKQbZswRA', 50000, 0, 0, 0, 50000, '2020-01-20 14:45:39');
 
 -- --------------------------------------------------------
 
@@ -646,6 +680,19 @@ CREATE TABLE `temp_tabel_keranjang_pembelian` (
   `tanggal_input` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `temp_tabel_keranjang_pembelian`
+--
+
+INSERT INTO `temp_tabel_keranjang_pembelian` (`id`, `tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`, `harga_beli`, `diskon`, `total_harga`, `tanggal_input`) VALUES
+(204, '1970-01-01', 'kd7G1Oxg0SrQ8yfj', 'P001', 5, 10000, 0, 50000, '2020-01-20'),
+(205, '1970-01-01', '5JP9AuaLDK8bwI0h', 'P001', 5, 10000, 0, 50000, '2020-01-20'),
+(207, '2020-01-21', 'DIN4H2SyJTtlVd5R', 'P001', 5, 10000, 0, 50000, '2020-01-20'),
+(208, '2020-01-21', 'hZM953iENxnbwvjO', 'P001', 5, 0, 0, 0, '2020-01-20'),
+(209, '2020-01-01', 'yzp0tCkaKQbZswRA', 'P001', 5, 10000, 0, 50000, '2020-01-20'),
+(210, '2020-01-01', 'cnwEHCsmvW9GkQNM', 'P001', 5, 10000, 0, 50000, '2020-01-20'),
+(211, '2020-01-01', 'ji7GkcnzHK08lgdx', 'P001', 5, 10000, 0, 50000, '2020-01-20');
+
 -- --------------------------------------------------------
 
 --
@@ -661,7 +708,7 @@ CREATE TABLE `temp_tabel_keranjang_penjualan` (
   `harga_jual` double NOT NULL,
   `diskon` double NOT NULL,
   `total_harga` double NOT NULL,
-  `tanggal_input` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `tanggal_input` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -688,7 +735,38 @@ INSERT INTO `temp_tabel_keranjang_penjualan` (`id`, `tanggal_transaksi`, `no_ord
 (375, '2020-01-20', 'OUT2651084', 'P001', 5, 2000000, 0, 10000000, '2020-01-20 02:17:29'),
 (376, '2020-01-20', 'OUT7281406', 'P001', 5, 2000000, 0, 10000000, '2020-01-20 02:17:59'),
 (377, '2020-01-20', 'OUT2091736', 'P001', 5, 2000000, 0, 10000000, '2020-01-20 02:33:34'),
-(378, '2020-01-20', 'OUT9127056', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 02:36:16');
+(378, '2020-01-20', 'OUT9127056', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 02:36:16'),
+(379, '2020-01-20', 'OUT1497658', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 06:38:44'),
+(386, '2020-01-20', 'OUT8642319', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:03:07'),
+(387, '2020-01-20', 'OUT8642319', 'B001', 6, 20000, 0, 120000, '2020-01-20 07:03:11'),
+(388, '2020-01-20', 'OUT8395140', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:05:27'),
+(389, '2020-01-20', 'OUT8395140', 'B001', 7, 20000, 0, 140000, '2020-01-20 07:05:31'),
+(390, '2020-01-20', 'OUT9713284', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:06:40'),
+(391, '2020-01-20', 'OUT5468073', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:08:10'),
+(392, '2020-01-20', 'OUT8793014', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:09:37'),
+(393, '2020-01-20', 'OUT5140862', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:11:53'),
+(394, '2020-01-20', 'OUT3645907', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:15:37'),
+(397, '2020-01-20', 'OUT3750682', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:25:16'),
+(398, '2020-01-20', 'OUT4365089', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:34:22'),
+(399, '2020-01-20', 'OUT5271648', 'B001', 7, 20000, 0, 140000, '2020-01-20 07:34:59'),
+(400, '2020-01-20', 'OUT2073461', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:36:43'),
+(401, '2020-01-20', 'OUT4128790', 'P001', 6, 2000000, 0, 12000000, '2020-01-20 07:40:40'),
+(402, '2020-01-20', 'OUT0815479', 'P001', 6, 2000000, 0, 12000000, '2020-01-20 07:42:00'),
+(403, '2020-01-20', 'OUT6175384', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:44:45'),
+(404, '2020-01-20', 'OUT8517204', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:59:46'),
+(405, '2020-01-20', 'OUT9168534', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 08:01:31'),
+(406, '2020-01-20', 'OUT4805179', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 08:05:09'),
+(407, '2020-01-20', 'OUT7895264', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 08:07:00'),
+(408, '2020-01-20', 'OUT4815729', 'P001', 11, 2000000, 0, 22000000, '2020-01-20 08:07:28'),
+(409, '2020-01-20', 'OUT7608395', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 08:09:19'),
+(410, '2020-01-20', 'OUT8426701', 'P001', 11, 2000000, 0, 22000000, '2020-01-20 08:09:58'),
+(411, '2020-01-20', 'OUT7942685', 'P001', 5, 2000000, 0, 10000000, '2020-01-20 08:11:09'),
+(412, '2020-01-20', 'OUT5031824', 'P001', 5, 2000000, 0, 10000000, '2020-01-20 08:12:22'),
+(413, '2020-01-20', 'OUT9482517', 'P001', 6, 2000000, 0, 12000000, '2020-01-20 08:16:26'),
+(414, '2020-01-20', 'OUT0184539', 'P001', 6, 2000000, 0, 12000000, '2020-01-20 08:19:11'),
+(415, '2020-01-20', 'OUT7814095', 'P001', 9, 2000000, 0, 18000000, '2020-01-20 08:20:51'),
+(417, '2020-01-20', 'OUT6845213', 'P001', 11, 2000000, 0, 22000000, '2020-01-20 08:26:16'),
+(418, '2020-01-20', 'OUT1405683', 'P001', 11, 2000000, 0, 22000000, '2020-01-20 08:26:57');
 
 --
 -- Indexes for dumped tables
@@ -698,7 +776,8 @@ INSERT INTO `temp_tabel_keranjang_penjualan` (`id`, `tanggal_transaksi`, `no_ord
 -- Indexes for table `detail_pembelian`
 --
 ALTER TABLE `detail_pembelian`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `detail_pembelian` (`nomor_transaksi`);
 
 --
 -- Indexes for table `detail_penjualan`
@@ -706,6 +785,12 @@ ALTER TABLE `detail_pembelian`
 ALTER TABLE `detail_penjualan`
   ADD PRIMARY KEY (`id`),
   ADD KEY `penjualan` (`nomor_faktur`);
+
+--
+-- Indexes for table `detail_persediaan`
+--
+ALTER TABLE `detail_persediaan`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `harga_detail_pembelian`
@@ -868,25 +953,31 @@ ALTER TABLE `temp_tabel_keranjang_penjualan`
 -- AUTO_INCREMENT for table `detail_pembelian`
 --
 ALTER TABLE `detail_pembelian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `detail_penjualan`
 --
 ALTER TABLE `detail_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+
+--
+-- AUTO_INCREMENT for table `detail_persediaan`
+--
+ALTER TABLE `detail_persediaan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `harga_detail_pembelian`
 --
 ALTER TABLE `harga_detail_pembelian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `harga_detail_penjualan`
 --
 ALTER TABLE `harga_detail_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `master_hutang`
@@ -916,7 +1007,7 @@ ALTER TABLE `master_merek_barang`
 -- AUTO_INCREMENT for table `master_persediaan`
 --
 ALTER TABLE `master_persediaan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `master_piutang`
@@ -964,17 +1055,23 @@ ALTER TABLE `tabel_keranjang_belanja`
 -- AUTO_INCREMENT for table `temp_tabel_keranjang_pembelian`
 --
 ALTER TABLE `temp_tabel_keranjang_pembelian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=203;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=213;
 
 --
 -- AUTO_INCREMENT for table `temp_tabel_keranjang_penjualan`
 --
 ALTER TABLE `temp_tabel_keranjang_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=379;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=420;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `detail_pembelian`
+--
+ALTER TABLE `detail_pembelian`
+  ADD CONSTRAINT `detail_pembelian` FOREIGN KEY (`nomor_transaksi`) REFERENCES `master_pembelian` (`nomor_transaksi`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `detail_penjualan`
