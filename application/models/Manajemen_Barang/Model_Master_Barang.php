@@ -9,29 +9,22 @@ class Model_Master_Barang extends CI_Model
         $this->load->helper(array('form', 'url', 'file'));
     }
 
-    function get_data($string)
+    function get_data()
     {
-        if ($string == null) {
-            $this->db->select('*');
-            $this->db->from('master_barang');
-            $output = $this->db->get();
 
-            return $output;
-        } else {
-            $this->db->select('*');
-            $this->db->from('master_barang');
-            $this->db->like("master_barang.kode_barang", $string);
-            $this->db->or_like("nama_barang", $string);
-            $this->db->or_like("harga_satuan", $string);
-            $output = $this->db->get();
-            return $output;
-        }
+        $this->db->select('master_barang.*, master_jenis_barang.nama_jenis_barang, master_merek_barang.nama_merek_barang, master_persediaan.jumlah_persediaan');
+        $this->db->from('master_barang');
+        $this->db->join('master_jenis_barang', 'master_jenis_barang.id_jenis_barang = master_barang.jenis_barang');
+        $this->db->join('master_merek_barang', 'master_merek_barang.id_merek_barang = master_barang.merek_barang');
+        $this->db->join('master_persediaan', 'master_persediaan.kode_barang = master_barang.kode_barang');
+        $output = $this->db->get();
+        return $output;
     }
 
 
     function push_satuan($kode_barang)
     {
-        $this->db->select("master_barang.harga_satuan,master_satuan_barang.nama_satuan");
+        $this->db->select("master_barang.harga_pokok,master_satuan_barang.nama_satuan");
         $this->db->from("master_barang");
         $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
         $this->db->where("master_barang.kode_barang", $kode_barang);
@@ -46,9 +39,14 @@ class Model_Master_Barang extends CI_Model
         $this->db->order_by("kode_barang", "DESC");
         $this->db->Limit("1");
         $query = $this->db->get();
-        $query = $query->row_array();
-        $data = $query['kode_barang'];
-        return filter_var($data, FILTER_SANITIZE_NUMBER_INT);
+
+        if ($query) {
+            return 0;
+        } else {
+            $query = $query->row_array();
+            $data = $query['kode_barang'];
+            return filter_var($data, FILTER_SANITIZE_NUMBER_INT);
+        }
     }
 
     function view_edit_data($kode_barang)

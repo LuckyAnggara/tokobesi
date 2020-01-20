@@ -32,15 +32,11 @@
 
                 <!-- Logo container-->
                 <div class="logo">
-                    <!-- Text Logo -->
-                    <!--<a href="index.html" class="logo">-->
-                    <!--<span class="logo-small"><i class="mdi mdi-radar"></i></span>-->
-                    <!--<span class="logo-large"><i class="mdi mdi-radar"></i> Adminto</span>-->
-                    <!--</a>-->
+
                     <!-- Image Logo -->
                     <a href="index.html" class="logo">
-                        <img src="<?= base_url('assets/'); ?>images/logo-sm.png" alt="" height="26" class="logo-small">
-                        <img src="<?= base_url('assets/'); ?>images/logo.png" alt="" height="24" class="logo-large">
+                        <img src="<?= base_url('assets/images/') . $setting_perusahaan['logo_perusahaan']; ?>" alt="" height="24" class="logo-large">
+                        <span class="logo-large"> <?= $setting_perusahaan['nama_perusahaan']; ?></span>
                     </a>
                 </div>
                 <!-- End Logo container-->

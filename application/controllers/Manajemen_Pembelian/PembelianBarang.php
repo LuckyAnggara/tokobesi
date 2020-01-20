@@ -9,25 +9,29 @@ class PembelianBarang extends CI_Controller
         $this->load->helper('string');
         $this->load->model('Manajemen_Penjualan/Model_Penjualan_Barang', 'modelPenjualan');
         $this->load->model('Manajemen_Pembelian/Model_Pembelian_Barang', 'modelPembelianBarang');
+        $this->load->model('Setting/Model_Setting', 'modelSetting');
     }
 
     public function index()
     {
-        $data['no_order_pembelian'] = $this->_generateNomor() ;
+        $data['no_order_pembelian'] = $this->_generateNomor();
         $data['css'] = 'manajemen_pembelian/pembelian_barang/pembelian_barang_css';
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['title'] = "Pembelian Barang";
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_pembelian/pembelian_barang/pembelian_barang', $data);
         $this->load->view('template/template_right');
+        $this->load->view('manajemen_pembelian/pembelian_barang/pembelian_barang_modal', $data);
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
         $this->load->view('manajemen_pembelian/pembelian_barang/pembelian_barang_js');
         $this->load->view('template/template_app_js');
     }
 
-    private function _generateNomor(){
-       return random_string('alnum', 16);
+    private function _generateNomor()
+    {
+        return random_string('alnum', 16);
     }
 
     public function clear_keranjang_pembelian($no_order_lama)
@@ -72,8 +76,13 @@ class PembelianBarang extends CI_Controller
 
     public function push_data_barang()
     {
+        $this->modelPembelianBarang->push_data_barang();
+    }
+
+    function push_total_perhitungan()
+    {
         $post = $this->input->post();
-        $this->modelPembelianBarang->push_data_barang($post);
+        $this->modelPembelianBarang->push_total_perhitungan($post);
     }
 
     public function get_data_keranjang($no_order_pembelian)
@@ -99,22 +108,14 @@ class PembelianBarang extends CI_Controller
 
     public function get_sum_keranjang($no_order)
     {
-        if (empty($no_order)) {
-            $output = array(
-                "total_harga" => '0'
-            );
-            $output = json_encode($output);
-            echo $output;
-        } else {
-            $this->db->select_sum('total_harga');
-            $this->db->where('no_order_pembelian', $no_order);
-            $output = $this->db->get('temp_tabel_keranjang_pembelian')->row();
-            $output = json_encode($output);
-            echo $output;
-        }
+
+        $output = $this->modelPembelianBarang->get_sum_keranjang($no_order);
+        $output = json_encode($output);
+        echo $output;
     }
 
-    public function push_grand_total(){
+    public function push_grand_total()
+    {
         $post = $this->input->post();
         $this->modelPembelianBarang->push_grand_total($post);
     }
@@ -126,7 +127,7 @@ class PembelianBarang extends CI_Controller
         echo $output;
     }
 
-    function proses_pembelian()
+    function proses_tunai()
     {
 
         $post = $this->input->post();
@@ -134,11 +135,25 @@ class PembelianBarang extends CI_Controller
         $this->db->from('master_pembelian');
         $this->db->where('nomor_transaksi', $post['nomor_transaksi']);
         $cek = $this->db->get()->num_rows();
-        if($cek > 0){
+        if ($cek > 0) {
             echo "1";
-        }else{
-        $this->modelPembelianBarang->proses_pembelian($post);
+        } else {
+            $this->modelPembelianBarang->proses_tunai($post);
         }
     }
 
+    function proses_kredit()
+    {
+
+        $post = $this->input->post();
+        $this->db->select('*');
+        $this->db->from('master_pembelian');
+        $this->db->where('nomor_transaksi', $post['nomor_transaksi']);
+        $cek = $this->db->get()->num_rows();
+        if ($cek > 0) {
+            echo "1";
+        } else {
+            $this->modelPembelianBarang->proses_kredit($post);
+        }
+    }
 }

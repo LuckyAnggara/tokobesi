@@ -12,14 +12,20 @@
                     <i class="fa fa-plus"></i>
                     <span>Tambah Data</span>
                 </button>
-                <div class="form-group row pull-right">
-                    <label class="col-4 col-form-label">Cari Data</label>
-                    <div class="col-8">
-                        <input type="text" class="form-control" id="searchInput" placeholder="Kata Kunci ....">
-                    </div>
-                </div>
                 <div class="table-responsive">
                     <table id="datatable-master-barang" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Kode Barang</th>
+                                <th>Nama Barang</th>
+                                <th>Jenis Barang</th>
+                                <th>Merek Barang</th>
+                                <th>Harga Pokok</th>
+                                <th>Persediaan</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
                     </table>
                 </div>
             </div>

@@ -113,6 +113,10 @@
         var tanpatitik = tanparp.split(".").join("");
         return tanpatitik;
     }
+
+    function formatSatuan(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 </script>
 
 <!-- Script Auto Generate Kode Barang -->
@@ -209,16 +213,15 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
-            "searching": false,
-            "order": [],
+            "searching": true,
+            // "order": [],
             "processing": true,
-            "serverSide": true,
+            // "serverSide": true,
             "ajax": {
                 "url": '<?= base_url("Manajemen_Barang/MasterBarang/getData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
-                    title: "No",
                     data: "kode_barang",
                     searching: true,
                     targets: 0,
@@ -227,7 +230,6 @@
                     }
                 },
                 {
-                    title: "Kode Barang",
                     data: "kode_barang",
                     searching: true,
                     targets: 1,
@@ -236,7 +238,6 @@
                     }
                 },
                 {
-                    title: "Nama Barang",
                     data: "nama_barang",
                     targets: 2,
                     render: function(data, type, full, meta) {
@@ -244,20 +245,39 @@
                     }
                 },
                 {
-                    title: "Harga Jual",
-                    data: "hargajual",
+                    data: "nama_jenis_barang",
                     targets: 3,
                     render: function(data, type, full, meta) {
-                        var display1 = formatRupiah(data.harga_satuan, 'Rp.');
+                        return data;
+                    }
+                },
+                {
+                    data: "nama_merek_barang",
+                    targets: 4,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "hargapokok",
+                    targets: 5,
+                    render: function(data, type, full, meta) {
+                        var display1 = formatRupiah(data.harga_pokok, 'Rp.');
                         var display2 = display1 + " / " + data.nama_satuan;
                         return display2;
                     }
                 },
                 {
-                    title: "Action",
+                    data: "jumlah_persediaan",
+                    targets: 6,
+                    render: function(data, type, full, meta) {
+                        var display1 = formatSatuan(data);
+                        return display1;
+                    }
+                },
+                {
                     data: "kode_barang",
-                    searching: true,
-                    targets: 4,
+                    targets: 7,
                     render: function(data, type, full, meta) {
                         var display1 = '<a type="button" onClick = "detail_barang(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
                         var display2 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
@@ -290,84 +310,6 @@
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
-
-        $('#searchInput').on('keypress', function(e) {
-            var code = e.keyCode || e.which;
-            if (code == 13) {
-                $('#datatable-master-barang').DataTable().destroy();
-                var input = $('#searchInput').val();
-                var table = $('#datatable-master-barang').DataTable({
-                    "oLanguage": {
-                        sProcessing: "Sabar yah...",
-                        sZeroRecords: "Tidak ada Data..."
-                    },
-                    "searching": false,
-                    "deferRender": true,
-                    "order": [],
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": '<?= base_url("Manajemen_Barang/MasterBarang/getData/"); ?>' + input,
-                        "type": "POST",
-                    },
-                    "columnDefs": [{
-                            title: "No",
-                            data: "kode_barang",
-                            searching: true,
-                            targets: 0,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Kode Barang",
-                            data: "kode_barang",
-                            searching: true,
-                            targets: 1,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Nama Barang",
-                            data: "nama_barang",
-                            searching: true,
-                            targets: 2,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Harga Satuan",
-                            data: "harga_satuan",
-                            searching: true,
-                            targets: 3,
-                            render: function(data, type, full, meta) {
-                                return formatRupiah(data, 'Rp.');
-                            }
-                        },
-                        {
-                            title: "Action",
-                            data: "kode_barang",
-                            searching: true,
-                            targets: 4,
-                            render: function(data, type, full, meta) {
-                                var display1 = '<a type="button" onClick = "detail_barang(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
-                                var display2 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
-                                return display1 + " " + display2;
-                            }
-                        }
-                    ],
-                    "rowCallback": function(row, data, iDisplayIndex) {
-                        var info = this.fnPagingInfo();
-                        var page = info.iPage;
-                        var length = info.iLength;
-                        var index = page * length + (iDisplayIndex + 1);
-                        $('td:eq(0)', row).html(index);
-                    }
-                });
-            }
-        });
     });
 </script>
 

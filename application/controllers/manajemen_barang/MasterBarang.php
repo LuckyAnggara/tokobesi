@@ -9,7 +9,7 @@ class MasterBarang extends CI_Controller
         parent::__construct();
         $this->load->model('Manajemen_Barang/Model_Master_Barang', 'modelBarang');
         $this->load->model('Manajemen_Barang/Detail_Barang/Model_Detail_Barang', 'modelDetailBarang');
-
+        $this->load->model('Setting/Model_Setting', 'modelSetting');
         $this->load->model('Manajemen_Barang/Model_Detail_Persediaan', 'detailpersediaan');
     }
 
@@ -21,6 +21,7 @@ class MasterBarang extends CI_Controller
         $data['satuan'] = $this->modelBarang->get_data_tjms('master_satuan_barang');
         $data['supplier'] = $this->modelBarang->get_data_tjms('master_supplier');
         $data['css'] = 'manajemen_barang/master_barang/master_barang_css';
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['title'] = "Data Barang";
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
@@ -34,14 +35,13 @@ class MasterBarang extends CI_Controller
         $this->load->view('template/template_app_js');
     }
 
-    public function getData($string = null)
+    public function getData()
     {
 
-        $string = str_replace("%20", " ", $string);
-        $database = $this->modelBarang->get_data($string);
+        $database = $this->modelBarang->get_data();
         $data = $database->result_array();
         $output = array(
-            "draw" => $_POST['draw'],
+            // "draw" => $_POST['draw'],
             "recordsTotal" => $this->db->count_all_results(),
             "recordsFiltered"  => $database->num_rows(),
             "data" => array()
@@ -49,7 +49,7 @@ class MasterBarang extends CI_Controller
 
         foreach ($data as $value) {
             $data2 = $this->modelBarang->push_satuan($value['kode_barang']);
-            $value['hargajual'] = $data2;
+            $value['hargapokok'] = $data2;
             $output['data'][] = $value;
         }
         $output = json_encode($output);
@@ -113,7 +113,7 @@ class MasterBarang extends CI_Controller
         $data['merek'] = $this->modelBarang->get_data_tjms('master_merek_barang');
         $data['satuan'] = $this->modelBarang->get_data_tjms('master_satuan_barang');
         $data['supplier'] = $this->modelBarang->get_data_tjms('master_supplier');
-
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['css'] = 'manajemen_barang/master_barang/master_barang_css';
         $data['title'] = "Data Barang " . $kode_barang;
         $data['kode_barang'] = $kode_barang;

@@ -8,11 +8,13 @@ class MasterJenisBarang extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Manajemen_Data/Model_Master_Jenis_Barang', 'modelJenis_Barang');
+        $this->load->model('Setting/Model_Setting', 'modelSetting');
     }
 
     public function index()
     {
         $data['css'] = 'manajemen_data/master_jenis_barang/master_jenis_barang_css';
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_data/master_Jenis_Barang/master_jenis_barang');

@@ -29,20 +29,18 @@
         $('.tipe_pelanggan').select2({
             placeholder: 'Tipe Pelanggan',
             minimumResultsForSearch: Infinity,
-            data: [
-            {
-                "id": "general",
-                "text": "General Costumer"
-            },
-            {
-                "id": "rekanan",
-                "text": "Rekanan"
-            }
+            data: [{
+                    "id": "general",
+                    "text": "General Costumer"
+                },
+                {
+                    "id": "rekanan",
+                    "text": "Rekanan"
+                }
             ],
         });
 
-        $('#generate_id').on('click', function()
-        {
+        $('#generate_id').on('click', function() {
             console.log('aw');
             var id_pelanggan = $('#edit_id_pelanggan');
             $.ajax({
@@ -68,7 +66,6 @@
             }
         });
     });
-
 </script>
 
 <!-- script format NPWP -->
@@ -126,84 +123,84 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        destroy : true,
-        
+        destroy: true,
+
         init_table();
-        function init_table(input = "")
-        {
+
+        function init_table(input = "") {
             $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
-            return {
-                "iStart": oSettings._iDisplayStart,
-                "iEnd": oSettings.fnDisplayEnd(),
-                "iLength": oSettings._iDisplayLength,
-                "iTotal": oSettings.fnRecordsTotal(),
-                "iFilteredTotal": oSettings.fnRecordsDisplay(),
-                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
-                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+                return {
+                    "iStart": oSettings._iDisplayStart,
+                    "iEnd": oSettings.fnDisplayEnd(),
+                    "iLength": oSettings._iDisplayLength,
+                    "iTotal": oSettings.fnRecordsTotal(),
+                    "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                    "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                    "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
                 };
             };
             var table = $('#datatable-master-pelanggan').DataTable({
-                    destroy : true,
-                    paging: true,
-                    "oLanguage": {
-                        sProcessing: "Sabar yah...",
-                        sZeroRecords: "Tidak ada Data..."
-                    },
-                    "searching": false,
-                    "processing": true,
-                    "serverSide": false,    
-                    "ajax": {
-                        "url": '<?= base_url("Manajemen_Data/MasterPelanggan/getData/"); ?>' + input,
-                        "type": "POST",
-                    },
-                    "columnDefs": [{
-                            data: "id_pelanggan",
-                            targets: 0,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            data: "id_pelanggan",
-                            targets: 1,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            data: "nama_pelanggan",
-                            targets: 2,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            data: "nomor_telepon",
-                            targets: 3,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            data: "id_pelanggan",
-                            targets: 4,
-                            render: function(data, type, full, meta) {
-                                var display1 = '<a type="button" onClick = "show_view_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
-                                var display2 = '<a type="button" onClick = "show_edit_modal(\'' + data + '\')"" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Edit Data"><i class="fa fa-edit" ></i> </a>';
-                                var display3 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
-                                return display1 + " " + display2 + " " + display3;
-                            }
+                destroy: true,
+                paging: true,
+                "oLanguage": {
+                    sProcessing: "Sabar yah...",
+                    sZeroRecords: "Tidak ada Data..."
+                },
+                "searching": false,
+                "processing": true,
+                "serverSide": false,
+                "ajax": {
+                    "url": '<?= base_url("Manajemen_Data/MasterPelanggan/getData/"); ?>' + input,
+                    "type": "POST",
+                },
+                "columnDefs": [{
+                        data: "id_pelanggan",
+                        targets: 0,
+                        render: function(data, type, full, meta) {
+                            return data;
                         }
-                    ],
-                    "deferRender": true,
-                    "rowCallback": function(row, data, iDisplayIndex) {
-                        var info = this.fnPagingInfo();
-                        var page = info.iPage;
-                        var length = info.iLength;
-                        var index = page * length + (iDisplayIndex + 1);
-                        $('td:eq(0)', row).html(index);
+                    },
+                    {
+                        data: "id_pelanggan",
+                        targets: 1,
+                        render: function(data, type, full, meta) {
+                            return data;
+                        }
+                    },
+                    {
+                        data: "nama_pelanggan",
+                        targets: 2,
+                        render: function(data, type, full, meta) {
+                            return data;
+                        }
+                    },
+                    {
+                        data: "nomor_telepon",
+                        targets: 3,
+                        render: function(data, type, full, meta) {
+                            return data;
+                        }
+                    },
+                    {
+                        data: "id_pelanggan",
+                        targets: 4,
+                        render: function(data, type, full, meta) {
+                            var display1 = '<a type="button" onClick = "show_view_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
+                            var display2 = '<a type="button" onClick = "show_edit_modal(\'' + data + '\')"" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Edit Data"><i class="fa fa-edit" ></i> </a>';
+                            var display3 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
+                            return display1 + " " + display2 + " " + display3;
+                        }
                     }
-                });
+                ],
+                "deferRender": true,
+                "rowCallback": function(row, data, iDisplayIndex) {
+                    var info = this.fnPagingInfo();
+                    var page = info.iPage;
+                    var length = info.iLength;
+                    var index = page * length + (iDisplayIndex + 1);
+                    $('td:eq(0)', row).html(index);
+                }
+            });
         }
 
         $('#searchInput').on('keypress', function(e) {
@@ -236,7 +233,7 @@
                     $('#add_Modal').modal('hide');
                     Swal.fire(
                         'Sukses!',
-                        'Gambar telah di Upload.',
+                        'Data telah di Simpan!.',
                         'success'
                     );
 
@@ -294,6 +291,7 @@
         var edit_tipe_pelanggan = $('#edit_tipe_pelanggan');
         var edit_nama_pelanggan = $('#edit_nama_pelanggan');
         var edit_alamat = $('#edit_alamat');
+        var edit_email = $('#edit_email');
         var edit_nomor_telepon = $('#edit_nomor_telepon');
         var edit_npwp = $('#edit_npwp');
         var edit_bank_rekening = $('#edit_bank_rekening');
@@ -316,6 +314,7 @@
                 edit_tipe_pelanggan.val(data.tipe_pelanggan);
                 edit_nama_pelanggan.val(data.nama_pelanggan);
                 edit_alamat.val(data.alamat);
+                edit_email.val(data.email);
                 edit_nomor_telepon.val(data.nomor_telepon);
                 edit_npwp.val(data.npwp);
                 edit_bank_rekening.val(bank[0]);
@@ -388,6 +387,7 @@
         var view_nama_pelanggan = $('#view_nama_pelanggan');
         var view_tipe_pelanggan = $('#view_tipe_pelanggan');
         var view_alamat = $('#view_alamat');
+        var view_email = $('#view_email');
         var view_nomor_telepon = $('#view_nomor_telepon');
         var view_npwp = $('#view_npwp');
         var view_bank_rekening = $('#view_bank_rekening');
@@ -405,6 +405,7 @@
                 view_tipe_pelanggan.val(data.tipe_pelanggan);
                 view_nama_pelanggan.val(data.nama_pelanggan);
                 view_alamat.val(data.alamat);
+                view_email.val(data.email);
                 view_nomor_telepon.val(data.nomor_telepon);
                 view_npwp.val(data.npwp);
                 view_bank_rekening.val(data.nomor_rekening);
