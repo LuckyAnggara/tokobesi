@@ -53,7 +53,7 @@
                     <div class="col-sm-12">
                         <div class="table-responsive">
                             <table id="datatable-kartu-persediaan" class="cell-border table-striped table table-bordered dt-responsive nowrap" width="100%">
-                                <thead class="thead-light text-center">
+                                <!-- <thead class="thead-light text-center">
                                     <tr class="text-center">
                                         <th rowspan="2">Tanggal</th>
                                         <th rowspan="2">No Transaksi</th>
@@ -72,33 +72,17 @@
                                         <th>Harga</th>
                                         <th>Total</th>
                                     </tr>
+                                </thead> -->
+                                <thead class="thead-dark text-center">
+                                    <tr class="text-center">
+                                        <th>Tanggal</th>
+                                        <th>Nomor Transaksi</th>
+                                        <th>Masuk</th>
+                                        <th>Keluar</th>
+                                        <th>Saldo</th>
+                                        <th>Keterangan</th>
+                                    </tr>
                                 </thead>
-                                <tbody>
-                                    <?php foreach ($kartu as $key => $value) : ?>
-                                        <tr>
-                                            <td><?= $value['tanggal_transaksi']; ?></td>
-                                            <td><?= $value['nomor_transaksi']; ?></td>
-                                            <?php if ($value['trans_type'] == "Masuk") : ?>
-                                                <td><?= $value['qty']; ?></td>
-                                                <td><?= $value['harga_beli']; ?></td>
-                                                <td><?= $value['qty'] * $value['harga_beli']; ?></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            <?php else : ?>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><?= -1 * $value['qty']; ?></td>
-                                                <td><?= $value['harga_beli']; ?></td>
-                                                <td><?= -1 * $value['qty'] * $value['harga_beli']; ?></td>
-                                            <?php endif; ?>
-                                            <td><?= $value['saldo']; ?></td>
-                                            <td><?= $value['harga_beli']; ?></td>
-                                            <td><?= $value['saldo'] * $value['harga_beli']; ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
                             </table>
                         </div>
                     </div>

@@ -1,4 +1,11 @@
 <div class="container-fluid">
+
+    <!-- Image loader -->
+    <div id='loader' style='display: none;'>
+        <img src="<?= base_url('assets/images/ajax-loader.gif');?>" width='32px' height='32px'>
+    </div>
+    <!-- Image loader -->
+
     <!-- Page-Title -->
     <div class="row">
         <div class="col-sm-12">
@@ -135,5 +142,5 @@
         </div>
     </div>
 
-</div> <!-- end container -->
 
+</div> <!-- end container -->

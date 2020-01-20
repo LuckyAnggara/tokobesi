@@ -1149,6 +1149,10 @@
               },
               cache: false,
               async: false,
+              beforeSend: function() {
+                // Show image container
+                $("#loader").show();
+              },
               success: function(data) {
                 Swal.fire({
                   title: 'Paid!!',
@@ -1165,6 +1169,10 @@
                 });
                 $('#checkout_modal').modal('hide');
                 sessionStorage.setItem("no_order", 'xxx');
+              },
+              complete: function(data) {
+                // Hide image container
+                $("#loader").hide();
               }
             });
           }

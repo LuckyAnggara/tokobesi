@@ -417,6 +417,8 @@ class Model_Penjualan_Barang extends CI_Model
 
             $this->db->where('kode_barang', $value['kode_barang']);
             $this->db->update('master_persediaan', $update);
+
+            $this->coba_coba($value);
         }
     }
 
@@ -449,5 +451,70 @@ class Model_Penjualan_Barang extends CI_Model
         $this->db->from('master_pelanggan');
         $this->db->where('id_pelanggan', $id_pelanggan);
         return $this->db->get()->num_rows();
+    }
+
+
+    function coba_coba($post)
+    {
+        $this->db->select_sum('sisa');
+        $this->db->where('kode_barang', $post['kode_barang']);
+        $all_qty = $this->db->get('harga_detail_pembelian');
+
+        $this->db->select('*');
+        $this->db->from('harga_detail_pembelian');
+        $this->db->where('kode_barang', $post['kode_barang']);
+        $this->db->order_by('tanggal_transaksi', 'DESC'); // FIFO 'DESC' , LIFO 'ASC'
+        $data = $this->db->get()->result_array();
+
+        $qty_penjualan = $post['jumlah_penjualan']; //10
+        $harga_jual = $post['harga_jual'];
+        $kode_barang = $post['kode_barang'];
+        $no_faktur = $post['nomor_faktur'];
+
+        if($qty_penjualan <= $all_qty){
+            foreach ($data as $key => $value) {
+                $tgl = $value['tanggal_transaksi'];
+                $sisa = $value['sisa'];
+                $harga = $value['harga'];
+
+                if ($qty_penjualan < $sisa) {
+                    $penjualan = $qty_penjualan;
+                } else {
+                    $penjualan = $penjualan - $sisa;
+                }
+
+                $data = [
+                    "no_faktur" => $no_faktur,
+                    "kode_barang" => $kode_barang,
+                    "qty" => $penjualan,
+                    "harga_pokok" => $harga,
+                    "harga_jual" => $harga_jual
+                ];
+                $this->db->insert('harga_detail_penjualan', $data);
+
+
+                if ($qty_penjualan > 0) {
+
+                    $temp = $qty_penjualan;
+
+                    $qty = $qty_penjualan - $sisa;
+
+                    if ($qty > 0) {
+                        $stok_update = 0;
+                    } else {
+                        $stok_update = $sisa - $temp;
+                    }
+                    $this->db->query("UPDATE harga_detail_pembelian SET sisa = $stok_update WHERE kode_barang ='" . $post['kode_barang'] . "' AND tanggal_transaksi = '$tgl'");
+                }
+            }
+        }
+
+        // 10 <= 100
+        
+    }
+
+    function coba_coba2($post)
+    {
+        
     }
 }
