@@ -89,7 +89,13 @@ class PenjualanBarang extends CI_Controller
 
         foreach ($data as $value) {
             $qty = $this->modelPersediaan->get_data_persediaan($value['kode_barang']);
-            $value['jumlah_persediaan'] = $qty['saldo'];
+            $qty_temp = $this->modelPersediaan->get_data_persediaan_temp($value['kode_barang']);
+            if($qty['saldo'] !== null){
+                $value['jumlah_persediaan'] = $qty['saldo'] - $qty_temp['saldo'];
+            }else{
+                $value['jumlah_persediaan'] = "0";
+            }
+            
             $output['data'][] = $value;
         }
 

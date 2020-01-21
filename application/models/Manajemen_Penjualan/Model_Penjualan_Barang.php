@@ -479,9 +479,10 @@ class Model_Penjualan_Barang extends CI_Model
         $kode_barang = $post['kode_barang'];
         $qty_penjualan = $post['jumlah_penjualan'];
         // total kan persediaan
-        $this->db->select_sum('sisa');
+        $this->db->select_sum('saldo');
         $this->db->where('kode_barang', $kode_barang);
-        $total_persediaan = $this->db->get('harga_detail_pembelian');
+        $this->db->where('saldo !=', 0);
+        $total_persediaan = $this->db->get('detail_pembelian');
 
         $this->db->select('*');
         $this->db->from('harga_detail_pembelian');

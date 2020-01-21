@@ -172,10 +172,15 @@
       changeMonth: true,
       changeYear: true,
     });
-    $.ajax({
-      url: '<?= base_url("Manajemen_Pembelian/PembelianBarang/clear_keranjang_pembelian/"); ?>' + sessionStorage.getItem("no_order_pembelian"),
-    });
 
+
+    $(window).on("unload", function(e) {
+      $.ajax({
+        async: false,
+        url: '<?= base_url("Manajemen_Pembelian/PembelianBarang/clear_keranjang_pembelian/"); ?>' + sessionStorage.getItem("no_order_pembelian"),
+      });
+      console.log('unload');
+    });
     $("#select_nama_supplier").select2({
       ajax: {
         url: '<?= base_url("Manajemen_Pembelian/PembelianBarang/get_data_supplier"); ?>',

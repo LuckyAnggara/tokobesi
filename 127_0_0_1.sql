@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 4.7.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 20, 2020 at 04:29 PM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.1
+-- Generation Time: Jan 21, 2020 at 10:11 AM
+-- Server version: 10.1.29-MariaDB
+-- PHP Version: 7.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -40,16 +40,17 @@ CREATE TABLE `detail_pembelian` (
   `harga_beli` double NOT NULL,
   `diskon` double NOT NULL,
   `total_harga` double NOT NULL,
-  `tanggal_input` date NOT NULL
+  `tanggal_input` date NOT NULL,
+  `saldo` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `detail_pembelian`
 --
 
-INSERT INTO `detail_pembelian` (`id`, `no_order_pembelian`, `tanggal_transaksi`, `nomor_transaksi`, `kode_barang`, `jumlah_pembelian`, `harga_beli`, `diskon`, `total_harga`, `tanggal_input`) VALUES
-(25, 'ji7GkcnzHK08lgdx', '2020-01-01', 'aa', 'P001', 5, 10000, 0, 50000, '2020-01-20'),
-(26, 'PNsWpzhBJr90SvMl', '2020-01-02', 'q', 'P001', 10, 2000, 0, 20000, '2020-01-20');
+INSERT INTO `detail_pembelian` (`id`, `no_order_pembelian`, `tanggal_transaksi`, `nomor_transaksi`, `kode_barang`, `jumlah_pembelian`, `harga_beli`, `diskon`, `total_harga`, `tanggal_input`, `saldo`) VALUES
+(27, 'XSidQWgjCs3lFEYe', '2020-01-01', 'BB', 'B001', 20, 15000, 0, 300000, '2020-01-21', 20),
+(28, 'XSidQWgjCs3lFEYe', '2020-01-01', 'BB', 'P001', 10, 10000, 0, 100000, '2020-01-21', 10);
 
 -- --------------------------------------------------------
 
@@ -91,8 +92,8 @@ CREATE TABLE `detail_persediaan` (
 --
 
 INSERT INTO `detail_persediaan` (`id`, `tanggal_transaksi`, `nomor_transaksi`, `kode_barang`, `jumlah`, `harga_beli`, `saldo`) VALUES
-(1, '2020-01-01', 'aa', 'P001', 5, 10000, 5),
-(2, '2020-01-02', 'q', 'P001', 10, 2000, 10);
+(3, '2020-01-01', 'BB', 'B001', 20, 15000, 20),
+(4, '2020-01-01', 'BB', 'P001', 10, 10000, 10);
 
 -- --------------------------------------------------------
 
@@ -153,15 +154,15 @@ INSERT INTO `harga_detail_penjualan` (`id`, `no_faktur`, `kode_barang`, `qty`, `
 
 CREATE TABLE `master_barang` (
   `kode_barang` varchar(255) NOT NULL,
-  `tipe_barang` int(11) DEFAULT 0,
-  `jenis_barang` int(11) DEFAULT 0,
-  `merek_barang` int(11) DEFAULT 0,
+  `tipe_barang` int(11) DEFAULT '0',
+  `jenis_barang` int(11) DEFAULT '0',
+  `merek_barang` int(11) DEFAULT '0',
   `kode_supplier` varchar(128) DEFAULT NULL,
   `nama_barang` varchar(255) NOT NULL,
   `harga_pokok` double NOT NULL,
   `harga_satuan` double NOT NULL,
-  `kode_satuan` int(11) DEFAULT 0,
-  `persediaan_minimum` int(11) NOT NULL DEFAULT 0,
+  `kode_satuan` int(11) DEFAULT '0',
+  `persediaan_minimum` int(11) NOT NULL DEFAULT '0',
   `gambar` varchar(255) NOT NULL,
   `keterangan` text NOT NULL,
   `status_jual` tinyint(4) NOT NULL,
@@ -186,8 +187,8 @@ CREATE TABLE `master_hutang` (
   `id` int(11) NOT NULL,
   `nomor_transaksi` varchar(255) NOT NULL,
   `tanggal_jatuh_tempo` date NOT NULL,
-  `down_payment` double NOT NULL DEFAULT 0,
-  `sisa_pembayaran` double NOT NULL DEFAULT 0,
+  `down_payment` double NOT NULL DEFAULT '0',
+  `sisa_pembayaran` double NOT NULL DEFAULT '0',
   `tanggal_input` date NOT NULL,
   `user` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -385,9 +386,7 @@ CREATE TABLE `master_pembelian` (
 --
 
 INSERT INTO `master_pembelian` (`no_order_pembelian`, `nomor_transaksi`, `tanggal_transaksi`, `kode_supplier`, `total_pembelian`, `diskon`, `pajak_keluaran`, `ongkir`, `grand_total`, `status_bayar`, `tanggal_input`, `user_input`) VALUES
-('ji7GkcnzHK08lgdx', 'aa', '2020-01-01', 'EKZ372', 50000, 0, 0, 0, 50000, 1, '2020-01-20', 'udin'),
-('PNsWpzhBJr90SvMl', 'q', '2020-01-02', 'EKO076', 20000, 0, 0, 0, 20000, 1, '2020-01-20', 'udin'),
-('yzp0tCkaKQbZswRA', 'a', '2020-01-01', 'EKO076', 50000, 0, 0, 0, 50000, 1, '2020-01-20', 'udin');
+('XSidQWgjCs3lFEYe', 'BB', '2020-01-01', 'EKZ372', 400000, 0, 40000, 0, 440000, 1, '2020-01-21', 'udin');
 
 -- --------------------------------------------------------
 
@@ -400,11 +399,11 @@ CREATE TABLE `master_penjualan` (
   `tanggal_transaksi` date NOT NULL,
   `no_faktur` varchar(255) NOT NULL,
   `id_pelanggan` varchar(255) NOT NULL,
-  `total_penjualan` double NOT NULL DEFAULT 0,
-  `diskon` double DEFAULT 0,
-  `pajak_masukan` double NOT NULL DEFAULT 0,
-  `ongkir` double NOT NULL DEFAULT 0,
-  `grand_total` double NOT NULL DEFAULT 0,
+  `total_penjualan` double NOT NULL DEFAULT '0',
+  `diskon` double DEFAULT '0',
+  `pajak_masukan` double NOT NULL DEFAULT '0',
+  `ongkir` double NOT NULL DEFAULT '0',
+  `grand_total` double NOT NULL DEFAULT '0',
   `status_bayar` int(1) NOT NULL,
   `tanggal_jatuh_tempo` date DEFAULT NULL,
   `tanggal_input` date NOT NULL,
@@ -432,8 +431,8 @@ CREATE TABLE `master_persediaan` (
 --
 
 INSERT INTO `master_persediaan` (`id`, `kode_barang`, `jumlah_persediaan`, `jumlah_keranjang`, `jumlah_persediaan_sementara`, `tanggal_input`, `no_order_terakhir`) VALUES
-(15, 'P001', 26, -11, 0, '2020-01-20 15:58:42', ''),
-(16, 'B001', 0, 0, 0, '2020-01-20 13:47:07', '');
+(15, 'P001', 36, -11, 0, '2020-01-21 04:28:53', ''),
+(16, 'B001', 15, 5, 0, '2020-01-21 04:28:53', '');
 
 -- --------------------------------------------------------
 
@@ -445,8 +444,8 @@ CREATE TABLE `master_piutang` (
   `id` int(11) NOT NULL,
   `no_faktur` varchar(255) NOT NULL,
   `tanggal_jatuh_tempo` date NOT NULL,
-  `down_payment` double NOT NULL DEFAULT 0,
-  `sisa_pembayaran` double NOT NULL DEFAULT 0,
+  `down_payment` double NOT NULL DEFAULT '0',
+  `sisa_pembayaran` double NOT NULL DEFAULT '0',
   `tanggal_input` date NOT NULL,
   `user` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -617,7 +616,7 @@ CREATE TABLE `tabel_keranjang_belanja` (
   `kode_barang` varchar(255) NOT NULL,
   `jumlah_pembelian` double NOT NULL,
   `harga_total` double NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -633,7 +632,7 @@ CREATE TABLE `tabel_perhitungan_order` (
   `pajak` double NOT NULL,
   `ongkir` double NOT NULL,
   `grand_total` double NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -660,6 +659,7 @@ INSERT INTO `tabel_perhitungan_order` (`no_order`, `total_keranjang`, `diskon`, 
 ('OUT9127056', 14000000, 0, 0, 0, 14000000, '2020-01-20 08:36:24'),
 ('PNsWpzhBJr90SvMl', 20000, 0, 0, 0, 20000, '2020-01-20 14:58:38'),
 ('s18nYcxUTr4Bi5Ig', 16000000, 0, 1600000, 0, 17600000, '2020-01-19 11:17:07'),
+('XSidQWgjCs3lFEYe', 400000, 0, 40000, 0, 440000, '2020-01-21 03:28:50'),
 ('yzp0tCkaKQbZswRA', 50000, 0, 0, 0, 50000, '2020-01-20 14:45:39');
 
 -- --------------------------------------------------------
@@ -680,19 +680,6 @@ CREATE TABLE `temp_tabel_keranjang_pembelian` (
   `tanggal_input` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `temp_tabel_keranjang_pembelian`
---
-
-INSERT INTO `temp_tabel_keranjang_pembelian` (`id`, `tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`, `harga_beli`, `diskon`, `total_harga`, `tanggal_input`) VALUES
-(204, '1970-01-01', 'kd7G1Oxg0SrQ8yfj', 'P001', 5, 10000, 0, 50000, '2020-01-20'),
-(205, '1970-01-01', '5JP9AuaLDK8bwI0h', 'P001', 5, 10000, 0, 50000, '2020-01-20'),
-(207, '2020-01-21', 'DIN4H2SyJTtlVd5R', 'P001', 5, 10000, 0, 50000, '2020-01-20'),
-(208, '2020-01-21', 'hZM953iENxnbwvjO', 'P001', 5, 0, 0, 0, '2020-01-20'),
-(209, '2020-01-01', 'yzp0tCkaKQbZswRA', 'P001', 5, 10000, 0, 50000, '2020-01-20'),
-(210, '2020-01-01', 'cnwEHCsmvW9GkQNM', 'P001', 5, 10000, 0, 50000, '2020-01-20'),
-(211, '2020-01-01', 'ji7GkcnzHK08lgdx', 'P001', 5, 10000, 0, 50000, '2020-01-20');
-
 -- --------------------------------------------------------
 
 --
@@ -708,65 +695,8 @@ CREATE TABLE `temp_tabel_keranjang_penjualan` (
   `harga_jual` double NOT NULL,
   `diskon` double NOT NULL,
   `total_harga` double NOT NULL,
-  `tanggal_input` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `tanggal_input` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `temp_tabel_keranjang_penjualan`
---
-
-INSERT INTO `temp_tabel_keranjang_penjualan` (`id`, `tanggal_transaksi`, `no_order_penjualan`, `kode_barang`, `jumlah_penjualan`, `harga_jual`, `diskon`, `total_harga`, `tanggal_input`) VALUES
-(358, '2020-01-19', 'OUT2549136', 'P001', 10, 2000000, 0, 20000000, '2020-01-19 05:20:13'),
-(359, '2020-01-20', 'OUT0169275', 'P001', 2, 2000000, 5000, 3995000, '2020-01-19 22:20:35'),
-(360, '2020-01-20', 'OUT2031946', 'P001', 5, 2000000, 0, 10000000, '2020-01-19 22:22:10'),
-(362, '2020-01-20', 'OUT4912587', 'P001', 50, 2000000, 0, 100000000, '2020-01-19 22:29:14'),
-(363, '2020-01-20', 'OUT2465831', 'P001', 30, 2000000, 0, 60000000, '2020-01-19 22:31:25'),
-(364, '2020-01-20', 'OUT0769812', 'P001', 50, 2000000, 0, 100000000, '2020-01-19 22:40:29'),
-(365, '2020-01-20', 'OUT7861425', 'P001', 20, 15000, 0, 300000, '2020-01-19 23:45:42'),
-(366, '2020-01-20', 'OUT2856397', 'P001', 50, 2000000, 0, 100000000, '2020-01-20 00:25:47'),
-(367, '2020-01-20', 'OUT2856397', 'P001', 20, 2000000, 0, 40000000, '2020-01-20 00:26:09'),
-(368, '2020-01-20', 'OUT7852691', 'P001', 6, 2000000, 0, 12000000, '2020-01-20 00:28:06'),
-(369, '2020-01-20', 'OUT7852691', 'P001', 2, 2000000, 0, 4000000, '2020-01-20 00:28:17'),
-(370, '2020-01-20', 'OUT8136072', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 01:42:07'),
-(371, '2020-01-20', 'OUT5923874', 'P001', 4, 2000000, 0, 8000000, '2020-01-20 01:42:55'),
-(372, '2020-01-20', 'OUT5923874', 'P001', 4, 2000000, 0, 8000000, '2020-01-20 01:42:59'),
-(373, '2020-01-20', 'OUT1809374', 'P001', 10, 2000000, 0, 20000000, '2020-01-20 02:05:02'),
-(374, '2020-01-20', 'OUT5406982', 'P001', 5, 2000000, 0, 10000000, '2020-01-20 02:16:59'),
-(375, '2020-01-20', 'OUT2651084', 'P001', 5, 2000000, 0, 10000000, '2020-01-20 02:17:29'),
-(376, '2020-01-20', 'OUT7281406', 'P001', 5, 2000000, 0, 10000000, '2020-01-20 02:17:59'),
-(377, '2020-01-20', 'OUT2091736', 'P001', 5, 2000000, 0, 10000000, '2020-01-20 02:33:34'),
-(378, '2020-01-20', 'OUT9127056', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 02:36:16'),
-(379, '2020-01-20', 'OUT1497658', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 06:38:44'),
-(386, '2020-01-20', 'OUT8642319', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:03:07'),
-(387, '2020-01-20', 'OUT8642319', 'B001', 6, 20000, 0, 120000, '2020-01-20 07:03:11'),
-(388, '2020-01-20', 'OUT8395140', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:05:27'),
-(389, '2020-01-20', 'OUT8395140', 'B001', 7, 20000, 0, 140000, '2020-01-20 07:05:31'),
-(390, '2020-01-20', 'OUT9713284', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:06:40'),
-(391, '2020-01-20', 'OUT5468073', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:08:10'),
-(392, '2020-01-20', 'OUT8793014', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:09:37'),
-(393, '2020-01-20', 'OUT5140862', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:11:53'),
-(394, '2020-01-20', 'OUT3645907', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:15:37'),
-(397, '2020-01-20', 'OUT3750682', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:25:16'),
-(398, '2020-01-20', 'OUT4365089', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:34:22'),
-(399, '2020-01-20', 'OUT5271648', 'B001', 7, 20000, 0, 140000, '2020-01-20 07:34:59'),
-(400, '2020-01-20', 'OUT2073461', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:36:43'),
-(401, '2020-01-20', 'OUT4128790', 'P001', 6, 2000000, 0, 12000000, '2020-01-20 07:40:40'),
-(402, '2020-01-20', 'OUT0815479', 'P001', 6, 2000000, 0, 12000000, '2020-01-20 07:42:00'),
-(403, '2020-01-20', 'OUT6175384', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:44:45'),
-(404, '2020-01-20', 'OUT8517204', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 07:59:46'),
-(405, '2020-01-20', 'OUT9168534', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 08:01:31'),
-(406, '2020-01-20', 'OUT4805179', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 08:05:09'),
-(407, '2020-01-20', 'OUT7895264', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 08:07:00'),
-(408, '2020-01-20', 'OUT4815729', 'P001', 11, 2000000, 0, 22000000, '2020-01-20 08:07:28'),
-(409, '2020-01-20', 'OUT7608395', 'P001', 7, 2000000, 0, 14000000, '2020-01-20 08:09:19'),
-(410, '2020-01-20', 'OUT8426701', 'P001', 11, 2000000, 0, 22000000, '2020-01-20 08:09:58'),
-(411, '2020-01-20', 'OUT7942685', 'P001', 5, 2000000, 0, 10000000, '2020-01-20 08:11:09'),
-(412, '2020-01-20', 'OUT5031824', 'P001', 5, 2000000, 0, 10000000, '2020-01-20 08:12:22'),
-(413, '2020-01-20', 'OUT9482517', 'P001', 6, 2000000, 0, 12000000, '2020-01-20 08:16:26'),
-(414, '2020-01-20', 'OUT0184539', 'P001', 6, 2000000, 0, 12000000, '2020-01-20 08:19:11'),
-(415, '2020-01-20', 'OUT7814095', 'P001', 9, 2000000, 0, 18000000, '2020-01-20 08:20:51'),
-(417, '2020-01-20', 'OUT6845213', 'P001', 11, 2000000, 0, 22000000, '2020-01-20 08:26:16'),
-(418, '2020-01-20', 'OUT1405683', 'P001', 11, 2000000, 0, 22000000, '2020-01-20 08:26:57');
 
 --
 -- Indexes for dumped tables
@@ -953,7 +883,7 @@ ALTER TABLE `temp_tabel_keranjang_penjualan`
 -- AUTO_INCREMENT for table `detail_pembelian`
 --
 ALTER TABLE `detail_pembelian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `detail_penjualan`
@@ -965,7 +895,7 @@ ALTER TABLE `detail_penjualan`
 -- AUTO_INCREMENT for table `detail_persediaan`
 --
 ALTER TABLE `detail_persediaan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `harga_detail_pembelian`
@@ -1055,13 +985,13 @@ ALTER TABLE `tabel_keranjang_belanja`
 -- AUTO_INCREMENT for table `temp_tabel_keranjang_pembelian`
 --
 ALTER TABLE `temp_tabel_keranjang_pembelian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=213;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=215;
 
 --
 -- AUTO_INCREMENT for table `temp_tabel_keranjang_penjualan`
 --
 ALTER TABLE `temp_tabel_keranjang_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=420;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=428;
 
 --
 -- Constraints for dumped tables

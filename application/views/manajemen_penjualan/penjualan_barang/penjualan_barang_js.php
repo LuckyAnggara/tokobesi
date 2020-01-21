@@ -37,6 +37,15 @@
   // init hide advance search -->
   <script>
     $(document).ready(function() {
+
+      $(window).on("unload", function(e) {
+        $.ajax({
+          async: false,
+          url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
+        });
+        console.log('unload');
+      });
+      
       $('#tanggal_jatuh_tempo').datepicker({
         autoclose: true,
         todayHighlight: true,
@@ -91,9 +100,11 @@
         var value = $("#qty").val();
         $("#qty").val(value.replace(/[^,\d]/g, '').toString());
       });
-      $.ajax({
-        url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
-      });
+
+
+      // $.ajax({
+      //   url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
+      // });
     });
 
     $('#advance').change(function() {

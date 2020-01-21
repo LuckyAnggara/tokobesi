@@ -244,7 +244,7 @@ class Model_Pembelian_Barang extends CI_Model
     {
         $nomor_transaksi = $post['nomor_transaksi'];
 
-        $this->db->query("INSERT INTO `detail_pembelian`(`nomor_transaksi`,`tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input`) SELECT '" .  $nomor_transaksi . "', `tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input` FROM temp_tabel_keranjang_pembelian WHERE no_order_pembelian = '" . $post['no_order_pembelian'] . "'");
+        $this->db->query("INSERT INTO `detail_pembelian`(`nomor_transaksi`,`tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input`,`saldo`) SELECT '" .  $nomor_transaksi . "', `tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input`,`jumlah_pembelian` FROM temp_tabel_keranjang_pembelian WHERE no_order_pembelian = '" . $post['no_order_pembelian'] . "'");
     }
 
     private function _delete_detail_pembelian_temp($post)
