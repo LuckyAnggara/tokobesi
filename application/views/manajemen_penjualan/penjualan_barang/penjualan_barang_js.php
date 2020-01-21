@@ -45,7 +45,7 @@
         });
         console.log('unload');
       });
-      
+
       $('#tanggal_jatuh_tempo').datepicker({
         autoclose: true,
         todayHighlight: true,
@@ -479,6 +479,8 @@
 
     // add ke keranjang ketika tambah di klik
 
+
+
     $('#button-penjualan-add').on('click', function() {
 
       var kode_barang = $('#label_kode_barang').text();
@@ -559,6 +561,7 @@
       $.ajax({
         url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/push_data_barang'); ?>",
         type: "post",
+
         data: {
           no_order_penjualan: no_order,
           kode_barang: kode_barang,

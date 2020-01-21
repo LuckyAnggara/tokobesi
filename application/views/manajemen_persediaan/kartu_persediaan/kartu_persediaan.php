@@ -53,26 +53,6 @@
                     <div class="col-sm-12">
                         <div class="table-responsive">
                             <table id="datatable-kartu-persediaan" class="cell-border table-striped table table-bordered dt-responsive nowrap" width="100%">
-                                <!-- <thead class="thead-light text-center">
-                                    <tr class="text-center">
-                                        <th rowspan="2">Tanggal</th>
-                                        <th rowspan="2">No Transaksi</th>
-                                        <th colspan="3">Masuk</th>
-                                        <th colspan="3">Keluar</th>
-                                        <th colspan="3">Saldo</th>
-                                    </tr>
-                                    <tr class="text-center">
-                                        <th>Qty</th>
-                                        <th>Harga</th>
-                                        <th>Total</th>
-                                        <th>Qty</th>
-                                        <th>Harga</th>
-                                        <th>Total</th>
-                                        <th>Qty</th>
-                                        <th>Harga</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead> -->
                                 <thead class="thead-dark text-center">
                                     <tr class="text-center">
                                         <th>Tanggal</th>

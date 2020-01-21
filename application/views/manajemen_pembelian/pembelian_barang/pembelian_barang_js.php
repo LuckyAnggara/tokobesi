@@ -164,6 +164,9 @@
       autoclose: true,
       todayHighlight: true
     });
+    $('#tanggal_transaksi').on('click', function() {
+      console.log($('#tanggal_transaksi').val());
+    });
     $('#tanggal_jatuh_tempo').datepicker({
       autoclose: true,
       todayHighlight: true,

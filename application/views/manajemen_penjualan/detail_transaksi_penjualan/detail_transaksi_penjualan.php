@@ -127,7 +127,7 @@ if ($data_order['status_bayar'] == 1) {
                 <div class="form-group row">
                     <label class="col-sm-4 col-sm-form-label m-t-10">Nomor Telepon</label>
                     <div class="col-sm-8">
-                        <input id="id_pelanggan" name="id_pelanggan" type="text" class="form-control" value="<?= $data_order['nomor_telepon']; ?>" readonly>
+                        <input id="nomor_telepon" name="nomor_telepon" type="text" class="form-control" value="<?= $data_order['nomor_telepon']; ?>" readonly>
                     </div>
                 </div>
                 <div class=" clearfix"></div>
@@ -142,7 +142,7 @@ if ($data_order['status_bayar'] == 1) {
                 <div class="form-group row">
                     <label class="col-sm-4 col-sm-form-label m-t-5">Tanggal Transaksi</label>
                     <div class="col-sm-8">
-                        <input id="id_pelanggan" name="id_pelanggan" type="text" class="form-control" value="<?= $tanggal_transaksi; ?>" readonly>
+                        <input id="tanggal_transaksi" name="tanggal_transaksi" type="text" class="form-control" value="<?= $tanggal_transaksi; ?>" readonly>
                     </div>
                 </div>
                 <div class="form-group row">

@@ -24,4 +24,10 @@ class Dashboard extends CI_Controller
 		$this->load->view('dashboard/dashboard_js');
 		$this->load->view('template/template_app_js');
 	}
+
+	public function jam()
+	{
+		echo  date("His") . "<br>";
+		echo date('Y-m-d H:i:s', strtotime('01/16/2020' . date("His")));
+	}
 }

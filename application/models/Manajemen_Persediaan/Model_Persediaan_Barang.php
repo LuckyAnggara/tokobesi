@@ -18,15 +18,22 @@ class Model_Persediaan_Barang extends CI_Model
 
     function get_data_persediaan($kode_barang)
     {
-        $qty = $this->db->query("SELECT SUM(`saldo`) AS `saldo` FROM `detail_pembelian` WHERE `kode_barang` = '" . $kode_barang . "' ");
 
-        return $qty->row_array();
-    }
+        $this->db->select_sum('saldo');
+        $this->db->where('kode_barang', $kode_barang);
+        $result = $this->db->get('detail_pembelian')->row();
+        $qty_saldo =  $result->saldo;
 
-    function get_data_persediaan_temp($kode_barang)
-    {
-        $qty = $this->db->query("SELECT SUM(`jumlah_penjualan`) AS `saldo` FROM `temp_tabel_keranjang_penjualan` WHERE `kode_barang` = '" . $kode_barang . "' ");
+        // $this->db->select_sum('jumlah_penjualan');
+        // $this->db->where('kode_barang', $kode_barang);
+        // $result = $this->db->get('detail_penjualan')->row();
+        // $qty_terjual =  $result->jumlah_penjualan;
 
-        return $qty->row_array();
+        $this->db->select_sum('jumlah_penjualan');
+        $this->db->where('kode_barang', $kode_barang);
+        $result = $this->db->get('temp_tabel_keranjang_penjualan')->row();
+        $qty_temp =  $result->jumlah_penjualan;
+
+        return  $qty_saldo - $qty_temp;
     }
 }

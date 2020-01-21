@@ -89,13 +89,12 @@ class PenjualanBarang extends CI_Controller
 
         foreach ($data as $value) {
             $qty = $this->modelPersediaan->get_data_persediaan($value['kode_barang']);
-            $qty_temp = $this->modelPersediaan->get_data_persediaan_temp($value['kode_barang']);
-            if($qty['saldo'] !== null){
-                $value['jumlah_persediaan'] = $qty['saldo'] - $qty_temp['saldo'];
-            }else{
+            if ($qty > 0) {
+                $value['jumlah_persediaan'] = $qty;
+            } else {
                 $value['jumlah_persediaan'] = "0";
             }
-            
+
             $output['data'][] = $value;
         }
 
@@ -226,6 +225,7 @@ class PenjualanBarang extends CI_Controller
                 $this->load->view('template/template_right');
                 $this->load->view('template/template_footer');
                 $this->load->view('template/template_js');
+
                 $this->load->view('template/template_app_js');
             } else {
 
@@ -250,7 +250,7 @@ class PenjualanBarang extends CI_Controller
 
     function get_data_persediaan($kode_barang)
     {
-        $output = $this->modelPenjualan->get_data_persediaan($kode_barang);
+        $output = $this->modelPersediaan->get_data_persediaan($kode_barang);
         echo $output;
     }
 
