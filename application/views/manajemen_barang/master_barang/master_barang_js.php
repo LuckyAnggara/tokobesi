@@ -51,6 +51,16 @@
 <!-- script validasi -->
 <script type="text/javascript">
     $(document).ready(function() {
+
+        $('#next').on('click', function() {
+            console.log('asdasd');
+            $('.nav-pills > .active').next('li').find('a').trigger('click');
+        });
+
+        $('.btnPrevious').click(function() {
+            $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+        });
+
         $('#submitForm').parsley();
         $('.select2').select2({
             minimumResultsForSearch: -1
@@ -87,6 +97,15 @@
         // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
         harga_pokok.value = formatRupiah(this.value, 'Rp. ');
         $('#harga_pokok').val(normalrupiah(data));
+    });
+
+    var komisi_sales = document.getElementById('komisi_sales_dummy');
+    komisi_sales.addEventListener('keyup', function(e) {
+        var data = $('#komisi_sales_dummy').val();
+        // tambahkan 'Rp.' pada saat form di ketik
+        // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
+        komisi_sales.value = formatRupiah(this.value, 'Rp. ');
+        $('#komisi_sales').val(normalrupiah(data));
     });
 
     /* Fungsi formatRupiah */

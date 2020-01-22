@@ -11,6 +11,7 @@ class MasterBarang extends CI_Controller
         $this->load->model('Manajemen_Barang/Detail_Barang/Model_Detail_Barang', 'modelDetailBarang');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
         $this->load->model('Manajemen_Barang/Model_Detail_Persediaan', 'detailpersediaan');
+        $this->load->model('Manajemen_Persediaan/Model_Persediaan_Barang', 'modelPersediaan');
     }
 
     public function index()
@@ -49,6 +50,13 @@ class MasterBarang extends CI_Controller
 
         foreach ($data as $value) {
             $data2 = $this->modelBarang->push_satuan($value['kode_barang']);
+
+            $qty = $this->modelPersediaan->get_data_persediaan($value['kode_barang']);
+            if ($qty > 0) {
+                $value['jumlah_persediaan'] = $qty;
+            } else {
+                $value['jumlah_persediaan'] = "0";
+            }
             $value['hargapokok'] = $data2;
             $output['data'][] = $value;
         }

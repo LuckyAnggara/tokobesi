@@ -9,3 +9,6 @@
 
 <!-- Select2 Css -->
 <link href="<?= base_url('assets/'); ?>plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+
+<!--Morris Chart CSS -->
+<link href="<?= base_url('assets/'); ?>/plugins/morris/morris.css" rel="stylesheet" type="text/css" />

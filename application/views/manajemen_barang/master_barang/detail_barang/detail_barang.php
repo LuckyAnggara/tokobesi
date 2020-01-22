@@ -40,25 +40,26 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#profile2" data-toggle="tab" aria-expanded="true" class="nav-link">
+                        <a href="#satuan_harga" data-toggle="tab" aria-expanded="true" class="nav-link">
                             Satuan & Harga
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#messages2" data-toggle="tab" aria-expanded="false" class="nav-link">
-                            Diskon / Potongan
+                            Komisi
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#settings2" data-toggle="tab" aria-expanded="false" class="nav-link">
-                            Statisktik Penjualan
+                        <a href="#lainnya" data-toggle="tab" aria-expanded="false" class="nav-link">
+                            Lainnya
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#settings2" data-toggle="tab" aria-expanded="false" class="nav-link">
-                            Lain - Lain
+                        <a href="#statistik" data-toggle="tab" aria-expanded="false" class="nav-link">
+                            Statistik Penjualan
                         </a>
                     </li>
+
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane fade show active" id="data_umum">
@@ -139,23 +140,9 @@
                             </div>
                         </form>
                     </div>
-                    <div role="tabpanel" class="tab-pane fade" id="profile2">
+                    <div role="tabpanel" class="tab-pane fade" id="satuan_harga">
                         <form data-parsley-validate novalidate autocomplete="off" id="form_harga" method="post" enctype="multipart/form-data" class="form-horizontal">
                             <div>
-                                <div class="form-group row">
-                                    <label class="col-3 col-form-label">Harga Pokok</label>
-                                    <div class="col-9">
-                                        <input readonly type="text" id="edit_harga_pokok_dummy" name="edit_harga_pokok_dummy" placeholder="Hanya Angka" class="form-control" required>
-                                        <input type="text" name="edit_harga_pokok" id="edit_harga_pokok" placeholder="Hanya Angka" class="form-control" hidden>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-3 col-form-label">Harga Jual</label>
-                                    <div class="col-9">
-                                        <input readonly type="text" id="edit_harga_satuan_dummy" name="edit_harga_satuan_dummy" placeholder="Hanya Angka" class="form-control" required>
-                                        <input type="text" name="edit_harga_satuan" id="edit_harga_satuan" placeholder="Hanya Angka" class="form-control" hidden>
-                                    </div>
-                                </div>
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Satuan Dasar</label>
                                     <div class="col-9">
@@ -178,16 +165,30 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-3 col-form-label">Status Jual</label>
+                                    <label class="col-3 col-form-label">Harga Pokok</label>
                                     <div class="col-9">
-                                        <select name="edit_status_jual" id="edit_status_jual" class="form-control select2" placeholder="ssss" required disabled>
-                                            <option value="0" selected disabled hidden>-Status-</option>
-                                            <option value="1">Dijual</option>
-                                            <option value="1">Tidak Dijual</option>
+                                        <input readonly type="text" id="edit_harga_pokok_dummy" name="edit_harga_pokok_dummy" placeholder="Hanya Angka" class="form-control" required>
+                                        <input type="text" name="edit_harga_pokok" id="edit_harga_pokok" placeholder="Hanya Angka" class="form-control" hidden>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Harga Jual</label>
+                                    <div class="col-9">
+                                        <input readonly type="text" id="edit_harga_satuan_dummy" name="edit_harga_satuan_dummy" placeholder="Hanya Angka" class="form-control" required>
+                                        <input type="text" name="edit_harga_satuan" id="edit_harga_satuan" placeholder="Hanya Angka" class="form-control" hidden>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Metode Persediaan</label>
+                                    <div class="col-9">
+                                        <select name="metode_hpp" id="metode_hpp" class="form-control select2" required disabled>
+                                            <option value="0" selected disabled hidden>--</option>
+                                            <option value="FIFO">FIFO</option>
+                                            <option value="LIFO">LIFO</option>
+                                            <option value="AVERAGE">AVERAGE</option>
                                         </select>
                                     </div>
                                 </div>
-
                             </div>
 
                             <div class="modal-footer">
@@ -201,33 +202,24 @@
                             </div>
                         </form>
                     </div>
-                    <div role="tabpanel" class="tab-pane fade" id="messages2">
-                        <p>Etsy mixtape wayfarers, ethical
-                            wes anderson tofu before they sold out mcsweeney's organic lomo
-                            retro fanny pack lo-fi farm-to-table readymade. Messenger bag
-                            gentrify pitchfork tattooed craft beer, iphone skateboard locavore
-                            carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy
-                            irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg
-                            banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy
-                            retro mlkshk vice blog. Scenester cred you probably haven't heard of
-                            them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu
-                            synth chambray yr.</p>
+                    <div role="tabpanel" class="tab-pane fade" id="lainnya">
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">Status Jual</label>
+                            <div class="col-9">
+                                <select name="edit_status_jual" id="edit_status_jual" class="form-control select2" placeholder="ssss" required disabled>
+                                    <option value="0" selected disabled hidden>-Status-</option>
+                                    <option value="1">Dijual</option>
+                                    <option value="1">Tidak Dijual</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane fade" id="settings2">
-                        <p>Trust fund seitan letterpress,
-                            keytar raw denim keffiyeh etsy art party before they sold out master
-                            cleanse gluten-free squid scenester freegan cosby sweater. Fanny
-                            pack portland seitan DIY, art party locavore wolf cliche high life
-                            echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before
-                            they sold out farm-to-table VHS viral locavore cosby sweater. Lomo
-                            wolf viral, mustache readymade thundercats keffiyeh craft beer marfa
-                            ethical. Wolf salvia freegan, sartorial keffiyeh echo park
-                            vegan.</p>
+                    <div role="tabpanel" class="tab-pane fade" id="statistik">
+                        <div id="line-example" style="height: 500px; width : 2000px"></div>
                     </div>
+                    <small class="text-muted">Last Update : <i id="edit_tanggal_input" readonly> </i> </small>
                 </div>
-                <small class="text-muted">Last Update : <i id="edit_tanggal_input" readonly> </i></small>
-            </div>
 
+            </div>
         </div>
-    </div>
-</div> <!-- container -->
+    </div> <!-- container -->

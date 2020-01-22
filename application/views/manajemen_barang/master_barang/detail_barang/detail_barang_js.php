@@ -20,6 +20,13 @@
 <!-- Select2 js -->
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
 
+<!-- Chart JS -->
+<!-- <script src="<?= base_url('assets/'); ?>plugins/chart.js/Chart.bundle.min.js"></script> -->
+<!-- <script src="<?= base_url('assets/'); ?>pages/jquery.chartjs.init.js"></script> -->
+
+<!--Morris Chart-->
+<script src="<?= base_url('assets/'); ?>plugins/morris/morris.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/raphael/raphael-min.js"></script>
 
 <!-- script Uploader -->
 <script type="text/javascript">
@@ -425,18 +432,18 @@
             }
         } else {
             if (bol == false) {
-                $('#edit_harga_pokok_dummy').attr("readonly", bol);
-                $('#edit_harga_satuan_dummy').attr("readonly", bol);
                 $('#edit_satuan').attr("disabled", bol);
                 $('#edit_persediaan_minimum').attr("readonly", bol);
-                $('#edit_satuan').attr("disabled", bol);
+                $('#edit_harga_pokok_dummy').attr("readonly", bol);
+                $('#edit_harga_satuan_dummy').attr("readonly", bol);
+                $('#metode_hpp').attr("disabled", bol);
                 $('#edit_status_jual').attr("disabled", bol);
             } else {
-                $('#edit_harga_pokok_dummy').attr("readonly", bol);
-                $('#edit_harga_satuan_dummy').attr("readonly", bol);
-                $('#edit_satuan').attr("disabled", bol);
                 $('#edit_persediaan_minimum').attr("readonly", bol);
                 $('#edit_satuan').attr("disabled", bol);
+                $('#edit_harga_pokok_dummy').attr("readonly", bol);
+                $('#edit_harga_satuan_dummy').attr("readonly", bol);
+                $('#metode_hpp').attr("disabled", bol);
                 $('#edit_status_jual').attr("disabled", bol);
             }
         }
@@ -452,13 +459,14 @@
         var edit_nama_barang = $('#edit_nama_barang');
         var edit_kode_supplier = $('#edit_kode_supplier');
         var edit_keterangan = $('#edit_keterangan');
+        var edit_satuan = $('#edit_satuan');
+        var edit_persediaan_minimum = $('#edit_persediaan_minimum');
+        var edit_satuan_minimum = $('#edit_satuan_minimum');
         var edit_harga_pokok_dummy = $('#edit_harga_pokok_dummy');
         var edit_harga_pokok = $('#edit_harga_pokok');
         var edit_harga_satuan_dummy = $('#edit_harga_satuan_dummy');
         var edit_harga_satuan = $('#edit_harga_satuan');
-        var edit_satuan = $('#edit_satuan');
-        var edit_persediaan_minimum = $('#edit_persediaan_minimum');
-        var edit_satuan_minimum = $('#edit_satuan_minimum');
+        var edit_metode_hpp = $('#metode_hpp');
         var edit_status_jual = $('#edit_status_jual');
         var edit_tanggal_input = $('#edit_tanggal_input');
         //var edit_image = $('#edit_image');
@@ -478,13 +486,15 @@
                 edit_nama_barang.val(data.nama_barang);
                 edit_kode_supplier.val(data.kode_supplier).trigger('change');
                 edit_keterangan.val(data.keterangan);
+
+                edit_satuan.val(data.kode_satuan).trigger('change');
+                edit_persediaan_minimum.val(data.persediaan_minimum);
+                edit_satuan_minimum.val($('#edit_satuan option:selected').text());
                 edit_harga_pokok_dummy.val(rupiahPokok);
                 edit_harga_pokok.val(data.harga_pokok);
                 edit_harga_satuan_dummy.val(rupiahJual);
                 edit_harga_satuan.val(data.harga_satuan);
-                edit_satuan.val(data.kode_satuan).trigger('change');
-                edit_persediaan_minimum.val(data.persediaan_minimum);
-                edit_satuan_minimum.val($('#edit_satuan option:selected').text());
+                edit_metode_hpp.val(data.metode_hpp).trigger('change');
                 edit_status_jual.val(data.status_jual).trigger('change');
                 edit_tanggal_input.text(data.tanggal_input);
                 // edit_image.attr('data-default-file', "<?= base_url('assets/images/barang/'); ?>" + data.gambar);
@@ -494,3 +504,71 @@
     }
 </script>
 <!-- Set Data Ke Tampilan -->
+
+
+
+
+<!-- Init Chart -->
+
+<script>
+    var startDate = new Date("2017-10-01"); //YYYY-MM-DD
+    var endDate = new Date("2017-10-07"); //YYYY-MM-DD
+
+    var getDateArray = function(start, end) {
+        var arr = new Array();
+        var dt = new Date(start);
+        while (dt <= end) {
+            arr.push(new Date(dt));
+            dt.setDate(dt.getDate() + 1);
+        }
+        return arr;
+    }
+
+
+    // var ctx = document.getElementById('lineChart').getContext('2d');
+    // var date_array = getDateArray(startDate, endDate);
+    // var time_Array = 0;
+
+    Morris.Line({
+        element: 'line-example',
+        data: [{
+                y: '2006',
+                a: 100,
+                b: 90
+            },
+            {
+                y: '2007',
+                a: 75,
+                b: 65
+            },
+            {
+                y: '2008',
+                a: 50,
+                b: 40
+            },
+            {
+                y: '2009',
+                a: 75,
+                b: 65
+            },
+            {
+                y: '2010',
+                a: 50,
+                b: 40
+            },
+            {
+                y: '2011',
+                a: 75,
+                b: 65
+            },
+            {
+                y: '2012',
+                a: 100,
+                b: 90
+            }
+        ],
+        xkey: 'y',
+        ykeys: ['a', 'b'],
+        labels: ['Series A', 'Series B']
+    });
+</script>

@@ -12,11 +12,10 @@ class Model_Master_Barang extends CI_Model
     function get_data()
     {
 
-        $this->db->select('master_barang.*, master_jenis_barang.nama_jenis_barang, master_merek_barang.nama_merek_barang, master_persediaan.jumlah_persediaan');
+        $this->db->select('*');
         $this->db->from('master_barang');
         $this->db->join('master_jenis_barang', 'master_jenis_barang.id_jenis_barang = master_barang.jenis_barang');
         $this->db->join('master_merek_barang', 'master_merek_barang.id_merek_barang = master_barang.merek_barang');
-        $this->db->join('master_persediaan', 'master_persediaan.kode_barang = master_barang.kode_barang');
         $output = $this->db->get();
         return $output;
     }
@@ -35,8 +34,8 @@ class Model_Master_Barang extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('master_barang');
-        $this->db->like("kode_barang", $string);
-        $this->db->order_by("kode_barang", "DESC");
+        $this->db->like("nama_barang", $string);
+        $this->db->order_by("nama_barang", "DESC");
         $this->db->Limit("1");
         $query = $this->db->get();
 
@@ -44,7 +43,7 @@ class Model_Master_Barang extends CI_Model
             return 0;
         } else {
             $query = $query->row_array();
-            $data = $query['kode_barang'];
+            $data = $query['kode_barang '];
             return filter_var($data, FILTER_SANITIZE_NUMBER_INT);
         }
     }
@@ -94,6 +93,8 @@ class Model_Master_Barang extends CI_Model
             'harga_satuan' => $post["harga_satuan"],
             'persediaan_minimum' => $post["persediaan_minimum"],
             'kode_satuan' => $post['satuan'],
+            'metode_hpp' => $post['metode_hpp'],
+            'komisi_sales' => $post['komisi_sales'],
             'gambar' => $this->_uploadImage(),
             'status_jual' => $post["status_jual"],
             'tanggal_input' => date("Y-m-d H:i:s"),
