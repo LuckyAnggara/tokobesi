@@ -182,9 +182,9 @@ class Model_Master_Barang extends CI_Model
 
     // untuk chart per barang
 
-    function get_statistik_penjualan($kode_barang)
+    function get_statistik_penjualan($post)
     {
-       $query =  $this->db->query("SELECT EXTRACT(DAY FROM tanggal_transaksi) as tanggal, COUNT(kode_barang) as nilai FROM detail_penjualan WHERE kode_barang = '" .$kode_barang. "' GROUP BY DATE(tanggal_transaksi)");
+        $query =  $this->db->query("SELECT DATE_FORMAT(tanggal_transaksi,'%d - %M') as tanggal,   SUM(jumlah_penjualan) as nilai, IFNULL(tanggal_transaksi, 0) tanggals FROM detail_penjualan WHERE kode_barang = '" . $post['kode_barang'] . "' AND tanggal_transaksi  BETWEEN '" . date('Y-m-d', strtotime($post['tanggal_awal'])) . "' AND '" . date('Y-m-d', strtotime($post['tanggal_akhir'])) . "' GROUP BY DATE(tanggal_transaksi)");
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $data) {
                 $hasil[] = $data;

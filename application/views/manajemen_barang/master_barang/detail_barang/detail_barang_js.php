@@ -8,6 +8,9 @@
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
 
+<!-- DatePicker Js -->
+<script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
 <!-- file uploads js -->
 <script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
 
@@ -512,14 +515,13 @@
     var label_tanggal = new Array()
 
     function renderChart(data, labels) {
-        console.log(labels);
         var ctx = document.getElementById("myChart").getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'This week',
+                    label: 'Penjualan',
                     data: data,
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -529,29 +531,73 @@
         });
     }
 
-    function getChartData() {
-        $("#loadingMessage").html('<img src="./assets/images/ajax-loader.gif" alt="" srcset="">');
-        $.ajax({
-            url: '<?= base_url("Manajemen_Barang/MasterBarang/get_statistik_penjualan/"); ?>' + kode_barang,
-            success: function(data) {
-                $("#loadingMessage").html("");
+    function getChartData(tanggal_awal, tanggal_akhir) {
 
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            async: false,
+            data: {
+                kode_barang: kode_barang,
+                tanggal_awal: tanggal_awal,
+                tanggal_akhir: tanggal_akhir
+            },
+            url: '<?= base_url("Manajemen_Barang/MasterBarang/get_statistik_penjualan/"); ?>',
+            success: function(data) {
                 var nilai = [];
                 var labels = [];
-
                 for (var i in data) {
-                    nilai.push(data[i].nilai);
-                    labels.push(data[i].tanggal);
+
+                    nilai.push(data[i].nilai); // push nilai penjualan
+                    labels.push(data[i].tanggal); // push nilai penjualan
+
+                    // var t = data[i].tanggal.split(/[- :]/);
+
+                    // // Apply each element to the Date function
+                    // var d = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
+                    // var a = d.getDate() + " - " + d.getMonth();
+
+                    // labels.push(a);
                 }
                 renderChart(nilai, labels);
             },
-            error: function(err) {
-                $("#loadingMessage").html("Error");
-            }
         });
     }
 
+
     $('#tanggal_awal').on('click', function() {
-        getChartData();
+
     })
+
+    $(document).ready(function() {
+        $('#tanggal_awal').datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        $('#tanggal_akhir').datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        var date = new Date();
+        $('#tanggal_akhir').datepicker("setDate", date)
+        date.setDate(date.getDate() - 7)
+        $('#tanggal_awal').datepicker("setDate", date)
+
+        var awal = $('#tanggal_awal').val();
+        var akhir = $('#tanggal_akhir').val();
+
+        getChartData(awal, akhir);
+
+        $("#tanggal_awal").on('change', function() {
+            var awal = $('#tanggal_awal').val();
+            var akhir = $('#tanggal_akhir').val();
+            getChartData(awal, akhir);
+        });
+
+        $("#tanggal_akhir").on('change', function() {
+            var awal = $('#tanggal_awal').val();
+            var akhir = $('#tanggal_akhir').val();
+            getChartData(awal, akhir);
+        });
+    });
 </script>
