@@ -94,7 +94,6 @@ class PenjualanBarang extends CI_Controller
             } else {
                 $value['jumlah_persediaan'] = "0";
             }
-
             $output['data'][] = $value;
         }
 

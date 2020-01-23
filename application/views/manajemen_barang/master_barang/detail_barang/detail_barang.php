@@ -215,7 +215,28 @@
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane fade" id="statistik">
-                        <div id="line-example" style="height: 500px; width : 2000px"></div>
+                        <div class="form-group row">
+                            <label class="col-sm-1 col-sm-form-label m-t-10">Tanggal</label>
+                            <div class="col-sm-5 col-lg-5 col-md-5">
+                                <div class="input-group">
+                                    <input type="text" autocomplete="off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal_awal">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text btn-inverse"><i class="ti-calendar"></i></span>
+                                    </div>
+                                </div><!-- input-group -->
+                            </div>
+                            <label class="col-sm-1 col-sm-form-label m-t-10">S.D</label>
+                            <div class="col-sm-5 col-lg-5 col-md-5">
+                                <div class="input-group">
+                                    <input type="text" autocomplete="off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal_akhir">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text btn-inverse"><i class="ti-calendar"></i></span>
+                                    </div>
+                                </div><!-- input-group -->
+                            </div>
+                        </div>
+                        <div id="loadingMessage"></div>
+                        <canvas id="myChart"></canvas>
                     </div>
                     <small class="text-muted">Last Update : <i id="edit_tanggal_input" readonly> </i> </small>
                 </div>

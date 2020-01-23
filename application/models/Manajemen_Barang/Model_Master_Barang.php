@@ -179,4 +179,17 @@ class Model_Master_Barang extends CI_Model
         $this->db->from($string);
         return $this->db->get()->result_array();
     }
+
+    // untuk chart per barang
+
+    function get_statistik_penjualan($kode_barang)
+    {
+       $query =  $this->db->query("SELECT EXTRACT(DAY FROM tanggal_transaksi) as tanggal, COUNT(kode_barang) as nilai FROM detail_penjualan WHERE kode_barang = '" .$kode_barang. "' GROUP BY DATE(tanggal_transaksi)");
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $data) {
+                $hasil[] = $data;
+            }
+            return $hasil;
+        }
+    }
 }

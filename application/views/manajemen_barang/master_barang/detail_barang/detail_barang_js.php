@@ -21,12 +21,9 @@
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
 
 <!-- Chart JS -->
-<!-- <script src="<?= base_url('assets/'); ?>plugins/chart.js/Chart.bundle.min.js"></script> -->
+<script src="<?= base_url('assets/'); ?>plugins/chart.js/Chart.bundle.min.js"></script>
 <!-- <script src="<?= base_url('assets/'); ?>pages/jquery.chartjs.init.js"></script> -->
 
-<!--Morris Chart-->
-<script src="<?= base_url('assets/'); ?>plugins/morris/morris.min.js"></script>
-<script src="<?= base_url('assets/'); ?>plugins/raphael/raphael-min.js"></script>
 
 <!-- script Uploader -->
 <script type="text/javascript">
@@ -511,64 +508,50 @@
 <!-- Init Chart -->
 
 <script>
-    var startDate = new Date("2017-10-01"); //YYYY-MM-DD
-    var endDate = new Date("2017-10-07"); //YYYY-MM-DD
+    var kode_barang = $('#hide_kode_barang').text();
+    var label_tanggal = new Array()
 
-    var getDateArray = function(start, end) {
-        var arr = new Array();
-        var dt = new Date(start);
-        while (dt <= end) {
-            arr.push(new Date(dt));
-            dt.setDate(dt.getDate() + 1);
-        }
-        return arr;
+    function renderChart(data, labels) {
+        console.log(labels);
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'This week',
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                }]
+            },
+            options: {},
+        });
     }
 
+    function getChartData() {
+        $("#loadingMessage").html('<img src="./assets/images/ajax-loader.gif" alt="" srcset="">');
+        $.ajax({
+            url: '<?= base_url("Manajemen_Barang/MasterBarang/get_statistik_penjualan/"); ?>' + kode_barang,
+            success: function(data) {
+                $("#loadingMessage").html("");
 
-    // var ctx = document.getElementById('lineChart').getContext('2d');
-    // var date_array = getDateArray(startDate, endDate);
-    // var time_Array = 0;
+                var nilai = [];
+                var labels = [];
 
-    Morris.Line({
-        element: 'line-example',
-        data: [{
-                y: '2006',
-                a: 100,
-                b: 90
+                for (var i in data) {
+                    nilai.push(data[i].nilai);
+                    labels.push(data[i].tanggal);
+                }
+                renderChart(nilai, labels);
             },
-            {
-                y: '2007',
-                a: 75,
-                b: 65
-            },
-            {
-                y: '2008',
-                a: 50,
-                b: 40
-            },
-            {
-                y: '2009',
-                a: 75,
-                b: 65
-            },
-            {
-                y: '2010',
-                a: 50,
-                b: 40
-            },
-            {
-                y: '2011',
-                a: 75,
-                b: 65
-            },
-            {
-                y: '2012',
-                a: 100,
-                b: 90
+            error: function(err) {
+                $("#loadingMessage").html("Error");
             }
-        ],
-        xkey: 'y',
-        ykeys: ['a', 'b'],
-        labels: ['Series A', 'Series B']
-    });
+        });
+    }
+
+    $('#tanggal_awal').on('click', function() {
+        getChartData();
+    })
 </script>

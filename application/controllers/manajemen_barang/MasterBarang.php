@@ -154,4 +154,12 @@ class MasterBarang extends CI_Controller
         $output = json_encode($data);
         echo $output;
     }
+
+    // untuk statistik penjualan per barang
+
+    public function get_statistik_penjualan($kode_barang){
+        $data = $this->modelBarang->get_statistik_penjualan($kode_barang);
+        $output = json_encode($data);
+        echo $output;
+    }
 }
