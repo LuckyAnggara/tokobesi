@@ -10,6 +10,10 @@ class PembelianBarang extends CI_Controller
         $this->load->model('Manajemen_Penjualan/Model_Penjualan_Barang', 'modelPenjualan');
         $this->load->model('Manajemen_Pembelian/Model_Pembelian_Barang', 'modelPembelianBarang');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
+
+        if ($this->session->userdata('status') != "login") {
+            redirect(base_url("login"));
+        }
     }
 
     public function index()

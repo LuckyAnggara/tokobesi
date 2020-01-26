@@ -79,7 +79,7 @@
 
                 <div class="clearfix"></div>
             </div>
-            <div class="card-box">
+            <div class="card-box" id="loading_tambah">
                 <div class="row">
                     <div class="col-6">
                         <h4 class="m-t-0 header-title">Keranjang Belanja</h4>

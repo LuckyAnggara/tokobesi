@@ -73,6 +73,9 @@
                                 <th>Nama Pelanggan</th>
                                 <th>Total Penjualan</th>
                                 <th>Status Bayar</th>
+
+                                <th>User</th>
+
                                 <th>Action</th>
                             </tr>
                         </thead>

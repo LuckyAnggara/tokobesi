@@ -64,6 +64,12 @@
                     "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
                 };
             };
+            var role = "<?php echo $this->session->userdata('role'); ?>";
+            if (role == "Direktur") {
+                var visible = true
+            } else {
+                var visible = false
+            }
             var table = $('#datatable-daftar-penjualan').DataTable({
                 destroy: true,
                 paging: true,
@@ -141,8 +147,17 @@
                         }
                     },
                     {
-                        data: "no_faktur",
+
+                        data: "user",
                         targets: 6,
+                        visible: visible,
+                        render: function(data, type, full, meta) {
+                            return data
+                        }
+                    },
+                    {
+                        data: "no_faktur",
+                        targets: 7,
                         render: function(data, type, full, meta) {
                             var display1 = '<a type="button" onClick = "view_detail(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Detail"><i class="fa fa-search" ></i> </a>';
                             var display2 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';

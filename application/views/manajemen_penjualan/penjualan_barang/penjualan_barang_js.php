@@ -32,6 +32,8 @@
   <!-- switchery -->
   <script src="<?= base_url('assets/'); ?>plugins/switchery/switchery.min.js"></script>
 
+  <script src="<?= base_url('assets/'); ?>plugins/jquery-loader/jquery.loading.js"></script>
+
 
   <!-- script sendiri   // script Radio Fitur Simple dan Adnvace
   // init hide advance search -->
@@ -43,7 +45,6 @@
           async: false,
           url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
         });
-        console.log('unload');
       });
 
       $('#tanggal_jatuh_tempo').datepicker({
@@ -398,6 +399,9 @@
           type: "POST",
           dataType: "JSON",
           async: false,
+          beforeSend: function() {
+            $("#result_page").loading();
+          },
           success: function(data) {
             if (data.jumlah_data > 0) {
               $("#result_page").empty();
@@ -410,6 +414,7 @@
               display_none = '<div class="col-12 text-center"><p>Data Barang ' + kata_kunci + ' tidak ditemukan </p></div>';
               $("#result_page").append(display_none);
             }
+            $("#result_page").loading('stop');
           }
         });
       } else {
@@ -561,7 +566,6 @@
       $.ajax({
         url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/push_data_barang'); ?>",
         type: "post",
-
         data: {
           no_order_penjualan: no_order,
           kode_barang: kode_barang,
@@ -571,9 +575,13 @@
         },
         cache: false,
         async: false,
+        beforeSend: function() {
+          $("#loading_tambah").loading();
+        },
         success: function(data) {
           $('#datatable-keranjang-penjualan').DataTable().ajax.reload();
           total_harga_keranjang();
+          $('#loading_tambah').loading('stop');
         }
       })
     }

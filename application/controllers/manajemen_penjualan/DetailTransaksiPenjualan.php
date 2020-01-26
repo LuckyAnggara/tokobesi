@@ -9,6 +9,10 @@ class DetailTransaksiPenjualan extends CI_Controller
         parent::__construct();
         $this->load->model('Manajemen_Penjualan/Model_Detail_Transaksi_Penjualan', 'modelDetailTransaksiPenjualan');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
+
+        if ($this->session->userdata('status') != "login") {
+            redirect(base_url("login"));
+        }
     }
 
     public function nomor_faktur($no_faktur)

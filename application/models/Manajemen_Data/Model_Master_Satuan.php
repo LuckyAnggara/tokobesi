@@ -58,6 +58,7 @@ class Model_Master_Satuan extends CI_Model
             'nama_satuan' => strtoupper($post['edit_nama_satuan']),
             'keterangan' => $post['edit_keterangan'],
             'tanggal_input' => date("Y-m-d H:i:s"),
+            'user' => $this->session->userdata['username'],
         ];
         $this->db->where('id_satuan', $id_satuan);
         $this->db->update('master_satuan_barang', $data);
@@ -72,6 +73,7 @@ class Model_Master_Satuan extends CI_Model
             'nama_satuan' => strtoupper($post['nama_satuan']),
             'keterangan' => $post['keterangan'],
             'tanggal_input' => date("Y-m-d H:i:s"),
+            'user' => $this->session->userdata['username'],
         ];
         $this->db->insert('master_satuan_barang', $data);
     }

@@ -73,6 +73,7 @@ class Model_Master_Barang extends CI_Model
             'kode_satuan' => $post['edit_satuan'],
             'gambar' => $this->_editUploadImage(),
             'status_jual' => $post["status_jual"],
+            'user' => $this->session->userdata['username'],
             'tanggal_input' => date("Y-m-d H:i:s"),
         );
         $this->db->where('kode_barang', $kode_barang);

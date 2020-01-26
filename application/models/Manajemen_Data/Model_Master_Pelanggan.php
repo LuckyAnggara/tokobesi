@@ -81,7 +81,7 @@ class Model_Master_Pelanggan extends CI_Model
             'npwp' => $post['edit_npwp'],
             'nomor_rekening' => $nomor_rekening,
             'tanggal_input' => date("Y-m-d H:i:s"),
-            'user' => 1000,
+            'user' => $this->session->userdata['username'],
         ];
         $this->db->where('id_pelanggan', $id_pelanggan);
         $this->db->update('master_pelanggan', $data);
@@ -103,7 +103,7 @@ class Model_Master_Pelanggan extends CI_Model
             'nomor_rekening' => $nomor_rekening,
             'status_pelanggan' => 0,
             'tanggal_input' => date("Y-m-d H:i:s"),
-            'user' => 1000,
+            'user' => $this->session->userdata['username'],
         ];
         $this->db->insert('master_pelanggan', $data);
     }

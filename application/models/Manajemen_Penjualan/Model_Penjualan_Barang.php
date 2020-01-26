@@ -70,7 +70,6 @@ class Model_Penjualan_Barang extends CI_Model
             $this->db->select('master_barang.*, master_satuan_barang.nama_satuan');
             $this->db->from('master_barang');
             $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
-            $output = $this->db->get();
             $this->db->like("master_barang.kode_barang", $string);
             $this->db->or_like("nama_barang", $string);
             $output = $this->db->get();
@@ -339,11 +338,11 @@ class Model_Penjualan_Barang extends CI_Model
         return strtoupper($alpha) . $number;
     }
 
-    function cekPasswordDirektur($post)
+    function cekPasswordDirektur($post) // overide password harga jual
     {
         $this->db->select('*');
         $this->db->from('master_user');
-        $this->db->where('jabatan', 'Direktur');
+        $this->db->where('role', 'Direktur');
         $this->db->where('password', $post['password']);
         $data = $this->db->get()->num_rows();
 
@@ -373,7 +372,7 @@ class Model_Penjualan_Barang extends CI_Model
             'id_pelanggan' => $id_pelanggan,
             'status_bayar' => $post['status'], // 0 untuk lunas 1 untuk nyicil cashbon
             'tanggal_input' =>  date("Y-m-d H:i:s"),
-            'user' => 'usn',
+            'user' => $this->session->userdata['username'],
         );
 
         $this->db->insert('master_penjualan', $data);
@@ -403,7 +402,7 @@ class Model_Penjualan_Barang extends CI_Model
                 'down_payment' => $post['down_payment'],
                 'sisa_pembayaran' => $sisa_pembayaran,
                 'tanggal_input' =>  date("Y-m-d H:i:s"),
-                'user' => 'usn',
+                'user' => $this->session->userdata['username'],
             );
 
             $this->db->insert('master_piutang', $data);
@@ -559,6 +558,7 @@ class Model_Penjualan_Barang extends CI_Model
 
                     $data = [
                         'nomor_faktur' => $post['nomor_faktur'],
+                        'tanggal_transaksi' => date("Y-m-d H:i:s"),
                         'kode_barang' => $kode_barang,
                         'qty' => $jual,
                         'harga_pokok' => $harga_beli,

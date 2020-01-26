@@ -12,6 +12,10 @@ class MasterBarang extends CI_Controller
         $this->load->model('Setting/Model_Setting', 'modelSetting');
         $this->load->model('Manajemen_Barang/Model_Detail_Persediaan', 'detailpersediaan');
         $this->load->model('Manajemen_Persediaan/Model_Persediaan_Barang', 'modelPersediaan');
+
+        if ($this->session->userdata('status') != "login") {
+            redirect(base_url("login"));
+        }
     }
 
     public function index()

@@ -4,7 +4,7 @@
                     <!-- Navigation Menu-->
                     <ul class="navigation-menu">
                         <li class="has-submenu">
-                            <a href="index.html"><i class="mdi mdi-view-dashboard"></i> <span> Dashboard </span> </a>
+                            <a href="<?= base_url('Dashboard'); ?>"><i class="mdi mdi-view-dashboard"></i> <span> Dashboard </span> </a>
                         </li>
                         <li class="has-submenu">
                             <a href="#"><i class="mdi mdi-invert-colors"></i> <span> Transaksi Penjualan </span> </a>

@@ -179,7 +179,7 @@ class Model_Pembelian_Barang extends CI_Model
             'kode_supplier' => $post['kode_supplier'],
             'tanggal_input' =>  date("Y-m-d H:i:s"),
             'status_bayar' => 1, // 1 untuk lunas 0 untuk nyicil cashbon
-            'user_input' => 'udin',
+            'user' => $this->session->userdata['username'],
         );
 
         $this->db->insert('master_pembelian', $data);
@@ -208,7 +208,7 @@ class Model_Pembelian_Barang extends CI_Model
             'kode_supplier' => $post['kode_supplier'],
             'tanggal_input' =>  date("Y-m-d H:i:s"),
             'status_bayar' => 0, // 1 untuk lunas 0 untuk nyicil cashbon
-            'user_input' => 'udin',
+            'user' => $this->session->userdata['username'],
         );
 
         $this->db->insert('master_pembelian', $data);
@@ -239,7 +239,7 @@ class Model_Pembelian_Barang extends CI_Model
             'down_payment' => $post['down_payment'],
             'sisa_pembayaran' => $sisa_pembayaran,
             'tanggal_input' =>  date("Y-m-d H:i:s"),
-            'user' => 'usn',
+            'user' => $this->session->userdata['username'],
         );
         $this->db->insert('master_hutang', $data);
     }

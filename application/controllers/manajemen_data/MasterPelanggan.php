@@ -9,6 +9,10 @@ class MasterPelanggan extends CI_Controller
         parent::__construct();
         $this->load->model('Manajemen_Data/Model_Master_Pelanggan', 'modelPelanggan');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
+
+        if ($this->session->userdata('status') != "login") {
+            redirect(base_url("login"));
+        }
     }
 
     public function index()

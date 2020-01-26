@@ -9,6 +9,10 @@ class DaftarTransaksiPembelian extends CI_Controller
         parent::__construct();
         $this->load->model('Manajemen_Pembelian/Model_Daftar_Transaksi_Pembelian', 'modelDaftarTransaksiPembelian');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
+
+        if ($this->session->userdata('status') != "login") {
+            redirect(base_url("login"));
+        }
     }
 
     public function index()

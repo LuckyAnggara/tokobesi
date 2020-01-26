@@ -82,13 +82,13 @@
 
                         <li class="dropdown notification-list">
                             <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                <img src="<?= base_url('assets/'); ?>images/users/avatar-1.jpg" alt="user" class="rounded-circle">
+                                <img src="<?= base_url('assets/images/users/') . $this->session->userdata['avatar']; ?>" alt="user" class="rounded-circle">
                             </a>
                             <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
 
                                 <!-- item-->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="ti-user m-r-5"></i> Profile
+                                    <i class="ti-user m-r-5"></i> <?= $this->session->userdata['username']; ?>
                                 </a>
 
                                 <!-- item-->
@@ -102,7 +102,7 @@
                                 </a>
 
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <a href=" <?= base_url('login/logout'); ?> " class="dropdown-item notify-item">
                                     <i class="ti-power-off m-r-5"></i> Logout
                                 </a>
 

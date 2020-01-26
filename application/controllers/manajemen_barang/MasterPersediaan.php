@@ -10,6 +10,10 @@ class MasterPersediaan extends CI_Controller
 		$this->load->model('Manajemen_Barang/Model_Master_Persediaan', 'modelpersediaan');
 		$this->load->model('Manajemen_Barang/Model_Detail_Persediaan', 'detailpersediaan');
 		$this->load->model('Setting/Model_Setting', 'modelSetting');
+
+		if ($this->session->userdata('status') != "login") {
+			redirect(base_url("login"));
+		}
 	}
 
 	public function index()

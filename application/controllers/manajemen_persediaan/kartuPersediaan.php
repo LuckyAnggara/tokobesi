@@ -10,6 +10,10 @@ class KartuPersediaan extends CI_Controller
         $this->load->helper('string');
         $this->load->model('Manajemen_Persediaan/Model_Persediaan_Barang', 'modelPersediaan');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
+
+        if ($this->session->userdata('status') != "login") {
+            redirect(base_url("login"));
+        }
     }
 
     public function index()

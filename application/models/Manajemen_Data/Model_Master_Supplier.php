@@ -68,6 +68,7 @@ class Model_Master_Supplier extends CI_Model
             'nomor_rekening' => $nomor_rekening,
             'keterangan' => $post['edit_keterangan'],
             'tanggal_input' => date("Y-m-d H:i:s"),
+            'user' => $this->session->userdata['username'],
         ];
         $this->db->where('kode_supplier', $kode_supplier);
         $this->db->update('master_supplier', $data);
@@ -87,6 +88,7 @@ class Model_Master_Supplier extends CI_Model
             'nomor_rekening' => $nomor_rekening,
             'keterangan' => $post['keterangan'],
             'tanggal_input' => date("Y-m-d H:i:s"),
+            'user' => $this->session->userdata['username'],
         ];
         $this->db->insert('master_supplier', $data);
     }

@@ -12,6 +12,10 @@ class PenjualanBarang extends CI_Controller
         $this->load->model('Manajemen_Persediaan/Model_Persediaan_Barang', 'modelPersediaan');
         $this->load->model('Manajemen_Penjualan/Model_Invoice', 'modelInvoice');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
+
+        if ($this->session->userdata('status') != "login") {
+            redirect(base_url("login"));
+        }
     }
 
     public function init_no_order()
@@ -68,8 +72,18 @@ class PenjualanBarang extends CI_Controller
         $output = array(
             "recordsTotal" => $this->db->count_all_results(),
             "jumlah_data"  => $database->num_rows(),
-            "data" => $data
+            "data" => array()
         );
+
+        foreach ($data as $value) {
+            $qty = $this->modelPersediaan->get_data_persediaan($value['kode_barang']);
+            if ($qty > 0) {
+                $value['jumlah_persediaan'] = $qty;
+            } else {
+                $value['jumlah_persediaan'] = "0";
+            }
+            $output['data'][] = $value;
+        }
 
         $output = json_encode($output);
         echo $output;
