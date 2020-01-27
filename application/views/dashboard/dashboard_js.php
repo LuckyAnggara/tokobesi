@@ -86,7 +86,7 @@
             $("#dropdown_produk_terjual").append(display);
         } else {
             for (var i in data.dropdown_produk_terjual) {
-                var display = '<a class="dropdown-item">' + formatDate(data.dropdown_produk_terjual[i].tanggal) + ' : <b><span>' + +data.dropdown_produk_terjual[i].jumlah_penjualan + '</span></b> Unit </a>'
+                var display = '<a class="dropdown-item">' + formatDate(data.dropdown_produk_terjual[i].tanggal) + ' : <b><span class="counterSatuan">' + +data.dropdown_produk_terjual[i].jumlah_penjualan + '</span></b> Unit </a>'
                 $("#dropdown_produk_terjual").append(display);
             }
         }
@@ -96,7 +96,7 @@
             $("#dropdown_transaksi_penjualan").append(display);
         } else {
             for (var i in data.dropdown_transaksi_penjualan) {
-                var display = '<a class="dropdown-item">' + formatDate(data.dropdown_produk_terjual[i].tanggal) + ' : <b><span>' + +data.dropdown_produk_terjual[i].jumlah_penjualan + '</span></b> Trx</a>'
+                var display = '<a class="dropdown-item">' + formatDate(data.dropdown_transaksi_penjualan[i].tanggal) + ' : <b><span class="counterSatuan">' + +data.dropdown_transaksi_penjualan[i].jumlah + '</span></b> Trx</a>'
                 $("#dropdown_transaksi_penjualan").append(display);
             }
         }
@@ -379,9 +379,12 @@
                                     return formatRupiah(t.yLabel.toString(), 'Rp.') + ' Juta';
                                 } else return formatRupiah(t.yLabel.toString(), 'Rp.') + ' Juta';
                             }
+                        },
+                        title: function(t, d) {
+                            return "Tanggal " + t[0].label;
                         }
-                    }
-                },
+                    },
+                }
             }
         });
 
@@ -449,25 +452,7 @@
         var myDoughnutChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: [
-                    "Desktops",
-                    "Tablets",
-                    "Mobiles"
-                ],
-                datasets: [{
-                    data: [300, 50, 100],
-                    backgroundColor: [
-                        "#188ae2",
-                        "#10c469",
-                        "#f9c851"
-                    ],
-                    hoverBackgroundColor: [
-                        "#188ae2",
-                        "#10c469",
-                        "#f9c851"
-                    ],
-                    hoverBorderColor: "#fff"
-                }]
+                datasets: []
                 // These labels appear in the legend and in the tooltips when hovering different arcs
             },
         });
@@ -499,7 +484,21 @@
                 }
             });
             myDoughnutChart.data.labels = label;
-            myDoughnutChart.data.datasets[0].data = value;
+            myDoughnutChart.data.datasets[0] = {
+                data: value,
+                backgroundColor: [
+                    "#188ae2",
+                    "#10c469",
+                    "#f9c851"
+                ],
+                hoverBackgroundColor: [
+                    "#188ae2",
+                    "#10c469",
+                    "#f9c851"
+                ],
+                hoverBorderColor: "#fff"
+            }
+
             myDoughnutChart.update();
         }
     })
@@ -528,7 +527,15 @@
                 scales: {
                     yAxes: [{
                         id: "y-axis-2",
-                        position: "right"
+                        position: "right",
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 600,
+                            // Include a dollar sign in the ticks
+                            callback: function(value, index, values) {
+                                return 'Rp. ' + formatSatuan(value.toString()) + ' Juta';
+                            }
+                        }
                     }]
                 },
                 tooltips: {
@@ -538,14 +545,15 @@
                         label: function(t, d) {
                             if (t.datasetIndex === 0) {
                                 return formatRupiah(t.yLabel.toString(), 'Rp.') + ' Juta';
-                            } else if (t.datasetIndex === 1) {
-                                if (t.yLabel.toString().length === 9) {
-                                    return formatRupiah(t.yLabel.toString(), 'Rp.') + ' Juta';
-                                } else return formatRupiah(t.yLabel.toString(), 'Rp.') + ' Juta';
                             }
+                        },
+                        title: function(t, d) {
+                            console.log(t);
+                            return "Bulan " + t[0].label;
                         }
                     }
                 },
+
             }
         });
         $('#produktifitas_sales').change(function() {

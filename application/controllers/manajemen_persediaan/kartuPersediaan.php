@@ -37,7 +37,8 @@ class KartuPersediaan extends CI_Controller
 
     public function get_data_ajax()
     {
-        $database = $this->modelPersediaan->get_kartu_persediaan_ajax();
+        $kode_barang = $this->input->post('kode_barang');
+        $database = $this->modelPersediaan->get_kartu_persediaan_ajax($kode_barang);
         $data = $database->result_array();
 
         $output = array(
@@ -47,11 +48,41 @@ class KartuPersediaan extends CI_Controller
             "data" =>  array()
         );
 
-        foreach ($data as $data2) {
-            $value['detail'] = $data2;
-            $output['data'][] = $value;
+        if($data == ""){
+            $output['data'] = "";
+        }else{
+            foreach ($data as $data2) {
+                $value['detail'] = $data2;
+                $output['data'][] = $value;
+            }
+            
         }
+
+       
         $output = json_encode($output);
         echo $output;
     }
+
+    public function get_data_barang_versi_select2()
+    {
+        $string = $this->input->post('search_term');
+        $database = $this->modelPersediaan->get_data_barang($string);
+        $data = $database->result_array();
+        $output = array(
+            "recordsTotal" => $this->db->count_all_results(),
+            "jumlah_data"  => $database->num_rows(),
+            "data" => $data,
+        );
+        $output = json_encode($output);
+        echo $output;
+    }
+    public function getDetailBarang()
+
+    {
+        $kode_barang = $this->input->post('kode_barang');
+        $output = $this->modelPersediaan->getDetailBarang($kode_barang);
+        $output = json_encode($output);
+        echo $output;
+    }
+
 }

@@ -38,7 +38,8 @@
                                     <ul>
                                         <li><a href="<?= base_url('Manajemen_Barang/MasterPersediaan'); ?>">Master Persediaan</a></li>
                                         <li><a href="<?= base_url('Manajemen_Persediaan/KartuPersediaan'); ?>">Kartu Persediaan</a></li>
-
+                                        <hr>
+                                        <li><a href="<?= base_url('Manajemen_Persediaan/SaldoAwalPersediaan'); ?>">Saldo Awal Persediaan</a></li>
                                     </ul>
                                 </li>
                             </ul>

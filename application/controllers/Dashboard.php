@@ -111,10 +111,15 @@ class Dashboard extends CI_Controller
 	{
 		$option = $this->input->post('option');
 		$data = $this->modelDashboard->topProduk($option);
-		foreach ($data as $key => $value) {
-			$dataset['nama_barang'][] = $value['nama_barang'];
-			$dataset['jumlah_penjualan'][] = $value['jumlah_penjualan'];
-		}
+		if ($data == null) {
+			$dataset['nama_barang'][] = "belum ada data";
+			$dataset['jumlah_penjualan'][] = 0;
+		} else {
+			foreach ($data as $key => $value) {
+				$dataset['nama_barang'][] = $value['nama_barang'];
+				$dataset['jumlah_penjualan'][] = $value['jumlah_penjualan'];
+			}
+		}		
 		$output = json_encode($dataset);
 		echo $output;
 	}

@@ -13,32 +13,32 @@
                     </div>
                 </div>
                 <hr>
-                <div class="row">
+                <div class="row" id="barang_div">
                     <div class="col-6">
                         <div class="form-group row">
-                            <label class="col-3 col-sm-form-label m-t-5">Kode Barang</label>
+                            <label class="col-3 col-sm-form-label m-t-10">Kode Barang</label>
                             <div class="col-9">
-                                <select id="select_nama_supplier" name="select_nama_supplier" type="text" class="form-control"></select>
+                                <select id="select_nama_barang" name="select_nama_barang" type="text" class="form-control"></select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-3 col-sm-form-label ">Nama Barang</label>
+                            <label class="col-3 col-sm-form-label  m-t-10 ">Nama Barang</label>
                             <div class="col-9">
-                                <p>asdasdasdkasldalskjdlaksjldkjaskl</p>
+                                <input type="text" class="form-control" id="nama_barang" readonly>
                             </div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-group row">
-                            <label class="col-3 col-sm-form-label m-t-5">Metode</label>
+                            <label class="col-3 col-sm-form-label m-t-10">Metode</label>
                             <div class="col-9">
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" id="metode" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-3 col-sm-form-label">Satuan</label>
+                            <label class="col-3 col-sm-form-label  m-t-10">Satuan</label>
                             <div class="col-9">
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" id="satuan" readonly>
                             </div>
                         </div>
                     </div>
@@ -58,9 +58,14 @@
                                         <th>Tanggal</th>
                                         <th>Nomor Transaksi</th>
                                         <th>Masuk</th>
-                                        <th>Keluar</th>
+                                        <th>Harga</th>
                                         <th>Saldo</th>
-                                        <th>Keterangan</th>
+                                        <th>Keluar</th>
+                                        <th>Harga</th>
+                                        <th>Saldo</th>
+                                        <th>sss</th>
+                                        <th>Harga</th>
+                                        <th>Saldo</th>
                                     </tr>
                                 </thead>
                             </table>
