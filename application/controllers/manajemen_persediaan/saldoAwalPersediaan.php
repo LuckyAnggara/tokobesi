@@ -36,13 +36,31 @@ class SaldoAwalPersediaan extends CI_Controller
         $database = $this->modelSaldoAwal->getData($string);
         $data = $database->result_array();
         $output = array(
-            "draw" => $_POST['draw'],
-            "recordsTotal" => $this->db->count_all_results(),
-            "recordsFiltered"  => $database->num_rows(),
             "data" => $data
         );
 
         $output = json_encode($output);
         echo $output;
+    }
+
+    public function getAllData()
+    {
+        $database = $this->modelSaldoAwal->getAllData();
+        $data = $database->result_array();
+        $output = array(
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" =>  $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
+
+    public function tambah_data()
+    {
+        $post = $this->input->post();
+        $this->modelSaldoAwal->tambah_data($post);
     }
 }

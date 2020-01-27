@@ -1,6 +1,6 @@
 <!-- modal tambah data -->
 <div id="add_Modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">Tambah Data Jenis Barang</h4>
@@ -24,7 +24,7 @@
                     <div class="form-group row">
                         <label class="col-3 col-form-label">Harga</label>
                         <div class="col-9">
-                            <input name="Harga" id="harga" type="text" class="form-control" placeholder="" required>
+                            <input name="harga" id="harga" type="text" class="form-control" placeholder="" required>
                         </div>
                     </div>
                 </div>

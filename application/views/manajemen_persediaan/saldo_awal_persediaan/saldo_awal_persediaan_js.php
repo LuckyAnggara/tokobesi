@@ -28,8 +28,41 @@
 <!-- script validasi -->
 <script type="text/javascript">
     $(document).ready(function() {
+
+
+        var harga_rupiah = document.getElementById('harga');
+        harga_rupiah.addEventListener('keyup', function(e) {
+            harga_rupiah.value = formatRupiah(this.value, 'Rp.');
+        });
+
+        var jumlah_satuan = document.getElementById('jumlah');
+        jumlah_satuan.addEventListener('keyup', function(e) {
+            jumlah_satuan.value = formatSatuan(this.value);
+        });
+
         cari_versi_select2();
+        setTable();
+
     });
+
+    function formatSatuan(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+    }
 </script>
 
 <!-- Script Set Data di Select2 -->
@@ -60,11 +93,8 @@
                 },
             },
             placeholder: "Pilih Barang .."
-        }).on('select2:select', function(evt) {
-            var data = $("#select_nama_barang option:selected").val();
-            // setData(data);
-            // setTable(data);
-        })
+        });
+
     }
 </script>
 
@@ -80,12 +110,6 @@
                 .find("input[type=checkbox], input[type=radio]")
                 .prop("checked", "")
                 .end();
-
-            $('#inputhelp').text('Kode Jenis Barang bersifat Unik, tidak bisa sama dengan data lainnya');
-            $('#inputhelp').removeClass("text-danger");
-            $('#inputhelp').addClass("text-muted");
-            $('#status').removeClass("text-danger fa fa-window-close");
-            $('#status').removeClass("text-success fa fa-check");
         });
 
         $('#edit_Modal').on('hidden.bs.modal', function(e) {
@@ -97,29 +121,13 @@
                 .prop("checked", "")
                 .end();
         });
-
-        $('#view_Modal').on('hidden.bs.modal', function(e) {
-            $(this)
-                .find("input,textarea,select")
-                .val('')
-                .end()
-                .find("input[type=checkbox], input[type=radio]")
-                .prop("checked", "")
-                .end();
-            $("#nav_detail_data_jenis_barang").addClass("active show");
-            $("#detail_data_jenis_barang").addClass("active show");
-            $("#nav_tabel_data_jenis_barang").removeClass("active show");
-            $("#tabel_data_jenis_barang").removeClass("active show");
-            $('#datatable-daftar-master-jenis-barang').DataTable().destroy();
-        });
     });
 </script>
 
 <!-- Isi Data Tabel -->
 
 <script type="text/javascript">
-    $(document).ready(function() {
-
+    function setTable() {
         $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
             return {
                 "iStart": oSettings._iDisplayStart,
@@ -131,58 +139,77 @@
                 "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
             };
         };
-
         //Init Datatabel Master Stock Persediaan 
-        var table = $('#datatable-master-jenis_barang').DataTable({
+        var table = $('#datatable-master-saldo-awal').DataTable({
+            destroy: true,
             "oLanguage": {
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
-            "searching": false,
+            "searching": true,
             "order": [],
             "processing": true,
-            "serverSide": true,
             "ajax": {
-                "url": '<?= base_url("Manajemen_Data/MasterJenisBarang/getData"); ?>',
+                "url": '<?= Base_url("Manajemen_Persediaan/SaldoAwalPersediaan/getAllData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
-                    title: "No",
-                    data: "id_jenis_barang",
-                    searching: true,
+                    data: "kode_barang",
                     targets: 0,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    title: "Kode Jenis Barang",
-                    data: "kode_jenis_barang",
-                    searching: true,
+                    data: "kode_barang",
                     targets: 1,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    title: "Nama Jenis Barang",
-                    data: "nama_jenis_barang",
-                    searching: true,
+                    data: "nama_barang",
                     targets: 2,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    title: "Action",
-                    data: "id_jenis_barang",
-                    searching: true,
+                    data: "qty_awal",
                     targets: 3,
                     render: function(data, type, full, meta) {
-                        var display1 = '<a type="button" onClick = "show_view_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
+                        return data;
+                    }
+                },
+                {
+                    data: "nama_satuan",
+                    targets: 4,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "harga_awal",
+                    targets: 5,
+                    render: function(data, type, full, meta) {
+                        return formatRupiah(data, 'Rp.');
+                    }
+                },
+                {
+                    data: "total",
+                    targets: 6,
+                    render: function(data, type, full, meta) {
+                        return formatRupiah(data, 'Rp.');
+
+                    }
+                },
+                {
+                    data: "id",
+                    targets: 7,
+                    render: function(data, type, full, meta) {
                         var display2 = '<a type="button" onClick = "show_edit_modal(\'' + data + '\')"" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Edit Data"><i class="fa fa-edit" ></i> </a>';
                         var display3 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
-                        return display1 + " " + display2 + " " + display3;
+                        return display2 + " " + display3;
                     }
                 }
             ],
@@ -195,76 +222,7 @@
             }
         });
 
-        $('#searchInput').on('keypress', function(e) {
-            var code = e.keyCode || e.which;
-            if (code == 13) {
-                $('#datatable-master-jenis_barang').DataTable().destroy();
-                var input = $('#searchInput').val();
-                var table = $('#datatable-master-jenis_barang').DataTable({
-                    "oLanguage": {
-                        sProcessing: "Sabar yah...",
-                        sZeroRecords: "Tidak ada Data..."
-                    },
-                    "searching": false,
-                    "deferRender": true,
-                    "order": [],
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": '<?= base_url("Manajemen_Data/MasterJenisBarang/getData/"); ?>' + input,
-                        "type": "POST",
-                    },
-                    "columnDefs": [{
-                            title: "No",
-                            data: "id",
-                            searching: true,
-                            targets: 0,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Kode Jenis Barang",
-                            data: "kode_jenis_barang",
-                            searching: true,
-                            targets: 1,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Nama Jenis Barang",
-                            data: "nama_jenis_barang",
-                            searching: true,
-                            targets: 2,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Action",
-                            data: "id_jenis_barang",
-                            searching: true,
-                            targets: 3,
-                            render: function(data, type, full, meta) {
-                                var display1 = '<a type="button" onClick = "show_view_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
-                                var display2 = '<a type="button" onClick = "show_edit_modal(\'' + data + '\')"" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Edit Data"><i class="fa fa-edit" ></i> </a>';
-                                var display3 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
-                                return display1 + " " + display2 + " " + display3;
-                            }
-                        }
-                    ],
-                    "rowCallback": function(row, data, iDisplayIndex) {
-                        var info = this.fnPagingInfo();
-                        var page = info.iPage;
-                        var length = info.iLength;
-                        var index = page * length + (iDisplayIndex + 1);
-                        $('td:eq(0)', row).html(index);
-                    }
-                });
-            }
-        });
-    });
+    }
 </script>
 
 <!-- Script Tambah Data -->
@@ -275,20 +233,24 @@
             e.preventDefault();
             var data = new FormData(document.getElementById("submitForm"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Data/MasterJenisBarang/tambah_data'); ?>",
+                url: "<?= Base_url('Manajemen_Persediaan/SaldoAwalPersediaan/tambah_data'); ?>",
                 type: "post",
                 data: data,
                 async: false,
                 processData: false,
                 contentType: false,
+                beforeSend: function() {
+                    $("#submitForm").loading();
+                },
                 success: function(data) {
-                    $('#datatable-master-jenis_barang').DataTable().ajax.reload();
-                    $('#add_Modal').modal('hide');
+                    $('#datatable-master-saldo-awal').DataTable().ajax.reload();
                     Swal.fire(
                         'Sukses!',
                         'Data Jenis Barang telah berhasil di tambahkan.',
                         'success'
                     )
+                    $("#submitForm").loading('stop');
+                    $('#add_Modal').modal('hide');
                 }
             })
         });
@@ -440,44 +402,6 @@
                 panggilDaftarTabelJenisBarang(data.id_jenis_barang);
                 $('#view_Modal').modal('show');
             }
-        });
-    }
-</script>
-
-<script>
-    function panggilDaftarTabelJenisBarang(id) {
-        var table_satuan = $('#datatable-daftar-master-jenis-barang').DataTable({
-            "oLanguage": {
-                sProcessing: "Sabar yah...",
-                sZeroRecords: "Tidak ada Data..."
-            },
-            "searching": true,
-            "order": [],
-            "processing": true,
-            "serverSide": true,
-            "ajax": {
-                "url": '<?= base_url("Manajemen_Data/MasterJenisBarang/get_Data_Dengan_Jenis_Barang/"); ?>' + id,
-                "type": "POST",
-            },
-            "columnDefs": [{
-                    title: "Kode Barang",
-                    data: "kode_barang",
-                    searching: true,
-                    targets: 0,
-                    render: function(data, type, full, meta) {
-                        return data;
-                    }
-                },
-                {
-                    title: "Nama Barang",
-                    data: "nama_barang",
-                    searching: true,
-                    targets: 1,
-                    render: function(data, type, full, meta) {
-                        return data;
-                    }
-                }
-            ],
         });
     }
 </script>

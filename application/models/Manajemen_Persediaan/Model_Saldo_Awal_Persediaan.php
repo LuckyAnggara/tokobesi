@@ -10,16 +10,55 @@ class Model_Saldo_Awal_Persediaan extends CI_Model
         $this->load->helper('string');
     }
 
-    function getData(){
+    function getData()
+    {
 
         $this->db->select('kode_barang');
         $this->db->from('master_saldo_awal');
-        $data = $this->db->get()->result_array();
-        $data = $data['kode_barang'];
-        echo $data;
+        $output = $this->db->get()->result_array();
+
+        foreach ($output as $key => $value) {
+            $data['kode_barang'][] = $value['kode_barang'];
+        }
+
         $this->db->select('*');
         $this->db->from('master_barang');
-        $this->db->where_not_in('kode_barang', $data['kode_barang']);
-        return $this->db->get()->result_array();
+        if (!empty($output)) {
+            $this->db->where_not_in('kode_barang', $data['kode_barang']);
+        }
+        return $this->db->get();
+    }
+
+    function getAllData()
+    {
+        $this->db->select('*');
+        $this->db->select('(`qty_awal`*`harga_awal`) as total');
+        $this->db->from('master_saldo_awal');
+        $this->db->join('master_barang', 'master_barang.kode_barang = master_saldo_awal.kode_barang');
+        $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
+        return $this->db->get();
+    }
+
+    function tambah_data($post)
+    {
+        $qty = $this->normal($post['jumlah']);
+        $harga = $this->normal($post['harga']);
+        $data = [
+            'kode_barang' => $post['kode_barang'],
+            'qty_awal' => $qty,
+            'harga_awal' => $harga,
+            'tanggal_input' => date("Y-m-d H:i:s"),
+            'user' => $this->session->userdata['username'],
+        ];
+
+        $this->db->insert('master_saldo_awal', $data);
+    }
+
+    function normal($value)
+    {
+
+        $value = str_replace("Rp.", "", $value);
+        $value = str_replace(".", "", $value);
+        return str_replace(",", "", $value);
     }
 }
