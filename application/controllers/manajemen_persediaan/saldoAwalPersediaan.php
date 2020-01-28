@@ -63,4 +63,32 @@ class SaldoAwalPersediaan extends CI_Controller
         $post = $this->input->post();
         $this->modelSaldoAwal->tambah_data($post);
     }
+
+    public function view_edit_data($id)
+    {
+        $data = $this->modelSaldoAwal->view_edit_data($id);
+        $output = json_encode($data);
+        echo $output;
+    }
+
+    public function edit_data($id)
+    {
+        $post = $this->input->post();
+        $this->modelSaldoAwal->edit_data($id, $post);
+    }
+
+    public function delete_data($id)
+    {
+        $this->modelSaldoAwal->delete_data($id);
+    }
+
+    public function subTotal()
+    {
+        $data = $this->modelSaldoAwal->subTotal();
+        // $output = array(
+        //     "data" => $data
+        // );
+        $output = json_encode($data);
+        echo $output;
+    }
 }

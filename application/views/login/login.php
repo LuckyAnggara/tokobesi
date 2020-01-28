@@ -52,7 +52,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <div class="col-xs-12">
                             <select class="form-control" type="password" required="" placeholder="Password" name="role">
                                 <option>Cashier</option>
@@ -62,12 +62,12 @@
                                 <option>Direktur</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="form-group text-center m-t-30">
                         <div class="col-xs-12">
                             <button class="btn btn-custom btn-bordred btn-block waves-effect waves-light" type="submit">Log In</button>
-                            <button class="btn btn-custom btn-bordred btn-block waves-effect waves-light" id="l" type="button">L In</button>
+                            <!-- <button class="btn btn-custom btn-bordred btn-block waves-effect waves-light" id="l" type="button">L In</button> -->
                         </div>
                     </div>
 
@@ -140,13 +140,13 @@
                                 text: 'Cek kembali Username dan Password serta Role',
                             });
                             $('#loginDiv').loading('stop');
-                        } else if (data == "login") {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'User sedang Login',
-                            });
-                            $('#loginDiv').loading('stop');
+                            // } else if (data == "login") {
+                            //     Swal.fire({
+                            //         icon: 'error',
+                            //         title: 'Oops...',
+                            //         text: 'User sedang Login',
+                            //     });
+                            //     $('#loginDiv').loading('stop');
                         } else {
                             window.location.href = "<?php echo base_url('dashboard'); ?>";
                         }

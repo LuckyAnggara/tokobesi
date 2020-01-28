@@ -34,10 +34,10 @@
                         <label class="col-4 col-form-label"></label>
                         <label class="col-3 col-form-label">Sub Total</label>
                         <div class="col-2">
-                            <input name="nama_jenis_barang" id="nama_jenis_barang" type="text" class="form-control" placeholder="" required>
+                            <input name="sub_total_qty" id="sub_total_qty" type="text" class="form-control" placeholder="" readonly>
                         </div>
                         <div class="col-3">
-                            <input name="nama_jenis_barang" id="nama_jenis_barang" type="text" class="form-control" placeholder="" required>
+                            <input name="sub_total_harga" id="sub_total_harga" type="text" class="form-control" placeholder="" readonly>
                         </div>
                     </div>
                 </div>

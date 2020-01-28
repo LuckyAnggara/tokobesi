@@ -61,4 +61,42 @@ class Model_Saldo_Awal_Persediaan extends CI_Model
         $value = str_replace(".", "", $value);
         return str_replace(",", "", $value);
     }
+
+    function view_edit_data($id)
+    {
+        $this->db->select('*');
+        $this->db->from('master_saldo_awal');
+        $this->db->join('master_barang', 'master_barang.kode_barang = master_saldo_awal.kode_barang');
+        $this->db->where('id', $id);
+        return $this->db->get()->row_array();
+    }
+
+    function edit_data($id, $post)
+    {
+        $qty = $this->normal($post['edit_jumlah']);
+        $harga = $this->normal($post['edit_harga']);
+        $data = [
+            'qty_awal' => $qty,
+            'harga_awal' => $harga,
+            'tanggal_input' => date("Y-m-d H:i:s"),
+            'user' => $this->session->userdata['username'],
+        ];
+
+        $this->db->where('id', $id);
+        $this->db->update('master_saldo_awal', $data);
+    }
+
+    function delete_data($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('master_saldo_awal');
+    }
+
+    function subTotal()
+    {
+        $this->db->select_sum('qty_awal');
+        $this->db->select_sum('harga_awal');
+        $this->db->from('master_saldo_awal');
+        return $this->db->get()->row_array();
+    }
 }

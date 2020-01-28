@@ -40,13 +40,24 @@
             jumlah_satuan.value = formatSatuan(this.value);
         });
 
+        var edit_harga_rupiah = document.getElementById('edit_harga');
+        edit_harga_rupiah.addEventListener('keyup', function(e) {
+            edit_harga_rupiah.value = formatRupiah(this.value, 'Rp.');
+        });
+
+        var edit_jumlah_satuan = document.getElementById('edit_jumlah');
+        edit_jumlah_satuan.addEventListener('keyup', function(e) {
+            edit_jumlah_satuan.value = formatSatuan(this.value);
+        });
+
         cari_versi_select2();
         setTable();
+        setSubTotal();
 
     });
 
     function formatSatuan(x) {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return x.toString().replace(/[^,\d]/g, '')
     }
 
     function formatRupiah(angka, prefix) {
@@ -102,7 +113,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#add_Modal').on('hidden.bs.modal', function(e) {
+        $('#add_modal').on('hidden.bs.modal', function(e) {
             $(this)
                 .find("input,textarea,select")
                 .val('')
@@ -112,7 +123,7 @@
                 .end();
         });
 
-        $('#edit_Modal').on('hidden.bs.modal', function(e) {
+        $('#edit_modal').on('hidden.bs.modal', function(e) {
             $(this)
                 .find("input,textarea,select")
                 .val('')
@@ -244,13 +255,14 @@
                 },
                 success: function(data) {
                     $('#datatable-master-saldo-awal').DataTable().ajax.reload();
+                    setSubTotal()
                     Swal.fire(
                         'Sukses!',
                         'Data Jenis Barang telah berhasil di tambahkan.',
                         'success'
                     )
                     $("#submitForm").loading('stop');
-                    $('#add_Modal').modal('hide');
+                    $('#add_modal').modal('hide');
                 }
             })
         });
@@ -260,18 +272,29 @@
 <!-- Script Delete Data -->
 
 <script type="text/javascript">
-    function warning_delete(id_jenis_barang) {
+    function warning_delete(id) {
         swal.fire({
             title: 'Apa anda yakin akan hapus data ini?',
-            text: "Semua Data Persediaan dengan kode " + id_jenis_barang + " juga akan terhapus",
+            text: "Merubah data ini akan mempengaruhi Persediaan!!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Yes, delete!'
         }).then((result) => {
             if (result.value) {
-                deleteData(id_jenis_barang);
+                deleteData(id);
+            }
+        });
+    }
+
+    function deleteData(id) {
+        $.ajax({
+            url: "<?= Base_url('Manajemen_Persediaan/SaldoAwalPersediaan/delete_data/'); ?>" + id,
+            async: false,
+            success: function(data) {
+                $('#datatable-master-saldo-awal').DataTable().ajax.reload();
+                setSubTotal()
                 swal.fire(
                     'Deleted!',
                     'Data telah dihapus!',
@@ -280,128 +303,107 @@
             }
         });
     }
-
-    function deleteData(id_jenis_barang) {
-        $.ajax({
-            url: "<?= base_url('Manajemen_Data/MasterJenisBarang/delete_data/'); ?>" + id_jenis_barang,
-            async: false,
-            success: function(data) {
-                $('#datatable-master-jenis_barang').DataTable().ajax.reload();
-            }
-        });
-    }
 </script>
 
 <!-- Script Edit Data -->
 <script type="text/javascript">
-    function show_edit_modal(id_jenis_barang) {
-        fetchdata_edit_modal(id_jenis_barang);
+    function show_edit_modal(id) {
+        swal.fire({
+            title: 'Anda akan merubah Saldo Awal Data Barang?',
+            text: "Merubah data ini akan mempengaruhi Persediaan!!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Lanjut!'
+        }).then((result) => {
+            if (result.value) {
+                fetchdata_edit_modal(id);
+            }
+        });
     }
 
-    function fetchdata_edit_modal(id_jenis_barang) {
-        var edit_data_label = $('#edit_data_label');
-        var edit_id_jenis_barang = $('#edit_id_jenis_barang');
-        var edit_kode_jenis_barang = $('#edit_kode_jenis_barang');
-        var edit_nama_jenis_barang = $('#edit_nama_jenis_barang');
-        var edit_keterangan = $('#edit_keterangan');
-        var edit_tanggal_input = $('#edit_tanggal_input');
+    function fetchdata_edit_modal(id) {
+        var edit_id = $('#edit_id');
+        var edit_kode_barang = $('#edit_kode_barang');
+        var edit_jumlah = $('#edit_jumlah');
+        var edit_harga = $('#edit_harga');
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterJenisBarang/view_edit_data/"); ?>' + id_jenis_barang,
+            url: "<?= base_url('Manajemen_Persediaan/SaldoAwalPersediaan/view_edit_data/'); ?>" + id,
             type: "POST",
             dataType: "JSON",
             async: false,
+            success: function(data) {
+                edit_id.val(data.id);
+                edit_kode_barang.val(data.kode_barang + ' - ' + data.nama_barang);
+                edit_jumlah.val(data.qty_awal);
+                edit_harga.val(formatRupiah(data.harga_awal.toString(), 'Rp.'));
+                $('#edit_modal').modal('show');
+            }
+        });
+    }
+
+    function warning_edit(id) {
+        swal.fire({
+            title: 'Apa anda yakin akan mengubah data ini?',
+            text: "Semua Data Jenis Barang ini juga akan terubah",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4fa7f3',
+            cancelButtonColor: '#d57171',
+            confirmButtonText: 'Ya, Ubah ini!'
+        }).then((result) => {
+            if (result.value) {
+                editData(id);
+            }
+        });
+    }
+
+    function editData(id) {
+        var data = new FormData(document.getElementById("edit_form"));
+        $.ajax({
+            url: "<?= base_url('Manajemen_Persediaan/SaldoAwalPersediaan/edit_data/'); ?>" + id,
+            type: "post",
+            data: data,
+            async: false,
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                $("#edit_form").loading();
+            },
+            success: function(data) {
+                swal.fire(
+                    'Edited!!!',
+                    'Data telah diubah!',
+                    'success'
+                )
+                $('#datatable-master-saldo-awal').DataTable().ajax.reload();
+                setSubTotal()
+                $("#edit_form").loading('stop');
+                $('#edit_modal').modal('hide');
+            }
+        })
+
+    }
+    $('#edit_form').submit(function(e) {
+        var edit_id = $('#edit_id').val();
+        e.preventDefault();
+        warning_edit(edit_id);
+    });
+
+    function setSubTotal() {
+        $.ajax({
+            url: "<?= base_url('Manajemen_Persediaan/SaldoAwalPersediaan/subTotal/'); ?>",
+            type: "post",
+            dataType: "JSON",
+            async: false,
+            processData: false,
+            contentType: false,
             success: function(data) {
                 console.log(data);
-                edit_data_label.text("Edit Data Jenis Barang Kode :" + data.kode_jenis_barang);
-                edit_id_jenis_barang.val(data.id_jenis_barang);
-                edit_kode_jenis_barang.val(data.kode_jenis_barang);
-                edit_nama_jenis_barang.val(data.nama_jenis_barang);
-                edit_keterangan.val(data.keterangan);
-                edit_tanggal_input.text(data.tanggal_input);
-                $('#edit_Modal').modal('show');
+                $('#sub_total_qty').val(data.qty_awal);
+                $('#sub_total_harga').val(formatRupiah(data.harga_awal, 'Rp.'));
             }
-        });
-    }
-
-    // submit edit data
-    $(document).ready(function() {
-
-        function warning_edit(id_jenis_barang) {
-            swal.fire({
-                title: 'Apa anda yakin akan mengubah data ini?',
-                text: "Semua Data Jenis Barang ini juga akan terubah",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#4fa7f3',
-                cancelButtonColor: '#d57171',
-                confirmButtonText: 'Ya, Ubah ini!'
-            }).then((result) => {
-                if (result.value) {
-                    editData(id_jenis_barang);
-                    swal.fire(
-                        'Edited!!!',
-                        'Data telah diubah!',
-                        'success'
-                    )
-                }
-            });
-        }
-
-        function editData(id_jenis_barang) {
-            var data = new FormData(document.getElementById("edit_form"));
-            $.ajax({
-                url: "<?= Base_url('Manajemen_Data/MasterJenisBarang/edit_data/'); ?>" + id_jenis_barang,
-                type: "post",
-                data: data,
-                async: false,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-                    $('#datatable-master-jenis_barang').DataTable().ajax.reload();
-                    $('#edit_Modal').modal('hide');
-                }
-            })
-
-        }
-        $('#edit_form').submit(function(e) {
-            var id_jenis_barang = $('#edit_id_jenis_barang').val();
-            e.preventDefault();
-            warning_edit(id_jenis_barang);
-        });
-
-    });
-</script>
-
-<!-- Script Edit Modal -->
-<script type="text/javascript">
-    function show_view_modal(id_jenis_barang) {
-        viewfetchdata(id_jenis_barang);
-    }
-
-    function viewfetchdata(id_jenis_barang) {
-        var view_data_label = $('#view_data_label');
-        var view_kode_jenis_barang = $('#view_kode_jenis_barang');
-        var view_nama_jenis_barang = $('#view_nama_jenis_barang');
-        var view_tanggal_input = $('#view_tanggal_input');
-        var view_histori_tanggal_input = $('#histori_tanggal_input');
-        var view_keterangan = $('#view_keterangan');
-        var nav_tabel_data_jenis_barang = $('#nav_tabel_data_jenis_barang');
-        $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterJenisBarang/view_edit_data/"); ?>' + id_jenis_barang,
-            type: "POST",
-            dataType: "JSON",
-            async: false,
-            success: function(data) {
-                view_data_label.text("Edit Data Jenis Barang Kode : " + data.kode_jenis_barang);
-                view_kode_jenis_barang.val(data.kode_jenis_barang);
-                view_nama_jenis_barang.val(data.nama_jenis_barang);
-                view_keterangan.val(data.keterangan);
-                view_tanggal_input.text(data.tanggal_input);
-                view_histori_tanggal_input.text(data.tanggal_input);
-                nav_tabel_data_jenis_barang.text('Daftar Barang Jenis ' + data.nama_jenis_barang);
-                panggilDaftarTabelJenisBarang(data.id_jenis_barang);
-                $('#view_Modal').modal('show');
-            }
-        });
+        })
     }
 </script>

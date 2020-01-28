@@ -26,24 +26,24 @@ class Login extends CI_Controller
 		$where = array(
 			'username' => $username,
 			'password' => $password, // md5($password)
-			'role' => $role
 		);
 
 		$cek = $this->modelLogin->cek_login("master_user", $where)->row_array();
 
 		if (isset($cek)) {
-			if ($cek['status'] == "login") {
-				echo "login";
-			} else {
-				$data_session = array(
-					'username' => $username,
-					'status' => "login",
-					'role' => $role,
-					'avatar' => $cek['avatar']
-				);
-				$this->session->set_userdata($data_session);
-				$this->modelLogin->update_status($username);
-			}
+			echo "login";
+			// if ($cek['status'] == "login") {
+			// 	echo "login";
+			// } else {
+			$data_session = array(
+				'username' => $username,
+				'status' => "login",
+				'role' => $role,
+				'avatar' => $cek['avatar']
+			);
+			$this->session->set_userdata($data_session);
+			// 	$this->modelLogin->update_status($username);
+			// }
 		} else {
 			echo "false";
 		}
