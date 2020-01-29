@@ -46,8 +46,10 @@ class Model_Saldo_Awal_Persediaan extends CI_Model
         $data = [
             'kode_barang' => $post['kode_barang'],
             'qty_awal' => $qty,
+            'nomor_faktur' => 'SALDO AWAL', // hanya dummy data
             'harga_awal' => $harga,
             'tanggal_input' => date("Y-m-d H:i:s"),
+            'tanggal_saldo' => date("Y-01-01 00:00:01"),
             'user' => $this->session->userdata['username'],
         ];
 
@@ -95,7 +97,7 @@ class Model_Saldo_Awal_Persediaan extends CI_Model
     function subTotal()
     {
         $this->db->select_sum('qty_awal');
-        $this->db->select_sum('harga_awal');
+        $this->db->select('SUM(qty_awal*harga_awal) as total');
         $this->db->from('master_saldo_awal');
         return $this->db->get()->row_array();
     }

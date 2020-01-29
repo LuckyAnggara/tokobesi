@@ -8,7 +8,7 @@
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
 
 <!-- CHART.js -->
-<script src="<?= base_url('assets/'); ?>plugins/chart.js/chart.bundle.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
 
 
 <!-- SCRIPT DASHBOARD AWAL -->

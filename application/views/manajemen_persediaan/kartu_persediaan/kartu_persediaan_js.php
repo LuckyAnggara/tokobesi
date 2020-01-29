@@ -135,29 +135,6 @@
           data: "detail",
           targets: 3,
           render: function(data, type, full, meta) {
-            if (data.trans_type == "Masuk") {
-              var display = "<a class='text-primary'>" + formatRupiah(data.harga_beli.toString(), 'Rp.') + " </a>"
-              return display
-            } else {
-              return "";
-            }
-          }
-        }, {
-          data: "detail",
-          targets: 4,
-          render: function(data, type, full, meta) {
-            var total = data.harga_beli * data.qty;
-            if (data.trans_type == "Masuk") {
-              var display = "<a class='text-primary'>" + formatRupiah(total.toString(), 'Rp.') + " </a>"
-              return display
-            } else {
-              return "";
-            }
-          }
-        }, {
-          data: "detail",
-          targets: 5,
-          render: function(data, type, full, meta) {
             if (data.trans_type == "Keluar") {
               var display = "<a class='text-danger'>" + data.qty + " </a>"
               return display;
@@ -167,47 +144,17 @@
           }
         }, {
           data: "detail",
-          targets: 6,
-          render: function(data, type, full, meta) {
-            if (data.trans_type == "Keluar") {
-              var display = "<a class='text-danger'>" + formatRupiah(data.harga_beli.toString(), 'Rp.') + " </a>"
-              return display
-            } else {
-              return "";
-            }
-          }
-        }, {
-          data: "detail",
-          targets: 7,
-          render: function(data, type, full, meta) {
-            var total = data.harga_beli * data.qty;
-            var display = "<a class='text-danger'>" + formatRupiah(total.toString(), 'Rp.') + " </a>"
-            if (data.trans_type == "Keluar") {
-              return display
-            } else {
-              return "";
-            }
-          }
-        }, {
-          data: "detail",
-          targets: 8,
+          targets: 4,
           render: function(data, type, full, meta) {
             // console.log(data.tanggal_transaksi);
             return data.saldo;
           }
         }, {
           data: "detail",
-          targets: 9,
+          targets: 5,
           render: function(data, type, full, meta) {
             // console.log(data.tanggal_transaksi);
-            return data.harga_beli;
-          }
-        }, {
-          data: "detail",
-          targets: 10,
-          render: function(data, type, full, meta) {
-            // console.log(data.tanggal_transaksi);
-            return data.harga_beli * data.saldo;
+            return data.trans_type.toUpperCase();
           }
         }]
       });

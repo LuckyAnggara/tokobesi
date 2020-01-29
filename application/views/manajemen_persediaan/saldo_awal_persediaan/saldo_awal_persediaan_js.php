@@ -13,7 +13,7 @@
 <script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
 
 <!-- Chart JS -->
-<script src="<?= base_url('assets/'); ?>plugins/chart.js/Chart.bundle.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
 
 <!-- Sweet Alert Js  -->
 <script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
@@ -337,7 +337,7 @@
                 edit_id.val(data.id);
                 edit_kode_barang.val(data.kode_barang + ' - ' + data.nama_barang);
                 edit_jumlah.val(data.qty_awal);
-                edit_harga.val(formatRupiah(data.harga_awal.toString(), 'Rp.'));
+                edit_harga.val(formatRupiah(total.toString(), 'Rp.'));
                 $('#edit_modal').modal('show');
             }
         });
@@ -400,9 +400,8 @@
             processData: false,
             contentType: false,
             success: function(data) {
-                console.log(data);
                 $('#sub_total_qty').val(data.qty_awal);
-                $('#sub_total_harga').val(formatRupiah(data.harga_awal, 'Rp.'));
+                $('#sub_total_harga').val(formatRupiah(data.total, 'Rp.'));
             }
         })
     }

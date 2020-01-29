@@ -58,14 +58,9 @@
                                         <th>Tanggal</th>
                                         <th>Nomor Transaksi</th>
                                         <th>Masuk</th>
-                                        <th>Harga</th>
-                                        <th>Saldo</th>
                                         <th>Keluar</th>
-                                        <th>Harga</th>
                                         <th>Saldo</th>
-                                        <th>sss</th>
-                                        <th>Harga</th>
-                                        <th>Saldo</th>
+                                        <th>Keterangan</th>
                                     </tr>
                                 </thead>
                             </table>

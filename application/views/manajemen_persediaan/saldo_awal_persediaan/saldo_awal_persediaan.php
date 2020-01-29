@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card-box">
-                <button name="contoh" id="contoh" data-target="#add_Modal" data-toggle="modal" class="btn btn-success btn-rounded w-md waves-effect waves-light m-b-20">
+                <button name="contoh" id="contoh" data-target="#add_modal" data-toggle="modal" class="btn btn-success btn-rounded w-md waves-effect waves-light m-b-20">
                     <i class="fa fa-plus"></i>
                     <span>Tambah Data</span>
                 </button>
