@@ -144,6 +144,10 @@ class Model_Dashboard extends CI_Model
         $output1 = $output['total_pembelian'];
 
 
+        if ($output1 == 0) {
+            $output1 = $output2;
+        }
+
         if ($output2 == 0) {
             return -100;
         } else {

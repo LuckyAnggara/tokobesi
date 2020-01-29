@@ -71,7 +71,7 @@
                                 <th>Tanggal Transaksi</th>
                                 <th>Nomor Faktur</th>
                                 <th>Nama Pelanggan</th>
-                                <th>Total Penjualan</th>
+                                <th>Grand Total</th>
                                 <th>Status Bayar</th>
 
                                 <th>User</th>

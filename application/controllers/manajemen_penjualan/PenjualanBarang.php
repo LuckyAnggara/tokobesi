@@ -272,4 +272,25 @@ class PenjualanBarang extends CI_Controller
         $output = $this->modelPenjualan->cek_pelanggan($id_pelanggan);
         echo $output;
     }
+
+    function cek()
+    {
+        $kode_barang = 'B001';
+        $this->db->select('*');
+        $this->db->from('master_saldo_awal');
+        $this->db->where('kode_barang', $kode_barang);
+        $saldo_awal = $this->db->get()->row_array();
+
+        print_r($saldo_awal);
+        echo $saldo_awal['saldo_awal'];
+
+        $this->db->select_sum('saldo');
+        $this->db->where('kode_barang', $kode_barang);
+        $this->db->where('saldo !=', 0);
+        $saldo_berjalan = $this->db->get('detail_pembelian')->row_array();
+
+        // cek total persediaan dari saldo awal + berjalan
+        // $total_persediaan = $saldo_awal['saldo_awal'] + $saldo_berjalan;
+        echo $saldo_berjalan['saldo'];
+    }
 }

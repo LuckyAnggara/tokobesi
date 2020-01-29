@@ -58,6 +58,7 @@
         var data = $("#select_nama_barang option:selected").val();
         setData(data);
         setTable(data);
+        setSaldoAkhir(data);
       })
     }
   </script>
@@ -97,9 +98,8 @@
         },
         "searching": false,
         "processing": true,
-
-        "ordering": true,
         "lengthChange": true,
+        "ordering": false,
         "paging": true,
         "ajax": {
           "url": '<?= base_url("Manajemen_Persediaan/KartuPersediaan/get_data_ajax/"); ?>',
@@ -109,56 +109,79 @@
           }
         },
         "columnDefs": [{
-          data: "detail",
-          targets: 0,
-          render: function(data, type, full, meta) {
-            return data.tanggal_transaksi;
-          }
-        }, {
-          data: "detail",
-          targets: 1,
-          render: function(data, type, full, meta) {
-            return data.nomor_transaksi;
-          }
-        }, {
-          data: "detail",
-          targets: 2,
-          render: function(data, type, full, meta) {
-            if (data.trans_type == "Masuk") {
-              var display = "<a class='text-primary'>" + data.qty + " </a>"
+            data: "detail",
+            targets: 0,
+            render: function(data, type, full, meta) {
+              return data.tanggal_transaksi;
+            }
+          }, {
+            data: "detail",
+            targets: 1,
+            render: function(data, type, full, meta) {
+              if (data.trans_type == "saldo awal") {
+                var display = "<b>" + data.nomor_transaksi + "</b>"
+              } else {
+                display = data.nomor_transaksi;
+              }
               return display;
-            } else {
-              return "";
+            }
+          }, {
+            data: "detail",
+            targets: 2,
+            render: function(data, type, full, meta) {
+              if (data.trans_type == "masuk") {
+                var display = "<a class='text-primary'>" + formatSatuan(data.qty) + " </a>"
+                return display;
+              } else {
+                return "-";
+              }
+            }
+          }, {
+            data: "detail",
+            targets: 3,
+            render: function(data, type, full, meta) {
+              if (data.trans_type == "keluar") {
+                var display = "<a class='text-danger'>" + formatSatuan(data.qty) + " </a>"
+                return display;
+              } else {
+                return "-";
+              }
+            }
+          },
+          {
+            data: "detail",
+            targets: 4,
+            render: function(data, type, full, meta) {
+              // console.log(data.tanggal_transaksi);
+              return "<b>" + formatSatuan(data.saldo) + "</b>";
+            }
+          },
+          {
+            data: "detail",
+            targets: 5,
+            render: function(data, type, full, meta) {
+              // console.log(data.tanggal_transaksi);
+              return data.trans_type.toUpperCase();
             }
           }
-        }, {
-          data: "detail",
-          targets: 3,
-          render: function(data, type, full, meta) {
-            if (data.trans_type == "Keluar") {
-              var display = "<a class='text-danger'>" + data.qty + " </a>"
-              return display;
-            } else {
-              return "";
-            }
-          }
-        }, {
-          data: "detail",
-          targets: 4,
-          render: function(data, type, full, meta) {
-            // console.log(data.tanggal_transaksi);
-            return data.saldo;
-          }
-        }, {
-          data: "detail",
-          targets: 5,
-          render: function(data, type, full, meta) {
-            // console.log(data.tanggal_transaksi);
-            return data.trans_type.toUpperCase();
-          }
-        }]
+        ]
       });
 
+    }
+
+    function setSaldoAkhir(kode_barang) {
+      $.ajax({
+        url: '<?= base_url("Manajemen_Persediaan/KartuPersediaan/get_data_ajax/"); ?>',
+        type: "POST",
+        dataType: "JSON",
+        data: {
+          kode_barang: kode_barang
+        },
+        success: function(data) {
+          var display = data.data[data.data.length - 1].detail.saldo;
+          $('#saldo_akhir').val(formatSatuan(display));
+        }
+      });
     }
 
     function formatSatuan(angka) {

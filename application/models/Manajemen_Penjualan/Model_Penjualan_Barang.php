@@ -487,10 +487,20 @@ class Model_Penjualan_Barang extends CI_Model
         $this->db->where('kode_barang', $kode_barang);
         $detail_barang = $this->db->get()->row_array();
 
+        $this->db->select('*');
+        $this->db->from('master_saldo_awal');
+        $this->db->where('kode_barang', $kode_barang);
+        $saldo_awal = $this->db->get()->row_array();
+
+
         $this->db->select_sum('saldo');
         $this->db->where('kode_barang', $kode_barang);
         $this->db->where('saldo !=', 0);
-        $total_persediaan = $this->db->get('detail_pembelian');
+        $saldo_berjalan = $this->db->get('detail_pembelian')->row_array();
+
+        // cek total persediaan dari saldo awal + berjalan
+        $total_persediaan = $saldo_awal['saldo_awal'] + $saldo_berjalan['saldo'];
+
 
         $this->db->select('*');
         $this->db->from('detail_pembelian');
@@ -502,7 +512,6 @@ class Model_Penjualan_Barang extends CI_Model
         } else {
             $this->db->order_by('tanggal_transaksi', 'ASC'); // DESC untuk FIFO
         }
-
         $data_barang = $this->db->get()->result_array();
         // untuk harga beli average
         $this->db->select_sum('harga_beli');
@@ -524,53 +533,74 @@ class Model_Penjualan_Barang extends CI_Model
         $penyebut = $harga->get()->num_rows();
 
         if ($qty_penjualan < $total_persediaan) {
+            // cek apakah penjualan lebih dari saldo awal
+            if ($qty_penjualan < $saldo_awal['saldo_awal']) {
+                // jika penjualan lebih kecil dari saldo awal
+                $stok_update = $saldo_awal['saldo_awal'] - $qty_penjualan;
+                $data = [
+                    'nomor_faktur' => $post['nomor_faktur'],
+                    'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                    'kode_barang' => $kode_barang,
+                    'qty' => $stok_update,
+                    'harga_pokok' => $saldo_awal['harga_awal'],
+                    'harga_jual' => $post['harga_jual'],
+                    'keterangan' => $detail_barang['metode_hpp']
+                ];
+                $this->db->insert('master_harga_pokok_penjualan', $data);
+                $this->db->query("UPDATE master_saldo_awal SET saldo_awal = $stok_update WHERE kode_barang = '$kode_barang'");
+            } else {
 
-            foreach ($data_barang as $key => $value) {
-                $id = $value['id'];
-                $tgl = $value['tanggal_transaksi'];
-                $stok = $value['saldo'];
+                $stok_update = 0;
+                $data = [
+                    'nomor_faktur' => $post['nomor_faktur'],
+                    'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                    'kode_barang' => $kode_barang,
+                    'qty' => $saldo_awal['saldo_awal'],
+                    'harga_pokok' => $saldo_awal['harga_awal'],
+                    'harga_jual' => $post['harga_jual'],
+                    'keterangan' => $detail_barang['metode_hpp']
+                ];
+                $this->db->insert('master_harga_pokok_penjualan', $data);
+                $this->db->query("UPDATE master_saldo_awal SET saldo_awal = $stok_update WHERE kode_barang = '$kode_barang'");
+                $qty_penjualan = $qty_penjualan - $saldo_awal['saldo_awal']; // update qty penjualan setelah di kurangi saldo awal yang diambil
 
-                // nentuain harga baragng jiga AVERAGE
-                if ($detail_barang['metode_hpp'] == "AVERAGE") {
+                foreach ($data_barang as $key => $value) {
+                    $id = $value['id'];
+                    $tgl = $value['tanggal_transaksi'];
+                    $stok = $value['saldo'];
 
-
-                    $harga_beli = $pembilang / $penyebut;
-
-                    echo $harga_beli . " harga nya <br>";
-                } else {
-                    $harga_beli = $value['harga_beli'];
-                    echo $harga_beli . " harga nya <br>";
-                }
-                if ($qty_penjualan !== 0) {
-                    echo $qty_penjualan . '<br>';
-                    if ($qty_penjualan >= $stok) { // jika 7 => 5 maka yess
-                        $qty_penjualan = $qty_penjualan - $stok; // qty_penjualan = 7 - 5 = 2
-                        $stok_update = 0; // stok jadi 0
-                        $jual = $stok; // untuk update jual posisi ga bisa asal
-                        echo "yang ini <br>";
+                    // nentuain harga baragng jiga AVERAGE
+                    if ($detail_barang['metode_hpp'] == "AVERAGE") {
+                        $harga_beli = $pembilang / $penyebut;
                     } else {
-                        $stok_update = $stok - $qty_penjualan;
-                        $jual = $qty_penjualan; // untuk update jual posisi ga bisa asal
-                        $qty_penjualan = $qty_penjualan - $qty_penjualan;
-                        echo "yang itu <br>";
+                        $harga_beli = $value['harga_beli'];
                     }
-                    echo $jual . 'dijual <br>';
 
-                    $data = [
-                        'nomor_faktur' => $post['nomor_faktur'],
-                        'tanggal_transaksi' => date("Y-m-d H:i:s"),
-                        'kode_barang' => $kode_barang,
-                        'qty' => $jual,
-                        'harga_pokok' => $harga_beli,
-                        'harga_jual' => $post['harga_jual'],
-                        'keterangan' => $detail_barang['metode_hpp']
-                    ];
-                    $this->db->insert('master_harga_pokok_penjualan', $data);
-                    $this->db->query("UPDATE detail_pembelian SET saldo = $stok_update WHERE id = '$id' AND kode_barang = '$kode_barang' AND tanggal_transaksi = '$tgl'");
-                } else {
+                    if ($qty_penjualan !== 0) {
+                        if ($qty_penjualan >= $stok) { // jika 7 => 5 maka yess
+                            $qty_penjualan = $qty_penjualan - $stok; // qty_penjualan = 7 - 5 = 2
+                            $stok_update = 0; // stok jadi 0
+                            $jual = $stok; // untuk update jual posisi ga bisa asal
+                        } else {
+                            $stok_update = $stok - $qty_penjualan;
+                            $jual = $qty_penjualan; // untuk update jual posisi ga bisa asal
+                            $qty_penjualan = $qty_penjualan - $qty_penjualan;
+                        }
+                        $data = [
+                            'nomor_faktur' => $post['nomor_faktur'],
+                            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                            'kode_barang' => $kode_barang,
+                            'qty' => $jual,
+                            'harga_pokok' => $harga_beli,
+                            'harga_jual' => $post['harga_jual'],
+                            'keterangan' => $detail_barang['metode_hpp']
+                        ];
+                        $this->db->insert('master_harga_pokok_penjualan', $data);
+                        $this->db->query("UPDATE detail_pembelian SET saldo = $stok_update WHERE id = '$id' AND kode_barang = '$kode_barang' AND tanggal_transaksi = '$tgl'");
+                    } else {
 
-                    echo "udaaahan udh abis";
-                    break;
+                        break;
+                    }
                 }
             }
         } else {
