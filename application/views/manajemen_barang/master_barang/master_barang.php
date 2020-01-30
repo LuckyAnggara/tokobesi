@@ -21,7 +21,7 @@
                                 <th>Nama Barang</th>
                                 <th>Jenis Barang</th>
                                 <th>Merek Barang</th>
-                                <th>Harga Pokok</th>
+                                <!-- <th>Harga Pokok</th> -->
                                 <th>Persediaan</th>
                                 <th>Action</th>
                             </tr>
