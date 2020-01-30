@@ -2,6 +2,10 @@
 <!-- Validation js (Parsleyjs) -->
 <script type="text/javascript" src="<?= base_url('assets/'); ?>plugins/parsleyjs/dist/parsley.min.js"></script>
 
+<!-- Form wizard -->
+<script src="<?= base_url('assets/'); ?>plugins/bootstrap-wizard/jquery.bootstrap.wizard.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/jquery-validation/dist/jquery.validate.min.js"></script>
+
 <script src="<?= base_url('assets/'); ?>plugins/jquery-mask/jquery.mask.min.js"></script>
 
 <!-- Required datatable js -->
@@ -52,14 +56,22 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $('#next').on('click', function() {
-            console.log('asdasd');
-            $('.nav-pills > .active').next('li').find('a').trigger('click');
+
+        $('#rootwizard').bootstrapWizard({
+            'tabClass': 'nav nav-tabs navtab-wizard nav-justified bg-muted',
+            'onNext': function(tab, navigation, index) {
+                var $valid = $("#submitForm").valid();
+                if (!$valid) {
+                    $validator.focusInvalid();
+                    return false;
+                }
+            }
+        });
+        $('#rootwizard .finish').click(function() {
+            alert('Finished!, Starting over!');
+            $('#rootwizard').find("a[href*='tab1']").trigger('click');
         });
 
-        $('.btnPrevious').click(function() {
-            $('.nav-tabs > .active').prev('li').find('a').trigger('click');
-        });
 
         $('#submitForm').parsley();
         $('.select2').select2({
@@ -277,18 +289,18 @@
                         return data;
                     }
                 },
-                {
-                    data: "hargapokok",
-                    targets: 5,
-                    render: function(data, type, full, meta) {
-                        var display1 = formatRupiah(data.harga_pokok, 'Rp.');
-                        var display2 = display1 + " / " + data.nama_satuan;
-                        return display2;
-                    }
-                },
+                // {
+                //     data: "hargapokok",
+                //     targets: 5,
+                //     render: function(data, type, full, meta) {
+                //         var display1 = formatRupiah(data.harga_pokok, 'Rp.');
+                //         var display2 = display1 + " / " + data.nama_satuan;
+                //         return display2;
+                //     }
+                // },
                 {
                     data: "jumlah_persediaan",
-                    targets: 6,
+                    targets: 5,
                     render: function(data, type, full, meta) {
                         var display1 = formatSatuan(data);
                         return display1;
@@ -296,7 +308,7 @@
                 },
                 {
                     data: "kode_barang",
-                    targets: 7,
+                    targets: 6,
                     render: function(data, type, full, meta) {
                         var display1 = '<a type="button" onClick = "detail_barang(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
                         var display2 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
@@ -391,6 +403,6 @@
 <!-- Script Edit Modal -->
 <script type="text/javascript">
     function detail_barang(kode_barang) {
-        window.location.replace("<?= base_url('Manajemen_Barang/MasterBarang/Detail_Barang/'); ?>" + kode_barang);
+        window.location.href = "<?= base_url('Manajemen_Barang/MasterBarang/Detail_Barang/'); ?>" + kode_barang;
     }
 </script>
