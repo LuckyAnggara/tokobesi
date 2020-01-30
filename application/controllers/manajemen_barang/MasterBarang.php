@@ -61,6 +61,10 @@ class MasterBarang extends CI_Controller
             } else {
                 $value['jumlah_persediaan'] = "0";
             }
+            $value['status'] = [
+                'status_jual' => $value['status_jual'],
+                'kode_barang' => $value['kode_barang']
+            ];
             $value['hargapokok'] = $data2;
             $output['data'][] = $value;
         }
@@ -68,11 +72,21 @@ class MasterBarang extends CI_Controller
         echo $output;
     }
     // Generate Kode Barang Automatic
-    public function cekData($string)
+    public function cekData($string = null)
     {
-        $noUrut = $this->modelBarang->cekData($string);
-        $noUrut++;
-        echo sprintf("%03s", $noUrut);
+        if ($string !== null) {
+            $data = $this->modelBarang->cekData($string);
+            $nourut = 0;
+            if ($data !== "1") {
+                $nourut = substr($data, 3, 4);
+            }
+            $nourut++;
+            $string = substr($string, 0, 3);
+            $nourut =  sprintf("%04s", $nourut);
+            echo strtoupper($string) . $nourut;
+        } else {
+            echo "";
+        }
     }
 
     // Tambah Data
@@ -167,5 +181,11 @@ class MasterBarang extends CI_Controller
         $data = $this->modelBarang->get_statistik_penjualan($post);
         $output = json_encode($data);
         echo $output;
+    }
+
+    public function status_update()
+    {
+        $post = $this->input->post();
+        $this->modelBarang->status_update($post);
     }
 }

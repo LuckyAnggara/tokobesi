@@ -337,7 +337,7 @@
                 edit_id.val(data.id);
                 edit_kode_barang.val(data.kode_barang + ' - ' + data.nama_barang);
                 edit_jumlah.val(data.qty_awal);
-                edit_harga.val(formatRupiah(total.toString(), 'Rp.'));
+                edit_harga.val(formatRupiah(data.harga_awal.toString(), 'Rp.'));
                 $('#edit_modal').modal('show');
             }
         });

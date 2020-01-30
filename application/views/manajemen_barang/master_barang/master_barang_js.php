@@ -16,10 +16,11 @@
 <script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
 
 <!-- Chart JS -->
-<script src="<?= base_url('assets/'); ?>plugins/chart.js/Chart.bundle.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
 
 <!-- Sweet Alert Js  -->
 <script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.min.js"></script>
+
 
 <!-- Select2 js -->
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
@@ -56,20 +57,40 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-
         $('#rootwizard').bootstrapWizard({
             'tabClass': 'nav nav-tabs navtab-wizard nav-justified bg-muted',
+            'onTabClick': function(tab, navigation, index) {
+                swal(
+                    'Oopss!',
+                    'Tekan tombol Next',
+                    'error'
+                )
+                return false;
+            },
             'onNext': function(tab, navigation, index) {
                 var $valid = $("#submitForm").valid();
                 if (!$valid) {
-                    $validator.focusInvalid();
                     return false;
                 }
-            }
+                var $total = navigation.find('li').length;
+                var $current = index + 1;
+                if ($total == $current) {
+                    $('#submit-add').text('Submit');
+                } else {
+                    $('#submit-add').text('Next');
+                }
+            },
         });
-        $('#rootwizard .finish').click(function() {
-            alert('Finished!, Starting over!');
-            $('#rootwizard').find("a[href*='tab1']").trigger('click');
+        $('#submit-add').on('click', function() {
+            if ($('#submit-add').text() == "Submit") {
+                tambah_data();
+                swal(
+                    'Good!',
+                    'Data telah di tambahkan!',
+                    'success'
+                )
+                $('#add_modal').modal('hide');
+            }
         });
 
 
@@ -157,11 +178,17 @@
     var kode_barang = $('#kode_barang');
     nama_barang.on("keyup", function() {
         string_awalan = nama_barang.val();
-        string_awalan = string_awalan.substr(0, 1);
-        string_awalan = string_awalan.toUpperCase();
+        // string_awalan = string_awalan.substr(0, 3);
+        // string_awalan = string_awalan.toUpperCase();
         var tambahan = cekData(string_awalan);
-        var res = string_awalan.concat(tambahan);
-        kode_barang.val(res);
+        // var res = string_awalan.concat(tambahan);
+
+        if (nama_barang.val() == '') {
+            kode_barang.val('');
+        } else {
+            kode_barang.val(tambahan);
+        }
+
     });
 
     function cekData(string) {
@@ -171,7 +198,9 @@
         $.ajax({
             url: '<?= base_url("Manajemen_Barang/MasterBarang/cekData/"); ?>' + string,
             success: function(result) {
+
                 data = result;
+
             }
         });
         return data;
@@ -182,7 +211,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#add_Modal').on('hidden.bs.modal', function(e) {
+        $('#add_modal').on('hidden.bs.modal', function(e) {
             $(this)
                 .find("input,textarea,select")
                 .val('')
@@ -190,33 +219,6 @@
                 .find("input[type=checkbox], input[type=radio]")
                 .prop("checked", "")
                 .end();
-        });
-
-        $('#edit_Modal').on('hidden.bs.modal', function(e) {
-            $(this)
-                .find("input,textarea,select")
-                .val('')
-                .end()
-                .find("input[type=checkbox], input[type=radio]")
-                .prop("checked", "")
-                .end();
-        });
-
-        $('#view_Modal').on('hidden.bs.modal', function(e) {
-            $(this)
-                .find("input,textarea,select")
-                .val('')
-                .end()
-                .find("input[type=checkbox], input[type=radio]")
-                .prop("checked", "")
-                .end();
-            $("#detail_barang").addClass("active show");
-            $("#nav_detail_barang").addClass("active show");
-            $("#nav_data_penjualan").removeClass("active show");
-            var ctx = document.getElementById('bar_lucky').getContext('2d');
-            var mybarchart = new Chart(ctx);
-            mybarchart.destroy();
-            $("#data_penjualan").removeClass("active show");
         });
     });
 </script>
@@ -299,16 +301,29 @@
                 //     }
                 // },
                 {
-                    data: "jumlah_persediaan",
+                    data: "status",
                     targets: 5,
                     render: function(data, type, full, meta) {
+                        if (data.status_jual == "0") {
+                            var display = '<a class="btn" onClick="status(\'' + data.kode_barang + '\')"><span class="badge badge-success">Di Jual</span></a>';
+                        } else {
+                            var display = '<a class="btn" onClick="status(\'' + data.kode_barang + '\')"><span class="badge badge-danger">Tidak di Jual</span></a>';
+                        }
+                        return display;
+                    }
+                },
+                {
+                    data: "jumlah_persediaan",
+                    targets: 6,
+                    render: function(data, type, full, meta) {
                         var display1 = formatSatuan(data);
+
                         return display1;
                     }
                 },
                 {
                     data: "kode_barang",
-                    targets: 6,
+                    targets: 7,
                     render: function(data, type, full, meta) {
                         var display1 = '<a type="button" onClick = "detail_barang(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
                         var display2 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
@@ -348,11 +363,13 @@
 
 <script>
     $(document).ready(function() {
-        $('#submitForm').submit(function(e) {
+        $('#statusUpdateForm').submit(function(e) {
             e.preventDefault();
-            var data = new FormData(document.getElementById("submitForm"));
+            kode_barang = $('#status_kode_barang').text();
+            var data = new FormData(document.getElementById("statusUpdateForm"));
+            data.append('kode_barang', kode_barang);
             $.ajax({
-                url: "<?= Base_url('Manajemen_Barang/MasterBarang/tambah_data'); ?>",
+                url: "<?= Base_url('Manajemen_Barang/MasterBarang/status_update'); ?>",
                 type: "post",
                 data: data,
                 async: false,
@@ -360,11 +377,37 @@
                 contentType: false,
                 success: function(data) {
                     $('#datatable-master-barang').DataTable().ajax.reload();
-                    $('#add_Modal').modal('hide');
+                    $('#status_modal').modal('hide');
+                    Swal(
+                        'Sukses!',
+                        'Status berhasil di ganti!!',
+                        'success'
+                    )
                 }
             })
         });
     });
+
+    function status(kode_barang) {
+        $('#status_kode_barang').text(kode_barang);
+        $('#status_modal').modal('show');
+    }
+
+    function tambah_data() {
+        var data = new FormData(document.getElementById("submitForm"));
+        $.ajax({
+            url: "<?= Base_url('Manajemen_Barang/MasterBarang/tambah_data'); ?>",
+            type: "post",
+            data: data,
+            async: false,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $('#datatable-master-barang').DataTable().ajax.reload();
+                $('#add_modal').modal('hide');
+            }
+        })
+    }
 </script>
 
 <!-- Script Delete Data -->

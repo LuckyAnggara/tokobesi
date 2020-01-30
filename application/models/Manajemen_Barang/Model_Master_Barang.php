@@ -30,21 +30,15 @@ class Model_Master_Barang extends CI_Model
         return $this->db->get()->row_array();
     }
 
-    function cekData($string)
+    function cekData()
     {
-        $this->db->select('*');
-        $this->db->from('master_barang');
-        $this->db->like("nama_barang", $string);
-        $this->db->order_by("nama_barang", "DESC");
-        $this->db->Limit("1");
-        $query = $this->db->get();
 
-        if ($query) {
-            return 0;
+        $query = $this->db->query("SELECT MAX(kode_barang) as kodebarang from master_barang");
+        $hasil = $query->row();
+        if ($hasil->kodebarang !== null) {
+            return $hasil->kodebarang;
         } else {
-            $query = $query->row_array();
-            $data = $query['kode_barang '];
-            return filter_var($data, FILTER_SANITIZE_NUMBER_INT);
+            return "1";
         }
     }
 
@@ -62,7 +56,7 @@ class Model_Master_Barang extends CI_Model
         $post = $this->input->post();
         $data = array(
             'kode_barang' => $post['edit_kode_barang'],
-            'tipe_barang' => $post['edit_tipe_barang'],
+            'tipe_barang' => 1,
             'jenis_barang' => $post['edit_jenis_barang'],
             'merek_barang' => $post['edit_merek_barang'],
             'kode_supplier' => $post['edit_kode_supplier'],
@@ -85,7 +79,7 @@ class Model_Master_Barang extends CI_Model
         $post = $this->input->post();
         $data = [
             'kode_barang' => $post['kode_barang'],
-            'tipe_barang' => $post['tipe_barang'],
+            'tipe_barang' => 1,
             'jenis_barang' => $post['jenis_barang'],
             'merek_barang' => $post['merek_barang'],
             'kode_supplier' => $post['kode_supplier'],
@@ -192,5 +186,14 @@ class Model_Master_Barang extends CI_Model
             }
             return $hasil;
         }
+    }
+
+    function status_update($post)
+    {
+        $data = array(
+            'status_jual' => $post["status_update"],
+        );
+        $this->db->where('kode_barang', $post['kode_barang']);
+        $this->db->update('master_barang', $data);
     }
 }

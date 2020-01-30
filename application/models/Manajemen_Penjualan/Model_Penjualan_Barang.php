@@ -18,45 +18,7 @@ class Model_Penjualan_Barang extends CI_Model
         return $this->db->get()->row_array();
     }
 
-    function get_data_barang2($string)
-    {
-        if ($string == null) {
-            $this->db->select('*');
-            $this->db->from('master_persediaan');
-            $output = $this->db->get();
 
-            return $output;
-        } else {
-            $this->db->select('*');
-            $this->db->from('master_barang');
-            $this->db->like("master_barang.kode_barang", $string);
-            $this->db->or_like("nama_barang", $string);
-            $this->db->or_like("harga_satuan", $string);
-            $output = $this->db->get();
-            return $output;
-        }
-    }
-
-    function getget_data_barang($string)
-    {
-        if ($string == null) {
-            $this->db->select('master_persediaan.*, master_barang.*, master_satuan_barang.nama_satuan');
-            $this->db->from('master_persediaan');
-            $this->db->join('master_barang', 'master_barang.kode_barang = master_persediaan.kode_barang');
-            $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
-            $output = $this->db->get();
-            return $output;
-        } else {
-            $this->db->select('master_persediaan.*, master_barang.*, master_satuan_barang.nama_satuan');
-            $this->db->from('master_persediaan');
-            $this->db->join('master_barang', 'master_barang.kode_barang = master_persediaan.kode_barang');
-            $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
-            $this->db->like("master_persediaan.kode_barang", $string);
-            $this->db->or_like("nama_barang", $string);
-            $output = $this->db->get();
-            return $output;
-        }
-    }
 
     function get_data_barang($string)
     {
@@ -64,14 +26,19 @@ class Model_Penjualan_Barang extends CI_Model
             $this->db->select('master_barang.*, master_satuan_barang.nama_satuan');
             $this->db->from('master_barang');
             $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
+            $this->db->where_not_in('status_jual', 1);
             $output = $this->db->get();
             return $output;
         } else {
             $this->db->select('master_barang.*, master_satuan_barang.nama_satuan');
             $this->db->from('master_barang');
             $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
+            $this->db->where_not_in('status_jual', 1);
+            $this->db->group_start();
             $this->db->like("master_barang.kode_barang", $string);
             $this->db->or_like("nama_barang", $string);
+            $this->db->group_end();
+
             $output = $this->db->get();
             return $output;
         }

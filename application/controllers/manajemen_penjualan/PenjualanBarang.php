@@ -100,7 +100,6 @@ class PenjualanBarang extends CI_Controller
             "jumlah_data"  => $database->num_rows(),
             "data" => array()
         );
-
         foreach ($data as $value) {
             $qty = $this->modelPersediaan->get_data_persediaan($value['kode_barang']);
             if ($qty > 0) {

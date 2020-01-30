@@ -477,8 +477,6 @@
         display_none = '<div class="col-12 text-center"><p>Cari Data Barang di Kolom Pencarian</p></div>';
         $("#result_page").append(display_none);
       }
-
-
     }
 
 

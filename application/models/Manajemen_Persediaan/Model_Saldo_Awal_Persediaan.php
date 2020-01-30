@@ -46,6 +46,7 @@ class Model_Saldo_Awal_Persediaan extends CI_Model
         $data = [
             'kode_barang' => $post['kode_barang'],
             'qty_awal' => $qty,
+            'saldo_awal' => $qty,
             'nomor_faktur' => 'SALDO AWAL', // hanya dummy data
             'harga_awal' => $harga,
             'tanggal_input' => date("Y-m-d H:i:s"),

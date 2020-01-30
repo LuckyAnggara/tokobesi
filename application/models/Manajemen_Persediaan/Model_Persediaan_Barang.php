@@ -48,7 +48,6 @@ class Model_Persediaan_Barang extends CI_Model
             $qty_awal = 0;
         }
 
-
         //cek saldo pembelian
         $this->db->select_sum('saldo');
         $this->db->where('kode_barang', $kode_barang);
