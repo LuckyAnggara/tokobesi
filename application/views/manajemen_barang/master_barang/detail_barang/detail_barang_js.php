@@ -15,7 +15,7 @@
 <script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
 
 <!-- Chart JS -->
-<script src="<?= base_url('assets/'); ?>plugins/chart.js/Chart.bundle.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
 
 <!-- Sweet Alert Js  -->
 <script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
@@ -23,9 +23,6 @@
 <!-- Select2 js -->
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
 
-<!-- Chart JS -->
-<script src="<?= base_url('assets/'); ?>plugins/chart.js/Chart.bundle.min.js"></script>
-<!-- <script src="<?= base_url('assets/'); ?>pages/jquery.chartjs.init.js"></script> -->
 
 
 <!-- script Uploader -->
@@ -81,8 +78,6 @@
     var edit_harga_satuan = document.getElementById('edit_harga_satuan_dummy');
     edit_harga_satuan.addEventListener('keyup', function(e) {
         var data = $('#edit_harga_satuan_dummy').val();
-        // tambahkan 'Rp.' pada saat form di ketik
-        // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
         edit_harga_satuan.value = formatRupiah(this.value, 'Rp. ');
         $('#edit_harga_satuan').val(normalrupiah(data));
     });
@@ -90,10 +85,15 @@
     var harga_pokok = document.getElementById('edit_harga_pokok_dummy');
     harga_pokok.addEventListener('keyup', function(e) {
         var data = $('#edit_harga_pokok_dummy').val();
-        // tambahkan 'Rp.' pada saat form di ketik
-        // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
         harga_pokok.value = formatRupiah(this.value, 'Rp. ');
         $('#edit_harga_pokok').val(normalrupiah(data));
+    });
+
+    var komisi_sales = document.getElementById('edit_komisi_sales_dummy');
+    komisi_sales.addEventListener('keyup', function(e) {
+        var data = $('#edit_komisi_sales_dummy').val();
+        komisi_sales.value = formatRupiah(this.value, 'Rp. ');
+        $('#edit_komisi_sales').val(normalrupiah(data));
     });
 
     /* Fungsi formatRupiah */
@@ -309,6 +309,98 @@
             warning_edit_harga(kode_barang);
         });
 
+        function warning_edit_komisi(kode_barang) {
+            swal.fire({
+                title: 'Apa anda yakin akan mengubah data ini?',
+                text: "Semua Data Barang dengan kode " + kode_barang + " juga akan terubah",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#4fa7f3',
+                cancelButtonColor: '#d57171',
+                confirmButtonText: 'Ya, Ubah ini!'
+            }).then((result) => {
+                if (result.value) {
+                    $('#edit_button_komisi_div').attr("hidden", true);
+                    $('#edit_trigger_komisi').attr("hidden", false);
+                    edit_data_komisi(kode_barang);
+                    setData(kode_barang);
+                    set_readonly('komisi', true);
+                    swal.fire(
+                        'Edited!!!',
+                        'Data Komisi ' + kode_barang + ' telah diubah!',
+                        'success'
+                    );
+                }
+            });
+        }
+
+        function edit_data_komisi(kode_barang) {
+            var data = new FormData(document.getElementById("form_komisi"));
+            $.ajax({
+                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data_komisi/'); ?>" + kode_barang,
+                type: "post",
+                data: data,
+                async: false,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+
+                }
+            })
+
+        }
+        $('#form_komisi').submit(function(e) {
+            var kode_barang = $('#hide_kode_barang').text();
+            e.preventDefault();
+            warning_edit_komisi(kode_barang);
+        });
+
+        function warning_edit_lainnya(kode_barang) {
+            swal.fire({
+                title: 'Apa anda yakin akan mengubah data ini?',
+                text: "Semua Data Barang dengan kode " + kode_barang + " juga akan terubah",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#4fa7f3',
+                cancelButtonColor: '#d57171',
+                confirmButtonText: 'Ya, Ubah ini!'
+            }).then((result) => {
+                if (result.value) {
+                    $('#edit_button_lainnya_div').attr("hidden", true);
+                    $('#edit_trigger_lainnya').attr("hidden", false);
+                    edit_data_lainnya(kode_barang);
+                    setData(kode_barang);
+                    set_readonly('lainnya', true);
+                    swal.fire(
+                        'Edited!!!',
+                        'Data Lainnya ' + kode_barang + ' telah diubah!',
+                        'success'
+                    );
+                }
+            });
+        }
+
+        function edit_data_lainnya(kode_barang) {
+            var data = new FormData(document.getElementById("form_lainnya"));
+            $.ajax({
+                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data_lainnya/'); ?>" + kode_barang,
+                type: "post",
+                data: data,
+                async: false,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+
+                }
+            })
+
+        }
+        $('#form_lainnya').submit(function(e) {
+            var kode_barang = $('#hide_kode_barang').text();
+            e.preventDefault();
+            warning_edit_lainnya(kode_barang);
+        });
+
     });
 </script>
 
@@ -382,6 +474,12 @@
         var edit_button_harga = $('#edit_trigger_harga');
         var edit_button_harga_div = $('#edit_button_harga_div');
         var edit_batal_harga = $('#edit_batal_harga');
+        var edit_button_komisi = $('#edit_trigger_komisi');
+        var edit_button_komisi_div = $('#edit_button_komisi_div');
+        var edit_batal_komisi = $('#edit_batal_komisi');
+        var edit_button_lainnya = $('#edit_trigger_lainnya');
+        var edit_button_lainnya_div = $('#edit_button_lainnya_div');
+        var edit_batal_lainnya = $('#edit_batal_lainnya');
 
         // UMUM - CLICK EDIT
         edit_button_umum.on('click', function() {
@@ -410,6 +508,34 @@
             set_readonly('harga', true);
             setData($('#hide_kode_barang').text());
         });
+
+        // KOMISI - CLICK EDIT
+        edit_button_komisi.on('click', function() {
+            edit_button_komisi_div.attr("hidden", false);
+            edit_button_komisi.attr("hidden", true);
+            set_readonly('komisi', false);
+        });
+        // KOMISI - CLICK BATAL
+        edit_batal_komisi.on('click', function() {
+            edit_button_komisi_div.attr("hidden", true);
+            edit_button_komisi.attr("hidden", false);
+            set_readonly('komisi', true);
+            setData($('#hide_kode_barang').text());
+        });
+
+        // LAINNYA - CLICK EDIT
+        edit_button_lainnya.on('click', function() {
+            edit_button_lainnya_div.attr("hidden", false);
+            edit_button_lainnya.attr("hidden", true);
+            set_readonly('lainnya', false);
+        });
+        // LAINNYA - CLICK BATAL
+        edit_batal_lainnya.on('click', function() {
+            edit_button_lainnya_div.attr("hidden", true);
+            edit_button_lainnya.attr("hidden", false);
+            set_readonly('lainnya', true);
+            setData($('#hide_kode_barang').text());
+        });
         // Fungsi Set Kolom Jadi Not Readonly
     });
 
@@ -430,7 +556,7 @@
                 $('#edit_kode_supplier').attr("disabled", bol);
                 $('#edit_keterangan').attr("readonly", bol);
             }
-        } else {
+        } else if (div == "harga") {
             if (bol == false) {
                 $('#edit_satuan').attr("disabled", bol);
                 $('#edit_persediaan_minimum').attr("readonly", bol);
@@ -444,6 +570,18 @@
                 $('#edit_harga_pokok_dummy').attr("readonly", bol);
                 $('#edit_harga_satuan_dummy').attr("readonly", bol);
                 $('#metode_hpp').attr("disabled", bol);
+                $('#edit_status_jual').attr("disabled", bol);
+            }
+        } else if (div == "komisi") {
+            if (bol == false) {
+                $('#edit_komisi_sales_dummy').attr("readonly", bol);
+            } else {
+                $('#edit_komisi_sales_dummy').attr("readonly", bol);
+            }
+        } else if (div == "lainnya") {
+            if (bol == false) {
+                $('#edit_status_jual').attr("disabled", bol);
+            } else {
                 $('#edit_status_jual').attr("disabled", bol);
             }
         }
@@ -466,6 +604,8 @@
         var edit_harga_pokok = $('#edit_harga_pokok');
         var edit_harga_satuan_dummy = $('#edit_harga_satuan_dummy');
         var edit_harga_satuan = $('#edit_harga_satuan');
+        var edit_komisi_sales_dummy = $('#edit_komisi_sales_dummy');
+        var edit_komisi_sales = $('#edit_komisi_sales');
         var edit_metode_hpp = $('#metode_hpp');
         var edit_status_jual = $('#edit_status_jual');
         var edit_tanggal_input = $('#edit_tanggal_input');
@@ -479,6 +619,7 @@
             success: function(data) {
                 rupiahJual = formatRupiah(data.harga_satuan, 'Rp.');
                 rupiahPokok = formatRupiah(data.harga_pokok, 'Rp.');
+                rupiahKomisi = formatRupiah(data.komisi_sales, 'Rp.');
                 edit_tipe_barang.val(data.tipe_barang).trigger('change');
                 edit_jenis_barang.val(data.tipe_barang).trigger('change');
                 edit_merek_barang.val(data.tipe_barang).trigger('change');
@@ -494,6 +635,8 @@
                 edit_harga_pokok.val(data.harga_pokok);
                 edit_harga_satuan_dummy.val(rupiahJual);
                 edit_harga_satuan.val(data.harga_satuan);
+                edit_komisi_sales_dummy.val(rupiahKomisi);
+                edit_komisi_sales.val(data.komisi_sales);
                 edit_metode_hpp.val(data.metode_hpp).trigger('change');
                 edit_status_jual.val(data.status_jual).trigger('change');
                 edit_tanggal_input.text(data.tanggal_input);

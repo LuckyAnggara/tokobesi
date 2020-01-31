@@ -113,6 +113,15 @@ class MasterBarang extends CI_Controller
         $this->modelDetailBarang->edit_data_harga($kode_barang);
     }
 
+    public function edit_data_komisi($kode_barang)
+    {
+        $this->modelDetailBarang->edit_data_komisi($kode_barang);
+    }
+
+    public function edit_data_lainnya($kode_barang)
+    {
+        $this->modelDetailBarang->edit_data_lainnya($kode_barang);
+    }
     public function delete_data($kode_barang)
     {
         if (empty($kode_barang)) {

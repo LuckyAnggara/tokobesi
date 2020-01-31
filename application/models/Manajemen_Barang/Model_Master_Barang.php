@@ -131,7 +131,7 @@ class Model_Master_Barang extends CI_Model
         if ($this->upload->do_upload('gambar')) {
             return $this->upload->data("file_name");
         } else {
-            return "default.jpg";
+            return "default.png";
         }
     }
 

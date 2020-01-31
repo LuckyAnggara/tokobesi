@@ -45,7 +45,7 @@
                                     <label class="col-3 col-form-label">Jenis Barang</label>
                                     <div class="col-3">
                                         <select name="jenis_barang" id="jenis_barang" class="form-control select2">
-                                            <option value="0" selected disabled hidden>-Jenis-</option>
+                                            <option value="0" selected disabled hidden>--</option>
                                             <?php foreach ($jenis as $value) : ?>
                                                 <option value=<?= $value['id_jenis_barang']; ?>><?= $value['nama_jenis_barang']; ?></option>
                                             <?php endforeach; ?>
@@ -54,7 +54,7 @@
                                     <label class="col-3 col-form-label text-right">Merek Barang</label>
                                     <div class="col-3">
                                         <select name="merek_barang" id="merek_barang" class="form-control select2">
-                                            <option value="0" selected disabled hidden>-Merek-</option>
+                                            <option value="0" selected disabled hidden>--</option>
                                             <?php foreach ($merek as $value) : ?>
                                                 <option value=<?= $value['id_merek_barang']; ?>><?= $value['nama_merek_barang']; ?></option>
                                             <?php endforeach; ?>

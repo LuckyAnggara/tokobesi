@@ -378,7 +378,7 @@
                 success: function(data) {
                     $('#datatable-master-barang').DataTable().ajax.reload();
                     $('#status_modal').modal('hide');
-                    Swal(
+                    swal(
                         'Sukses!',
                         'Status berhasil di ganti!!',
                         'success'

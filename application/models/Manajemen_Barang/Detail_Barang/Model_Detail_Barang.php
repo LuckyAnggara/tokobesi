@@ -96,4 +96,27 @@ class Model_Detail_Barang extends CI_Model
         $this->db->where('kode_barang', $kode_barang);
         $this->db->update('master_barang', $data);
     }
+
+    function edit_data_komisi($kode_barang)
+    {
+        $post = $this->input->post();
+        $data = [
+            'komisi_sales' => $post["edit_komisi_sales"],
+            'tanggal_input' => date("Y-m-d H:i:s"),
+        ];
+        $this->db->where('kode_barang', $kode_barang);
+        $this->db->update('master_barang', $data);
+    }
+
+    function edit_data_lainnya($kode_barang)
+    {
+        $post = $this->input->post();
+        $data = [
+            'status_jual' => $post["edit_status_jual"],
+            'tanggal_input' => date("Y-m-d H:i:s"),
+        ];
+        $this->db->where('kode_barang', $kode_barang);
+        $this->db->update('master_barang', $data);
+    }
+    
 }

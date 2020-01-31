@@ -20,11 +20,6 @@
                     <div>
                         <button type="submit" id="edit_gambar_button" name="edit_gambar_button" class="btn btn-primary waves-effect waves-light"><i class="fa fa-image"></i> Ganti Gambar</button>
                     </div>
-                    <hr>
-                    <div>
-                        <h4 class="card-title">Nama Produk</h4>
-                        <p class="card-text">Deskripsi Produk</p>
-                    </div>
 
                 </div>
             </div>
@@ -32,8 +27,7 @@
         </div>
         <div class="col-sm-9">
             <div class="card-box">
-
-                <ul class="nav nav-tabs nav-justified">
+                <ul class="nav nav-tabs nav-justified nav-pills">
                     <li class="nav-item">
                         <a href="#data_umum" data-toggle="tab" aria-expanded="false" class="nav-link active">
                             Data Umum
@@ -45,7 +39,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#messages2" data-toggle="tab" aria-expanded="false" class="nav-link">
+                        <a href="#komisi" data-toggle="tab" aria-expanded="false" class="nav-link">
                             Komisi
                         </a>
                     </li>
@@ -100,7 +94,6 @@
                                                 <option value=<?= $value['id_merek_barang']; ?>><?= $value['nama_merek_barang']; ?></option>
                                             <?php endforeach; ?>
                                         </select>
-                                        <small id="inputhelp" class="form-text text-muted">*Optional</small>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -118,7 +111,6 @@
                                                 <option value=<?= $value['kode_supplier']; ?>><?= $value['nama_supplier']; ?></option>
                                             <?php endforeach; ?>
                                         </select>
-                                        <small id="inputhelp" class="form-text text-muted">*Optional</small>
                                     </div>
                                 </div>
                                 <hr>
@@ -193,7 +185,7 @@
 
                             <div class="modal-footer">
                                 <div>
-                                    <button type="button" id="edit_trigger_harga" name="edit_trigger_umum" class="btn btn-success waves-effect waves-light"><i class="fa fa-edit"></i> Edit</button>
+                                    <button type="button" id="edit_trigger_harga" name="edit_trigger_harga" class="btn btn-success waves-effect waves-light"><i class="fa fa-edit"></i> Edit</button>
                                 </div>
                                 <div id="edit_button_harga_div" hidden>
                                     <button id="edit_batal_harga" name="edit_batal_harga" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancel</button>
@@ -202,17 +194,49 @@
                             </div>
                         </form>
                     </div>
-                    <div role="tabpanel" class="tab-pane fade" id="lainnya">
-                        <div class="form-group row">
-                            <label class="col-3 col-form-label">Status Jual</label>
-                            <div class="col-9">
-                                <select name="edit_status_jual" id="edit_status_jual" class="form-control select2" placeholder="ssss" required disabled>
-                                    <option value="0" selected disabled hidden>-Status-</option>
-                                    <option value="1">Dijual</option>
-                                    <option value="1">Tidak Dijual</option>
-                                </select>
+                    <div role="tabpanel" class="tab-pane fade" id="komisi">
+                        <form data-parsley-validate novalidate autocomplete="off" id="form_komisi" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Komisi Sales / Item</label>
+                                <div class="col-9">
+                                    <input type="text" id="edit_komisi_sales_dummy" name="edit_komisi_sales_dummy" class="form-control" value="Rp.0" required readonly>
+                                    <input type="text" name="edit_komisi_sales" id="edit_komisi_sales" class="form-control" value="0" hidden>
+                                    <small id="inputhelp" class="form-text text-muted">*Untuk penentuan komisi sales, jika status sales komisi per item</small>
+                                </div>
                             </div>
-                        </div>
+                            <div class="modal-footer">
+                                <div>
+                                    <button type="button" id="edit_trigger_komisi" name="edit_trigger_komisi" class="btn btn-success waves-effect waves-light"><i class="fa fa-edit"></i> Edit</button>
+                                </div>
+                                <div id="edit_button_komisi_div" hidden>
+                                    <button id="edit_batal_komisi" name="edit_batal_komisi" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" id="submit_batal_komisi" name="submit_batal_komisi" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i> Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="lainnya">
+                        <form data-parsley-validate novalidate autocomplete="off" id="form_lainnya" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Status Jual</label>
+                                <div class="col-9">
+                                    <select name="edit_status_jual" id="edit_status_jual" class="form-control select2" required disabled>
+                                        <option selected disabled hidden>-Status-</option>
+                                        <option value="0">Dijual</option>
+                                        <option value="1">Tidak Dijual</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div>
+                                    <button type="button" id="edit_trigger_lainnya" name="edit_trigger_lainnya" class="btn btn-success waves-effect waves-light"><i class="fa fa-edit"></i> Edit</button>
+                                </div>
+                                <div id="edit_button_lainnya_div" hidden>
+                                    <button id="edit_batal_lainnya" name="edit_batal_lainnya" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" id="submit_batal_lainnya" name="submit_batal_lainnya" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i> Submit</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div role="tabpanel" class="tab-pane fade" id="statistik">
                         <div class="form-group row">
@@ -240,7 +264,6 @@
                     </div>
                     <small class="text-muted">Last Update : <i id="edit_tanggal_input" readonly> </i> </small>
                 </div>
-
             </div>
         </div>
     </div> <!-- container -->

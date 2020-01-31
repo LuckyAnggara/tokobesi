@@ -24,7 +24,7 @@
                                     </div>
                                 </div><!-- input-group -->
                             </div>
-                            <label class="col-sm-1 col-sm-form-label m-t-10">S.D</label>
+                            <label class="col-sm-1 col-sm-form-label text-center m-t-10">S.D</label>
                             <div class="col-sm-5 col-lg-3 col-md-3">
                                 <div class="input-group">
                                     <input type="text" autocomplete="off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal_akhir">
