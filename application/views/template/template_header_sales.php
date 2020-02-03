@@ -51,11 +51,25 @@
                             </a>
                             <!-- End mobile menu toggle-->
                         </li>
-                        <!-- <li class="hide-phone">
-                            <form class="app-search">
-                                <input type="text" placeholder="Search..." class="form-control">
-                                <button type="submit"><i class="fa fa-search"></i></button>
-                            </form>
+
+                        <!-- <li class="dropdown notification-list">
+                            <a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                <i class="fa fa-shopping-cart"><span class="badge badge-primary badge-pill">15</span></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <i class="ti-user m-r-5"></i> <?= $this->session->userdata['username']; ?>
+                                </a>
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <i class="ti-settings m-r-5"></i> Settings
+                                </a>
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <i class="ti-lock m-r-5"></i> Lock screen
+                                </a>
+                                <a href=" <?= base_url('login/logout'); ?> " class="dropdown-item notify-item">
+                                    <i class="ti-power-off m-r-5"></i> Logout
+                                </a>
+                            </div>
                         </li> -->
                         <li>
                             <!-- Notification -->
@@ -63,12 +77,8 @@
                                 <ul class="list-inline mb-0">
                                     <li>
                                         <a href="javascript:void(0);" class="right-bar-toggle">
-                                            <i class="mdi mdi-bell-outline noti-icon"></i>
+                                            <i class="fa fa-shopping-cart"><span class="badge badge-danger badge-pill" id="jumlah_keranjang">0</span></i>
                                         </a>
-                                        <div class="noti-dot">
-                                            <span class="dot"></span>
-                                            <span class="pulse"></span>
-                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -80,26 +90,18 @@
                                 <img src="<?= base_url('assets/images/users/') . $this->session->userdata['avatar']; ?>" alt="user" class="rounded-circle">
                             </a>
                             <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                <!-- item-->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <i class="ti-user m-r-5"></i> <?= $this->session->userdata['username']; ?>
                                 </a>
-
-                                <!-- item-->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <i class="ti-settings m-r-5"></i> Settings
                                 </a>
-
-                                <!-- item-->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <i class="ti-lock m-r-5"></i> Lock screen
                                 </a>
-
-                                <!-- item-->
                                 <a href=" <?= base_url('login/logout'); ?> " class="dropdown-item notify-item">
                                     <i class="ti-power-off m-r-5"></i> Logout
                                 </a>
-
                             </div>
                         </li>
 

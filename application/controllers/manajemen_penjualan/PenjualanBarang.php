@@ -292,4 +292,13 @@ class PenjualanBarang extends CI_Controller
         // $total_persediaan = $saldo_awal['saldo_awal'] + $saldo_berjalan;
         echo $saldo_berjalan['saldo'];
     }
+
+    // delete last record bisi error
+
+    function revert_error()
+    {
+        $this->db->query('DELETE from master_penjualan order by id desc limit 1');
+        $this->db->query('DELETE from master_pelanggan order by id desc limit 1');
+        $this->db->query('DELETE from temp_tabel_keranjang_penjualan order by id desc limit 1');
+    }
 }

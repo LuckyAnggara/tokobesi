@@ -352,7 +352,8 @@
     $(document).ready(function() {
         var ctx = document.getElementById('myChart').getContext('2d');
         var chart = new Chart(ctx, {
-            responsive: false,
+            responsive: true,
+            maintainAspectRatio: false,
             type: 'bar',
             data: {
                 datasets: []
@@ -361,13 +362,15 @@
                 scales: {
                     yAxes: [
                         // {
-                    //     id: "y-axis-1",
-                    //     position: "left"
-                    // },
-                     {
-                        id: "y-axis-2",
-                        position: "right"
-                    }]
+                        //     id: "y-axis-1",
+                        //     position: "left"
+                        // },
+                        {
+                            id: "y-axis-2",
+                            position: "right"
+                        },
+
+                    ],
                 },
                 tooltips: {
                     mode: 'index',

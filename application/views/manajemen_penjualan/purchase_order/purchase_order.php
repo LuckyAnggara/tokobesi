@@ -4,9 +4,10 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="pull-right m-t-20">
-            <a class="btn btn-success waves-effect waves-light"><i class="fa fa-shopping-cart"></i></a>
+                <a class="btn btn-success waves-effect waves-light"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <h4 class="page-title">Purchase Order</h4>
+            <h4 class="page-title">Purchase Order : <span id="no_order"><?= $no_order; ?></span>
+            </h4>
         </div>
     </div>
     <!-- end page title end breadcrumb -->
@@ -21,8 +22,14 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-sm-form-label">Cari Nama Barang</label>
                     <div class="col-sm-10">
-                        <input autocomplete="off" placeholder="Kolom Pencarian Barang.." id="cari_barang" name="cari_barang" type="text" class="form-control">
+                     <div class="input-group">
+                               <input autocomplete="off" placeholder="Kolom Pencarian Barang.." id="cari_barang" name="cari_barang" type="text" class="form-control">
+                                <div class="input-group-append" id="div_cari-button">
+                                    <button id="searchbtn" name="searchbtn"class=" btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
                     </div>
+                    
                 </div>
                 <hr>
                 <div class="row" id="result_page">

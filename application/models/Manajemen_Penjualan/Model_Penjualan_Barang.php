@@ -467,8 +467,6 @@ class Model_Penjualan_Barang extends CI_Model
 
         // cek total persediaan dari saldo awal + berjalan
         $total_persediaan = $saldo_awal['saldo_awal'] + $saldo_berjalan['saldo'];
-
-
         $this->db->select('*');
         $this->db->from('detail_pembelian');
         $this->db->where('saldo !=', 0);
@@ -499,7 +497,7 @@ class Model_Penjualan_Barang extends CI_Model
         $harga = $this->db;
         $penyebut = $harga->get()->num_rows();
 
-        if ($qty_penjualan < $total_persediaan) {
+        if ($qty_penjualan <= $total_persediaan) {
             // cek apakah penjualan lebih dari saldo awal
             if ($qty_penjualan < $saldo_awal['saldo_awal']) {
                 // jika penjualan lebih kecil dari saldo awal
@@ -571,7 +569,7 @@ class Model_Penjualan_Barang extends CI_Model
                 }
             }
         } else {
-            echo "stok barang kurang";
+            echo "error";
         }
     }
 
