@@ -359,10 +359,12 @@
             },
             options: {
                 scales: {
-                    yAxes: [{
-                        id: "y-axis-1",
-                        position: "left"
-                    }, {
+                    yAxes: [
+                        // {
+                    //     id: "y-axis-1",
+                    //     position: "left"
+                    // },
+                     {
                         id: "y-axis-2",
                         position: "right"
                     }]
@@ -437,7 +439,7 @@
                 label: 'Laba Harian',
                 data: harian,
                 backgroundColor: '#71B37C',
-                yAxisID: 'y-axis-1'
+                // yAxisID: 'y-axis-1'
             };
             chart.update();
         }

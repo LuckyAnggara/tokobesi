@@ -1,0 +1,40 @@
+<div class="container-fluid">
+
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="pull-right m-t-20">
+            <a class="btn btn-success waves-effect waves-light"><i class="fa fa-shopping-cart"></i></a>
+            </div>
+            <h4 class="page-title">Purchase Order</h4>
+        </div>
+    </div>
+    <!-- end page title end breadcrumb -->
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="card-box">
+                <div class="form-group row">
+                    <h4 class="col-12 m-t-0 header-title">Data Barang</h4>
+                </div>
+                <hr>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-sm-form-label">Cari Nama Barang</label>
+                    <div class="col-sm-10">
+                        <input autocomplete="off" placeholder="Kolom Pencarian Barang.." id="cari_barang" name="cari_barang" type="text" class="form-control">
+                    </div>
+                </div>
+                <hr>
+                <div class="row" id="result_page">
+                    <div class="col-12 text-center">
+                        <p>Cari Data Barang di Kolom Pencarian</p>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+
+</div> <!-- end container -->

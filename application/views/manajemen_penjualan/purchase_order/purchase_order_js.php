@@ -43,7 +43,7 @@
       $(window).on("unload", function(e) {
         $.ajax({
           async: false,
-          url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
+          url: '<?= base_url("Manajemen_Penjualan/PurchaseOrder/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
         });
       });
 
@@ -57,8 +57,6 @@
         changeYear: true,
       });
 
-      $('#cari_barang').hide();
-      cari_versi_select2()
       $('#modal_detail_penjualan').on('hidden.bs.modal', function(e) {
         $(this)
           .find("input,textarea,select")
@@ -104,7 +102,7 @@
 
 
       // $.ajax({
-      //   url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
+      //   url: '<?= base_url("Manajemen_Penjualan/PurchaseOrder/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
       // });
     });
 
@@ -128,42 +126,7 @@
       }
     })
 
-    function cari_versi_select2() {
-      $("#select_nama_barang").select2({
-        ajax: {
-          url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/get_data_barang_versi_select2"); ?>',
-          type: "post",
-          dataType: 'json',
-          delay: 250,
-          // data: function(params) {
-          //   return {
-          //     search_term: params.term
-          //   };
-          // },
-          processResults: function(data) {
-            var results = [];
-            for (var i in data.data) {
-              results.push({
-                "id": data.data[i].kode_barang + '-' + data.data[i].harga_satuan + '-' + data.data[i].jumlah_persediaan + '-' + data.data[i].nama_satuan,
-                "text": data.data[i].kode_barang + ' - ' + data.data[i].nama_barang
-              });
-            };
-            return {
-              results: results
-            };
-          },
-        },
-        placeholder: "Pencarian Barang, menggunakan Nama Barang atau Kode Barang .."
-      }).on('select2:select', function(evt) {
-        var data = $("#select_nama_barang option:selected").val();
-        str = data.split("-");
-        var kode_barang = str[0]
-        var harga_jual = str[1];
-        var sisa_persediaan = str[2];
-        var satuan = str[3];
-        choose_barang(kode_barang, sisa_persediaan, satuan, harga_jual);
-      })
-    }
+
 
     // script formatRupiah
     function normalrupiah(angka) {
@@ -339,7 +302,7 @@
       var nomor_telepon = $('#nomor_telepon');
       if (id_pelanggan.val() !== "") {
         $.ajax({
-          url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/get_data_pelanggan/"); ?>' + id_pelanggan.val(),
+          url: '<?= base_url("Manajemen_Penjualan/PurchaseOrder/get_data_pelanggan/"); ?>' + id_pelanggan.val(),
           type: "POST",
           dataType: "JSON",
           async: false,
@@ -395,7 +358,7 @@
     function search(kata_kunci) {
       if (kata_kunci !== "") {
         $.ajax({
-          url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/get_data_barang/"); ?>' + kata_kunci,
+          url: '<?= base_url("Manajemen_Penjualan/PurchaseOrder/get_data_barang/"); ?>' + kata_kunci,
           type: "POST",
           dataType: "JSON",
           async: false,
@@ -406,7 +369,7 @@
             if (data.jumlah_data > 0) {
               $("#result_page").empty();
               for (var i in data.data) {
-                var display2 = '<div id="result"  class="col-md-4 col-lg-2"><div class="card gal-detail thumb"><a type="button" id="wawa" onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].nama_satuan + '\',\'' + data.data[i].harga_satuan + '\')" ><img class="img-thumbnail img-responsive" alt="profile-image" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Tidak ada Gambar"><h5>' + data.data[i].nama_barang + '</h5><p class="card-text">' + data.data[i].keterangan + '</p></a></div></div>';
+                var display2 = '<div id="result"  class="col-md-1 col-lg-1 col-sm-1"><div class="card gal-detail thumb"><a type="button" id="wawa" onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].nama_satuan + '\',\'' + data.data[i].harga_satuan + '\')" ><img class="img-thumbnail img-responsive" alt="profile-image" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Tidak ada Gambar"><h5 >' + data.data[i].nama_barang + '</h5><p class="card-text">' + data.data[i].keterangan + '</p></a></div></div>';
                 $('#result_page').append(display2).fadeIn('slow');
               }
             } else {
@@ -492,7 +455,7 @@
       var diskon = $('#diskon').val();
       var persediaan = $.ajax({
         type: "POST",
-        url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/get_data_persediaan/"); ?>' + kode_barang,
+        url: '<?= base_url("Manajemen_Penjualan/PurchaseOrder/get_data_persediaan/"); ?>' + kode_barang,
         dataType: "text",
         async: false
       }).responseText;
@@ -531,7 +494,7 @@
     $('#button-password-add').on('click', function() {
       var password = $('#password_input').val();
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/cekPasswordDirektur'); ?>",
+        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrder/cekPasswordDirektur'); ?>",
         type: "post",
         data: {
           password: password
@@ -562,7 +525,7 @@
 
       $('#simpan_checkout').attr('disabled', false);
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/push_data_barang'); ?>",
+        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrder/push_data_barang'); ?>",
         type: "post",
         data: {
           no_order_penjualan: no_order,
@@ -590,7 +553,7 @@
 
     function push_persediaan_temporary_tambah(jumlah_penjualan, kode_barang) {
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/persediaan_temp_tambah/'); ?>",
+        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrder/persediaan_temp_tambah/'); ?>",
         type: "post",
         data: {
           kode_barang: kode_barang,
@@ -604,7 +567,7 @@
 
     function push_persediaan_temporary_batal(id) {
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/persediaan_temp_batal/'); ?>",
+        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrder/persediaan_temp_batal/'); ?>",
         type: "post",
         data: {
           id: id,
@@ -617,7 +580,7 @@
 
     function total_harga_keranjang() {
       $.ajax({
-        url: "<?= base_url("Manajemen_Penjualan/PenjualanBarang/get_sum_keranjang/"); ?>" + $('#no_order').text(),
+        url: "<?= base_url("Manajemen_Penjualan/PurchaseOrder/get_sum_keranjang/"); ?>" + $('#no_order').text(),
         type: "post",
         dataType: "JSON",
         async: false,
@@ -664,7 +627,7 @@
         "lengthChange": false,
         "paging": false,
         "ajax": {
-          "url": '<?= base_url("Manajemen_Penjualan/PenjualanBarang/get_data_keranjang/"); ?>' + $('#no_order').text(),
+          "url": '<?= base_url("Manajemen_Penjualan/PurchaseOrder/get_data_keranjang/"); ?>' + $('#no_order').text(),
           "type": "POST",
         },
         "columnDefs": [{
@@ -796,7 +759,7 @@
 
     function deleteData_keranjang(id) {
       $.ajax({
-        url: "<?= base_url('Manajemen_Penjualan/PenjualanBarang/delete_data_keranjang/'); ?>" + id,
+        url: "<?= base_url('Manajemen_Penjualan/PurchaseOrder/delete_data_keranjang/'); ?>" + id,
         async: false,
         success: function(data) {
           $('#datatable-keranjang-penjualan').DataTable().ajax.reload();
@@ -837,7 +800,7 @@
 
     function push_total_perhitungan(no_order, pajak, ongkir) {
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/push_total_perhitungan'); ?>",
+        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrder/push_total_perhitungan'); ?>",
         type: "post",
         data: {
           no_order_penjualan: no_order,
@@ -868,7 +831,7 @@
       var dp = $('#dp');
 
       $.ajax({
-        url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/get_total_perhitungan/"); ?>' + no_order,
+        url: '<?= base_url("Manajemen_Penjualan/PurchaseOrder/get_total_perhitungan/"); ?>' + no_order,
         type: "POST",
         dataType: "JSON",
         async: false,
@@ -994,7 +957,7 @@
 
       if (kode_diskon !== "") {
         $.ajax({
-          url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/get_diskon/"); ?>' + kode_diskon,
+          url: '<?= base_url("Manajemen_Penjualan/PurchaseOrder/get_diskon/"); ?>' + kode_diskon,
           type: "POST",
           dataType: "JSON",
           async: false,
@@ -1072,7 +1035,7 @@
 
     function simpan_order(no_order, id_pelanggan, nama_pelanggan, alamat, nomor_telepon) {
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/simpan_order/'); ?>",
+        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrder/simpan_order/'); ?>",
         type: "post",
         data: {
           no_order_penjualan: no_order,
@@ -1154,7 +1117,7 @@
         }).then((result) => {
           if (result.value) {
             $.ajax({
-              url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/bayar_checkout/'); ?>",
+              url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrder/bayar_checkout/'); ?>",
               type: "post",
               data: {
                 no_order_penjualan: no_order_penjualan,
@@ -1184,7 +1147,7 @@
                   confirmButtonText: 'Cetak Faktur ?'
                 }).then((result) => {
                   if (result.value) {
-                    window.location.replace("<?= base_url('Manajemen_Penjualan/PenjualanBarang/Invoice/'); ?>" + no_order_penjualan)
+                    window.location.replace("<?= base_url('Manajemen_Penjualan/PurchaseOrder/Invoice/'); ?>" + no_order_penjualan)
                   }
                 });
                 $('#checkout_modal').modal('hide');
@@ -1266,7 +1229,7 @@
 
     function cek_pelanggan(id_pelanggan = "") {
       return $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/cek_pelanggan/'); ?>" + id_pelanggan,
+        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrder/cek_pelanggan/'); ?>" + id_pelanggan,
         type: "post",
         dataType: "text",
         async: false

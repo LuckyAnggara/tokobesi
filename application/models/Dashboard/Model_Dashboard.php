@@ -324,7 +324,7 @@ class Model_Dashboard extends CI_Model
     function get_data_laba_total($hari, $bulan, $tahun)
     {
         $tanggal = $tahun . "-" . $bulan . "-" . $hari;
-        $tanggalawal = $tahun . "-" . $bulan . "-" . 01;
+        $tanggalawal = $tahun . "-" . 01 . "-" . 01;
         $tanggal1 =  date("Y-m-d 00:00:00", strtotime($tanggalawal));
         $tanggal2 =  date("Y-m-d 23:59:59", strtotime($tanggal));
 

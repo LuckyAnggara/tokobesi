@@ -13,6 +13,9 @@
                                     <ul>
                                         <li><a href="<?= base_url('Manajemen_Penjualan/PenjualanBarang'); ?>">Penjualan Barang</a></li>
                                         <hr>
+                                        <li><a href="<?= base_url('manajemen_penjualan/purchaseordersales'); ?>">P.O Sales - Admin</a></li>
+                                        <li><a href="<?= base_url('manajemen_penjualan/purchaseorder'); ?>">P.O Sales - Sales</a></li>
+                                        <hr>
                                         <li><a href="<?= base_url('Manajemen_Penjualan/DaftarTransaksiPenjualan'); ?>">Daftar Transaksi</a></li>
                                         <li><a href="<?= base_url('Manajemen_Penjualan/ReturPenjualan'); ?>">Retur Transaksi Penjualan</a></li>
                                     </ul>
