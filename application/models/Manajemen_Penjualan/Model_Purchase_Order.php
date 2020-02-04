@@ -332,9 +332,14 @@ class Model_Purchase_Order extends CI_Model
         $this->db->join('master_barang', 'master_barang.kode_barang =temp_tabel_keranjang_penjualan.kode_barang');
         $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
         $this->db->where('no_order_penjualan', $post['no_order']);
-        $this->db->where('temp_tabel_keranjang_penjualan.user', $this->session->userdata['username'],);
+        $this->db->where('temp_tabel_keranjang_penjualan.user', $this->session->userdata['username']);
         $this->db->where('status', 1);
 
         return $this->db->get();
+    }
+
+    function setDataReview()
+    {
+        
     }
 }

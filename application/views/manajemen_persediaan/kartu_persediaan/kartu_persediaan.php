@@ -16,7 +16,7 @@
                 <div class="row" id="barang_div">
                     <div class="col-12">
                         <div class="form-group row">
-                            <label class="col-3 col-sm-form-label m-t-10">Kode Barang</label>
+                            <label class="col-3 col-sm-form-label m-t-10">Kode</label>
                             <div class="col-9">
                                 <select id="select_nama_barang" name="select_nama_barang" type="text" class="form-control"></select>
                             </div>
@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group row">
-                            <label class="col-3 col-sm-form-label  m-t-10 ">Nama Barang</label>
+                            <label class="col-3 col-sm-form-label  m-t-10 ">Nama</label>
                             <div class="col-9">
                                 <input type="text" class="form-control" id="nama_barang" readonly>
                             </div>

@@ -45,10 +45,10 @@ class PurchaseOrder extends CI_Controller
         $data['no_order'] = $this->session->userdata('no_order_dummy');
         $data['css'] = 'manajemen_penjualan/purchase_order/purchase_order_css';
         $data['title'] = "Penjualan Barang";
-        $this->load->view('template/template_header_sales', $data);
+        $this->load->view('template/template_sales/template_header_sales', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_penjualan/purchase_order/purchase_order', $data);
-        $this->load->view('template/template_right_sales');
+        $this->load->view('template/template_sales/template_right_sales');
         $this->load->view('manajemen_penjualan/purchase_order/purchase_order_modal');
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');

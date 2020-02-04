@@ -34,6 +34,8 @@
 
   <script src="<?= base_url('assets/'); ?>plugins/jquery-loader/jquery.loading.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
+
 
   <!-- script sendiri   // script Radio Fitur Simple dan Adnvace
   // init hide advance search -->
@@ -96,8 +98,8 @@
         $('#dummy_harga_jual').attr('readonly', true);
         $('#qty').val(1);
         $('#diskon').val(0);
-        $("#select_nama_barang").val(null).trigger('change');
-        $('#cari_barang').val('');
+        // $("#select_nama_barang").val(null).trigger('change');
+        // $('#cari_barang').val('');
       });
 
       $('#checkout_modal').on('hidden.bs.modal', function(e) {
@@ -134,28 +136,6 @@
       //   url: '<?= base_url("Manajemen_Penjualan/PurchaseOrder/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
       // });
     });
-
-    $('#advance').change(function() {
-      $("#select_nama_barang").select2('destroy').hide();
-      $('#select_nama_barang').val(null).trigger('change');
-      $('#cari_barang').show();
-    });
-    $('#check_type').change(function() {
-      if (this.checked) {
-        $("#select_nama_barang").select2('destroy').hide();
-        $('#select_nama_barang').val(null).trigger('change');
-        $('#cari_barang').show();
-      } else {
-        cari_versi_select2();
-        $('#cari_barang').hide();
-        $('#cari_barang').val('');
-        $("#result_page").empty();
-        display_none = '<div class="col-12 text-center"><p>Cari Data Barang di Kolom Pencarian</p></div>';
-        $("#result_page").append(display_none);
-      }
-    })
-
-
 
     // script formatRupiah
     function normalrupiah(angka) {
@@ -468,12 +448,9 @@
         );
       }
     }
-
-
     // add ke keranjang ketika tambah di klik
 
     $('#button-penjualan-add').on('click', function() {
-
       var kode_barang = $('#label_kode_barang').text();
       var jumlah = $('#qty').val();
       var harga_jual = $('#harga_jual').val();
@@ -493,8 +470,10 @@
       } else {
         if (jumlah <= parseInt(persediaan)) {
           push_keranjang_belanja(kode_barang, jumlah, harga_jual, diskon);
-          push_persediaan_temporary_tambah(jumlah, kode_barang);
+          notiftoast();
+          //push_persediaan_temporary_tambah(jumlah, kode_barang);
           notifKeranjang();
+          search($('#cari_barang').val());
         } else {
           Swal.fire(
             'Quantitas Melebihi Persediaan',
@@ -503,13 +482,33 @@
           )
         }
       }
-      $('#select_nama_barang').val(null).trigger('change');
-      $('#cari_barang').val('');
-      $("#result_page").empty();
-      display_none = '<div class="col-12 text-center"><p>Cari Data Barang di Kolom Pencarian</p></div>';
-      $("#result_page").append(display_none);
-
+      // $('#select_nama_barang').val(null).trigger('change');
+      // $('#cari_barang').val('');
+      // $("#result_page").empty();
+      // display_none = '<div class="col-12 text-center"><p>Cari Data Barang di Kolom Pencarian</p></div>';
+      // $("#result_page").append(display_none);
     });
+
+    function notiftoast() {
+      Command: toastr["success"]('Barang ditambahkan ke keranjang')
+      toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-full-width",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "200",
+        "hideDuration": "500",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      }
+    }
 
     function overide_harga() {
       $('#modal_password').modal('show');
@@ -564,8 +563,6 @@
           $("#loading_tambah").loading();
         },
         success: function(data) {
-          $('#datatable-keranjang-penjualan').DataTable().ajax.reload();
-          total_harga_keranjang();
           $('#loading_tambah').loading('stop');
         }
       })
