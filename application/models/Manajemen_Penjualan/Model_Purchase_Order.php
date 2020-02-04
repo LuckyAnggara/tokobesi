@@ -9,6 +9,34 @@ class Model_Purchase_Order extends CI_Model
         $this->load->helper(array('form', 'url', 'string'));
     }
 
+    function cekData($string)
+    {
+        $this->db->select('*');
+        $this->db->from('temp_purchase_order');
+        $this->db->where('no_order', $string);
+        $cek = $this->db->get()->num_rows();
+        if ($cek > 0) {
+            return $string;
+        } else {
+            return null;
+        }
+    }
+
+    function cekDataMaster($string)
+    {
+        $this->db->select('*');
+        $this->db->from('master_purchase_order');
+        $this->db->where('no_order', $string);
+        $cek = $this->db->get()->num_rows();
+        if ($cek > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
     function get_data_by_id($id_pelanggan)
     {
         $this->db->select('*');
@@ -17,8 +45,6 @@ class Model_Purchase_Order extends CI_Model
 
         return $this->db->get()->row_array();
     }
-
-
 
     function get_data_barang($string)
     {
@@ -205,12 +231,12 @@ class Model_Purchase_Order extends CI_Model
     {
 
         $this->db->select_sum('diskon');
-        $this->db->where('no_order_penjualan', $post['no_order_penjualan']);
-        $diskon = $this->db->get('temp_tabel_keranjang_penjualan')->row_array();
+        $this->db->where('no_order', $post['no_order']);
+        $diskon = $this->db->get('temp_purchase_order')->row_array();
 
         $this->db->select_sum('total_harga');
-        $this->db->where('no_order_penjualan', $post['no_order_penjualan']);
-        $total_harga = $this->db->get('temp_tabel_keranjang_penjualan')->row_array();
+        $this->db->where('no_order', $post['no_order']);
+        $total_harga = $this->db->get('temp_purchase_order')->row_array();
 
         $total_keranjang = $total_harga['total_harga'] + $diskon['diskon'];
 
@@ -218,12 +244,11 @@ class Model_Purchase_Order extends CI_Model
 
         $this->db->select('*');
         $this->db->from('tabel_perhitungan_order');
-        $this->db->where('no_order', $post['no_order_penjualan']);
+        $this->db->where('no_order', $post['no_order']);
         $cek = $this->db->get()->num_rows();
 
-
         $data = array(
-            'no_order' => $post['no_order_penjualan'],
+            'no_order' => $post['no_order'],
             'total_keranjang' => $total_keranjang,
             'diskon' => $diskon['diskon'],
             'pajak' => $post['pajak'],
@@ -234,13 +259,14 @@ class Model_Purchase_Order extends CI_Model
         if ($cek < 1) {
             $this->db->insert('tabel_perhitungan_order', $data);
         } else {
-            $this->db->query("DELETE From tabel_perhitungan_order Where no_order = '" . $post['no_order_penjualan'] . "'"); // delete dulu
+            $this->db->query("DELETE From tabel_perhitungan_order Where no_order = '" . $post['no_order'] . "'"); // delete dulu
             $this->db->insert('tabel_perhitungan_order', $data); // lalu tambah
         }
     }
 
-    function get_total_perhitungan($no_order)
+    function get_total_perhitungan($post)
     {
+        $no_order = $post['no_order'];
         $this->db->select('*');
         $this->db->from('tabel_perhitungan_order');
         $this->db->where('no_order', $no_order);
@@ -294,14 +320,14 @@ class Model_Purchase_Order extends CI_Model
     private function _delete_perhitungan($post) // delete di tabel perhitungan karena sudah di proses
     {
         $this->db->select('*');
-        $this->db->where('no_order', $post['no_order_penjualan']);
+        $this->db->where('no_order', $post['no_order']);
         $this->db->delete('tabel_perhitungan_order');
     }
     function cek_nomor_order($no_order)
     {
         $this->db->select('*');
-        $this->db->from('master_penjualan');
-        $this->db->where('no_order_penjualan',  $no_order);
+        $this->db->from('master_purchase_order');
+        $this->db->where('no_order',  $no_order);
         return $this->db->get()->num_rows();
     }
 
@@ -338,8 +364,86 @@ class Model_Purchase_Order extends CI_Model
         return $this->db->get();
     }
 
-    function setDataReview()
+    function setDataReview($post)
     {
-        
+        $no_order = $post['no_order'];
+        $this->db->select('*');
+        $this->db->from('temp_purchase_order');
+        $this->db->join('master_barang', 'master_barang.kode_barang = temp_purchase_order.kode_barang');
+        $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
+        $this->db->where('no_order', $no_order);
+        $this->db->where('status', $no_order);
+        return $this->db->get()->result_array();
+    }
+
+    function push_review_temp($post)
+    {
+        $no_order = $post['no_order'];
+        $this->db->query("INSERT INTO `temp_purchase_order`(`no_order`, `kode_barang`, `jumlah_penjualan`, `harga_jual`,`diskon`,`total_harga`,`tanggal_input`) SELECT `no_order_penjualan`, `kode_barang`, `jumlah_penjualan`, `harga_jual`,`diskon`,`total_harga`,`tanggal_input` FROM temp_tabel_keranjang_penjualan WHERE no_order_penjualan ='" . $no_order . "'");
+    }
+
+    function proses_ke_admin($post)
+    {
+        // input data baru
+
+        if ($post['id_pelanggan'] == "") {
+            $id_pelanggan = $this->_createPelangganDummy($post);
+        } else {
+            $id_pelanggan = $post['id_pelanggan'];
+        }
+
+        $data = array(
+            'no_order' => $post['no_order'],
+            'id_pelanggan' => $id_pelanggan,
+            'tanggal_input' =>  date("Y-m-d H:i:s"),
+            'sales' => $this->session->userdata['username'],
+            'status_po' => 1, // 1 artinya proses di admin
+        );
+
+        $this->db->insert('master_purchase_order', $data);
+
+        // update data total penjualan
+        $this->db->query("UPDATE master_purchase_order INNER JOIN tabel_perhitungan_order ON tabel_perhitungan_order.no_order = master_purchase_order.no_order SET master_purchase_order.total_penjualan = tabel_perhitungan_order.total_keranjang, master_purchase_order.diskon = tabel_perhitungan_order.diskon, master_purchase_order.pajak_masukan = tabel_perhitungan_order.pajak, master_purchase_order.ongkir = tabel_perhitungan_order.ongkir, master_purchase_order.grand_total = tabel_perhitungan_order.grand_total where  tabel_perhitungan_order.no_order = '" . $post['no_order'] . "'");
+
+        // tambah detail penjualan
+        $this->_ubah_status_detail_po($post);
+
+        $this->_delete_perhitungan($post);
+
+        $this->_update_timeline_po($post);
+    }
+
+    private function _ubah_status_detail_po($post)
+    {
+        $data = array(
+            'status' => 1
+        );
+        $this->db->where('no_order', $post['no_order']);
+        $this->db->update('temp_purchase_order', $data);
+    }
+
+    private function _update_timeline_po($post)
+
+    {
+
+        $this->db->select('no_order');
+        $this->db->from('timeline_po');
+        $this->db->where('no_order', $post['no_order']);
+        $cek = $this->db->get()->num_rows();
+
+        if ($cek > 1) {
+            $urutan = $cek + 1;
+        } else {
+            $urutan = 1;
+        }
+
+        $data = array(
+            'no_order' => $post['no_order'],
+            'tanggal' =>  date("Y-m-d H:i:s"),
+            'pesan' => $post['pesan'],
+            'urutan' => $urutan,
+        );
+
+        $this->db->insert('timeline_po', $data);
     }
 }

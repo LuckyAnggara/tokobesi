@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 03, 2020 at 04:31 PM
+-- Generation Time: Feb 04, 2020 at 04:11 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -429,7 +429,7 @@ CREATE TABLE `master_persediaan` (
 
 INSERT INTO `master_persediaan` (`id`, `kode_barang`, `jumlah_persediaan`, `jumlah_keranjang`, `jumlah_persediaan_sementara`, `tanggal_input`, `no_order_terakhir`) VALUES
 (0, 'K001', -2322, 0, 0, '2020-01-22 15:46:02', ''),
-(15, 'P001', -835.5, -40.5, 0, '2020-01-21 16:22:28', ''),
+(15, 'P001', 564.5, -1440.5, 0, '2020-01-21 16:22:28', ''),
 (16, 'B001', -4595, -15, 0, '2020-01-21 04:28:53', '');
 
 -- --------------------------------------------------------
@@ -463,21 +463,26 @@ INSERT INTO `master_piutang` (`id`, `no_faktur`, `tanggal_jatuh_tempo`, `down_pa
 
 CREATE TABLE `master_purchase_order` (
   `id` int(11) NOT NULL,
-  `no_po` varchar(255) NOT NULL,
+  `no_order` varchar(255) NOT NULL,
   `sales` varchar(255) NOT NULL,
-  `no_faktur` varchar(255) NOT NULL,
   `id_pelanggan` varchar(255) NOT NULL,
   `total_penjualan` double NOT NULL,
   `diskon` double NOT NULL,
   `pajak_masukan` double NOT NULL,
   `ongkir` double NOT NULL,
   `grand_total` double NOT NULL,
-  `status_bayar` int(11) NOT NULL,
-  `tanggal_jatuh_tempo` datetime DEFAULT NULL,
   `tanggal_input` datetime NOT NULL,
   `user` varchar(255) NOT NULL,
   `status_po` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `master_purchase_order`
+--
+
+INSERT INTO `master_purchase_order` (`id`, `no_order`, `sales`, `id_pelanggan`, `total_penjualan`, `diskon`, `pajak_masukan`, `ongkir`, `grand_total`, `tanggal_input`, `user`, `status_po`) VALUES
+(3, 'PO.0442041', 'lucky15', 'LZQ9840', 530000000, 0, 53000000, 0, 583000000, '2020-02-04 15:35:44', '', 1),
+(4, 'PO.0442037', 'lucky15', 'LZQ9840', 50000000, 0, 0, 0, 50000000, '2020-02-04 16:07:18', '', 1);
 
 -- --------------------------------------------------------
 
@@ -730,6 +735,46 @@ INSERT INTO `tabel_perhitungan_order` (`no_order`, `total_keranjang`, `diskon`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `temp_purchase_order`
+--
+
+CREATE TABLE `temp_purchase_order` (
+  `id` int(11) NOT NULL,
+  `no_order` varchar(255) NOT NULL,
+  `kode_barang` varchar(255) NOT NULL,
+  `jumlah_penjualan` double NOT NULL,
+  `harga_jual` double NOT NULL,
+  `diskon` double NOT NULL,
+  `total_harga` double NOT NULL,
+  `tanggal_input` date NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `temp_purchase_order`
+--
+
+INSERT INTO `temp_purchase_order` (`id`, `no_order`, `kode_barang`, `jumlah_penjualan`, `harga_jual`, `diskon`, `total_harga`, `tanggal_input`, `status`) VALUES
+(1, 'PO.0442039', 'BES0002', 1, 100000, 0, 100000, '2020-02-04', 0),
+(2, 'PO.0442039', 'BES0002', 1, 100000, 0, 100000, '2020-02-04', 0),
+(4, 'PO.0442049', 'BES0002', 50, 100000, 0, 5000000, '2020-02-04', 0),
+(5, 'PO.0442058', 'BES0002', 100, 100000, 0, 10000000, '2020-02-04', 0),
+(6, 'PO.0442080', 'BES0002', 500, 100000, 0, 50000000, '2020-02-04', 0),
+(7, 'PO.0442080', 'BES0002', 100, 100000, 0, 10000000, '2020-02-04', 0),
+(9, 'PO.0442028', 'BES0002', 200, 100000, 0, 20000000, '2020-02-04', 0),
+(10, 'PO.0442028', 'P001', 200, 1200000, 0, 240000000, '2020-02-04', 0),
+(12, 'PO.0442091', 'BES0002', 500, 100000, 0, 50000000, '2020-02-04', 0),
+(13, 'PO.0442091', 'P001', 100, 1200000, 0, 120000000, '2020-02-04', 0),
+(15, 'PO.0442061', 'BES0002', 500, 100000, 0, 50000000, '2020-02-04', 0),
+(16, 'PO.0442061', 'P001', 500, 1200000, 0, 600000000, '2020-02-04', 0),
+(18, 'PO.0442041', 'BES0002', 200, 100000, 0, 20000000, '2020-02-04', 1),
+(19, 'PO.0442041', 'BES0002', 300, 100000, 0, 30000000, '2020-02-04', 1),
+(20, 'PO.0442041', 'P001', 400, 1200000, 0, 480000000, '2020-02-04', 1),
+(21, 'PO.0442037', 'BES0002', 500, 100000, 0, 50000000, '2020-02-04', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `temp_tabel_keranjang_pembelian`
 --
 
@@ -764,6 +809,28 @@ CREATE TABLE `temp_tabel_keranjang_penjualan` (
   `user` varchar(255) NOT NULL,
   `tanggal_input` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `timeline_po`
+--
+
+CREATE TABLE `timeline_po` (
+  `id` int(11) NOT NULL,
+  `no_order` varchar(255) NOT NULL,
+  `urutan` int(11) NOT NULL,
+  `tanggal` datetime NOT NULL,
+  `pesan` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `timeline_po`
+--
+
+INSERT INTO `timeline_po` (`id`, `no_order`, `urutan`, `tanggal`, `pesan`) VALUES
+(1, 'PO.0442041', 1, '2020-02-04 15:35:44', 'dgssdg'),
+(2, 'PO.0442037', 1, '2020-02-04 16:07:18', 'proses yapss');
 
 --
 -- Indexes for dumped tables
@@ -883,7 +950,7 @@ ALTER TABLE `master_piutang`
 --
 ALTER TABLE `master_purchase_order`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `no_po` (`no_po`);
+  ADD UNIQUE KEY `no_po` (`no_order`);
 
 --
 -- Indexes for table `master_saldo_awal`
@@ -955,6 +1022,12 @@ ALTER TABLE `tabel_perhitungan_order`
   ADD PRIMARY KEY (`no_order`);
 
 --
+-- Indexes for table `temp_purchase_order`
+--
+ALTER TABLE `temp_purchase_order`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `temp_tabel_keranjang_pembelian`
 --
 ALTER TABLE `temp_tabel_keranjang_pembelian`
@@ -964,6 +1037,12 @@ ALTER TABLE `temp_tabel_keranjang_pembelian`
 -- Indexes for table `temp_tabel_keranjang_penjualan`
 --
 ALTER TABLE `temp_tabel_keranjang_penjualan`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `timeline_po`
+--
+ALTER TABLE `timeline_po`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1022,13 +1101,19 @@ ALTER TABLE `master_piutang`
 -- AUTO_INCREMENT for table `master_purchase_order`
 --
 ALTER TABLE `master_purchase_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `master_saldo_awal`
 --
 ALTER TABLE `master_saldo_awal`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `temp_purchase_order`
+--
+ALTER TABLE `temp_purchase_order`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `temp_tabel_keranjang_pembelian`
@@ -1040,7 +1125,13 @@ ALTER TABLE `temp_tabel_keranjang_pembelian`
 -- AUTO_INCREMENT for table `temp_tabel_keranjang_penjualan`
 --
 ALTER TABLE `temp_tabel_keranjang_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+
+--
+-- AUTO_INCREMENT for table `timeline_po`
+--
+ALTER TABLE `timeline_po`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables

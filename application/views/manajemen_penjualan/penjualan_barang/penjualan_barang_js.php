@@ -1145,7 +1145,7 @@
           proses();
         }
       }
-      
+
 
       function proses() {
         Swal.fire({
@@ -1178,32 +1178,32 @@
                 $("#loader").show();
               },
               success: function(data) {
-                if(data == "error"){
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Ada Kesalahan!',
-                });
-
-                revertProsesError();
-                }else{
+                if (data == "error") {
                   Swal.fire({
-                  title: 'Paid!!',
-                  text: "Order " + no_order_penjualan + " telah di bayar!",
-                  icon: 'success',
-                  showCancelButton: false,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Cetak Faktur ?'
-                }).then((result) => {
-                  if (result.value) {
-                    window.location.replace("<?= base_url('Manajemen_Penjualan/PenjualanBarang/Invoice/'); ?>" + no_order_penjualan)
-                  }
-                });
-                $('#checkout_modal').modal('hide');
-                sessionStorage.setItem("no_order", 'xxx');
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ada Kesalahan!',
+                  });
+
+                  revertProsesError();
+                } else {
+                  Swal.fire({
+                    title: 'Paid!!',
+                    text: "Order " + no_order_penjualan + " telah di bayar!",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Cetak Faktur ?'
+                  }).then((result) => {
+                    if (result.value) {
+                      window.location.replace("<?= base_url('Manajemen_Penjualan/PenjualanBarang/Invoice/'); ?>" + no_order_penjualan)
+                    }
+                  });
+                  $('#checkout_modal').modal('hide');
+                  sessionStorage.setItem("no_order", 'xxx');
                 }
-               
+
               },
               complete: function(data) {
                 // Hide image container
@@ -1216,21 +1216,21 @@
       }
     });
 
-    function revertProsesError(){
-          $.ajax({
-              url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/revert_error/'); ?>",
-              cache: false,
-              async: false,
-              success: function(data) {
-                if(data == "error"){
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Ada Kesalahan! Silahkan Refresh Halaman',
-                });
-                }
-              }
+    function revertProsesError() {
+      $.ajax({
+        url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/revert_error/'); ?>",
+        cache: false,
+        async: false,
+        success: function(data) {
+          if (data == "error") {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Ada Kesalahan! Silahkan Refresh Halaman',
             });
+          }
+        }
+      });
     }
 
     function init_table_pelanggan() {

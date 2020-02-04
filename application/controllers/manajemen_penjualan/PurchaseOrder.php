@@ -8,7 +8,7 @@ class PurchaseOrder extends CI_Controller
     {
         parent::__construct();
         $this->load->helper('string');
-        $this->load->model('Manajemen_Penjualan/Model_Purchase_Order', 'ModelPO');
+        $this->load->model('Manajemen_Penjualan/Model_Purchase_Order', 'modelPO');
         $this->load->model('Manajemen_Persediaan/Model_Persediaan_Barang', 'modelPersediaan');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
 
@@ -26,7 +26,7 @@ class PurchaseOrder extends CI_Controller
 
     function cek_duplikat($no_order)
     {
-        $cek = $this->ModelPO->cek_nomor_order($no_order);
+        $cek = $this->modelPO->cek_nomor_order($no_order);
         if ($cek < 1) {
             $this->session->set_userdata('no_order_dummy', 'PO.' . $no_order);
         } else {
@@ -35,7 +35,7 @@ class PurchaseOrder extends CI_Controller
     }
     public function clear_keranjang_belanja($no_order_lama)
     {
-        $this->ModelPO->get_data_keranjang_clear($no_order_lama);
+        $this->modelPO->get_data_keranjang_clear($no_order_lama);
     }
 
     public function index()
@@ -58,7 +58,7 @@ class PurchaseOrder extends CI_Controller
 
     public function get_data_pelanggan($id_pelanggan)
     {
-        $data = $this->ModelPO->get_data_by_id($id_pelanggan);
+        $data = $this->modelPO->get_data_by_id($id_pelanggan);
         $output = json_encode($data);
         echo $output;
     }
@@ -66,7 +66,7 @@ class PurchaseOrder extends CI_Controller
     public function get_data_barang($string = null)
     {
         $string = str_replace("%20", " ", $string);
-        $database = $this->ModelPO->get_data_barang($string);
+        $database = $this->modelPO->get_data_barang($string);
         $data = $database->result_array();
         $output = array(
             "recordsTotal" => $this->db->count_all_results(),
@@ -90,12 +90,12 @@ class PurchaseOrder extends CI_Controller
 
     public function push_data_barang()
     {
-        $this->ModelPO->push_data_barang();
+        $this->modelPO->push_data_barang();
     }
 
     public function get_data_keranjang($no_order)
     {
-        $database = $this->ModelPO->get_data_keranjang($no_order);
+        $database = $this->modelPO->get_data_keranjang($no_order);
         $data = $database->result_array();
         $output = array(
             "recordsTotal" => $this->db->count_all_results(),
@@ -108,7 +108,7 @@ class PurchaseOrder extends CI_Controller
 
     public function get_sum_keranjang($no_order)
     {
-        $output = $this->ModelPO->get_sum_keranjang($no_order);
+        $output = $this->modelPO->get_sum_keranjang($no_order);
         $output = json_encode($output);
         echo $output;
     }
@@ -134,18 +134,18 @@ class PurchaseOrder extends CI_Controller
     {
         if (empty($id)) {
         } else {
-            $this->ModelPO->delete_data_keranjang($id); // delete data
+            $this->modelPO->delete_data_keranjang($id); // delete data
         }
     }
 
     public function persediaan_temp_tambah()
     {
-        $this->ModelPO->persediaan_temp_tambah();
+        $this->modelPO->persediaan_temp_tambah();
     }
 
     public function persediaan_temp_batal()
     {
-        $this->ModelPO->persediaan_temp_batal();
+        $this->modelPO->persediaan_temp_batal();
     }
 
     public function set_last_no_order($no_order)
@@ -159,19 +159,19 @@ class PurchaseOrder extends CI_Controller
     function push_total_perhitungan()
     {
         $post = $this->input->post();
-        $this->ModelPO->push_total_perhitungan($post);
+        $this->modelPO->push_total_perhitungan($post);
     }
 
     function get_total_perhitungan($no_order)
     {
-        $data = $this->ModelPO->get_total_perhitungan($no_order);
+        $data = $this->modelPO->get_total_perhitungan($no_order);
         $output = json_encode($data);
         echo $output;
     }
 
     function get_diskon($kode_diskon)
     {
-        $data = $this->ModelPO->get_diskon($kode_diskon);
+        $data = $this->modelPO->get_diskon($kode_diskon);
         $output = json_encode($data);
         echo $output;
     }
@@ -179,14 +179,14 @@ class PurchaseOrder extends CI_Controller
     function bayar_checkout()
     {
         $post = $this->input->post();
-        $data = $this->ModelPO->proses_penjualan($post);
+        $data = $this->modelPO->proses_penjualan($post);
     }
 
 
     function cekPasswordDirektur()
     {
         $post = $this->input->post();
-        $output = $this->ModelPO->cekPasswordDirektur($post);
+        $output = $this->modelPO->cekPasswordDirektur($post);
         echo $output;
     }
 
@@ -198,7 +198,7 @@ class PurchaseOrder extends CI_Controller
 
     function cek_pelanggan($id_pelanggan = "")
     {
-        $output = $this->ModelPO->cek_pelanggan($id_pelanggan);
+        $output = $this->modelPO->cek_pelanggan($id_pelanggan);
         echo $output;
     }
 
@@ -226,7 +226,7 @@ class PurchaseOrder extends CI_Controller
     function notif_keranjang()
     {
         $post = $this->input->post();
-        $database = $this->ModelPO->notif_keranjang($post);
+        $database = $this->modelPO->notif_keranjang($post);
         $data = $database->result_array();
         $output = array(
             "jumlah"  => $database->num_rows(),
@@ -234,5 +234,11 @@ class PurchaseOrder extends CI_Controller
         );
         $output = json_encode($output);
         echo $output;
+    }
+
+    public function push_review_temp()
+    {
+        $post = $this->input->post();
+        $this->modelPO->push_review_temp($post);
     }
 }
