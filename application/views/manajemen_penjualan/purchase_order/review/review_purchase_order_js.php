@@ -17,7 +17,6 @@
 <!-- switchery -->
 <script src="<?= base_url('assets/'); ?>plugins/switchery/switchery.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
 <!-- scrpt satuan -->
 <script>
     function formatRupiah(angka, prefix) {
@@ -352,13 +351,16 @@
                 $.LoadingOverlay("show");
             },
             success: function(data) {
-                Swal.fire(
-                    'Good job!',
-                    'P.O Sudah dikirim ke Admin!',
-                    'success'
-                )
+                Swal.fire({
+                        title: "Good job",
+                        text: "You clicked the button!",
+                        icon: "success"
+                    },
+                    function() {
+                        location.reload();
+                    }
+                );
 
-                setTimeout(location.reload(), 1000);
             },
             complete: function() {
                 $.LoadingOverlay("hide");

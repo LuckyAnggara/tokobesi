@@ -405,7 +405,7 @@
           dataType: "JSON",
           async: false,
           beforeSend: function() {
-            $("#result_page").loading();
+            $("#loading").LoadingOverlay('show');
           },
           success: function(data) {
             if (data.jumlah_data > 0) {
@@ -420,6 +420,9 @@
               $("#result_page").append(display_none);
             }
             $("#result_page").loading('stop');
+          },
+          complete: function() {
+            $("#loading").LoadingOverlay("hide", true);
           }
         });
       } else {
