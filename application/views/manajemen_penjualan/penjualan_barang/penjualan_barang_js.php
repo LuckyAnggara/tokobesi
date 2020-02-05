@@ -400,7 +400,7 @@
           dataType: "JSON",
           async: false,
           beforeSend: function() {
-            $("#result_page").loading();
+            $("#result_page").LoadingOverlay("show");
           },
           success: function(data) {
             if (data.jumlah_data > 0) {
@@ -414,8 +414,10 @@
               display_none = '<div class="col-12 text-center"><p>Data Barang ' + kata_kunci + ' tidak ditemukan </p></div>';
               $("#result_page").append(display_none);
             }
-            $("#result_page").loading('stop');
-          }
+          },
+          complete: function() {
+                $("#result_page").LoadingOverlay("hide", true);
+            }
         });
       } else {
         $("#result_page").empty();
@@ -506,7 +508,6 @@
         if (jumlah <= parseInt(persediaan)) {
           push_keranjang_belanja(kode_barang, jumlah, harga_jual, diskon);
           push_persediaan_temporary_tambah(jumlah, kode_barang);
-
           // $('#modal_detail_penjualan').modal('hide');
         } else {
           Swal.fire(
@@ -574,13 +575,16 @@
         cache: false,
         async: false,
         beforeSend: function() {
-          $("#loading_tambah").loading();
-        },
+            $("#modal_detail_penjualan").LoadingOverlay("show");
+          },
         success: function(data) {
           $('#datatable-keranjang-penjualan').DataTable().ajax.reload();
           total_harga_keranjang();
           $('#loading_tambah').loading('stop');
-        }
+        },
+        complete: function() {
+                $("#modal_detail_penjualan").LoadingOverlay("hide", true);
+            }
       })
     }
 
@@ -1175,7 +1179,7 @@
               async: false,
               beforeSend: function() {
                 // Show image container
-                $("#loader").show();
+                $.LoadingOverlay("show");
               },
               success: function(data) {
                 if (data == "error") {
@@ -1207,7 +1211,7 @@
               },
               complete: function(data) {
                 // Hide image container
-                $("#loader").hide();
+                $.LoadingOverlay("hide");
               }
             });
           }

@@ -355,8 +355,7 @@
                         title: "Good job",
                         text: "You clicked the button!",
                         icon: "success"
-                    },
-                    function() {
+                    }).then(function() { 
                         location.reload();
                     }
                 );

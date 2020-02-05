@@ -446,4 +446,12 @@ class Model_Purchase_Order extends CI_Model
 
         $this->db->insert('timeline_po', $data);
     }
+
+    function timeline($string)
+    {
+        $this->db->select('*');
+        $this->db->from('timeline_po');
+        $this->db->where('no_order', $string);
+        return $this->db->get()->result_array();
+    }
 }

@@ -1,3 +1,77 @@
+<?php 
+
+function warna()
+{
+    $my_array = array("danger","primary","success","warning","purple","invers","info");
+    $k = array_rand($my_array);
+    $v = $my_array[$k];
+    return $v;
+}
+
+function urutan($urutan)
+{
+    if ($urutan % 2 == 0){ //Kondisi
+        return "alt";
+    }else {
+        return "";
+    }
+}
+
+function ago($timestamp)
+{
+    //type cast, current time, difference in timestamps
+    $timestamp      = strtotime($timestamp);
+    $current_time   = time();
+    $diff           = $current_time - $timestamp;
+    
+    //intervals in seconds
+    $intervals      = array (
+        'tahun' => 31556926, 'bulan' => 2629744, 'minggu' => 604800, 'hari' => 86400, 'jam' => 3600, 'menit'=> 60
+    );
+    
+    //now we just find the difference
+    if ($diff == 0)
+    {
+        return 'just now';
+    }    
+    if ($diff < 60)
+    {
+        return $diff == 1 ? $diff . ' detik lalu' : $diff . ' detik lalu';
+    }        
+    if ($diff >= 60 && $diff < $intervals['jam'])
+    {
+        $diff = floor($diff/$intervals['menit']);
+        return $diff == 1 ? $diff . ' menit lalu' : $diff . ' menit lalu';
+    }        
+    if ($diff >= $intervals['jam'] && $diff < $intervals['hari'])
+    {
+        $diff = floor($diff/$intervals['jam']);
+        return $diff == 1 ? $diff . ' jam lalu' : $diff . ' jam lalu';
+    }    
+    if ($diff >= $intervals['hari'] && $diff < $intervals['minggu'])
+    {
+        $diff = floor($diff/$intervals['hari']);
+        return $diff == 1 ? $diff . ' hari lalu' : $diff . ' hari lalu';
+    }    
+    if ($diff >= $intervals['minggu'] && $diff < $intervals['bulan'])
+    {
+        $diff = floor($diff/$intervals['minggu']);
+        return $diff == 1 ? $diff . ' minggu lalu' : $diff . ' minggu lalu';
+    }    
+    if ($diff >= $intervals['bulan'] && $diff < $intervals['tahun'])
+    {
+        $diff = floor($diff/$intervals['bulan']);
+        return $diff == 1 ? $diff . ' bulan lalu' : $diff . ' bulan lalu';
+    }    
+    if ($diff >= $intervals['tahun'])
+    {
+        $diff = floor($diff/$intervals['tahun']);
+        return $diff == 1 ? $diff . ' tahun lalu' : $diff . ' tahun lalu';
+    }
+}
+
+?>
+
 <div class="container-fluid">
     <!-- Page-Title -->
     <div class="row">
@@ -21,182 +95,22 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="timeline">
-                <article class="timeline-item alt">
-                    <div class="text-right">
-                        <div class="time-show first">
-                            <a href="#" class="btn btn-custom w-lg">Today</a>
-                        </div>
-                    </div>
-                </article>
-                <article class="timeline-item alt">
+            <?php foreach ($timeline as $key => $value) :?>
+                <article class="timeline-item <?= urutan($value['urutan']);?>">
                     <div class="timeline-desk">
                         <div class="panel">
                             <div class="panel-body">
-                                <span class="arrow-alt"></span>
-                                <span class="timeline-icon bg-danger"><i class="mdi mdi-circle"></i></span>
-                                <h4 class="text-danger">1 hour ago</h4>
-                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                <p>Dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde? </p>
+                                <span class="arrow-<?= urutan($value['urutan']);?>"></span>
+                                <span class="timeline-icon bg-<?= warna();?>"><i class="mdi mdi-circle"></i></span>
+                                <h4 class="text-<?= warna();?>"><?= ago($value['tanggal']);?></h4>
+                                <p class="timeline-date text-muted"><small><?= date('H:i',strtotime($value['tanggal']));?></small></p>
+                                <p><?= $value['pesan'];?></p>
                             </div>
                         </div>
                     </div>
                 </article>
-                <article class="timeline-item ">
-                    <div class="timeline-desk">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <span class="arrow"></span>
-                                <span class="timeline-icon bg-success"><i class="mdi mdi-circle"></i></span>
-                                <h4 class="text-success">2 hours ago</h4>
-                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                <p>consectetur adipisicing elit. Iusto, optio, dolorum <a href="#">John deon</a> provident rerum aut hic quasi placeat iure tempora laudantium </p>
-
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                <article class="timeline-item alt">
-                    <div class="timeline-desk">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <span class="arrow-alt"></span>
-                                <span class="timeline-icon bg-primary"><i class="mdi mdi-circle"></i></span>
-                                <h4 class="text-primary">10 hours ago</h4>
-                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                <p>3 new photo Uploaded on facebook fan page</p>
-                                <div class="album">
-                                    <a href="#">
-                                        <img alt="" src="assets/images/small/img1.jpg">
-                                    </a>
-                                    <a href="#">
-                                        <img alt="" src="assets/images/small/img2.jpg">
-                                    </a>
-                                    <a href="#">
-                                        <img alt="" src="assets/images/small/img3.jpg">
-                                    </a>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                <article class="timeline-item">
-                    <div class="timeline-desk">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <span class="arrow"></span>
-                                <span class="timeline-icon bg-purple"><i class="mdi mdi-circle"></i></span>
-                                <h4 class="text-purple">14 hours ago</h4>
-                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                <p>Outdoor visit at California State Route 85 with John Boltana &
-                                    Harry Piterson regarding to setup a new show room.</p>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                <article class="timeline-item alt">
-                    <div class="timeline-desk">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <span class="arrow-alt"></span>
-                                <span class="timeline-icon"><i class="mdi mdi-circle"></i></span>
-                                <h4 class="text-muted">19 hours ago</h4>
-                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                <p>Jonatha Smith added new milestone <span><a href="#">Pathek</a></span>
-                                    Lorem ipsum dolor sit amet consiquest dio</p>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="timeline-item alt">
-                    <div class="text-right">
-                        <div class="time-show">
-                            <a href="#" class="btn btn-custom w-lg">Yesterday</a>
-                        </div>
-                    </div>
-                </article>
-                <article class="timeline-item">
-                    <div class="timeline-desk">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <span class="arrow"></span>
-                                <span class="timeline-icon bg-warning"><i class="mdi mdi-circle"></i></span>
-                                <h4 class="text-warning">07 January 2016</h4>
-                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                <p>Montly Regular Medical check up at Greenland Hospital by the
-                                    doctor <span><a href="#"> Johm meon </a></span>
-                                </p>
-
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                <article class="timeline-item alt">
-                    <div class="timeline-desk">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <span class="arrow-alt"></span>
-                                <span class="timeline-icon bg-primary"><i class="mdi mdi-circle"></i></span>
-                                <h4 class="text-primary">07 January 2016</h4>
-                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                <p>Download the new updates of Ubold admin dashboard</p>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="timeline-item">
-                    <div class="timeline-desk">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <span class="arrow"></span>
-                                <span class="timeline-icon bg-success"><i class="mdi mdi-circle"></i></span>
-                                <h4 class="text-success">07 January 2016</h4>
-                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                <p>Jonatha Smith added new milestone <span><a class="blue" href="#">crishtian</a></span>
-                                    Lorem ipsum dolor sit amet consiquest dio</p>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                <article class="timeline-item alt">
-                    <div class="text-right">
-                        <div class="time-show">
-                            <a href="#" class="btn btn-custom w-lg">Last Month</a>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="timeline-item alt">
-                    <div class="timeline-desk">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <span class="arrow-alt"></span>
-                                <span class="timeline-icon"><i class="mdi mdi-circle"></i></span>
-                                <h4 class="text-muted">31 December 2015</h4>
-                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                <p>Download the new updates of Ubold admin dashboard</p>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="timeline-item">
-                    <div class="timeline-desk">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <span class="arrow"></span>
-                                <span class="timeline-icon bg-danger"><i class="mdi mdi-circle"> </i></span>
-                                <h4 class="text-danger">16 Decembar 2015</h4>
-                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                <p>Jonatha Smith added new milestone <span><a href="#">prank</a></span>
-                                    Lorem ipsum dolor sit amet consiquest dio</p>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-
+            <?php endforeach;?>
+                
             </div>
         </div>
     </div>

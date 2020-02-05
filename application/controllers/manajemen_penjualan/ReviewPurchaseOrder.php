@@ -22,7 +22,7 @@ class ReviewPurchaseOrder extends CI_Controller
 
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['css'] = 'manajemen_penjualan/purchase_order/purchase_order_css';
-
+        $data['timeline'] = $this->modelPO->timeline($string);
         $data['no_order'] = $this->modelPO->cekData($string);
 
 

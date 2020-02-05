@@ -411,7 +411,7 @@
             if (data.jumlah_data > 0) {
               $("#result_page").empty();
               for (var i in data.data) {
-                var display2 = '<div id="result"  class="col-md-2 col-lg-2 col-sm-1"><div class="card gal-detail thumb"><a type="button" id="wawa" onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].nama_satuan + '\',\'' + data.data[i].harga_satuan + '\')" ><img class="img-thumbnail img-responsive" alt="profile-image" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Tidak ada Gambar"><h5 >' + data.data[i].nama_barang + '</h5><p class="card-text">stok : <b>' + formatSatuan(data.data[i].jumlah_persediaan.toString()) + ' ' + data.data[i].nama_satuan + '</b></p></a></div></div>';
+                var display2 = '<div id="result"  class="col-md-2 col-lg-2 col-sm-1"><div class="card gal-detail thumb"><a type="button" id="wawa" onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].nama_satuan + '\',\'' + data.data[i].harga_satuan + '\')" ><img class="img-thumbnail img-responsive" alt="profile-image" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Tidak ada Gambar"><h5 >' + data.data[i].nama_barang + '</h5><p class="card-text"> Harga : '+ formatRupiah(data.data[i].harga_satuan,'Rp.')+' stok : <b>' + formatSatuan(data.data[i].jumlah_persediaan.toString()) + ' ' + data.data[i].nama_satuan + '</b></p></a></div></div>';
                 $('#result_page').append(display2).fadeIn('slow');
               }
             } else {
@@ -522,24 +522,26 @@
     });
 
     function notiftoast() {
-      Command: toastr["success"]('Barang ditambahkan ke keranjang')
-      toastr.options = {
-        "closeButton": false,
-        "debug": false,
-        "newestOnTop": false,
-        "progressBar": false,
-        "positionClass": "toast-bottom-full-width",
-        "preventDuplicates": false,
-        "onclick": null,
-        "showDuration": "100",
-        "hideDuration": "100",
-        "timeOut": "500",
-        "extendedTimeOut": "200",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-      }
+
+
+toastr.options = {
+  "closeButton": false,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": false,
+  "positionClass": "toast-bottom-full-width",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "5000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+}
+Command: toastr["success"]("Barang ditambahkan ke keranjang")
     }
 
     function overide_harga() {
