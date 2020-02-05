@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 function warna()
 {
-    $my_array = array("danger","primary","success","warning","purple","invers","info");
+    $my_array = array("danger", "primary", "success", "warning", "purple", "invers", "info");
     $k = array_rand($my_array);
     $v = $my_array[$k];
     return $v;
@@ -10,9 +10,9 @@ function warna()
 
 function urutan($urutan)
 {
-    if ($urutan % 2 == 0){ //Kondisi
+    if ($urutan % 2 == 0) { //Kondisi
         return "alt";
-    }else {
+    } else {
         return "";
     }
 }
@@ -23,49 +23,41 @@ function ago($timestamp)
     $timestamp      = strtotime($timestamp);
     $current_time   = time();
     $diff           = $current_time - $timestamp;
-    
+
     //intervals in seconds
-    $intervals      = array (
-        'tahun' => 31556926, 'bulan' => 2629744, 'minggu' => 604800, 'hari' => 86400, 'jam' => 3600, 'menit'=> 60
+    $intervals      = array(
+        'tahun' => 31556926, 'bulan' => 2629744, 'minggu' => 604800, 'hari' => 86400, 'jam' => 3600, 'menit' => 60
     );
-    
+
     //now we just find the difference
-    if ($diff == 0)
-    {
+    if ($diff == 0) {
         return 'just now';
-    }    
-    if ($diff < 60)
-    {
+    }
+    if ($diff < 60) {
         return $diff == 1 ? $diff . ' detik lalu' : $diff . ' detik lalu';
-    }        
-    if ($diff >= 60 && $diff < $intervals['jam'])
-    {
-        $diff = floor($diff/$intervals['menit']);
+    }
+    if ($diff >= 60 && $diff < $intervals['jam']) {
+        $diff = floor($diff / $intervals['menit']);
         return $diff == 1 ? $diff . ' menit lalu' : $diff . ' menit lalu';
-    }        
-    if ($diff >= $intervals['jam'] && $diff < $intervals['hari'])
-    {
-        $diff = floor($diff/$intervals['jam']);
+    }
+    if ($diff >= $intervals['jam'] && $diff < $intervals['hari']) {
+        $diff = floor($diff / $intervals['jam']);
         return $diff == 1 ? $diff . ' jam lalu' : $diff . ' jam lalu';
-    }    
-    if ($diff >= $intervals['hari'] && $diff < $intervals['minggu'])
-    {
-        $diff = floor($diff/$intervals['hari']);
+    }
+    if ($diff >= $intervals['hari'] && $diff < $intervals['minggu']) {
+        $diff = floor($diff / $intervals['hari']);
         return $diff == 1 ? $diff . ' hari lalu' : $diff . ' hari lalu';
-    }    
-    if ($diff >= $intervals['minggu'] && $diff < $intervals['bulan'])
-    {
-        $diff = floor($diff/$intervals['minggu']);
+    }
+    if ($diff >= $intervals['minggu'] && $diff < $intervals['bulan']) {
+        $diff = floor($diff / $intervals['minggu']);
         return $diff == 1 ? $diff . ' minggu lalu' : $diff . ' minggu lalu';
-    }    
-    if ($diff >= $intervals['bulan'] && $diff < $intervals['tahun'])
-    {
-        $diff = floor($diff/$intervals['bulan']);
+    }
+    if ($diff >= $intervals['bulan'] && $diff < $intervals['tahun']) {
+        $diff = floor($diff / $intervals['bulan']);
         return $diff == 1 ? $diff . ' bulan lalu' : $diff . ' bulan lalu';
-    }    
-    if ($diff >= $intervals['tahun'])
-    {
-        $diff = floor($diff/$intervals['tahun']);
+    }
+    if ($diff >= $intervals['tahun']) {
+        $diff = floor($diff / $intervals['tahun']);
         return $diff == 1 ? $diff . ' tahun lalu' : $diff . ' tahun lalu';
     }
 }
@@ -95,22 +87,25 @@ function ago($timestamp)
     <div class="row">
         <div class="col-sm-12">
             <div class="timeline">
-            <?php foreach ($timeline as $key => $value) :?>
-                <article class="timeline-item <?= urutan($value['urutan']);?>">
-                    <div class="timeline-desk">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <span class="arrow-<?= urutan($value['urutan']);?>"></span>
-                                <span class="timeline-icon bg-<?= warna();?>"><i class="mdi mdi-circle"></i></span>
-                                <h4 class="text-<?= warna();?>"><?= ago($value['tanggal']);?></h4>
-                                <p class="timeline-date text-muted"><small><?= date('H:i',strtotime($value['tanggal']));?></small></p>
-                                <p><?= $value['pesan'];?></p>
+                <?php foreach ($timeline as $key => $value) : ?>
+                    <article class="timeline-item <?= urutan($value['urutan']); ?>">
+                        <div class="timeline-desk">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <span class="arrow-<?= urutan($value['urutan']); ?>"></span>
+                                    <span class="timeline-icon bg-<?= warna(); ?>"><i class="mdi mdi-circle"></i></span>
+                                    <h4 class="text-<?= warna(); ?>"><?= ago($value['tanggal']); ?></h4>
+                                    <p class="timeline-date text-muted"><small>pada : <?= date('H:i', strtotime($value['tanggal'])); ?></small></p>
+                                    <hr>
+                                    <p><?= nl2br($value['pesan']); ?></p>
+                                    <hr>
+                                    <p class="text-<?= warna(); ?>"><?= nl2br($value['nama']); ?></p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </article>
-            <?php endforeach;?>
-                
+                    </article>
+                <?php endforeach; ?>
+
             </div>
         </div>
     </div>

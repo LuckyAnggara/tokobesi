@@ -140,13 +140,7 @@
                                 text: 'Cek kembali Username dan Password serta Role',
                             });
                             $('#loginDiv').loading('stop');
-                            // } else if (data == "login") {
-                            //     Swal.fire({
-                            //         icon: 'error',
-                            //         title: 'Oops...',
-                            //         text: 'User sedang Login',
-                            //     });
-                            //     $('#loginDiv').loading('stop');
+
                         } else {
                             window.location.href = "<?php echo base_url('dashboard'); ?>";
                         }

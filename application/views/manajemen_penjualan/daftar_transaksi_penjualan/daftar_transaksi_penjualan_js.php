@@ -19,6 +19,8 @@
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
 
 
+
+
 <!-- script init -->
 <script type="text/javascript">
     $(document).ready(function() {

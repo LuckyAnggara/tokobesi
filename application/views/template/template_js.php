@@ -9,3 +9,4 @@
 <script src="<?= base_url('assets/'); ?>js/jquery.nicescroll.js"></script>
 <script src="<?= base_url('assets/'); ?>js/jquery.slimscroll.js"></script>
 <script src="<?= base_url('assets/'); ?>js/jquery.scrollTo.min.js"></script>
+<script src="<?= base_url('assets/'); ?>js/pusher.js"></script>

@@ -80,5 +80,24 @@ class ReviewPurchaseOrder extends CI_Controller
     {
         $post = $this->input->post();
         $this->modelPO->proses_ke_admin($post);
+        pusher_notif_sales();
+    }
+
+    function pusher_notif_sales()
+    {
+        require_once(APPPATH . 'libraries/vendor/autoload.php');
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+        );
+        $pusher = new Pusher\Pusher(
+            'a198692078b54078587e',
+            'bbcd6e359ab9b8fb37d2',
+            '942885',
+            $options
+        );
+
+        $data['message'] = 'sales';
+        $pusher->trigger('my-channel', 'my-event', $data);
     }
 }

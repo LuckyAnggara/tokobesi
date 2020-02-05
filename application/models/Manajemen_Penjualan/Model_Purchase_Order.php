@@ -9,6 +9,49 @@ class Model_Purchase_Order extends CI_Model
         $this->load->helper(array('form', 'url', 'string'));
     }
 
+    // SCRIPT PO ADMIN
+
+    function get_data_po($post)
+    {
+        $this->db->select('*');
+        $this->db->from('master_purchase_order');
+        $this->db->where('master_purchase_order.tanggal_input >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
+        $this->db->where('master_purchase_order.tanggal_input <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
+        if ($post['status'] !== "") {
+            $this->db->where('status_po', $post['status']);
+        }
+        $this->db->order_by('master_purchase_order.tanggal_input', 'DESC');
+        return $this->db->get();
+    }
+
+    function data_sales($post)
+    {
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('username', $post);
+        return $this->db->get()->row_array();
+    }
+
+    function data_admin($post)
+    {
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('username', $post);
+        return $this->db->get()->row_array();
+    }
+
+    function data_pelanggan($post)
+    {
+        $this->db->select('*');
+        $this->db->from('master_pelanggan');
+        $this->db->where('id_pelanggan', $post);
+        return $this->db->get()->row_array();
+    }
+
+
+
+
+    //SCRIPT PO SALES KEBAWAH
     function cekData($string)
     {
         $this->db->select('*');
@@ -34,7 +77,6 @@ class Model_Purchase_Order extends CI_Model
             return false;
         }
     }
-
 
 
     function get_data_by_id($id_pelanggan)
@@ -133,26 +175,6 @@ class Model_Purchase_Order extends CI_Model
 
     public function persediaan_temp_batal($value)
     {
-
-        $post = $value;
-        $this->db->select('*');
-        $this->db->from('temp_tabel_keranjang_penjualan');
-        $this->db->where('id', $post['id']);
-        $output_keranjang = $this->db->get()->row_array();
-
-        $this->db->select('*');
-        $this->db->from('master_persediaan');
-        $this->db->where('kode_barang', $output_keranjang['kode_barang']);
-        $output_persediaan = $this->db->get()->row_array();
-
-        $data = array(
-            'jumlah_keranjang' => $output_persediaan['jumlah_keranjang'] - $output_keranjang['jumlah_penjualan'],
-            'jumlah_persediaan' => $output_persediaan['jumlah_persediaan'] + $output_keranjang['jumlah_penjualan']
-        );
-        print_r($data);
-
-        $this->db->where('kode_barang', $output_keranjang['kode_barang']);
-        $this->db->update('master_persediaan', $data);
     }
 
     public function get_data_keranjang_clear($no_order)
@@ -442,6 +464,7 @@ class Model_Purchase_Order extends CI_Model
             'tanggal' =>  date("Y-m-d H:i:s"),
             'pesan' => $post['pesan'],
             'urutan' => $urutan,
+            'user' =>  $this->session->userdata['username'],
         );
 
         $this->db->insert('timeline_po', $data);
@@ -451,6 +474,7 @@ class Model_Purchase_Order extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('timeline_po');
+        $this->db->join('master_user', 'master_user.username = timeline_po.user');
         $this->db->where('no_order', $string);
         return $this->db->get()->result_array();
     }
