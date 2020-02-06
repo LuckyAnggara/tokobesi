@@ -19,9 +19,18 @@ class PurchaseOrderSales extends CI_Controller
 
     public function init_no_order()
     {
-        $this->session->unset_userdata('no_order_dummy');
-        $no_order_dummy = date('djy') . random_string('numeric', 2);
-        $this->cek_duplikat($no_order_dummy);
+
+        $cek_last_order = $this->modelPO->cek_last_order();
+
+        if($cek_last_order !== ""){
+            $no_order_dummy = $cek_last_order['no_order_penjualan'];
+            
+        }else{
+            $this->session->unset_userdata('no_order_dummy');
+            $no_order_dummy = date('djy') . random_string('numeric', 2);
+            $this->cek_duplikat($no_order_dummy);
+        }
+       
     }
 
     function cek_duplikat($no_order)

@@ -19,19 +19,16 @@
   <!-- DatePicker Js -->
   <script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
-  
+
   <!-- switchery -->
   <script src="<?= base_url('assets/'); ?>plugins/switchery/switchery.min.js"></script>
 
   <script>
     $(document).ready(function() {
 
-      $(window).bind("unload", function(e) {
-        e.preventDefault();
-        console.log(sessionStorage.getItem("no_order"))
-        clear_data(sessionStorage.getItem("no_order"));
-        return '>>>>>Before You Go<<<<<<<< \n bro!!Working';
-      })
+      // $(window).on("unload", function(e) {
+      //   clear_data(sessionStorage.getItem("no_order"));
+      // });
 
 
       $('#modal_detail_penjualan').on('hidden.bs.modal', function(e) {
@@ -98,7 +95,7 @@
             },
             success: function(data) {
               push_total_perhitungan(no_order, 0, 0);
-              window.location.href = "<?= base_url('Manajemen_Penjualan/reviewPurchaseOrderSales/review/'); ?>" + no_order
+              window.location.href = "<?= base_url('Manajemen_Penjualan/ReviewPurchaseOrder/review/'); ?>" + no_order
             },
             complete: function() {
               $.LoadingOverlay("hide");
@@ -474,10 +471,7 @@
       } else {
         if (jumlah <= parseInt(persediaan)) {
           push_keranjang_belanja(kode_barang, jumlah, harga_jual, diskon);
-          notiftoast();
-          //push_persediaan_temporary_tambah(jumlah, kode_barang);
-          notifKeranjang();
-          search($('#cari_barang').val());
+          
         } else {
           Swal.fire(
             'Quantitas Melebihi Persediaan',
@@ -563,10 +557,17 @@
         cache: false,
         async: false,
         beforeSend: function() {
-          $("#loading_tambah").loading();
+          $("#modal_detail_penjualan").LoadingOverlay("show");
         },
         success: function(data) {
           $('#loading_tambah').loading('stop');
+          notiftoast();
+          //push_persediaan_temporary_tambah(jumlah, kode_barang);
+          notifKeranjang();
+          search($('#cari_barang').val());
+        },
+        complete: function() {
+          $("#modal_detail_penjualan").LoadingOverlay("hide", true);
         }
       })
     }
@@ -732,6 +733,5 @@
           console.log('harus nya ad sukses');
         }
       });
-      console.log('proses')
     }
   </script>

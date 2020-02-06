@@ -45,8 +45,8 @@
                                 <li class="text-left m-b-3">
                                     <div class="input-group">
                                         <input readonly id="total_pajak" autocomplete="off" name="total_pajak" type="text" class="form-control" value="Rp. 0">
-                                        <div class="input-group-append">
-                                            <button id="apply_pajak" name="apply_pajak" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-check"></i></button>
+                                        <div class="input-group-append" id="div_cari-pajak">
+                                            <button id="apply_pajak" name="apply_pajak" onClick="apply_pajak();" class=" btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-check"></i></button>
                                         </div>
                                     </div>
                                 </li>
@@ -118,7 +118,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-sm-4">
             <div class="card-box text-center">
                 <button type="submit" id="proses" class="btn btn-success waves-effect waves-light">Proses</button>
                 <button type="submit" id="batal" class="btn btn-danger waves-effect waves-light">Batal</button>

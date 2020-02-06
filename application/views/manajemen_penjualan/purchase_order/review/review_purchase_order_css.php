@@ -17,8 +17,6 @@
 
         <link href="<?= base_url('assets/'); ?>plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
         <link href="<?= base_url('assets/'); ?>plugins/switchery/switchery.min.css" rel="stylesheet" />
-        <!-- Toaster -->
-        <link href="<?= base_url('assets/'); ?>plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css" />
 
         <!-- swtichery -->
         <link href="<?= base_url('assets/'); ?>plugins/switchery/switchery.min.css" rel="stylesheet" />

@@ -45,6 +45,8 @@
         return tanpatitik;
     }
 </script>
+
+<!-- DATA  -->
 <script>
     $(document).ready(function() {
         setData();
@@ -84,12 +86,44 @@
                 for (var i in data) {
                     var harga_jual = formatRupiah(data[i].harga_jual, 'Rp.');
                     var total_harga = formatRupiah(data[i].total_harga, 'Rp.');
-                    var display = '<div class="col-xl-3 col-md-6"><div class="card-box widget-user"><div class="dropdown pull-right"><a type="button" class="dropdown-toggle arrow-none card-drop text-danger" data-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-close-box"></i></a></div><div><img src="<?= base_url('assets/images/barang/'); ?>' + data[i].gambar + '" class="img-responsive rounded-circle" alt="user"><div class="wid-u-info"><h4 class="mt-0">' + data[i].nama_barang + '</h4><h6><span class="text-danger"><b>' + data[i].jumlah_penjualan + ' </b></span>' + data[i].nama_satuan + ' @ ' + harga_jual + '</h6><h5><span><b>' + total_harga + ' </b></span></h5></div></div></div></div>'
+                    var display = '<div class="col-xl-3 col-md-3 col-xs-3"><div class="card-box widget-user"><div class="pull-right"><a type="button" class="card-drop text-danger" onClick="warning_delete(\'' + data[i].id + '\')"><i class="fa fa-times-rectangle"></i></a></div><div><img src="<?= base_url('assets/images/barang/'); ?>' + data[i].gambar + '" class="img-responsive rounded-circle" alt="user"><div class="wid-u-info"><h4 class="mt-0">' + data[i].nama_barang + '</h4><h6><span class="text-danger"><b>' + data[i].jumlah_penjualan + ' </b></span>' + data[i].nama_satuan + ' @ ' + harga_jual + '</h6><h5><span><b>' + total_harga + ' </b></span></h5></div></div></div></div>'
                     $('#loading').append(display).fadeIn('slow');
                 }
             },
             complete: function() {
                 $("#loading").LoadingOverlay("hide", true);
+            }
+        });
+    }
+
+    function warning_delete(id) {
+        swal.fire({
+            title: 'Apa anda yakin akan hapus data ini dari Keranjang Belanja?',
+            text: "Data akan di hapus dari Keranjang Belanja..",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                swal.fire(
+                    'Deleted!',
+                    'Data telah dihapus!',
+                    'success'
+                )
+                deleteData_keranjang(id);
+            }
+        });
+    }
+
+    function deleteData_keranjang(id) {
+        $.ajax({
+            url: "<?= base_url('Manajemen_Penjualan/PurchaseOrderSales/delete_data_keranjang/'); ?>" + id,
+            async: false,
+            success: function(data) {
+                setData();
+                $('#loading').empty();
             }
         });
     }
@@ -129,19 +163,10 @@
         });
     }
 
-    $('#apply_pajak').on('click', function() {
-
-        var no_order = $('#no_order').text();
-        var total_penjualan = normalrupiah($('#total_penjualan').text());
-
-        var pajak = total_penjualan * 0.10;
-        push_total_perhitungan(no_order, pajak, 0);
-
-    });
 
     function push_total_perhitungan(no_order, pajak, ongkir) {
         $.ajax({
-            url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrder/push_total_perhitungan'); ?>",
+            url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/push_total_perhitungan'); ?>",
             type: "post",
             data: {
                 no_order: no_order,
@@ -156,6 +181,42 @@
 
         })
     }
+
+    function tutup_tombol_pajak() {
+        $('#div_cari-pajak').empty();
+        var display = '<button id="pajak-edit" onClick="batal_pajak();" name="pajak-edit" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-history"></i></button>'
+        $('#div_cari-pajak').append(display);
+    }
+
+
+    function apply_pajak() {
+
+        var no_order = $('#no_order').text();
+        var total_penjualan = normalrupiah($('#total_penjualan').text());
+
+        var pajak = total_penjualan * 0.10;
+        push_total_perhitungan(no_order, pajak, 0);
+        tutup_tombol_pajak();
+
+    }
+
+    function batal_pajak() {
+        var no_order = $('#no_order').text();
+
+        var display2 = '<button id="apply_pajak" onClick="apply_pajak();" name="apply_pajak" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-check"></i></button>'
+        $('#div_cari-pajak').empty();
+
+        $('#div_cari-pajak').append(display2);
+
+        push_total_perhitungan(no_order, 0, 0);
+    };
+
+    $(document).ready(function() {
+        if ($('#total_pajak').val() !== "Rp. 0") {
+            tutup_tombol_pajak();
+        }
+
+    })
 </script>
 
 <!-- script pelanggan -->
@@ -168,7 +229,7 @@
         var nomor_telepon = $('#nomor_telepon');
         if (id_pelanggan.val() !== "") {
             $.ajax({
-                url: '<?= base_url("Manajemen_Penjualan/PurchaseOrder/get_data_pelanggan/"); ?>' + id_pelanggan.val(),
+                url: '<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/get_data_pelanggan/"); ?>' + id_pelanggan.val(),
                 type: "POST",
                 dataType: "JSON",
                 async: false,
@@ -268,7 +329,6 @@
         var data = this.textContent;
         $('#pelanggan_modal').modal('hide');
         $('#id_pelanggan').val(data);
-        console.log('TD cell textContent : ', this.textContent)
     })
 
     function warning_pelanggan_kosong() {
@@ -278,6 +338,17 @@
             text: 'Data Pelanggan Masih Kosong!',
         })
     }
+
+    function batal_pelanggan() {
+        $('#id_pelanggan').attr('disabled', false).val('');
+        $('#nama_pelanggan').attr('disabled', false).val('');
+        $('#alamat').attr('disabled', false).val('');
+        $('#nomor_telepon').attr('disabled', false).val('');
+        $('#div_cari-button').empty();
+        $('#id_pelanggan_help').text('Kosong kan jika tidak ada ID Pelanggan');
+        display = '<button id="cari-button" name="cari-button" onClick="cari_pelanggan();" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-search"></i></button>'
+        $('#div_cari-button').append(display);
+    };
 </script>
 
 <!-- script proses -->
@@ -287,12 +358,6 @@
         var nama_pelanggan = $('#nama_pelanggan');
         var no_order = $('#no_order').text();
 
-        // jika pelanggan bisa kredit
-        if ($('#id_pelanggan').is(':disabled') == false) {
-            $('#div_tombol_kredit').attr('hidden', true);
-        } else {
-            $('#div_tombol_kredit').attr('hidden', false);
-        }
 
         if (nama_pelanggan.val() !== "") {
             konfirm();
@@ -352,13 +417,12 @@
             },
             success: function(data) {
                 Swal.fire({
-                        title: "Good job",
-                        text: "You clicked the button!",
-                        icon: "success"
-                    }).then(function() { 
-                        location.reload();
-                    }
-                );
+                    title: "Good job",
+                    text: "You clicked the button!",
+                    icon: "success"
+                }).then(function() {
+                    location.reload();
+                });
 
             },
             complete: function() {

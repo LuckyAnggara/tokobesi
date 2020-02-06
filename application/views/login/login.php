@@ -98,6 +98,9 @@
     <script src="<?= base_url('assets/'); ?>js/jquery.slimscroll.js"></script>
     <script src="<?= base_url('assets/'); ?>js/jquery.scrollTo.min.js"></script>
 
+    <!-- Loading Overlay -->
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
+
     <!-- Sweet Alert Js  -->
     <script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
     <script src="<?= base_url('assets/'); ?>plugins/jquery-loader/jquery.loading.js"></script>
@@ -122,14 +125,7 @@
                     processData: false,
                     contentType: false,
                     beforeSend: function() {
-                        $("#loginDiv").loading({
-                            onStart: function(loading) {
-                                loading.overlay.slideDown(400);
-                            },
-                            onStop: function(loading) {
-                                loading.overlay.slideUp(400);
-                            }
-                        });
+                        $.LoadingOverlay("show");
                     },
                     success: function(data) {
                         console.log(data);
@@ -144,7 +140,10 @@
                         } else {
                             window.location.href = "<?php echo base_url('dashboard'); ?>";
                         }
-                    }
+                    },
+                    complete: function() {
+                        $.LoadingOverlay("hide");
+                    },
                 })
             });
         });

@@ -50,8 +50,22 @@ class Model_Purchase_Order extends CI_Model
 
 
 
-
     //SCRIPT PO SALES KEBAWAH
+
+    function cek_last_order()
+    {
+        $user = $this->session->userdata['username'];
+
+        $this->db->select('*');
+        $this->db->from('temp_tabel_keranjang_penjualan');
+        $this->db->where('user', $user );
+        $this->db->where('is_po', 1);
+        $this->db->like('tanggal_transaksi', date("Y-m-d 00:00:00"));
+        $this->db->group_by('no_order_penjualan');   
+        $this->db->get()->row_array();
+        
+    }
+
     function cekData($string)
     {
         $this->db->select('*');
@@ -126,6 +140,7 @@ class Model_Purchase_Order extends CI_Model
             'tanggal_input' => date("Y-m-d H:i:s"),
             'user' =>  $this->session->userdata['username'],
             'status' => 1, // artinya 1 adalah PO dan 0 adalah direct order ke toko
+            'is_po' => 1, // artinya 1 adalah PO dan 0 adalah direct order ke toko
             'tanggal_input' => date("Y-m-d H:i:s"),
         ];
         $this->db->insert('temp_tabel_keranjang_penjualan', $data);
@@ -156,6 +171,9 @@ class Model_Purchase_Order extends CI_Model
 
         $this->db->where('id', $id);
         $this->db->delete('temp_tabel_keranjang_penjualan');
+
+        $this->db->where('id', $id);
+        $this->db->delete('temp_purchase_order');
     }
 
     public function persediaan_temp_tambah()

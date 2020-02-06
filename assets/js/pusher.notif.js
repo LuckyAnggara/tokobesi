@@ -1,6 +1,6 @@
 $(document).ready(function () {
     // CALL FUNCTION SHOW PRODUCT
-    Pusher.logToConsole = true;
+    
     var pusher = new Pusher('a198692078b54078587e', {
         cluster: 'ap1',
         forceTLS: true
