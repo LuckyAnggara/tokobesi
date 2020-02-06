@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center">
-                    2016 - 2018 © Adminto. Coderthemes.com
+                    Copyright 24codes.my.id
                 </div>
             </div>
         </div>

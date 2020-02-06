@@ -42,7 +42,7 @@ class PurchaseOrderAdmin extends CI_Controller
         );
 
         foreach ($data as $key => $value) {
-            $sales =  $this->modelPO->data_sales($value['user']);
+            $sales =  $this->modelPO->data_sales($value['sales']);
             $admin =  $this->modelPO->data_admin($value['admin']);
             $pelanggan =  $this->modelPO->data_pelanggan($value['id_pelanggan']);
 
@@ -69,6 +69,4 @@ class PurchaseOrderAdmin extends CI_Controller
             $this->modelDaftarTransaksiPenjualan->delete_data($no_faktur); // tambah data siswa
         }
     }
-
-   
 }

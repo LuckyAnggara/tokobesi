@@ -18,6 +18,8 @@
 
     <!-- Notification css (Toastr) -->
     <script src="<?= base_url('assets/'); ?>js/modernizr.min.js"></script>
+    <link href="<?= base_url('assets/'); ?>plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css" />
+
 
 
 </head>

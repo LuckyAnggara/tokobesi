@@ -5,7 +5,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-4">
+        <div class="col-md-4 col-xs-12">
             <div class="card-box">
                 <div class="row">
                     <div class="col-6">
@@ -51,12 +51,12 @@
             </div>
 
         </div>
-        <div class="col-8">
+        <div class="col-md-8 col-xs-12">
             <div class="card-box">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="table-responsive">
-                            <table id="datatable-kartu-persediaan" class="table-hover table-striped table table-compact dt-responsive nowrap " width="100%">
+                            <table id="datatable-kartu-persediaan" class="table-hover table-striped table table-compact dt-responsive nowrap" width="100%">
                                 <thead class="thead-dark text-center">
                                     <tr class="text-center">
                                         <th>Tanggal</th>

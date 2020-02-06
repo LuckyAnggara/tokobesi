@@ -98,6 +98,7 @@ class ReviewPurchaseOrder extends CI_Controller
         );
 
         $data['message'] = 'sales';
+        $data['sales'] = 'update_po';
         $pusher->trigger('my-channel', 'my-event', $data);
     }
 }

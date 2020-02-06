@@ -1,9 +1,7 @@
   <!-- Required datatable js -->
   <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
   <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
-  <!-- Responsive examples -->
-  <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.responsive.min.js"></script>
-  <script src="<?= base_url('assets/'); ?>plugins/datatables/responsive.bootstrap4.min.js"></script>
+
 
   <!-- Sweet Alert Js  -->
   <script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>

@@ -118,12 +118,24 @@
     }
 
     function deleteData_keranjang(id) {
+        var no_order = $('#no_order').text()
         $.ajax({
             url: "<?= base_url('Manajemen_Penjualan/PurchaseOrderSales/delete_data_keranjang/'); ?>" + id,
             async: false,
             success: function(data) {
-                setData();
                 $('#loading').empty();
+                setData();
+                push_total_perhitungan(no_order, 0, 0)
+                batal_pajak();
+                if ($('#loading').is(':empty')) {
+                    swal.fire(
+                        'Oopss!',
+                        'Data keranjang Kosong, Kembali ke halaman Belanja!',
+                        'warning'
+                    ).then((result) => {
+                        window.location.href = "<?= base_url('Manajemen_Penjualan/purchaseordersales'); ?>"
+                    })
+                }
             }
         });
     }
@@ -417,8 +429,8 @@
             },
             success: function(data) {
                 Swal.fire({
-                    title: "Good job",
-                    text: "You clicked the button!",
+                    title: "Terkirim",
+                    text: "Order anda telah terkirim ke Admin!",
                     icon: "success"
                 }).then(function() {
                     location.reload();

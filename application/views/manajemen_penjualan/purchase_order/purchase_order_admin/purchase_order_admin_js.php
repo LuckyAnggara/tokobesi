@@ -34,6 +34,8 @@
             todayHighlight: true
         });
         $('#tanggal_akhir').datepicker("setDate", "12-31-" + new Date().getFullYear());
+
+        // pusher
     });
 </script>
 
@@ -42,7 +44,18 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        destroy: true,
+        var pusher = new Pusher('a198692078b54078587e', {
+            cluster: 'ap1',
+            forceTLS: true
+        });
+
+        var channel = pusher.subscribe('my-channel');
+        channel.bind('my-event', function(data) {
+            if (data.sales === 'update_po') {
+                init_table();
+                console.log('awee');
+            }
+        });
         init_table();
 
         function init_table(status = null, tanggal_awal = "01-01-" + new Date().getFullYear(), tanggal_akhir = "31-12-" + new Date().getFullYear()) {

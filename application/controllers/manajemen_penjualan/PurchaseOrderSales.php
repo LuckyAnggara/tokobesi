@@ -21,16 +21,32 @@ class PurchaseOrderSales extends CI_Controller
     {
 
         $cek_last_order = $this->modelPO->cek_last_order();
-
-        if($cek_last_order !== ""){
+        if ($cek_last_order !== NULL) {
             $no_order_dummy = $cek_last_order['no_order_penjualan'];
-            
-        }else{
             $this->session->unset_userdata('no_order_dummy');
-            $no_order_dummy = date('djy') . random_string('numeric', 2);
+            $this->session->set_userdata('no_order_dummy', $no_order_dummy);
+        } else {
+            $this->session->unset_userdata('no_order_dummy');
+            $nomor_urut = $this->modelPO->nomor(date('djy'));
+            $nomor = $nomor_urut + 1;
+            $no_order_dummy = date('djy') . sprintf("%03d", $nomor);
+
             $this->cek_duplikat($no_order_dummy);
         }
-       
+    }
+
+    public function cobacoba()
+    {
+        $nomor_urut = $this->modelPO->nomor(date('djy'));
+        $nomor = $nomor_urut + 1;
+        $no_order_dummy = date('djy') . sprintf("%03d", $nomor);
+        echo $no_order_dummy;
+    }
+
+    public function cek_last_order()
+    {
+        $no_order = $this->input->post('no_order');
+        echo $this->modelPO->cek_last_order($no_order);
     }
 
     function cek_duplikat($no_order)

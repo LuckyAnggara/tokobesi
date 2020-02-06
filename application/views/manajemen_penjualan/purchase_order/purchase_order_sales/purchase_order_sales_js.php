@@ -30,6 +30,8 @@
       //   clear_data(sessionStorage.getItem("no_order"));
       // });
 
+      cek_last_order()
+
 
       $('#modal_detail_penjualan').on('hidden.bs.modal', function(e) {
         $(this)
@@ -68,6 +70,29 @@
   <!-- script sendiri   // script Radio Fitur Simple dan Adnvace
   // init hide advance search -->
   <script>
+    function cek_last_order() {
+      var no_order = $('#no_order').text();
+      $.ajax({
+        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/cek_last_order'); ?>",
+        type: "post",
+        data: {
+          no_order: no_order,
+        },
+        beforeSend: function() {
+          $.LoadingOverlay("show");
+        },
+        success: function(data) {
+          if (data == 1) {
+            $('#status_order').text('pending order');
+            $('#status_order').removeClass("badge-success").addClass("badge-danger");
+            notifKeranjang();
+          }
+        },
+        complete: function() {
+          $.LoadingOverlay("hide");
+        }
+      })
+    }
     // clear keranjang
     $('#review').on('click', function() {
       $(".right-bar").toggle();
@@ -119,7 +144,7 @@
         if (result.value) {
           $.ajax({
             async: false,
-            url: '<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
+            url: '<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/clear_keranjang_belanja/"); ?>' + $('#no_order').text(),
             success: function(data) {
               $("#keranjang").empty();
               $("#jumlah_keranjang").text(0);
@@ -128,7 +153,9 @@
                 'Deleted!',
                 'Order di Batalkan!',
                 'success'
-              )
+              ).then((result) => {
+                location.reload(true);
+              })
             }
           });
         }
@@ -471,7 +498,7 @@
       } else {
         if (jumlah <= parseInt(persediaan)) {
           push_keranjang_belanja(kode_barang, jumlah, harga_jual, diskon);
-          
+
         } else {
           Swal.fire(
             'Quantitas Melebihi Persediaan',

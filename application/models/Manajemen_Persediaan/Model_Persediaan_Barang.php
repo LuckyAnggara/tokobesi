@@ -65,6 +65,13 @@ class Model_Persediaan_Barang extends CI_Model
         $result = $this->db->get('temp_tabel_keranjang_penjualan')->row();
         $qty_temp =  $result->jumlah_penjualan;
 
-        return  $qty_awal + $qty_saldo - $qty_temp;
+
+        // data dari purchase order yg masih pending di sales atau admin
+        $this->db->select_sum('jumlah_penjualan');
+        $this->db->where('kode_barang', $kode_barang);
+        $result = $this->db->get('temp_purchase_order')->row();
+        $qty_po =  $result->jumlah_penjualan;
+
+        return  $qty_awal + $qty_saldo - $qty_temp - $qty_po;
     }
 }

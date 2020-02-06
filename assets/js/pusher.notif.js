@@ -1,6 +1,5 @@
-$(document).ready(function () {
-    // CALL FUNCTION SHOW PRODUCT
-    
+$(document).ready(function () { // CALL FUNCTION SHOW PRODUCT
+
     var pusher = new Pusher('a198692078b54078587e', {
         cluster: 'ap1',
         forceTLS: true
@@ -10,7 +9,6 @@ $(document).ready(function () {
     channel.bind('my-event', function (data) {
         if (data.message === 'sales') {
             notiftoast();
-            console.log('awa');
         }
     });
 
