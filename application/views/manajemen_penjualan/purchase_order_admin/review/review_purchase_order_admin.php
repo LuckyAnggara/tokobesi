@@ -1,9 +1,46 @@
 <?php
 function rupiah($angka)
 {
-    $hasil_rupiah = "Rp " . number_format($angka, 2, ',', '.');
+    $hasil_rupiah = "Rp " . number_format($angka, 0, ',', '.');
     return $hasil_rupiah;
 }
+
+function status($x)
+{
+    switch ($x) {
+        case "1":
+            return "Waiting Approve";
+            break;
+        case "2":
+            return "Approve";
+            break;
+        case "3":
+            return "Review Sales";
+            break;
+        case "99":
+            return "Reject";
+            break;
+    }
+}
+
+function status_warna($x)
+{
+    switch ($x) {
+        case "1":
+            return "primary";
+            break;
+        case "2":
+            return "success";
+            break;
+        case "3":
+            return "warning";
+            break;
+        case "99":
+            return "danger";
+            break;
+    }
+}
+
 function Terbilang($x)
 {
     $abil = array("", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas");
@@ -83,111 +120,114 @@ function tgl_indo($tanggal)
 
     return $hari_ini . ', ' . $pecahkan[2] . ' ' . $bulan[(int) $pecahkan[1]] . ' ' . $pecahkan[0];
 }
-$tanggal_transaksi = $data_order['tanggal_transaksi'];
+$tanggal_transaksi = $data_po['tanggal_input'];
 $tanggal_transaksi = tgl_indo(date("Y-m-d-D", strtotime($tanggal_transaksi)));
 
-if ($data_order['status_pelanggan'] == 1) {
+if ($data_po['status_pelanggan'] == 1) {
     $id_pelanggan = "Walk in Costumer";
 } else {
-    $id_pelanggan = $data_order['id_pelanggan'];
+    $id_pelanggan = $data_po['id_pelanggan'];
 }
 
-if ($data_order['status_bayar'] == 1) {
-    $status_pembayaran = '<span class="badge badge-success  m-t-15">Lunas</span>';
-} else {
-    $status_pembayaran = '<span class="badge badge-danger  m-t-15">Belum Lunas</span>';
+function status_approve($x)
+{
+    switch ($x) {
+        case "1":
+            return "";
+            break;
+        case "2":
+            return "hidden";
+            break;
+        case "3":
+            return "hidden";
+            break;
+        case "99":
+            return "hidden";
+            break;
+    }
 }
+
 ?>
+
 
 <div class="container-fluid">
     <!-- Page-Title -->
     <div class="row">
         <div class="col-sm-12">
-            <h4 class="page-title">Transaksi Pembelian</h4>
+            <div class="pull-right m-t-20">
+                <a class="btn btn-<?= status_warna($data_po['status_po']); ?> "><?= status($data_po['status_po']); ?></a>
+            </div>
+            <h4 class="page-title">Review Order : <span id="no_order"><?= $data_po['no_order']; ?></span>
         </div>
     </div>
+    <!-- end page title end breadcrumb -->
     <div class="row">
-        <div class="col-6">
+        <div class="col-sm-6">
+            <div class="card-box">
+                <div class="form-group row">
+                    <h4 class="m-t-0 header-title">Data Umum</h4>
+                </div>
+                <hr>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-sm-form-label">Tanggal Order</label>
+                    <div class="col-sm-8">
+                        <input id="id_sales" autocomplete="off" name="id_sales" type="text" class="form-control" readonly value="<?= $tanggal_transaksi; ?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-sm-form-label">ID Sales</label>
+                    <div class="col-sm-8">
+                        <input id="id_sales" autocomplete="off" name="id_sales" type="text" class="form-control" readonly value="<?= $data_po['user']; ?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-sm-form-label">Nama Sales</label>
+                    <div class="col-sm-8">
+                        <input id="nama_sales" name="nama_sales" type="text" class="form-control" readonly value="<?= $data_po['nama']; ?>">
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="col-sm-6">
             <div class="card-box">
                 <div class="form-group row">
                     <h4 class="m-t-0 header-title">Data Pelanggan</h4>
                 </div>
                 <hr>
                 <div class="form-group row">
-                    <label class="col-sm-4 col-sm-form-label m-t-10">ID Pelanggan</label>
+                    <label class="col-sm-4 col-sm-form-label">ID Pelanggan</label>
                     <div class="col-sm-8">
-                        <input id="id_pelanggan" name="id_pelanggan" type="text" class="form-control" value="<?= $id_pelanggan; ?>" readonly>
+                        <input id="id_pelanggan" autocomplete="off" name="id_pelanggan" type="text" class="form-control" disabled value="<?= $id_pelanggan; ?>">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-4 col-sm-form-label m-t-10">Nama Pelanggan</label>
+                    <label class="col-sm-4 col-sm-form-label">Nama Pelanggan</label>
                     <div class="col-sm-8">
-                        <input id="nama_pelanggan" name="nama_pelanggan" type="text" class="form-control" value="<?= $data_order['nama_pelanggan']; ?>" readonly>
+                        <input id="nama_pelanggan" name="nama_pelanggan" type="text" class="form-control" readonly value="<?= $data_po['nama_pelanggan']; ?>">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-4 col-sm-form-label m-t-10">Nomor Telepon</label>
+                    <label class="col-sm-4 col-sm-form-label">Alamat</label>
                     <div class="col-sm-8">
-                        <input id="nomor_telepon" name="nomor_telepon" type="text" class="form-control" value="<?= $data_order['nomor_telepon']; ?>" readonly>
-                    </div>
-                </div>
-                <div class=" clearfix"></div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="card-box">
-                <div class="form-group row">
-                    <h4 class="m-t-0 header-title">Data Pembayaran</h4>
-                </div>
-                <hr>
-                <div class="form-group row">
-                    <label class="col-sm-4 col-sm-form-label m-t-5">Tanggal Transaksi</label>
-                    <div class="col-sm-8">
-                        <input id="tanggal_transaksi" name="tanggal_transaksi" type="text" class="form-control" value="<?= $tanggal_transaksi; ?>" readonly>
+                        <textarea id="alamat" name="alamat" type="text" class="form-control" readonly><?= $data_po['alamat']; ?></textarea>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-4 col-sm-form-label m-t-10">Status Pembayaran</label>
+                    <label class="col-sm-4 col-sm-form-label">No Telepon</label>
                     <div class="col-sm-8">
-                        <?= $status_pembayaran; ?>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-4 col-sm-form-label m-t-10">Grand Total</label>
-                    <div class="col-sm-8">
-                        <div class="input-group" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <input type="text" class="form-control" value=" <?= rupiah($data_order['grand_total']); ?>" readonly>
-                            <div class="input-group-append" id="div_cari-button">
-                                <a id="cari-button" name="cari-button" class="btn btn-inverse waves-effect waves-light" type="button"><i>Klik Untuk Detail</i></a>
-                            </div>
-                        </div>
-
-                        <div class="dropdown-menu">
-                            <!-- item-->
-                            <a class="dropdown-item"><b><u>Diskon</u></b> : <?= rupiah($data_order['diskon']); ?></a>
-                            <!-- item-->
-                            <a class="dropdown-item"><b><u>Pajak</u></b> : <?= rupiah($data_order['pajak_masukan']); ?></a>
-                            <!-- item-->
-                            <a class="dropdown-item"><b><u>Ongkos Kirim</u></b> : <?= rupiah($data_order['ongkir']); ?></a>
-                        </div>
-
+                        <input readonly id="nomor_telepon" name="nomor_telepon" type="text" class="form-control" value="<?= $data_po['nomor_telepon']; ?>">
                     </div>
                 </div>
                 <div class="clearfix"></div>
             </div>
         </div>
-        <div class="col-12">
-            <div class="card-box">
-                <div class="row">
-                    <div class="col-6">
-                        <h4 class="m-t-0 header-title">Keranjang Belanja</h4>
-                    </div>
-                </div>
-                <hr>
+        <div class="col-sm-12">
+            <div class="card-box" id="loading_tambah">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="table-responsive">
-                            <table id="datatable-keranjang-penjualan" class="table table-bordered table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                            <table id="datatable-keranjang-po" class="table table-bordered table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>#</th>
@@ -200,7 +240,7 @@ if ($data_order['status_bayar'] == 1) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($detail_order as $key => $value) : ?>
+                                    <?php foreach ($review_order as $key => $value) : ?>
                                         <tr>
                                             <td><?= ++$key; ?></td>
                                             <td><?= $value['kode_barang']; ?></td>
@@ -215,18 +255,34 @@ if ($data_order['status_bayar'] == 1) {
                             </table>
                         </div>
                     </div>
-                </div>
+                </div> <!-- end row -->
                 <hr>
-
                 <div class="row">
+                    <div class="col-sm-2">
+                        <h3 class="m-t-0">Total :</h3>
+                    </div>
+                    <div class="col-sm-4">
+                        <h3 class="m-t-0" id="total_keranjang"><?= rupiah($data_po['total_penjualan']); ?>,-</h3>
+                    </div>
+                    <div class="col-sm-6 pull-left">
+                        <h3 class="m-t-0" id="terbilang_keranjang"><?= terbilang($data_po['total_penjualan']); ?> Rupiah</h3>
+                    </div>
+                </div>
+                <div class="row" <?= status_approve($data_po['status_po']); ?>>
                     <div class="col-sm-12">
                         <div class="text-right m-t-30">
-                            <a id="cetak_faktur" type="button" href="<?= base_url('Manajemen_Penjualan/PenjualanBarang/Invoice/') . $data_order['no_order_penjualan']; ?>" class="btn  btn-lg btn-primary waves-effect waves-light"><i class="fa fa-print"></i> Cetak Faktur</a>
+                            <button id="checkout" name="checkout" type="button" class="btn btn-success waves-effect waves-light m-r-10"> <i class="fa fa-thumbs-o-up"></i> Approve</button>
+                            <button id="return" name="return" type="button" class="btn btn-warning waves-effect waves-light"><i class="fa fa-share-square-o"></i> Return</button>
+                            <button id="reject" name="reject" type="button" class="btn btn-danger waves-effect waves-light"><i class="fa fa-thumbs-o-down"></i> Reject</button>
                         </div>
+
+
                     </div>
                 </div>
                 <div class="clearfix"></div>
             </div>
         </div>
     </div>
-</div> <!-- container -->
+
+
+</div> <!-- end container -->

@@ -119,7 +119,7 @@ class Dashboard extends CI_Controller
 				$dataset['nama_barang'][] = $value['nama_barang'];
 				$dataset['jumlah_penjualan'][] = $value['jumlah_penjualan'];
 			}
-		}		
+		}
 		$output = json_encode($dataset);
 		echo $output;
 	}

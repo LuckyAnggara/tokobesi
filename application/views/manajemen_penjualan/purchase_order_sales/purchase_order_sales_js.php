@@ -86,6 +86,8 @@
             $('#status_order').text('pending order');
             $('#status_order').removeClass("badge-success").addClass("badge-danger");
             notifKeranjang();
+            push_total_perhitungan(no_order, 0, 0);
+            notifTotalKeranjang();
           }
         },
         complete: function() {
@@ -119,7 +121,6 @@
               $.LoadingOverlay("show");
             },
             success: function(data) {
-              push_total_perhitungan(no_order, 0, 0);
               window.location.href = "<?= base_url('Manajemen_Penjualan/ReviewPurchaseOrder/review/'); ?>" + no_order
             },
             complete: function() {
@@ -146,21 +147,35 @@
             async: false,
             url: '<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/clear_keranjang_belanja/"); ?>' + $('#no_order').text(),
             success: function(data) {
+              deleteMasterPo($('#no_order').text())
               $("#keranjang").empty();
               $("#jumlah_keranjang").text(0);
               $('#operatorbtn').attr('hidden', true);
+              setTimeout(function() {
+                location.reload(true);
+              }, 5000);
               Swal.fire(
                 'Deleted!',
                 'Order di Batalkan!',
                 'success'
               ).then((result) => {
                 location.reload(true);
-              })
+              });
+
             }
           });
         }
       })
     })
+
+    function deleteMasterPo(no_order) {
+      $.ajax({
+        url: "<?= base_url('Manajemen_Penjualan/PurchaseOrderSales/delete_data_po/'); ?>" + no_order,
+        async: false,
+      });
+    }
+
+
 
     // script formatRupiah
     function normalrupiah(angka) {
@@ -401,24 +416,44 @@
           dataType: "JSON",
           async: false,
           beforeSend: function() {
-            $("#loading").LoadingOverlay('show');
+            $("#result_page").LoadingOverlay('show');
+          },
+          error: function(e) {
+            if (e.status == 400) {
+              Swal.fire(
+                'Spelling error',
+                'Ada karakter pencarian yang tidak diperbolehkan',
+                'error'
+              )
+            }
           },
           success: function(data) {
             if (data.jumlah_data > 0) {
               $("#result_page").empty();
               for (var i in data.data) {
-                var display2 = '<div id="result"  class="col-md-2 col-lg-2 col-sm-1"><div class="card gal-detail thumb"><a type="button" id="wawa" onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].nama_satuan + '\',\'' + data.data[i].harga_satuan + '\')" ><img class="img-thumbnail img-responsive" alt="profile-image" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Tidak ada Gambar"><h5 >' + data.data[i].nama_barang + '</h5><p class="card-text"> Harga : ' + formatRupiah(data.data[i].harga_satuan, 'Rp.') + ' stok : <b>' + formatSatuan(data.data[i].jumlah_persediaan.toString()) + ' ' + data.data[i].nama_satuan + '</b></p></a></div></div>';
-                $('#result_page').append(display2).fadeIn('slow');
+                var harga_jual = formatRupiah(data.data[i].harga_satuan, 'Rp.');
+                var display = '<div id="wawa" class="col-xl-3 col-md-3 col-xs-3" onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].nama_satuan + '\',\'' + data.data[i].harga_satuan + '\')">' +
+                  '<div class="card-box widget-user">' +
+                  '<div>' +
+                  '<img src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" class="img-responsive rounded-circle" alt="user">' +
+                  '<div class="wid-u-info">' +
+                  '<h4 class="mt-0">' + data.data[i].nama_barang + '</h4>' +
+                  '<h6><span class="text-primary"><b>' + harga_jual + ' </b></span><br>stok : <b>' + formatSatuan(data.data[i].jumlah_persediaan.toString()) + ' ' + data.data[i].nama_satuan + '</b></h6>' +
+                  '</div>' +
+                  '</div>' +
+                  '</div>' +
+                  '</div>'
+                // var display2 = '<div id="result"  class="col-md-2 col-lg-2 col-sm-1"><div class="card gal-detail thumb"><a type="button" id="wawa" onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].nama_satuan + '\',\'' + data.data[i].harga_satuan + '\')"><img class="img-thumbnail img-responsive" alt="profile-image" src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" alt="Tidak ada Gambar"><h5 >' + data.data[i].nama_barang + '</h5><p class="card-text"> Harga : ' + formatRupiah(data.data[i].harga_satuan, 'Rp.') + ' stok : <b>' + formatSatuan(data.data[i].jumlah_persediaan.toString()) + ' ' + data.data[i].nama_satuan + '</b></p></a></div></div>';
+                $('#result_page').append(display).fadeIn('slow');
               }
             } else {
               $("#result_page").empty();
               display_none = '<div class="col-12 text-center"><p>Data Barang ' + kata_kunci + ' tidak ditemukan </p></div>';
               $("#result_page").append(display_none);
             }
-            $("#result_page").loading('stop');
           },
           complete: function() {
-            $("#loading").LoadingOverlay("hide", true);
+            $("#result_page").LoadingOverlay("hide", true);
           }
         });
       } else {
@@ -460,6 +495,7 @@
         $("#qty").trigger("touchspin.updatesettings", {
           max: persediaan
         });
+
         input_harga_jual.val(formatRupiah(harga_jual.toString(), 'Rp.'));
         label_kode_barang.text(kode_barang);
         sisa_persediaan.text(persediaan);
@@ -479,6 +515,7 @@
     // add ke keranjang ketika tambah di klik
 
     $('#button-penjualan-add').on('click', function() {
+      var no_order = $('#no_order').text();
       var kode_barang = $('#label_kode_barang').text();
       var jumlah = $('#qty').val();
       var harga_jual = $('#harga_jual').val();
@@ -496,9 +533,10 @@
           'error'
         )
       } else {
-        if (jumlah <= parseInt(persediaan)) {
+        if (jumlah <= persediaan) {
           push_keranjang_belanja(kode_barang, jumlah, harga_jual, diskon);
-
+          push_total_perhitungan(no_order, 0, 0);
+          notifTotalKeranjang();
         } else {
           Swal.fire(
             'Quantitas Melebihi Persediaan',
@@ -567,10 +605,8 @@
 
   <script>
     function push_keranjang_belanja(kode_barang, jumlah, harga_jual, diskon) {
-      var id_pelanggan = $('#id_pelanggan').val();
       var no_order = $('#no_order').text();
 
-      $('#simpan_checkout').attr('disabled', false);
       $.ajax({
         url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/push_data_barang'); ?>",
         type: "post",
@@ -589,7 +625,6 @@
         success: function(data) {
           $('#loading_tambah').loading('stop');
           notiftoast();
-          //push_persediaan_temporary_tambah(jumlah, kode_barang);
           notifKeranjang();
           search($('#cari_barang').val());
         },
@@ -686,6 +721,9 @@
         },
         cache: false,
         async: false,
+        beforeSend: function() {
+          $("#keranjang").LoadingOverlay("show");
+        },
         success: function(data) {
           $("#keranjang").empty();
           if (data.jumlah > 0) {
@@ -699,7 +737,38 @@
             $("#jumlah_keranjang").text(0);
             $('#operatorbtn').attr('hidden', true);
           }
-        }
+        },
+        complete: function() {
+          $("#keranjang").LoadingOverlay("hide");
+        },
+      });
+    }
+
+    function notifTotalKeranjang() {
+      var no_order = $('#no_order').text();
+      $.ajax({
+        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/get_total_perhitungan/'); ?>",
+        type: "post",
+        dataType: 'json',
+        data: {
+          no_order: no_order,
+        },
+        cache: false,
+        async: false,
+        beforeSend: function() {
+          $("#total_div").LoadingOverlay("show");
+        },
+        success: function(data) {
+          if (data !== null) {
+            $('#total_div').attr('hidden', false);
+            $('#total_right').text(formatRupiah(data.total_keranjang, 'Rp.'));
+          } else {
+            $('#total_div').attr('hidden', true);
+          }
+        },
+        complete: function() {
+          $("#total_div").LoadingOverlay("hide");
+        },
       });
     }
 
@@ -725,18 +794,21 @@
     }
 
     function deleteData_keranjang(id) {
+      var no_order = $('#no_order').text();
       $.ajax({
         url: "<?= base_url('Manajemen_Penjualan/PurchaseOrderSales/delete_data_keranjang/'); ?>" + id,
         async: false,
         success: function(data) {
+          push_total_perhitungan(no_order, 0, 0);
           notifKeranjang();
+          notifTotalKeranjang();
         }
       });
     }
 
     function push_total_perhitungan(no_order, pajak, ongkir) {
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/push_total_perhitungan'); ?>",
+        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/push_total_perhitungan_sales'); ?>",
         type: "post",
         data: {
           no_order: no_order,

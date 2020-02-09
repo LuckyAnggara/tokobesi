@@ -14,6 +14,11 @@
 
 <!-- Select2 js -->
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
+
+<!-- Pusher Notif Sendiri -->
+<script src="<?= base_url('assets/'); ?>js/pusher.notif.js"></script>
+
+
 <!-- Input Mask Js dan Max Length-->
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
@@ -173,12 +178,12 @@
                         }
                     },
                     {
-                        data: "id",
+                        data: "no_order",
                         targets: 8,
                         render: function(data, type, full, meta) {
-                            var display1 = '<a type="button" onClick = "view_detail(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Review"><i class="fa fa-sticky-note-o" ></i> </a>';
-                            var display2 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
-                            return display1;
+                            var display1 = '<a type="button" href="<?= base_url('manajemen_penjualan/purchaseorderadmin/review/'); ?>' + data + '" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Review"><i class="fa fa-sticky-note-o" ></i> </a>';
+                            var display2 = '<a type="button" href="<?= base_url('manajemen_penjualan/reviewpurchaseorder/timeline/'); ?>' + data + '" class="btn btn-icon waves-effect waves-light btn-inverse btn-sm" data-toggle="tooltip" data-placement="left" title="Timeline"><i class="fa fa-clock-o"></i> </a>';
+                            return display1 + ' ' + display2;
                         }
                     }
                 ],
@@ -218,47 +223,4 @@
             init_table(status_bayar, tanggal_awal, tanggal_akhir);
         });
     });
-</script>
-
-
-<!-- Script Filter -->
-
-<script>
-    function view_detail(no_faktur) {
-        window.location.href = "<?= base_url('Manajemen_Penjualan/DetailTransaksiPenjualan/Nomor_Faktur/'); ?>" + no_faktur;
-    }
-</script>
-<!-- Script Delete Data -->
-
-<script type="text/javascript">
-    function warning_delete(id_pelanggan) {
-        swal.fire({
-            title: 'Apa anda yakin akan hapus data ini?',
-            text: "Semua Data Pelanggan dengan kode " + id_pelanggan + " juga akan terhapus",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.value) {
-                deleteData(id_pelanggan);
-                swal.fire(
-                    'Deleted!',
-                    'Data telah dihapus!',
-                    'success'
-                )
-            }
-        });
-    }
-
-    function deleteData(id_pelanggan) {
-        $.ajax({
-            url: "<?= base_url('Manajemen_Penjualan/DaftarTransaksiPenjualan/delete_data/'); ?>" + id_pelanggan,
-            async: false,
-            success: function(data) {
-                $('#datatable-master-pelanggan').DataTable().ajax.reload();
-            }
-        });
-    }
 </script>

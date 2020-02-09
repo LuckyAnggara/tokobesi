@@ -11,22 +11,23 @@ class ReviewPurchaseOrder extends CI_Controller
         $this->load->model('Manajemen_Penjualan/Model_Purchase_Order', 'modelPO');
         $this->load->model('Manajemen_Persediaan/Model_Persediaan_Barang', 'modelPersediaan');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
+        $this->load->model('Setting/Model_Pusher', 'modelPusher');
 
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
         }
     }
 
-    public function review($string = null)
+    public function timeline($string = null)
     {
-
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-        $data['css'] = 'manajemen_penjualan/purchase_order/review/review_purchase_order_css';
+        $data['css'] = 'manajemen_penjualan/purchase_order_sales/review/review_purchase_order_css';
         $data['timeline'] = $this->modelPO->timeline($string);
-        $data['no_order'] = $this->modelPO->cekData($string);
+        $data['no_order'] = $string;
 
+        $cek = $this->modelPO->cekData($string);
 
-        if (!isset($data['no_order'])) {
+        if ($cek == false) {
             $this->load->view('template/template_header', $data);
             $this->load->view('template/template_menu');
             $this->load->view('template/template_page_not_found');
@@ -35,28 +36,45 @@ class ReviewPurchaseOrder extends CI_Controller
             $this->load->view('template/template_js');
             $this->load->view('template/template_app_js');
         } else {
-            $cekProses = $this->modelPO->cekDataMaster($string); // melakukan cek. apakah sudah di proses sebelumnya, kalo sudah tampilkan timelain
-            if ($cekProses !== true) {
-                $this->load->view('template/template_sales/template_header_sales', $data);
-                $this->load->view('template/template_menu');
-                $this->load->view('manajemen_penjualan/purchase_order/review/review_purchase_order', $data);
-                $this->load->view('template/template_sales/template_right_sales');
-                $this->load->view('manajemen_penjualan/purchase_order/review/review_purchase_order_modal');
-                $this->load->view('template/template_footer');
-                $this->load->view('template/template_js');
-                $this->load->view('manajemen_penjualan/purchase_order/review/review_purchase_order_js');
-                $this->load->view('template/template_app_js');
-            } else {
-                $this->load->view('template/template_sales/template_header_sales', $data);
-                $this->load->view('template/template_menu');
-                $this->load->view('manajemen_penjualan/purchase_order/review/timeline_purchase_order', $data);
-                $this->load->view('template/template_sales/template_right_sales');
-                $this->load->view('manajemen_penjualan/purchase_order/review/review_purchase_order_modal');
-                $this->load->view('template/template_footer');
-                $this->load->view('template/template_js');
-                $this->load->view('manajemen_penjualan/purchase_order/review/review_purchase_order_js');
-                $this->load->view('template/template_app_js');
-            }
+            $this->load->view('template/template_sales/template_header_sales', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('manajemen_penjualan/purchase_order_sales/review/timeline_purchase_order', $data);
+            $this->load->view('template/template_sales/template_right_sales');
+            $this->load->view('manajemen_penjualan/purchase_order_sales/review/review_purchase_order_modal');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('template/template_app_js');
+        }
+    }
+
+    public function review($string = null)
+    {
+
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+        $data['css'] = 'manajemen_penjualan/purchase_order_sales/review/review_purchase_order_css';
+        $data['timeline'] = $this->modelPO->timeline($string);
+        $data['no_order'] = $string;
+        $cek = $this->modelPO->cekData($string);
+
+        if ($cek == false) {
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('template/template_page_not_found');
+            $this->load->view('template/template_right');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('template/template_app_js');
+        } else {
+
+            $this->load->view('template/template_sales/template_header_sales', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('manajemen_penjualan/purchase_order_sales/review/review_purchase_order', $data);
+            $this->load->view('template/template_sales/template_right_sales');
+            $this->load->view('manajemen_penjualan/purchase_order_sales/review/review_purchase_order_modal');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('manajemen_penjualan/purchase_order_sales/review/review_purchase_order_js');
+            $this->load->view('template/template_app_js');
         }
     }
 
@@ -67,6 +85,14 @@ class ReviewPurchaseOrder extends CI_Controller
         $output = json_encode($data);
         echo $output;
     }
+    function get_total_perhitungan_return()
+    {
+        $post = $this->input->post();
+        $data = $this->modelPO->get_total_perhitungan_return($post);
+        $output = json_encode($data);
+        echo $output;
+    }
+
 
     function get_total_perhitungan()
     {
@@ -80,25 +106,6 @@ class ReviewPurchaseOrder extends CI_Controller
     {
         $post = $this->input->post();
         $this->modelPO->proses_ke_admin($post);
-        $this->pusher_notif_sales();
-    }
-
-    function pusher_notif_sales()
-    {
-        require_once(APPPATH . 'libraries/vendor/autoload.php');
-        $options = array(
-            'cluster' => 'ap1',
-            'useTLS' => true
-        );
-        $pusher = new Pusher\Pusher(
-            'a198692078b54078587e',
-            'bbcd6e359ab9b8fb37d2',
-            '942885',
-            $options
-        );
-
-        $data['message'] = 'sales';
-        $data['sales'] = 'update_po';
-        $pusher->trigger('my-channel', 'my-event', $data);
+        // $this->modelPusher->pusher_notif_sales();
     }
 }

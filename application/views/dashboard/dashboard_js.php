@@ -7,6 +7,9 @@
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
 
+<!-- Pusher Notif Sendiri -->
+<script src="<?= base_url('assets/'); ?>js/pusher.notif.js"></script>
+
 <!-- CHART.js -->
 <script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
 
@@ -282,7 +285,7 @@
                     }
                 },
                 {
-                    data: "jam",
+                    data: "tanggal",
                     targets: 1,
                     render: function(data, type, full, meta) {
                         return data;
@@ -360,11 +363,10 @@
             },
             options: {
                 scales: {
-                    yAxes: [
-                        // {
-                        //     id: "y-axis-1",
-                        //     position: "left"
-                        // },
+                    yAxes: [{
+                            id: "y-axis-1",
+                            position: "left"
+                        },
                         {
                             id: "y-axis-2",
                             position: "right"
@@ -549,7 +551,7 @@
                     callbacks: {
                         label: function(t, d) {
                             if (t.datasetIndex === 0) {
-                                return formatRupiah(t.yLabel.toString(), 'Rp.') + ' Juta';
+                                return formatSatuan(t.yLabel.toString()) + ' Juta';
                             }
                         },
                         title: function(t, d) {

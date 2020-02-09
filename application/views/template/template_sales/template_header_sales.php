@@ -52,25 +52,7 @@
                             <!-- End mobile menu toggle-->
                         </li>
 
-                        <!-- <li class="dropdown notification-list">
-                            <a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                <i class="fa fa-shopping-cart"><span class="badge badge-primary badge-pill">15</span></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="ti-user m-r-5"></i> <?= $this->session->userdata['username']; ?>
-                                </a>
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="ti-settings m-r-5"></i> Settings
-                                </a>
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="ti-lock m-r-5"></i> Lock screen
-                                </a>
-                                <a href=" <?= base_url('login/logout'); ?> " class="dropdown-item notify-item">
-                                    <i class="ti-power-off m-r-5"></i> Logout
-                                </a>
-                            </div>
-                        </li> -->
+                    
                         <li>
                             <!-- Notification -->
                             <div class="notification-box">

@@ -9,4 +9,12 @@ class Model_Setting extends CI_Model
         $this->db->from('setting_perusahaan');
         return $this->db->get()->row_array();
     }
+
+    function prefixFaktur()
+    {
+        $this->db->select('prefix_faktur');
+        $this->db->from('setting_perusahaan');
+        $data =  $this->db->get()->row_array();
+        return $data['prefix_faktur'];
+    }
 }

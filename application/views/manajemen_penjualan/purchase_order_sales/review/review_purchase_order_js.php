@@ -128,6 +128,7 @@
                 push_total_perhitungan(no_order, 0, 0)
                 batal_pajak();
                 if ($('#loading').is(':empty')) {
+                    deleteMasterPo(no_order);
                     swal.fire(
                         'Oopss!',
                         'Data keranjang Kosong, Kembali ke halaman Belanja!',
@@ -137,6 +138,13 @@
                     })
                 }
             }
+        });
+    }
+
+    function deleteMasterPo(no_order) {
+        $.ajax({
+            url: "<?= base_url('Manajemen_Penjualan/PurchaseOrderSales/delete_data_po/'); ?>" + no_order,
+            async: false,
         });
     }
 </script>
@@ -178,7 +186,7 @@
 
     function push_total_perhitungan(no_order, pajak, ongkir) {
         $.ajax({
-            url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/push_total_perhitungan'); ?>",
+            url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/push_total_perhitungan_review'); ?>",
             type: "post",
             data: {
                 no_order: no_order,
@@ -401,6 +409,11 @@
             }).then((result) => {
                 proses(text)
             })
+        } else {
+            Swal.fire({
+                title: 'Silahkan tulis pesan di Kolom Pes',
+                icon: 'error',
+            })
         }
 
     }
@@ -419,7 +432,6 @@
                 nama_pelanggan: nama_pelanggan,
                 alamat: alamat,
                 nomor_telepon: nomor_telepon,
-
                 no_order: no_order,
                 pesan: pesan
             },
@@ -428,18 +440,61 @@
                 $.LoadingOverlay("show");
             },
             success: function(data) {
+                setTimeout(function() {
+                    window.location.href = "<?= base_url('Manajemen_Penjualan/reviewpurchaseorder/timeline/'); ?>" + no_order;
+                }, 2000);
                 Swal.fire({
                     title: "Terkirim",
                     text: "Order anda telah terkirim ke Admin!",
                     icon: "success"
                 }).then(function() {
-                    location.reload();
+                    window.location.href = "<?= base_url('Manajemen_Penjualan/reviewpurchaseorder/timeline/'); ?>" + no_order;
                 });
 
             },
             complete: function() {
                 $.LoadingOverlay("hide");
             }
+        });
+    }
+</script>
+
+<!-- Script Batal -->
+<script>
+    $('#batal').on('click', function() {
+        var no_order = $('#no_order').text();
+        warning_delete(no_order)
+    });
+
+    function warning_delete(no_order) {
+        swal.fire({
+            title: 'Apa anda yakin akan hapus data ini?',
+            text: "Data Order " + no_order + " akan terhapus",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                deleteData(no_order);
+                swal.fire(
+                    'Deleted!',
+                    'Data telah dihapus!',
+                    'success'
+                ).then((result) => {
+                    if (result.value) {
+                        location.reload(true);
+                    }
+                })
+            }
+        });
+    }
+
+    function deleteData(no_order) {
+        $.ajax({
+            url: "<?= base_url('Manajemen_Penjualan/PurchaseOrderSales/delete_data_po/'); ?>" + no_order,
+            async: false,
         });
     }
 </script>

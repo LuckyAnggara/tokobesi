@@ -11,6 +11,7 @@ class PurchaseOrderSales extends CI_Controller
         $this->load->model('Manajemen_Penjualan/Model_Purchase_Order', 'modelPO');
         $this->load->model('Manajemen_Persediaan/Model_Persediaan_Barang', 'modelPersediaan');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
+        $this->load->model('Setting/Model_Pusher', 'modelPusher');
 
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
@@ -27,9 +28,9 @@ class PurchaseOrderSales extends CI_Controller
             $this->session->set_userdata('no_order_dummy', $no_order_dummy);
         } else {
             $this->session->unset_userdata('no_order_dummy');
-            $nomor_urut = $this->modelPO->nomor(date('djy'));
+            $nomor_urut = $this->modelPO->nomor(date('dmy'));
             $nomor = $nomor_urut + 1;
-            $no_order_dummy = date('djy') . sprintf("%03d", $nomor);
+            $no_order_dummy = date('dmy') . sprintf("%03d", $nomor);
 
             $this->cek_duplikat($no_order_dummy);
         }
@@ -37,9 +38,9 @@ class PurchaseOrderSales extends CI_Controller
 
     public function cobacoba()
     {
-        $nomor_urut = $this->modelPO->nomor(date('djy'));
+        $nomor_urut = $this->modelPO->nomor(date('dmy'));
         $nomor = $nomor_urut + 1;
-        $no_order_dummy = date('djy') . sprintf("%03d", $nomor);
+        $no_order_dummy = date('dmy') . sprintf("%03d", $nomor);
         echo $no_order_dummy;
     }
 
@@ -68,16 +69,30 @@ class PurchaseOrderSales extends CI_Controller
         $this->init_no_order();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['no_order'] = $this->session->userdata('no_order_dummy');
-        $data['css'] = 'manajemen_penjualan/purchase_order/purchase_order_sales/purchase_order_sales_css';
+        $data['css'] = 'manajemen_penjualan/purchase_order_sales/purchase_order_sales_css';
         $data['title'] = "Penjualan Barang";
         $this->load->view('template/template_sales/template_header_sales', $data);
         $this->load->view('template/template_menu');
-        $this->load->view('manajemen_penjualan/purchase_order/purchase_order_sales/purchase_order_sales', $data);
+        $this->load->view('manajemen_penjualan/purchase_order_sales/purchase_order_sales', $data);
         $this->load->view('template/template_sales/template_right_sales');
-        $this->load->view('manajemen_penjualan/purchase_order/purchase_order_sales/purchase_order_sales_modal');
+        $this->load->view('manajemen_penjualan/purchase_order_sales/purchase_order_sales_modal');
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
-        $this->load->view('manajemen_penjualan/purchase_order/purchase_order_sales/purchase_order_sales_js');
+        $this->load->view('manajemen_penjualan/purchase_order_sales/purchase_order_sales_js');
+        $this->load->view('template/template_app_js');
+    }
+
+    public function daftar()
+    {
+        $data['css'] = 'manajemen_penjualan/purchase_order_sales/daftar/daftar_purchase_order_css';
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+        $this->load->view('template/template_header', $data);
+        $this->load->view('template/template_menu');
+        $this->load->view('manajemen_penjualan/purchase_order_sales/daftar/daftar_purchase_order');
+        $this->load->view('template/template_right');
+        $this->load->view('template/template_footer');
+        $this->load->view('template/template_js');
+        $this->load->view('manajemen_penjualan/purchase_order_sales/daftar/daftar_purchase_order_js');
         $this->load->view('template/template_app_js');
     }
 
@@ -116,6 +131,8 @@ class PurchaseOrderSales extends CI_Controller
     public function push_data_barang()
     {
         $this->modelPO->push_data_barang();
+        $this->modelPusher->pusher_update_persediaan(); // delete data
+
     }
 
     public function get_data_keranjang($no_order)
@@ -159,7 +176,17 @@ class PurchaseOrderSales extends CI_Controller
     {
         if (empty($id)) {
         } else {
-            $this->modelPO->delete_data_keranjang($id); // delete data
+            $this->modelPO->delete_data_keranjang($id);
+            $this->modelPusher->pusher_update_persediaan(); // delete data
+        }
+    }
+
+    public function delete_data_po($no_order)
+    {
+        if (empty($no_order)) {
+        } else {
+            $this->modelPO->delete_data_po($no_order); // delete data
+            $this->modelPusher->pusher_update_persediaan(); // delete data
         }
     }
 
@@ -181,15 +208,22 @@ class PurchaseOrderSales extends CI_Controller
     // checkout penjualan
 
 
-    function push_total_perhitungan()
+    function push_total_perhitungan_sales()
     {
         $post = $this->input->post();
-        $this->modelPO->push_total_perhitungan($post);
+        $this->modelPO->push_total_perhitungan_sales($post);
     }
 
-    function get_total_perhitungan($no_order)
+    function push_total_perhitungan_review()
     {
-        $data = $this->modelPO->get_total_perhitungan($no_order);
+        $post = $this->input->post();
+        $this->modelPO->push_total_perhitungan_review($post);
+    }
+
+    function get_total_perhitungan()
+    {
+        $post = $this->input->post();
+        $data = $this->modelPO->get_total_perhitungan($post);
         $output = json_encode($data);
         echo $output;
     }
@@ -265,5 +299,38 @@ class PurchaseOrderSales extends CI_Controller
     {
         $post = $this->input->post();
         $this->modelPO->push_review_temp($post);
+        $this->modelPusher->pusher_update_persediaan();
+    }
+
+
+    // script daftar po oleh sales 
+
+    public function getDataPOSales()
+    {
+        $post = $this->input->post();
+        $database = $this->modelPO->get_data_po_sales($post);
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results('master_penjualan'),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => array()
+        );
+
+        foreach ($data as $key => $value) {
+            $status_order =  $this->modelPO->data_status($value['no_order']);
+            $admin =  $this->modelPO->data_admin($value['admin']);
+            $pelanggan =  $this->modelPO->data_pelanggan($value['id_pelanggan']);
+            $value['status_order'] = $status_order;
+            $value['admin'] = $admin;
+            $value['pelanggan'] = $pelanggan;
+
+            $output['data'][] = $value;
+        }
+
+
+
+        $output = json_encode($output);
+        echo $output;
     }
 }

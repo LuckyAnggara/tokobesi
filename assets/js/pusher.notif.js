@@ -9,6 +9,7 @@ $(document).ready(function () { // CALL FUNCTION SHOW PRODUCT
     channel.bind('my-event', function (data) {
         if (data.message === 'sales') {
             notiftoast();
+            playAudio();
         }
     });
 
@@ -34,5 +35,15 @@ $(document).ready(function () { // CALL FUNCTION SHOW PRODUCT
         Command : toastr["info"]("Order Baru dari Sales", "Order Baru !!")
 
     }
+    function playAudio() {
+        var url = "assets/sound/notif.mp3"
+        new Audio(url).play();
+        console.log('play');
+    }
+    function play() {
+        var audio = document.getElementById("audio");
+        audio.play();
+    }
+
 
 });

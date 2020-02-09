@@ -10,7 +10,7 @@
     <hr>
 
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-12">
             <div class="card-box" id="total_loading">
                 <div class="clearfix row">
                     <ul class="col-3" style="list-style-type:none">
@@ -66,7 +66,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-12">
             <div class="card-box" id="pelanggan_loading">
                 <div class="form-group row">
                     <h4 class="m-t-0 header-title">Data Pelanggan</h4>
@@ -118,7 +118,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-12">
             <div class="card-box text-center">
                 <button type="submit" id="proses" class="btn btn-success waves-effect waves-light">Proses</button>
                 <button type="submit" id="batal" class="btn btn-danger waves-effect waves-light">Batal</button>

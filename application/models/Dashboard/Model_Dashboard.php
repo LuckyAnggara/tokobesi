@@ -299,13 +299,13 @@ class Model_Dashboard extends CI_Model
 
     function get_data_penjualan_terakhir($tanggal)
     {
-        $this->db->select('master_penjualan.status_bayar,master_penjualan.no_faktur, master_penjualan.sales, master_penjualan.total_penjualan, DATE_FORMAT(`tanggal_transaksi`, "%H:%i") as jam, master_user.nama');
+        $this->db->select('master_penjualan.status_bayar,master_penjualan.no_faktur, master_penjualan.sales, master_penjualan.total_penjualan, DATE_FORMAT(`tanggal_transaksi`, "%H:%i") as jam, DATE_FORMAT(`tanggal_transaksi`, "%d-%M-%y") as tanggal, master_user.nama');
         $this->db->from('master_penjualan');
         $this->db->join('master_user', 'master_user.username = master_penjualan.user');
         $this->db->where('tanggal_transaksi >=', $tanggal);
         $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59'));
         $this->db->limit(5);
-        $this->db->order_by('tanggal_transaksi', 'DESC');
+        $this->db->order_by('id', 'DESC');
         $output = $this->db->get();
         return $output;
     }
@@ -461,6 +461,7 @@ class Model_Dashboard extends CI_Model
         $this->db->from('master_penjualan');
         $this->db->where('sales', $kode_sales);
         $this->db->group_by('bulan');
+        $this->db->order_by('bulan', 'DESC');
         return $this->db->get()->result_array();
     }
 }

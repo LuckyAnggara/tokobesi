@@ -39,7 +39,8 @@ class Login extends CI_Controller
 				'username' => $username,
 				'status' => "login",
 				'role' => $role,
-				'avatar' => $cek['avatar']
+				'avatar' => $cek['avatar'],
+				'faktur_prefix' => $this->modelSetting->prefixFaktur()
 			);
 			$this->session->set_userdata($data_session);
 			// 	$this->modelLogin->update_status($username);

@@ -138,25 +138,8 @@ class Model_Penjualan_Barang extends CI_Model
     public function get_data_keranjang_clear($no_order)
     {
         //  cek dulu apakah sudah di save apa blm
-
-        $this->db->select('*');
-        $this->db->from('temp_tabel_keranjang_penjualan');
         $this->db->where('no_order_penjualan', $no_order);
-        $cek = $this->db->get()->num_rows();
-
-        if ($cek > 0) {
-            $this->db->select('*');
-            $this->db->from('temp_tabel_keranjang_penjualan');
-            $this->db->where('no_order_penjualan', $no_order);
-            $data = $this->db->get()->result_array();
-
-            foreach ($data as $value) {
-                $this->persediaan_temp_batal($value);
-            }
-            $this->db->where('no_order_penjualan', $no_order);
-            $this->db->delete('temp_tabel_keranjang_penjualan');
-        } else {
-        }
+        $this->db->delete('temp_tabel_keranjang_penjualan');
     }
 
     function simpan_order($post)

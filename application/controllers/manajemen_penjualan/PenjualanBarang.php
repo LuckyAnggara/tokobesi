@@ -12,6 +12,7 @@ class PenjualanBarang extends CI_Controller
         $this->load->model('Manajemen_Persediaan/Model_Persediaan_Barang', 'modelPersediaan');
         $this->load->model('Manajemen_Penjualan/Model_Invoice', 'modelInvoice');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
+        $this->load->model('Setting/Model_Pusher', 'modelPusher');
 
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
@@ -37,6 +38,8 @@ class PenjualanBarang extends CI_Controller
     public function clear_keranjang_belanja($no_order_lama)
     {
         $this->modelPenjualan->get_data_keranjang_clear($no_order_lama);
+        echo "aww";
+        $this->modelPusher->pusher_update_persediaan();
     }
 
     public function index()
@@ -117,6 +120,7 @@ class PenjualanBarang extends CI_Controller
     public function push_data_barang()
     {
         $this->modelPenjualan->push_data_barang();
+        $this->modelPusher->pusher_update_persediaan();
     }
 
     public function get_data_keranjang($no_order)

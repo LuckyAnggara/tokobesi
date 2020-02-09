@@ -14,6 +14,7 @@
                                         <li><a href="<?= base_url('Manajemen_Penjualan/PenjualanBarang'); ?>">Penjualan Barang</a></li>
                                         <hr>
                                         <li><a href="<?= base_url('manajemen_penjualan/purchaseordersales'); ?>">P.O Sales - Sales</a></li>
+                                        <li><a href="<?= base_url('manajemen_penjualan/purchaseordersales/daftar'); ?>">P.O Sales - Daftar</a></li>
                                         <li><a href="<?= base_url('manajemen_penjualan/purchaseorderadmin'); ?>">P.O Sales - Admin</a></li>
                                         <hr>
                                         <li><a href="<?= base_url('Manajemen_Penjualan/DaftarTransaksiPenjualan'); ?>">Daftar Transaksi</a></li>
@@ -39,10 +40,11 @@
                             <ul class="submenu">
                                 <li>
                                     <ul>
-                                        <li><a href="<?= base_url('Manajemen_Barang/MasterPersediaan'); ?>">Master Persediaan</a></li>
+                                        <li><a href="<?= base_url('Manajemen_Persediaan/MasterPersediaan'); ?>">Master Persediaan</a></li>
                                         <li><a href="<?= base_url('Manajemen_Persediaan/KartuPersediaan'); ?>">Kartu Persediaan</a></li>
                                         <hr>
                                         <li><a href="<?= base_url('Manajemen_Persediaan/SaldoAwalPersediaan'); ?>">Saldo Awal Persediaan</a></li>
+                                        <li><a href="<?= base_url('Manajemen_Persediaan/StockOpname'); ?>">Stock Opname</a></li>
                                     </ul>
                                 </li>
                             </ul>

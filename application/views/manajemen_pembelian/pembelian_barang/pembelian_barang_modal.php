@@ -68,7 +68,7 @@
                     <div class="form-group">
                         <label class="control-label">Harga Beli</label>
                         <input id="dummy_harga_beli" autocomplete="off" name="dummy_harga_beli" type="text" class="form-control" placeholder="">
-                        <input id="harga_beli" autocomplete="off" name="harga_beli" type="text" class="form-control" placeholder="">
+                        <input hidden id="harga_beli" autocomplete="off" name="harga_beli" type="text" class="form-control" placeholder="">
                     </div>
                     <div class="form-group">
                         <label class="control-label">Diskon</label>

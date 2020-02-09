@@ -1,10 +1,10 @@
 <div class="container-fluid">
+    <!-- Page-Title -->
     <div class="row">
         <div class="col-sm-12">
-            <h4 class="page-title">Daftar Purchase Order</h4>
+            <h4 class="page-title">Master Persediaan<span class="badge badge-danger" id="filter_status">Real Time</span></h4>
         </div>
     </div>
-
     <div class="row">
         <div class="col-12">
             <div class="card-box">
@@ -15,6 +15,22 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group row">
+                            <label class="col-sm-1 col-sm-form-label">Status</label>
+                            <div class="col-sm-11 col-md-7 col-lg-7 m-b-10">
+                                <select name="status" id="status" class="form-control">
+                                    <option value="0">Real Time</option>
+                                    <option value="1">Tanggal Tertentu</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <button name="filter" id="filter" class="btn btn-primary waves-effect waves-light">
+                                    <i class="fa fa-filter"></i>
+                                    <span> Filter</span>
+                                </button>
+                            </div>
+
+                        </div>
+                        <div class="form-group row" id="tanggal_filter" hidden>
                             <label class="col-sm-1 col-sm-form-label m-t-10">Tanggal</label>
                             <div class="col-sm-5 col-lg-3 col-md-3">
                                 <div class="input-group">
@@ -34,28 +50,6 @@
                                 </div><!-- input-group -->
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-sm-1 col-sm-form-label">Status</label>
-                            <div class="col-sm-11 col-md-7 col-lg-7 m-b-10">
-                                <select name="status_bayar" id="status_bayar" class="form-control">
-                                    <option value="">Semua</option>
-                                    <option value="1">Waiting Aprrove</option>
-                                    <option value="2">Approves</option>
-                                    <option value="3">Return</option>
-                                    <option value="99">Reject</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4 col-lg-4">
-                                <button name="filter" id="filter" class="btn btn-primary waves-effect waves-light">
-                                    <i class="fa fa-filter"></i>
-                                    <span> Filter</span>
-                                </button>
-                            </div>
-
-                        </div>
-                        <div class="form-group row">
-
-                        </div>
 
 
                     </div>
@@ -66,17 +60,18 @@
         <div class="col-12">
             <div class="card-box">
                 <div class="table-responsive">
-                    <table id="datatable-daftar-po" class="table table-striped table-bordered  dt-responsive nowrap" cellspacing="0" width="100%">
+                    <table id="datatable-master-persediaan" class="table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead class="thead-dark">
                             <tr>
                                 <th>#</th>
-                                <th>Tanggal Transaksi</th>
-                                <th>Nomor P.O</th>
-                                <th>Nama Pelanggan</th>
-                                <th>Grand Total</th>
-                                <th>Sales</th>
-                                <th>Status</th>
-                                <th>User</th>
+                                <th>Kode Barang</th>
+                                <th>Nama Barang</th>
+                                <th>Saldo Awal</th>
+                                <th>Masuk</th>
+                                <th>Keluar</th>
+                                <th>In Cart</th>
+                                <th>In Cart (PO)</th>
+                                <th>Saldo Akhir</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

@@ -69,6 +69,8 @@ class Model_Persediaan_Barang extends CI_Model
         // data dari purchase order yg masih pending di sales atau admin
         $this->db->select_sum('jumlah_penjualan');
         $this->db->where('kode_barang', $kode_barang);
+        $this->db->where('status !=', 99);
+        $this->db->where('status !=', 2);
         $result = $this->db->get('temp_purchase_order')->row();
         $qty_po =  $result->jumlah_penjualan;
 

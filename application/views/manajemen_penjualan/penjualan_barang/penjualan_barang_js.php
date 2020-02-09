@@ -39,14 +39,18 @@
   // init hide advance search -->
   <script>
     $(document).ready(function() {
+      $(window).bind('beforeunload', function() {
 
-      $(window).on("unload", function(e) {
+
         $.ajax({
-          async: false,
           url: '<?= base_url("Manajemen_Penjualan/PenjualanBarang/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
+          success: function(data) {
+            console.log('clear');
+          }
         });
-      });
 
+
+      });
       $('#tanggal_jatuh_tempo').datepicker({
         autoclose: true,
         todayHighlight: true,
@@ -416,8 +420,8 @@
             }
           },
           complete: function() {
-                $("#result_page").LoadingOverlay("hide", true);
-            }
+            $("#result_page").LoadingOverlay("hide", true);
+          }
         });
       } else {
         $("#result_page").empty();
@@ -575,16 +579,16 @@
         cache: false,
         async: false,
         beforeSend: function() {
-            $("#modal_detail_penjualan").LoadingOverlay("show");
-          },
+          $("#modal_detail_penjualan").LoadingOverlay("show");
+        },
         success: function(data) {
           $('#datatable-keranjang-penjualan').DataTable().ajax.reload();
           total_harga_keranjang();
           $('#loading_tambah').loading('stop');
         },
         complete: function() {
-                $("#modal_detail_penjualan").LoadingOverlay("hide", true);
-            }
+          $("#modal_detail_penjualan").LoadingOverlay("hide", true);
+        }
       })
     }
 

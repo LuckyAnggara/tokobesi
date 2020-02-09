@@ -228,7 +228,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <canvas id="myChart" height="50"></canvas>
+                            <canvas id="myChart" height="150"></canvas>
                         </div>
                     </div><!-- end col -->
                 </div>
