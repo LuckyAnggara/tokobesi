@@ -8,8 +8,6 @@
 <!-- form Uploads -->
 <link href="<?= base_url('assets/'); ?>plugins/fileuploads/css/dropify.min.css" rel="stylesheet" type="text/css" />
 
-<!-- Sweet Alert css -->
-<link href="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 
 <!-- Select2 Css -->
 <link href="<?= base_url('assets/'); ?>plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />

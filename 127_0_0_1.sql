@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 09, 2020 at 04:12 PM
+-- Generation Time: Feb 10, 2020 at 04:12 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -111,6 +111,54 @@ INSERT INTO `detail_persediaan` (`id`, `tanggal_transaksi`, `nomor_transaksi`, `
 (19, '2020-02-09', 'betasdas', 'B001', 1000, 95000, 1000),
 (20, '2020-02-09', 'asfasf', 'B001', 500, 90000, 500),
 (21, '2020-02-07', 'asfasf', 'BES0002', 500, 100000, 500);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `detail_stok_opname`
+--
+
+CREATE TABLE `detail_stok_opname` (
+  `id` int(11) NOT NULL,
+  `nomor_referensi` varchar(255) NOT NULL,
+  `tanggal` datetime NOT NULL,
+  `kode_barang` varchar(255) NOT NULL,
+  `saldo_buku` double NOT NULL,
+  `saldo_fisik` double NOT NULL,
+  `selisih` double NOT NULL,
+  `nomor_referensi_detail` varchar(255) NOT NULL,
+  `user` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `detail_stok_opname`
+--
+
+INSERT INTO `detail_stok_opname` (`id`, `nomor_referensi`, `tanggal`, `kode_barang`, `saldo_buku`, `saldo_fisik`, `selisih`, `nomor_referensi_detail`, `user`) VALUES
+(57, 'REF9264850', '2020-02-10 00:00:00', 'B001', 1400, 0, 1400, '', 'lucky15'),
+(58, 'REF9264850', '2020-02-10 00:00:00', 'BES0002', 510, 0, 510, '', 'lucky15'),
+(59, 'REF9264850', '2020-02-10 00:00:00', 'K001', 0, 0, 0, '', 'lucky15'),
+(60, 'REF9264850', '2020-02-10 00:00:00', 'P001', 0, 0, 0, '', 'lucky15'),
+(61, 'REF7503296', '2020-02-18 00:00:00', 'B001', 1400, 0, 1400, '', 'lucky15'),
+(62, 'REF7503296', '2020-02-18 00:00:00', 'BES0002', 510, 0, 510, '', 'lucky15'),
+(63, 'REF7503296', '2020-02-18 00:00:00', 'K001', 0, 0, 0, '', 'lucky15'),
+(64, 'REF7503296', '2020-02-18 00:00:00', 'P001', 0, 0, 0, '', 'lucky15'),
+(65, 'REF3605274', '2020-02-10 00:00:00', 'B001', 1400, 20, 1380, '', 'lucky15'),
+(66, 'REF3605274', '2020-02-10 00:00:00', 'BES0002', 510, 0, 510, '', 'lucky15'),
+(67, 'REF3605274', '2020-02-10 00:00:00', 'K001', 0, 0, 0, '', 'lucky15'),
+(68, 'REF3605274', '2020-02-10 00:00:00', 'P001', 0, 0, 0, '', 'lucky15'),
+(69, 'REF4593078', '2020-02-10 00:00:00', 'B001', 1400, 0, 1400, '', 'lucky15'),
+(70, 'REF4593078', '2020-02-10 00:00:00', 'BES0002', 510, 0, 510, '', 'lucky15'),
+(71, 'REF4593078', '2020-02-10 00:00:00', 'K001', 0, 0, 0, '', 'lucky15'),
+(72, 'REF4593078', '2020-02-10 00:00:00', 'P001', 0, 0, 0, '', 'lucky15'),
+(73, 'REF2153890', '2020-02-12 00:00:00', 'B001', 1400, 0, 1400, '', 'lucky15'),
+(74, 'REF2153890', '2020-02-12 00:00:00', 'BES0002', 510, 0, 510, '', 'lucky15'),
+(75, 'REF2153890', '2020-02-12 00:00:00', 'K001', 0, 0, 0, '', 'lucky15'),
+(76, 'REF2153890', '2020-02-12 00:00:00', 'P001', 0, 0, 0, '', 'lucky15'),
+(77, 'REF5642970', '2020-02-10 00:00:00', 'B001', 1400, 0, 1400, '', 'lucky15'),
+(78, 'REF5642970', '2020-02-10 00:00:00', 'BES0002', 510, 0, 510, '', 'lucky15'),
+(79, 'REF5642970', '2020-02-10 00:00:00', 'K001', 0, 0, 0, '', 'lucky15'),
+(80, 'REF5642970', '2020-02-10 00:00:00', 'P001', 0, 0, 0, '', 'lucky15');
 
 -- --------------------------------------------------------
 
@@ -526,15 +574,28 @@ INSERT INTO `master_satuan_barang` (`id_satuan`, `kode_satuan`, `nama_satuan`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `master_stock_opname`
+-- Table structure for table `master_stok_opname`
 --
 
-CREATE TABLE `master_stock_opname` (
+CREATE TABLE `master_stok_opname` (
   `id` int(11) NOT NULL,
   `nomor_referensi` varchar(255) NOT NULL,
   `tanggal` datetime NOT NULL,
-  `keterangan` text NOT NULL
+  `keterangan` text NOT NULL,
+  `user` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `master_stok_opname`
+--
+
+INSERT INTO `master_stok_opname` (`id`, `nomor_referensi`, `tanggal`, `keterangan`, `user`) VALUES
+(16, 'REF9264850', '2020-02-10 00:00:00', 'asdas', 'lucky15'),
+(17, 'REF7503296', '2020-02-18 00:00:00', 'asdasd', 'lucky15'),
+(18, 'REF3605274', '2020-02-10 00:00:00', '', 'lucky15'),
+(19, 'REF4593078', '2020-02-10 00:00:00', '', 'lucky15'),
+(20, 'REF2153890', '2020-02-12 00:00:00', 'sdgsdg', 'lucky15'),
+(21, 'REF5642970', '2020-02-10 00:00:00', '', 'lucky15');
 
 -- --------------------------------------------------------
 
@@ -610,7 +671,7 @@ CREATE TABLE `master_user` (
 
 INSERT INTO `master_user` (`username`, `kode_pegawai`, `password`, `role`, `nama`, `avatar`, `status`, `timestamp`) VALUES
 ('desi10', '10002', '123', 'Sales', 'Desi Evilia A', 'avatar-3.jpg', 'logout', '2020-02-09 10:40:25'),
-('lucky15', '10001', '123', 'Sales', 'Lucky Anggara', 'avatar-2.jpg', 'logout', '2020-02-09 14:04:34');
+('lucky15', '10001', '123', 'Sales', 'Lucky Anggara', 'avatar-2.jpg', 'logout', '2020-02-09 16:13:43');
 
 -- --------------------------------------------------------
 
@@ -826,6 +887,13 @@ ALTER TABLE `detail_persediaan`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `detail_stok_opname`
+--
+ALTER TABLE `detail_stok_opname`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `stokopname` (`nomor_referensi`);
+
+--
 -- Indexes for table `harga_detail_pembelian`
 --
 ALTER TABLE `harga_detail_pembelian`
@@ -940,9 +1008,9 @@ ALTER TABLE `master_satuan_barang`
   ADD PRIMARY KEY (`id_satuan`);
 
 --
--- Indexes for table `master_stock_opname`
+-- Indexes for table `master_stok_opname`
 --
-ALTER TABLE `master_stock_opname`
+ALTER TABLE `master_stok_opname`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nomor_referensi` (`nomor_referensi`);
 
@@ -1044,6 +1112,12 @@ ALTER TABLE `detail_persediaan`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
+-- AUTO_INCREMENT for table `detail_stok_opname`
+--
+ALTER TABLE `detail_stok_opname`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+
+--
 -- AUTO_INCREMENT for table `master_harga_pokok_penjualan`
 --
 ALTER TABLE `master_harga_pokok_penjualan`
@@ -1086,10 +1160,10 @@ ALTER TABLE `master_saldo_awal`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `master_stock_opname`
+-- AUTO_INCREMENT for table `master_stok_opname`
 --
-ALTER TABLE `master_stock_opname`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `master_stok_opname`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `temp_purchase_order`
@@ -1130,6 +1204,12 @@ ALTER TABLE `detail_pembelian`
 --
 ALTER TABLE `detail_penjualan`
   ADD CONSTRAINT `penjualan` FOREIGN KEY (`nomor_faktur`) REFERENCES `master_penjualan` (`no_faktur`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `detail_stok_opname`
+--
+ALTER TABLE `detail_stok_opname`
+  ADD CONSTRAINT `stokopname` FOREIGN KEY (`nomor_referensi`) REFERENCES `master_stok_opname` (`nomor_referensi`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `master_harga_pokok_penjualan`

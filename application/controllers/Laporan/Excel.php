@@ -20,27 +20,40 @@ class Excel extends CI_Controller
     public function StokOpname($no_ref)
     {
 
-        $semua_pengguna =  $this->modelMasterPersediaan->getDataStockOpname();
+        $database = $this->modelMasterPersediaan->getDataStockOpname($no_ref);
+        $dataBarang = $database->result_array();
+        $output = array();
 
-        
+        foreach ($dataBarang as $key => $value) {
+
+            $data_barang = $this->modelMasterPersediaan->dataBarang($value['kode_barang']);
+
+            $value['data_barang'] = $data_barang;
+
+            $output[] = $value;
+        }
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Nama Barang');
-        $sheet->setCellValue('C1', 'Satuan');
-        $sheet->setCellValue('D1', 'Saldo (Buku)');
-        $sheet->setCellValue('E1', 'Saldo (Fisik)');
+        $sheet->setCellValue('B1', 'Kode Barang');
+        $sheet->setCellValue('C1', 'Nama Barang');
+        $sheet->setCellValue('D1', 'Satuan');
+        $sheet->setCellValue('E1', 'Saldo (Buku)');
+        $sheet->setCellValue('F1', 'Saldo (Fisik)');
 
         $kolom = 2;
         $nomor = 1;
-        foreach ($semua_pengguna as $pengguna) {
 
-            $spreadsheet->setActiveSheetIndex(0)
-                ->setCellValue('A' . $kolom, $nomor)
-                ->setCellValue('B' . $kolom, $pengguna['kode_barang'])
-                ->setCellValue('C' . $kolom, $pengguna['kode_barang'])
-                ->setCellValue('D' . $kolom, $pengguna['kode_barang'])
-                ->setCellValue('E' . $kolom, $pengguna['kode_barang']);
+        foreach ($output as $key => $value) {
+
+            $barang = $value['data_barang'];
+            $sheet->setCellValue('A' . $kolom, $nomor);
+            $sheet->setCellValue('B' . $kolom, $barang['kode_barang']);
+            $sheet->setCellValue('C' . $kolom, $barang['nama_barang']);
+            $sheet->setCellValue('D' . $kolom, $barang['nama_satuan']);
+            $sheet->setCellValue('E' . $kolom, $value['saldo_buku']);
+            $sheet->setCellValue('F' . $kolom, $value['saldo_fisik']);
 
             $kolom++;
             $nomor++;
@@ -48,7 +61,7 @@ class Excel extends CI_Controller
 
         $writer = new Xlsx($spreadsheet);
 
-        $filename = 'stokopname'. $no_ref;
+        $filename = 'stokopname';
 
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');

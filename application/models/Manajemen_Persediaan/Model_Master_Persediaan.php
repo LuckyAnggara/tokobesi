@@ -133,12 +133,6 @@ class Model_Master_Persediaan extends CI_Model
 
     // STOCK OPNAME
 
-    function getDataStockOpname()
-    {
-        $this->db->select('kode_barang');
-        $this->db->from('master_barang');
-        return $this->db->get();
-    }
 
     function dataBarang($kode_barang)
     {
@@ -205,5 +199,88 @@ class Model_Master_Persediaan extends CI_Model
         return random_string('numeric', 7);
     }
 
-    
+    function tambah_data($post)
+    {
+        $data = [
+            'nomor_referensi' => $post['nomor_referensi'],
+            'tanggal' =>  date('Y-m-d H:i:s', strtotime($post['tanggal'])),
+            'keterangan' => $post['keterangan'],
+            'user' => $this->session->userdata['username']
+        ];
+        $this->db->insert('master_stok_opname', $data);
+    }
+
+    function tambah_detail_data($post)
+    {
+        $database = $this->getDataBarang();
+        $dataBarang = $database->result_array();
+        $output = array();
+
+        foreach ($dataBarang as $key => $value) {
+            $data_barang = $this->dataBarang($value['kode_barang']);
+            $saldo_buku = $this->saldoBuku($value['kode_barang']);
+            $value['data_barang'] = $data_barang;
+            $value['saldo_buku'] = $saldo_buku;
+            $value['saldo_fisik'] = "0";
+            $value['selisih'] = $saldo_buku - $value['saldo_fisik'];
+            $output[] = $value;
+        }
+
+        foreach ($output as $key => $value) {
+            $barang = $value['data_barang'];
+            $data = [
+                'nomor_referensi' => $post['nomor_referensi'],
+                'tanggal' =>  date('Y-m-d H:i:s', strtotime($post['tanggal'])),
+                'kode_barang' => $barang['kode_barang'],
+                'saldo_buku' => $value['saldo_buku'],
+                'saldo_fisik' => $value['saldo_fisik'],
+                'selisih' => $value['selisih'],
+                'user' => $this->session->userdata['username']
+            ];
+            $this->db->insert('detail_stok_opname', $data);
+        }
+    }
+
+    function getDataStockOpname($no_ref)
+    {
+        $this->db->select('*');
+        $this->db->from('detail_stok_opname');
+        $this->db->where('nomor_referensi', $no_ref);
+        $this->db->order_by('kode_barang', 'ASC');
+
+        return $this->db->get();
+    }
+
+    function update_data_by_upload($no_ref) // update data stok opname by upload file
+    {
+        $config['upload_path']          = './assets/upload/temp/stokopname/';
+        $config['allowed_types']        = 'xlsx|xls';
+        $config['file_name']            = random_string('alnum', 16);
+        $config['overwrite']            = true;
+        $config['max_size']             = 4096; // 4MB
+        // $config['max_width']            = 1024;
+        // $config['max_height']           = 768;
+        $this->load->library('upload', $config);
+        if ($this->upload->do_upload('upload_data')) {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            $nama_file = $this->upload->data("file_name");
+            $spreadsheet = $reader->load('./assets/upload/temp/stokopname/' . $nama_file);
+            $sheetData = $spreadsheet->getActiveSheet()->toArray();
+
+            unlink('./assets/upload/temp/stokopname/' . $nama_file);
+        }
+
+
+        for ($i = 1; $i < count($sheetData); $i++) {
+            $selisih = $sheetData[$i]['4'] - $sheetData[$i]['5'];
+            $data = [
+                'saldo_fisik' => $sheetData[$i]['5'],
+                'selisih' => $selisih,
+                'user' => $this->session->userdata['username']
+            ];
+            $this->db->where('kode_barang', $sheetData[$i]['1']);
+            $this->db->where('nomor_referensi', $no_ref);
+            $this->db->update('detail_stok_opname', $data);
+        }
+    }
 }
