@@ -59,10 +59,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12">
+                        <div class="form-group row">
+                            <label class="col-5 col-sm-form-label m-t-10">Upload</label>
+                            <button name="download_format" id="download_format"  class="btn btn-success btn-rounded w-md waves-effect waves-light m-b-20">
+                                <i class="fa fa-plus"></i>
+                                <span>Tambah Data</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
             </div>
-
         </div>
         <div class="col-md-8 col-xs-12">
             <div class="card-box">

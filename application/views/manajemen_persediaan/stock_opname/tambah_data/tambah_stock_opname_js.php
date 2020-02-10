@@ -106,3 +106,24 @@
         });
     }
 </script>
+
+<!-- Script Random Type -->
+
+<script>
+    $('#apply_random').on('click', function() {
+        $.ajax({
+            url: '<?= base_url("Manajemen_Persediaan/stockopname/random_ref/"); ?>',
+            type: "POST",
+            dataType: "JSON",
+            async: false,
+            success: function(data) {
+                $('#nomor_referensi').val(data);
+            }
+        });
+    })
+
+    $('#download_format').on('click', function() {
+        window.location.href = '<?= base_url("Laporan/excel/stokopname/"); ?>' + $('#nomor_referensi').val();
+      
+    })
+</script>

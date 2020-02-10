@@ -72,4 +72,11 @@ class StockOpname extends CI_Controller
         $output = json_encode($output);
         echo $output;
     }
+
+    public function random_ref(){
+        $number = $this->modelMasterPersediaan->random_ref();
+        $output =  "REF#" . $number;
+        $output = json_encode($output);
+        echo $output;
+    }
 }

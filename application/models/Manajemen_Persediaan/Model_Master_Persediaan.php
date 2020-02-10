@@ -3,6 +3,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Model_Master_Persediaan extends CI_Model
 {
+    function __construct()
+    {
+        parent::__construct();
+        $this->load->helper('string');
+    }
     function getDataBarang()
     {
         $this->db->select('kode_barang, nama_barang');
@@ -194,4 +199,11 @@ class Model_Master_Persediaan extends CI_Model
 
         return ($saldoAwal + $saldoMasuk) - ($saldoKeluar + $saldoCart + $saldoCartPo);
     }
+
+    function random_ref()
+    {
+        return random_string('numeric', 7);
+    }
+
+    
 }
