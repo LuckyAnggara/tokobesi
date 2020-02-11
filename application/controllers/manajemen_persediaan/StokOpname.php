@@ -159,7 +159,7 @@ class StokOpname extends CI_Controller
     {
         $post = $this->input->post();
         $this->modelMasterPersediaan->delete_detail_selisih($post);
-        echo $post['id'];
+        echo  $this->modelMasterPersediaan->koreksi($post['id_ref']);
     }
     public function edit_detail_selisih()
     {

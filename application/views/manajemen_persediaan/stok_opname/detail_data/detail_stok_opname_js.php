@@ -262,7 +262,7 @@
             '<input type="text" class="form-control"  id="ket' + data + '" placeholder="Keterangan">' +
             '</div>' +
             '<div class="col-1">' +
-            '<button type="button" onClick="apply_data(\'' + data + '\')"  class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i></button>' +
+            '<button type="button" onClick="apply_data(\'' + data + '\')" id="btn' + data + '" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i></button>' +
             '</div>' +
             '<div class="col-1">' +
             '<button type="button" onClick="remove_data(\'' + data + '\')" class="btn btn-danger waves-effect waves-light"><i class="fa  fa-times"></i></button>' +
@@ -272,10 +272,12 @@
     }
 
     function remove_data(id) {
+        var id_ref = $('#id').text();
         $.ajax({
             url: '<?= base_url("Manajemen_Persediaan/stokopname/delete_detail_selisih"); ?>',
             type: "POST",
             data: {
+                id_ref: id_ref,
                 id: id
             },
             dataType: "JSON",
@@ -284,7 +286,8 @@
                 $("#data_selisih").LoadingOverlay("show");
             },
             success: function(data) {
-                $('#' + data).remove()
+                $('#' + id).remove()
+                $('#detail_sisa_selisih').val($('#detail_qty_selisih').val() - data);
             },
             complete: function() {
                 $("#data_selisih").LoadingOverlay("hide");
@@ -296,7 +299,7 @@
         var qty = $('#qty' + id);
         var ket = $('#ket' + id);
         var id_ref = $('#id').text();
-        if ($('#' + id).attr('edit') == 'yes') {
+        if ($('#' + id).data('edit') == 'yes') {
             if (qty.val() == "" && ket.val() == "") {
                 Swal.fire(
                     'Data belum di isi !',
@@ -324,7 +327,7 @@
                             var ket = $('#ket' + id);
                             $(this).empty()
                             $(this).append('<i class="fa fa-edit"></i>')
-                            $('#' + id).attr('edit', 'no')
+                            $('#' + id).data('edit', 'no')
                             qty.attr('readonly', true)
                             ket.attr('readonly', true)
                             return $(this).is('.btn-primary, .btn-warning') ? 'btn-primary btn-warning' : 'btn-primary';
@@ -343,7 +346,7 @@
                 var ket = $('#ket' + id);
                 $(this).empty()
                 $(this).append('<i class="fa fa-check"></i>')
-                $('#' + id).attr('edit', 'yes')
+                $('#' + id).data('edit', 'yes')
                 qty.attr('readonly', false)
                 ket.attr('readonly', false)
                 return $(this).is('.btn-warning, .btn-primary') ? 'btn-warning btn-primary' : 'btn-warning';
