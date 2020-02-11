@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 10, 2020 at 04:12 PM
+-- Generation Time: Feb 11, 2020 at 04:25 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -23,6 +23,30 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `tob` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `tob`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `detail_detail_stok_opname`
+--
+
+CREATE TABLE `detail_detail_stok_opname` (
+  `id` int(11) NOT NULL,
+  `id_detail_stok_opname` int(10) NOT NULL,
+  `qty` double NOT NULL,
+  `keterangan` varchar(512) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `detail_detail_stok_opname`
+--
+
+INSERT INTO `detail_detail_stok_opname` (`id`, `id_detail_stok_opname`, `qty`, `keterangan`) VALUES
+(22, 59, 0, ''),
+(25, 60, 0, ''),
+(26, 59, 0, ''),
+(28, 58, 0, ''),
+(33, 57, 1400, 'fasfasfasfa');
 
 -- --------------------------------------------------------
 
@@ -866,6 +890,12 @@ INSERT INTO `timeline_po` (`id`, `no_order`, `urutan`, `tanggal`, `pesan`, `user
 --
 
 --
+-- Indexes for table `detail_detail_stok_opname`
+--
+ALTER TABLE `detail_detail_stok_opname`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `detail_pembelian`
 --
 ALTER TABLE `detail_pembelian`
@@ -1092,6 +1122,12 @@ ALTER TABLE `timeline_po`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `detail_detail_stok_opname`
+--
+ALTER TABLE `detail_detail_stok_opname`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `detail_pembelian`

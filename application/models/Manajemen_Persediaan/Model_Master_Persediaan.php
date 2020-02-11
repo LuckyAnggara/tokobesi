@@ -280,7 +280,6 @@ class Model_Master_Persediaan extends CI_Model
             $nama_file = $this->upload->data("file_name");
             $spreadsheet = $reader->load('./assets/upload/temp/stokopname/' . $nama_file);
             $sheetData = $spreadsheet->getActiveSheet()->toArray();
-
         }
 
         for ($i = 1; $i < count($sheetData); $i++) {
@@ -295,6 +294,69 @@ class Model_Master_Persediaan extends CI_Model
             $this->db->update('detail_stok_opname', $data);
         }
         unlink('./assets/upload/temp/stokopname/' . $nama_file);
+    }
 
+
+    // script detail dari detail stok opname
+    function detailStokOpname($id_detail)
+    {
+        $this->db->select('*');
+        $this->db->from('detail_stok_opname');
+        $this->db->where('id', $id_detail);
+        return $this->db->get()->row_array();
+    }
+
+    function detail_detailStokOpname($id_detail)
+    {
+        $this->db->select('*');
+        $this->db->from('detail_detail_stok_opname');
+        $this->db->where('id_detail_stok_opname', $id_detail);
+        return $this->db->get()->result_array();
+    }
+
+    function tambah_detail_selisih($post)
+    {
+
+        $data = [
+            'id_detail_stok_opname' => $post['id'],
+        ];
+        $this->db->insert('detail_detail_stok_opname', $data);
+
+        $this->db->select('id');
+        $this->db->from('detail_detail_stok_opname');
+        $this->db->limit(1);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get()->row_array();
+        $last = $query['id'];
+        echo $last;
+    }
+
+    function delete_detail_selisih($post)
+    {
+        $this->db->where('id', $post['id']);
+        $this->db->delete('detail_detail_stok_opname');
+    }
+
+    function edit_detail_selisih($post)
+    {
+        $data = [
+            'qty' => $post['qty'],
+            'keterangan' => $post['ket'],
+        ];
+        $this->db->where('id', $post['id']);
+        $this->db->update('detail_detail_stok_opname', $data);
+    }
+
+    function koreksi($id_detail)
+    {
+        $this->db->select_sum('qty');
+        $this->db->from('detail_detail_stok_opname');
+        $this->db->where('id_detail_stok_opname', $id_detail);
+        $output = $this->db->get()->row_array();
+        if ($output['qty'] == null) {
+            return "0";
+        } else {
+            return $output['qty'];
+        }
     }
 }

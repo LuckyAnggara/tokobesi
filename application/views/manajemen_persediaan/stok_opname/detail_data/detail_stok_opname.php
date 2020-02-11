@@ -55,7 +55,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="table-responsive">
-                            <table id="datatable-stock-opname" class="table-hover table-striped table table-compact dt-responsive nowrap" width="100%">
+                            <table id="datatable-stok-opname" class="table-hover table-striped table table-compact dt-responsive nowrap" width="100%">
                                 <thead class="thead-dark text-center">
                                     <tr class="text-center">
                                         <th>#</th>
@@ -78,7 +78,7 @@
             <div class="card-box" id="box_selisih" hidden>
                 <div class="row">
                     <div class="col-6">
-                        <h4 class="header-title" id="myModalLabel">Detail Selisih</h4>
+                        <h4 class="header-title" id="myModalLabel">Detail Selisih</h4><small id="id"></small>
                         <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> -->
                     </div>
                 </div>
@@ -87,15 +87,25 @@
                     <div class="col-12">
                         <div class="form-group row">
                             <label class="col-3 col-form-label">Kode Barang</label>
-                            <div class="col-6">
-                                <input style="text-transform:uppercase" name="kode_satuan" id="kode_satuan" type="text" class="form-control" required>
+                            <div class="col-9">
+                                <input style="text-transform:uppercase" name="detail_kode_barang" id="detail_kode_barang" type="text" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-3 col-form-label">Jumlah Selisih</label>
                             <div class="col-3">
                                 <div class="input-group">
-                                    <input name="nama_satuan" id="nama_satuan" type="text" class="form-control" placeholder="" required>
+                                    <input name="detail_qty_selisih" id="detail_qty_selisih" type="text" class="form-control" readonly>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text btn-inverse">Pieces</span>
+                                    </div>
+                                </div><!-- input-group -->
+                            </div>
+
+                            <label class="col-3 col-form-label text-right">Sisa Selisih</label>
+                            <div class="col-3">
+                                <div class="input-group">
+                                    <input name="detail_sisa_selisih" id="detail_sisa_selisih" type="text" class="form-control" readonly>
                                     <div class="input-group-append">
                                         <span class="input-group-text btn-inverse">Pieces</span>
                                     </div>
@@ -104,25 +114,13 @@
                         </div>
                         <hr>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label  m-t-5">Detail</label>
+                            <label class="col-2 col-form-label m-t-5">Detail</label>
                             <div class="col-1  m-t-5">
                                 <button type="button" id="add_data" class="btn btn-primary waves-effect waves-light">+</button>
                             </div>
                             <div class="col-9 m-t-5">
-                                <ol id="data_selisih">
-                                    <li>
-                                        <div class="form-group row">
-                                            <div class="col-sm-2">
-                                                <input type="text" class="form-control" placeholder="Qty">
-                                            </div>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" placeholder="Keterangan">
-                                            </div>
-                                            <div class="col-1">
-                                                <button type="button" id="add_data" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i></button>
-                                            </div>
-                                        </div>
-                                    </li>
+                                <ol id="data_selisih" class="data_selisih">
+
                                 </ol>
                             </div>
                         </div>

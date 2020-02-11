@@ -54,7 +54,7 @@
         };
 
         //Init Datatabel Master Stock Persediaan 
-        var table = $('#datatable-stock-opname').DataTable({
+        var table = $('#datatable-stok-opname').DataTable({
             "destroy": true,
             "oLanguage": {
                 sProcessing: "Sabar yah...",
@@ -136,7 +136,7 @@
 <script>
     function tambah_master(no_ref, tanggal, ket) {
         $.ajax({
-            url: '<?= base_url("Manajemen_Persediaan/stockopname/tambah_stokopname"); ?>',
+            url: '<?= base_url("Manajemen_Persediaan/stokopname/tambah_stokopname"); ?>',
             type: "POST",
             data: {
                 nomor_referensi: no_ref,
@@ -161,6 +161,9 @@
 
 <script>
     function show_modal(id) {
+        $("#data_selisih").empty()
+
+        show_detail_selisih_stok_opname(id);
         $('#box_selisih').attr('hidden', false);
         $('html, body').animate({
             scrollTop: $('#box_selisih').offset().top
@@ -169,19 +172,182 @@
         });
     }
 
+
+    function show_detail_selisih_stok_opname(id) {
+        $.ajax({
+            url: '<?= base_url("Manajemen_Persediaan/stokopname/show_detail_selisih_stok_opname"); ?>',
+            type: "POST",
+            data: {
+                id: id
+            },
+            dataType: "JSON",
+            async: false,
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            success: function(data) {
+                $('#detail_kode_barang').val(data.kode_barang);
+                $('#detail_qty_selisih').val(data.selisih);
+                $('#detail_sisa_selisih').val(data.selisih - data.koreksi);
+                $('#id').text(data.id);
+                if (data.data.length > 0) {
+                    for (var i in data.data) {
+                        id = data.data[i].id
+                        qty = data.data[i].qty
+                        ket = data.data[i].keterangan
+                        display_li(id, qty, ket);
+                    }
+                }
+
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            }
+        });
+    }
+</script>
+
+<!-- operator -->
+<script>
     $('#add_data').on('click', function(e) {
         e.preventDefault();
-        var display = '<li><div class="form-group row">' +
-            '<div class="col-sm-2">' +
-            '<input type="text" class="form-control" placeholder="Qty">' +
+        var id = $('#id').text();
+        $.ajax({
+            url: '<?= base_url("Manajemen_Persediaan/stokopname/tambah_detail_selisih"); ?>',
+            type: "POST",
+            data: {
+                id: id
+            },
+            dataType: "JSON",
+            async: false,
+            beforeSend: function() {
+                $("#data_selisih").LoadingOverlay("show");
+            },
+            success: function(data) {
+                tambah_li(data);
+            },
+            complete: function() {
+                $("#data_selisih").LoadingOverlay("hide");
+            }
+        });
+
+    })
+
+    function display_li(id, qty, ket) {
+
+        var display = '<li id=' + id + ' data-edit="no"><div class="form-group row">' +
+            '<div class="col-sm-3">' +
+            '<input type="number" id="qty' + id + '"  class="form-control" placeholder="Qty" readonly value="' + qty + '">' +
             '</div>' +
-            '<div class="col-sm-8">' +
-            '<input type="text" class="form-control" placeholder="Keterangan">' +
+            '<div class="col-sm-6">' +
+            '<input type="text" class="form-control"  id="ket' + id + '" placeholder="-" readonly value="' + ket + '">' +
             '</div>' +
             '<div class="col-1">' +
-            '<button type="button" id="add_data" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i></button>' +
+            '<button type="button" onClick="apply_data(\'' + id + '\')" id="btn' + id + '"  class="btn btn-warning waves-effect waves-light"><i class="fa fa-edit"></i></button>' +
+            '</div>' +
+            '<div class="col-1">' +
+            '<button type="button" onClick="remove_data(\'' + id + '\')" class="btn btn-danger waves-effect waves-light"><i class="fa  fa-times"></i></button>' +
             '</div>' +
             '</div></li>';
         $('#data_selisih').append(display)
-    })
+    }
+
+    function tambah_li(data) {
+
+        var display = '<li id=' + data + ' data-edit="yes"><div class="form-group row">' +
+            '<div class="col-sm-3">' +
+            '<input type="number" id="qty' + data + '"  class="form-control" placeholder="Qty">' +
+            '</div>' +
+            '<div class="col-sm-6">' +
+            '<input type="text" class="form-control"  id="ket' + data + '" placeholder="Keterangan">' +
+            '</div>' +
+            '<div class="col-1">' +
+            '<button type="button" onClick="apply_data(\'' + data + '\')"  class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i></button>' +
+            '</div>' +
+            '<div class="col-1">' +
+            '<button type="button" onClick="remove_data(\'' + data + '\')" class="btn btn-danger waves-effect waves-light"><i class="fa  fa-times"></i></button>' +
+            '</div>' +
+            '</div></li>';
+        $('#data_selisih').append(display)
+    }
+
+    function remove_data(id) {
+        $.ajax({
+            url: '<?= base_url("Manajemen_Persediaan/stokopname/delete_detail_selisih"); ?>',
+            type: "POST",
+            data: {
+                id: id
+            },
+            dataType: "JSON",
+            async: false,
+            beforeSend: function() {
+                $("#data_selisih").LoadingOverlay("show");
+            },
+            success: function(data) {
+                $('#' + data).remove()
+            },
+            complete: function() {
+                $("#data_selisih").LoadingOverlay("hide");
+            }
+        })
+    }
+
+    function apply_data(id) {
+        var qty = $('#qty' + id);
+        var ket = $('#ket' + id);
+        var id_ref = $('#id').text();
+        if ($('#' + id).attr('edit') == 'yes') {
+            if (qty.val() == "" && ket.val() == "") {
+                Swal.fire(
+                    'Data belum di isi !',
+                    'Silahkan Cek Kembali',
+                    'error'
+                )
+            } else {
+                $.ajax({
+                    url: '<?= base_url("Manajemen_Persediaan/stokopname/edit_detail_selisih"); ?>',
+                    type: "POST",
+                    data: {
+                        id_ref: id_ref,
+                        id: id,
+                        qty: qty.val(),
+                        ket: ket.val(),
+                    },
+                    dataType: "JSON",
+                    async: false,
+                    beforeSend: function() {
+                        $("#data_selisih").LoadingOverlay("show");
+                    },
+                    success: function(data) {
+                        $('#btn' + id).toggleClass(function() {
+                            var qty = $('#qty' + id);
+                            var ket = $('#ket' + id);
+                            $(this).empty()
+                            $(this).append('<i class="fa fa-edit"></i>')
+                            $('#' + id).attr('edit', 'no')
+                            qty.attr('readonly', true)
+                            ket.attr('readonly', true)
+                            return $(this).is('.btn-primary, .btn-warning') ? 'btn-primary btn-warning' : 'btn-primary';
+                        })
+
+                        $('#detail_sisa_selisih').val($('#detail_qty_selisih').val() - data);
+                    },
+                    complete: function() {
+                        $("#data_selisih").LoadingOverlay("hide");
+                    }
+                })
+            }
+        } else {
+            $('#btn' + id).toggleClass(function() {
+                var qty = $('#qty' + id);
+                var ket = $('#ket' + id);
+                $(this).empty()
+                $(this).append('<i class="fa fa-check"></i>')
+                $('#' + id).attr('edit', 'yes')
+                qty.attr('readonly', false)
+                ket.attr('readonly', false)
+                return $(this).is('.btn-warning, .btn-primary') ? 'btn-warning btn-primary' : 'btn-warning';
+            })
+        }
+    }
 </script>

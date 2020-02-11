@@ -24,7 +24,7 @@ class StokOpname extends CI_Controller
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_persediaan/stok_opname/stok_opname');
         $this->load->view('template/template_right');
-        $this->load->view('manajemen_persediaan/stok_opname/stok_opname_modal');
+        // $this->load->view('manajemen_persediaan/stok_opname/stok_opname_modal');
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
         $this->load->view('manajemen_persediaan/stok_opname/stok_opname_js');
@@ -49,13 +49,13 @@ class StokOpname extends CI_Controller
 
     public function detail_stokopname($no_ref)
     {
-        
+
         $data['css'] = 'manajemen_persediaan/stok_opname/detail_data/detail_stok_opname_css';
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['stok_opname'] = $this->modelMasterPersediaan->getDetailMasterStokOpname($no_ref);
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
-        $this->load->view('manajemen_persediaan/stok_opname/detail_data/detail_stok_opname',$data);
+        $this->load->view('manajemen_persediaan/stok_opname/detail_data/detail_stok_opname', $data);
         $this->load->view('template/template_right');
         $this->load->view('manajemen_persediaan/stok_opname/detail_data/detail_stok_opname_modal');
         $this->load->view('template/template_footer');
@@ -64,13 +64,14 @@ class StokOpname extends CI_Controller
         $this->load->view('template/template_app_js');
     }
 
-    public function getDetailMasterStokOpname(){
+    public function getDetailMasterStokOpname()
+    {
         $no_ref = $this->input->post('no_ref');
         $data = $this->modelMasterPersediaan->getDetailMasterStokOpname($no_ref);
         $output = json_encode($data);
         echo $output;
     }
-    
+
 
     public function getDataStokOpname($no_ref)
     {
@@ -128,5 +129,42 @@ class StokOpname extends CI_Controller
     {
         $no_ref = $this->input->post('nomor_referensi');
         $this->modelMasterPersediaan->update_data_by_upload($no_ref);
+    }
+
+    public function show_detail_selisih_stok_opname()
+    {
+        $id_detail = $this->input->post('id');
+        $detail = $this->modelMasterPersediaan->detailStokOpname($id_detail);
+        $output = $detail;
+
+        $detail_detail = $this->modelMasterPersediaan->detail_detailStokOpname($id_detail);
+        if ($detail_detail == null) {
+            $detail_detail = null;
+        };
+
+        $output['data'] = $this->modelMasterPersediaan->detail_detailStokOpname($id_detail);
+        $output['koreksi'] = $this->modelMasterPersediaan->koreksi($id_detail);
+        $output = json_encode($output);
+        echo $output;
+    }
+
+    public function tambah_detail_selisih()
+    {
+        $post = $this->input->post();
+        $output = $this->modelMasterPersediaan->tambah_detail_selisih($post);
+        echo $output;
+    }
+
+    public function delete_detail_selisih()
+    {
+        $post = $this->input->post();
+        $this->modelMasterPersediaan->delete_detail_selisih($post);
+        echo $post['id'];
+    }
+    public function edit_detail_selisih()
+    {
+        $post = $this->input->post();
+        $this->modelMasterPersediaan->edit_detail_selisih($post);
+        echo  $this->modelMasterPersediaan->koreksi($post['id_ref']);
     }
 }
