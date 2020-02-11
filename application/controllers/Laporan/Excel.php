@@ -20,7 +20,7 @@ class Excel extends CI_Controller
     public function StokOpname($no_ref)
     {
 
-        $database = $this->modelMasterPersediaan->getDataStockOpname($no_ref);
+        $database = $this->modelMasterPersediaan->getDataStokOpname($no_ref);
         $dataBarang = $database->result_array();
         $output = array();
 

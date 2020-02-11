@@ -97,7 +97,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="table-responsive">
-                            <table id="datatable-stock-opname" class="table-hover table-striped table table-compact dt-responsive nowrap" width="100%">
+                            <table id="datatable-stok-opname" class="table-hover table-striped table table-compact dt-responsive nowrap" width="100%">
                                 <thead class="thead-dark text-center">
                                     <tr class="text-center">
                                         <th>#</th>

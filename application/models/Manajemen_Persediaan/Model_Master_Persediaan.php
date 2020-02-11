@@ -133,6 +133,20 @@ class Model_Master_Persediaan extends CI_Model
 
     // STOCK OPNAME
 
+    function getMasterStokOpname()
+    {
+        $this->db->select('*, DATE_FORMAT(tanggal, "%d-%b-%y") as tanggal');
+        $this->db->from('master_stok_opname');
+        return $this->db->get();
+    }
+
+    function getDetailMasterStokOpname($no_ref)
+    {
+        $this->db->select('*');
+        $this->db->from('master_stok_opname');
+        $this->db->where('nomor_referensi', $no_ref);
+        return $this->db->get()->row_array();
+    }
 
     function dataBarang($kode_barang)
     {
@@ -241,7 +255,7 @@ class Model_Master_Persediaan extends CI_Model
         }
     }
 
-    function getDataStockOpname($no_ref)
+    function getDataStokOpname($no_ref)
     {
         $this->db->select('*');
         $this->db->from('detail_stok_opname');
@@ -267,9 +281,7 @@ class Model_Master_Persediaan extends CI_Model
             $spreadsheet = $reader->load('./assets/upload/temp/stokopname/' . $nama_file);
             $sheetData = $spreadsheet->getActiveSheet()->toArray();
 
-            unlink('./assets/upload/temp/stokopname/' . $nama_file);
         }
-
 
         for ($i = 1; $i < count($sheetData); $i++) {
             $selisih = $sheetData[$i]['4'] - $sheetData[$i]['5'];
@@ -282,5 +294,7 @@ class Model_Master_Persediaan extends CI_Model
             $this->db->where('nomor_referensi', $no_ref);
             $this->db->update('detail_stok_opname', $data);
         }
+        unlink('./assets/upload/temp/stokopname/' . $nama_file);
+
     }
 }

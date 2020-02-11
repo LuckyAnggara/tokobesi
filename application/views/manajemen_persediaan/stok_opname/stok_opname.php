@@ -13,12 +13,12 @@
                     <span>Tambah Data</span>
                 </button>
                 <div class="table-responsive">
-                    <table id="datatable-stock-opname" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <table id="datatable-master-opname" class="table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead class="thead-dark">
                             <tr>
                                 <th>#</th>
-                                <th>Nomor Referensi</th>
                                 <th>Tanggal</th>
+                                <th>Nomor Referensi</th>
                                 <th>Keterangan</th>
                                 <th>Action</th>
                             </tr>

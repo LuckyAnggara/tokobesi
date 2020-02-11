@@ -13,7 +13,32 @@
             todayHighlight: true,
             orientation: "bottom left",
         });
+        init_data($('#nomor_referensi').val());
+
+        init_table($('#nomor_referensi').val());
     })
+
+    function init_data(no_ref) {
+
+        $.ajax({
+            url: '<?= base_url("manajemen_persediaan/stokopname/getDetailMasterStokOpname"); ?>',
+            type: "POST",
+            data: {
+                no_ref: no_ref
+            },
+            dataType: "JSON",
+            async: false,
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            success: function(data) {
+                $('#tanggal').datepicker("setDate", new Date(data.tanggal));
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            }
+        });
+    }
 
     function init_table(no_ref) {
         $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
@@ -40,7 +65,7 @@
             "processing": true,
             "serverSide": false,
             "ajax": {
-                "url": '<?= base_url("manajemen_persediaan/stockopname/getDataStockOpname/"); ?>' + no_ref,
+                "url": '<?= base_url("manajemen_persediaan/stokopname/getDataStokOpname/"); ?>' + no_ref,
                 "type": "POST",
             },
             "columnDefs": [{
@@ -83,11 +108,11 @@
                 },
 
                 {
-                    data: "data_barang",
+                    data: "id",
                     searching: true,
                     targets: 6,
                     render: function(data, type, full, meta) {
-                        var display1 = '<a type="button" onClick = "show_view_modal(\'' + data.kode_barang + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
+                        var display1 = '<a type="button" onClick = "show_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
                         return display1;
                     }
                 }
@@ -123,74 +148,40 @@
             beforeSend: function() {
                 $.LoadingOverlay("show");
             },
+
             complete: function() {
                 $.LoadingOverlay("hide");
             }
         });
     }
 </script>
-<!-- Script Button Type -->
+
+
+<!-- script modal -->
+
 <script>
-    $('#proses_stokopname').on('click', function() {
-        var no_ref = $('#nomor_referensi');
-        var tanggal = $('#tanggal');
-        var ket = $('#keterangan').val();
-        if (no_ref.val() !== "" && tanggal.val() !== "") {
-            $('#button_data_div').attr('hidden', false);
-            tambah_master(no_ref.val(), tanggal.val(), ket)
-            init_table(no_ref.val());
-            no_ref.attr('readonly', true);
-            tanggal.attr('readonly', true);
-            $('#proses_stokopname').attr('hidden', true);
-        } else {
-            Swal.fire(
-                'Data Stok Opname belum di isi !',
-                'Silahkan Cek Kembali',
-                'error'
-            )
-        }
-    });
-    $('#apply_random').on('click', function() {
-        $.ajax({
-            url: '<?= base_url("Manajemen_Persediaan/stockopname/random_ref/"); ?>',
-            type: "POST",
-            dataType: "JSON",
-            async: false,
-            success: function(data) {
-                $('#nomor_referensi').val(data);
-            }
+    function show_modal(id) {
+        $('#box_selisih').attr('hidden', false);
+        $('html, body').animate({
+            scrollTop: $('#box_selisih').offset().top
+        }, 'slow', function() {
+            $('#box_selisih').focus();
         });
-    })
+    }
 
-    $('#download_format').on('click', function() {
-        window.location.href = '<?= base_url("Laporan/excel/stokopname/"); ?>' + $('#nomor_referensi').val();
-    })
-
-    $('#upload').on('click', function() {
-        console.log($('#upload_data')[0].files.length)
-        if ($('#upload_data').get(0).files.length !== 0) {
-            var nomor_referensi = $('#nomor_referensi').val();
-            var data = new FormData(document.getElementById("upload_form"));
-            data.append('nomor_referensi', nomor_referensi);
-            $.ajax({
-                url: "<?= Base_url('Manajemen_Persediaan/stockopname/import_data/'); ?>",
-                type: "post",
-                data: data,
-                async: false,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-                    $('#datatable-stock-opname').DataTable().ajax.reload();
-                }
-            })
-        } else {
-            Swal.fire(
-                'Data Stok Opname belum di isi !',
-                'Silahkan Cek Kembali',
-                'error'
-            )
-        }
-
-
+    $('#add_data').on('click', function(e) {
+        e.preventDefault();
+        var display = '<li><div class="form-group row">' +
+            '<div class="col-sm-2">' +
+            '<input type="text" class="form-control" placeholder="Qty">' +
+            '</div>' +
+            '<div class="col-sm-8">' +
+            '<input type="text" class="form-control" placeholder="Keterangan">' +
+            '</div>' +
+            '<div class="col-1">' +
+            '<button type="button" id="add_data" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i></button>' +
+            '</div>' +
+            '</div></li>';
+        $('#data_selisih').append(display)
     })
 </script>

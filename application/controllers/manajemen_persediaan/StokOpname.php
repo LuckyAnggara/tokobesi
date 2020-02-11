@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class StockOpname extends CI_Controller
+class StokOpname extends CI_Controller
 {
 
     function __construct()
@@ -18,38 +18,63 @@ class StockOpname extends CI_Controller
 
     public function index()
     {
-        $data['css'] = 'manajemen_persediaan/stock_opname/stock_opname_css';
+        $data['css'] = 'manajemen_persediaan/stok_opname/stok_opname_css';
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
-        $this->load->view('manajemen_persediaan/stock_opname/stock_opname');
+        $this->load->view('manajemen_persediaan/stok_opname/stok_opname');
         $this->load->view('template/template_right');
-        $this->load->view('manajemen_persediaan/stock_opname/stock_opname_modal');
+        $this->load->view('manajemen_persediaan/stok_opname/stok_opname_modal');
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
-        $this->load->view('manajemen_persediaan/stock_opname/stock_opname_js');
+        $this->load->view('manajemen_persediaan/stok_opname/stok_opname_js');
         $this->load->view('template/template_app_js');
     }
 
 
     public function tambah_data()
     {
-        $data['css'] = 'manajemen_persediaan/stock_opname/tambah_data/tambah_stock_opname_css';
+        $data['css'] = 'manajemen_persediaan/stok_opname/tambah_data/tambah_stok_opname_css';
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
-        $this->load->view('manajemen_persediaan/stock_opname/tambah_data/tambah_stock_opname');
+        $this->load->view('manajemen_persediaan/stok_opname/tambah_data/tambah_stok_opname');
         $this->load->view('template/template_right');
-        // $this->load->view('manajemen_persediaan/stock_opname/stock_opname_modal');
+        // $this->load->view('manajemen_persediaan/stok_opname/stok_opname_modal');
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
-        $this->load->view('manajemen_persediaan/stock_opname/tambah_data/tambah_stock_opname_js');
+        $this->load->view('manajemen_persediaan/stok_opname/tambah_data/tambah_stok_opname_js');
         $this->load->view('template/template_app_js');
     }
 
-    public function getDataStockOpname($no_ref)
+    public function detail_stokopname($no_ref)
     {
-        $database = $this->modelMasterPersediaan->getDataStockOpname($no_ref);
+        
+        $data['css'] = 'manajemen_persediaan/stok_opname/detail_data/detail_stok_opname_css';
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+        $data['stok_opname'] = $this->modelMasterPersediaan->getDetailMasterStokOpname($no_ref);
+        $this->load->view('template/template_header', $data);
+        $this->load->view('template/template_menu');
+        $this->load->view('manajemen_persediaan/stok_opname/detail_data/detail_stok_opname',$data);
+        $this->load->view('template/template_right');
+        $this->load->view('manajemen_persediaan/stok_opname/detail_data/detail_stok_opname_modal');
+        $this->load->view('template/template_footer');
+        $this->load->view('template/template_js');
+        $this->load->view('manajemen_persediaan/stok_opname/detail_data/detail_stok_opname_js');
+        $this->load->view('template/template_app_js');
+    }
+
+    public function getDetailMasterStokOpname(){
+        $no_ref = $this->input->post('no_ref');
+        $data = $this->modelMasterPersediaan->getDetailMasterStokOpname($no_ref);
+        $output = json_encode($data);
+        echo $output;
+    }
+    
+
+    public function getDataStokOpname($no_ref)
+    {
+        $database = $this->modelMasterPersediaan->getDataStokOpname($no_ref);
         $dataBarang = $database->result_array();
         $output = array(
             "recordsTotal" => $this->db->count_all_results(),
@@ -65,6 +90,20 @@ class StockOpname extends CI_Controller
 
             $output['data'][] = $value;
         }
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
+    public function getMasterStokOpname()
+    {
+        $database = $this->modelMasterPersediaan->getMasterStokOpname();
+        $dataBarang = $database->result_array();
+        $output = array(
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $dataBarang
+        );
 
         $output = json_encode($output);
         echo $output;

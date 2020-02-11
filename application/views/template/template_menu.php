@@ -11,14 +11,14 @@
                             <ul class="submenu">
                                 <li>
                                     <ul>
-                                        <li><a href="<?= base_url('Manajemen_Penjualan/PenjualanBarang'); ?>">Penjualan Barang</a></li>
+                                        <li><a href="<?= base_url('manajemen_penjualan/PenjualanBarang'); ?>">Penjualan Barang</a></li>
                                         <hr>
                                         <li><a href="<?= base_url('manajemen_penjualan/purchaseordersales'); ?>">P.O Sales - Sales</a></li>
                                         <li><a href="<?= base_url('manajemen_penjualan/purchaseordersales/daftar'); ?>">P.O Sales - Daftar</a></li>
                                         <li><a href="<?= base_url('manajemen_penjualan/purchaseorderadmin'); ?>">P.O Sales - Admin</a></li>
                                         <hr>
-                                        <li><a href="<?= base_url('Manajemen_Penjualan/DaftarTransaksiPenjualan'); ?>">Daftar Transaksi</a></li>
-                                        <li><a href="<?= base_url('Manajemen_Penjualan/ReturPenjualan'); ?>">Retur Transaksi Penjualan</a></li>
+                                        <li><a href="<?= base_url('manajemen_penjualan/DaftarTransaksiPenjualan'); ?>">Daftar Transaksi</a></li>
+                                        <li><a href="<?= base_url('manajemen_penjualan/ReturPenjualan'); ?>">Retur Transaksi Penjualan</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -28,9 +28,9 @@
                             <ul class="submenu">
                                 <li>
                                     <ul>
-                                        <li><a href="<?= base_url('Manajemen_Pembelian/PembelianBarang'); ?>">Pembelian Barang</a></li>
+                                        <li><a href="<?= base_url('manajemen_pembelian/PembelianBarang'); ?>">Pembelian Barang</a></li>
                                         <hr>
-                                        <li><a href="<?= base_url('Manajemen_Pembelian/DaftarTransaksiPembelian'); ?>">Daftar Transaksi</a></li>
+                                        <li><a href="<?= base_url('manajemen_pembelian/DaftarTransaksiPembelian'); ?>">Daftar Transaksi</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -40,11 +40,11 @@
                             <ul class="submenu">
                                 <li>
                                     <ul>
-                                        <li><a href="<?= base_url('Manajemen_Persediaan/MasterPersediaan'); ?>">Master Persediaan</a></li>
-                                        <li><a href="<?= base_url('Manajemen_Persediaan/KartuPersediaan'); ?>">Kartu Persediaan</a></li>
+                                        <li><a href="<?= base_url('manajemen_persediaan/MasterPersediaan'); ?>">Master Persediaan</a></li>
+                                        <li><a href="<?= base_url('manajemen_persediaan/KartuPersediaan'); ?>">Kartu Persediaan</a></li>
                                         <hr>
-                                        <li><a href="<?= base_url('Manajemen_Persediaan/SaldoAwalPersediaan'); ?>">Saldo Awal Persediaan</a></li>
-                                        <li><a href="<?= base_url('Manajemen_Persediaan/StockOpname'); ?>">Stock Opname</a></li>
+                                        <li><a href="<?= base_url('manajemen_persediaan/SaldoAwalPersediaan'); ?>">Saldo Awal Persediaan</a></li>
+                                        <li><a href="<?= base_url('manajemen_persediaan/stokopname'); ?>">stok Opname</a></li>
                                     </ul>
                                 </li>
                             </ul>
