@@ -163,13 +163,11 @@ class Model_Master_Persediaan extends CI_Model
         $this->db->select('qty_awal, saldo_awal, harga_awal');
         $this->db->from('master_saldo_awal');
         $this->db->where('kode_barang', $kode_barang);
+    
         $data = $this->db->get()->row_array();
-        if ($data !== null) {
-            $saldoAwal = $data['qty_awal'];
-        } else {
-            $saldoAwal = 0;
-        }
-
+      
+        $saldoAwal = $data['qty_awal'];
+        
         // saldo masuk
         $this->db->select_sum('jumlah_pembelian');
         $this->db->from('detail_pembelian');
@@ -196,6 +194,8 @@ class Model_Master_Persediaan extends CI_Model
         $this->db->select_sum('jumlah_penjualan');
         $this->db->from('temp_purchase_order');
         $this->db->where('kode_barang', $kode_barang);
+        $this->db->where('status !=', 99);
+        $this->db->where('status !=', 2);
         $data = $this->db->get()->row_array();
         $saldoCartPo = $data['jumlah_penjualan'];
 
@@ -236,7 +236,8 @@ class Model_Master_Persediaan extends CI_Model
             $value['data_barang'] = $data_barang;
             $value['saldo_buku'] = $saldo_buku;
             $value['saldo_fisik'] = "0";
-            $value['selisih'] = $saldo_buku - $value['saldo_fisik'];
+            $value['data_selisih']['selisih'] = $saldo_buku - $value['saldo_fisik'];
+            $value['data_selisih']['id'] = 
             $output[] = $value;
         }
 
@@ -358,5 +359,16 @@ class Model_Master_Persediaan extends CI_Model
         } else {
             return $output['qty'];
         }
+    }
+
+    function tambah_saldo_fisik($post)
+    {
+        $selisih = $post['saldo_buku']- $post['saldo_fisik'];
+        $data = [
+            'saldo_fisik' => $post['saldo_fisik'],
+            'selisih' => $selisih
+        ];
+        $this->db->where('id', $post['id']);
+        $this->db->update('detail_stok_opname', $data);
     }
 }

@@ -40,7 +40,7 @@ class StokOpname extends CI_Controller
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_persediaan/stok_opname/tambah_data/tambah_stok_opname');
         $this->load->view('template/template_right');
-        // $this->load->view('manajemen_persediaan/stok_opname/stok_opname_modal');
+        $this->load->view('manajemen_persediaan/stok_opname/tambah_data/tambah_stok_opname_modal');
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
         $this->load->view('manajemen_persediaan/stok_opname/tambah_data/tambah_stok_opname_js');
@@ -166,5 +166,11 @@ class StokOpname extends CI_Controller
         $post = $this->input->post();
         $this->modelMasterPersediaan->edit_detail_selisih($post);
         echo  $this->modelMasterPersediaan->koreksi($post['id_ref']);
+    }
+
+    public function tambah_saldo_fisik()
+    {
+        $post = $this->input->post();
+        $this->modelMasterPersediaan->tambah_saldo_fisik($post);
     }
 }

@@ -48,7 +48,7 @@
             <div class="card-box">
                 <div class="row">
                     <div class="col-6">
-                        <h4 class="m-t-0 header-title">Data Barang</h4>
+                        <h4 class="m-t-0 header-title">Data</h4>
                     </div>
                 </div>
                 <hr>
@@ -78,7 +78,7 @@
             <div class="card-box" id="box_selisih" hidden>
                 <div class="row">
                     <div class="col-6">
-                        <h4 class="header-title" id="myModalLabel">Detail Selisih</h4><small id="id"></small>
+                        <h4 class="header-title" id="myModalLabel">Detail Selisih</h4><small hidden id="id"></small>
                         <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> -->
                     </div>
                 </div>
@@ -86,14 +86,14 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group row">
-                            <label class="col-3 col-form-label">Kode Barang</label>
-                            <div class="col-9">
+                            <label class="col-sm-12 col-lg-3 col-md-3 col-form-label">Kode Barang</label>
+                            <div class="col-sm-12 col-lg-9 col-md-9">
                                 <input style="text-transform:uppercase" name="detail_kode_barang" id="detail_kode_barang" type="text" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-3 col-form-label">Jumlah Selisih</label>
-                            <div class="col-3">
+                            <label class="col-sm-12 col-lg-3 col-md-3 col-form-label">Jumlah Selisih</label>
+                            <div class="col-sm-12 col-lg-9 col-md-9">
                                 <div class="input-group">
                                     <input name="detail_qty_selisih" id="detail_qty_selisih" type="text" class="form-control" readonly>
                                     <div class="input-group-append">
@@ -102,8 +102,8 @@
                                 </div><!-- input-group -->
                             </div>
 
-                            <label class="col-3 col-form-label text-right">Sisa Selisih</label>
-                            <div class="col-3">
+                            <label class="col-sm-12 col-lg-3 col-md-3 col-form-label">Sisa Selisih</label>
+                            <div class="col-sm-12 col-lg-9 col-md-9">
                                 <div class="input-group">
                                     <input name="detail_sisa_selisih" id="detail_sisa_selisih" type="text" class="form-control" readonly>
                                     <div class="input-group-append">
@@ -114,11 +114,11 @@
                         </div>
                         <hr>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label m-t-5">Detail</label>
-                            <div class="col-1  m-t-5">
+                            <label class="col-sm-11 col-lg-2 col-md-2 col-form-label m-t-5">Detail</label>
+                            <div class="col-1 m-t-5">
                                 <button type="button" id="add_data" class="btn btn-primary waves-effect waves-light">+</button>
                             </div>
-                            <div class="col-9 m-t-5">
+                            <div class="col-sm-12 col-lg-9 col-md-9 m-t-5">
                                 <ol id="data_selisih" class="data_selisih">
 
                                 </ol>

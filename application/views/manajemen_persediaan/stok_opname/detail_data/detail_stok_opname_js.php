@@ -94,10 +94,15 @@
                     }
                 },
                 {
-                    data: "saldo_fisik",
+                    data: {
+                        "id": "id",
+                        "saldo_buku": "saldo_buku",
+                        "saldo_fisik": "saldo_fisik",
+                    },
                     targets: 4,
                     render: function(data, type, full, meta) {
-                        return data;
+                        var display = '<a class="btn" onClick="fisik_modal(\'' + data.id + '\',\'' + data.saldo_fisik + '\',\'' + data.saldo_buku + '\')"><span>' + data.saldo_fisik + '</span></a>';
+                        return display;
                     }
                 }, {
                     data: "selisih",
@@ -162,7 +167,6 @@
 <script>
     function show_modal(id) {
         $("#data_selisih").empty()
-
         show_detail_selisih_stok_opname(id);
         $('#box_selisih').attr('hidden', false);
         $('html, body').animate({
@@ -170,6 +174,13 @@
         }, 'slow', function() {
             $('#box_selisih').focus();
         });
+    }
+
+    function fisik_modal(id, saldo_fisik, saldo_buku) {
+        $('#fisik_id').text(id);
+        $('#saldo_fisik').val(saldo_fisik)
+        $('#saldo_buku').val(saldo_buku)
+        $('#fisik_modal').modal('show');
     }
 
 
@@ -255,7 +266,7 @@
     function tambah_li(data) {
 
         var display = '<li id=' + data + ' data-edit="yes"><div class="form-group row">' +
-            '<div class="col-sm-3">' +
+            '<div class="col-sm-12 col-lg-3 col-md-3">' +
             '<input type="number" id="qty' + data + '"  class="form-control" placeholder="Qty">' +
             '</div>' +
             '<div class="col-sm-6">' +
@@ -299,6 +310,8 @@
         var qty = $('#qty' + id);
         var ket = $('#ket' + id);
         var id_ref = $('#id').text();
+        var selisih = $('#detail_sisa_selisih').val();
+
         if ($('#' + id).data('edit') == 'yes') {
             if (qty.val() == "" && ket.val() == "") {
                 Swal.fire(
@@ -307,38 +320,46 @@
                     'error'
                 )
             } else {
-                $.ajax({
-                    url: '<?= base_url("Manajemen_Persediaan/stokopname/edit_detail_selisih"); ?>',
-                    type: "POST",
-                    data: {
-                        id_ref: id_ref,
-                        id: id,
-                        qty: qty.val(),
-                        ket: ket.val(),
-                    },
-                    dataType: "JSON",
-                    async: false,
-                    beforeSend: function() {
-                        $("#data_selisih").LoadingOverlay("show");
-                    },
-                    success: function(data) {
-                        $('#btn' + id).toggleClass(function() {
-                            var qty = $('#qty' + id);
-                            var ket = $('#ket' + id);
-                            $(this).empty()
-                            $(this).append('<i class="fa fa-edit"></i>')
-                            $('#' + id).data('edit', 'no')
-                            qty.attr('readonly', true)
-                            ket.attr('readonly', true)
-                            return $(this).is('.btn-primary, .btn-warning') ? 'btn-primary btn-warning' : 'btn-primary';
-                        })
+                if (qty.val() <= parseInt(selisih)) {
 
-                        $('#detail_sisa_selisih').val($('#detail_qty_selisih').val() - data);
-                    },
-                    complete: function() {
-                        $("#data_selisih").LoadingOverlay("hide");
-                    }
-                })
+                    $.ajax({
+                        url: '<?= base_url("Manajemen_Persediaan/stokopname/edit_detail_selisih"); ?>',
+                        type: "POST",
+                        data: {
+                            id_ref: id_ref,
+                            id: id,
+                            qty: qty.val(),
+                            ket: ket.val(),
+                        },
+                        dataType: "JSON",
+                        async: false,
+                        beforeSend: function() {
+                            $("#data_selisih").LoadingOverlay("show");
+                        },
+                        success: function(data) {
+                            $('#btn' + id).toggleClass(function() {
+                                $(this).empty()
+                                $(this).append('<i class="fa fa-edit"></i>')
+                                $('#' + id).data('edit', 'no')
+                                qty.attr('readonly', true)
+                                ket.attr('readonly', true)
+                                return $(this).is('.btn-primary, .btn-warning') ? 'btn-primary btn-warning' : 'btn-primary';
+                            })
+
+                            $('#detail_sisa_selisih').val($('#detail_qty_selisih').val() - data);
+                        },
+                        complete: function() {
+                            $("#data_selisih").LoadingOverlay("hide");
+                        }
+                    })
+                } else {
+                    Swal.fire(
+                        'Jumlah input lebih besar dari sisa selisih !',
+                        'Silahkan Cek Kembali',
+                        'error'
+                    )
+                }
+
             }
         } else {
             $('#btn' + id).toggleClass(function() {
@@ -353,4 +374,27 @@
             })
         }
     }
+
+    // penambahan data saldo fisik manual
+    $(document).ready(function() {
+        $('#saldoFisikForm').submit(function(e) {
+            e.preventDefault();
+            id = $('#fisik_id').text();
+            var data = new FormData(document.getElementById("saldoFisikForm"));
+            data.append('id', id);
+            $.ajax({
+                url: "<?= base_url("manajemen_persediaan/stokopname/tambah_saldo_fisik"); ?>",
+                type: "post",
+                data: data,
+                async: false,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    $('#box_selisih').attr('hidden', true);
+                    $('#fisik_modal').modal('hide');
+                    $('#datatable-stok-opname').DataTable().ajax.reload();
+                }
+            })
+        })
+    })
 </script>

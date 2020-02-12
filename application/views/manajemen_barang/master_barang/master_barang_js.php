@@ -18,9 +18,6 @@
 <!-- Chart JS -->
 <script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
 
-<!-- Sweet Alert Js  -->
-<script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.min.js"></script>
-
 
 <!-- Select2 js -->
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
@@ -60,7 +57,7 @@
         $('#rootwizard').bootstrapWizard({
             'tabClass': 'nav nav-tabs navtab-wizard nav-justified bg-muted',
             'onTabClick': function(tab, navigation, index) {
-                swal(
+                Swal.fire(
                     'Oopss!',
                     'Tekan tombol Next',
                     'error'
@@ -84,7 +81,7 @@
         $('#submit-add').on('click', function() {
             if ($('#submit-add').text() == "Submit") {
                 tambah_data();
-                swal(
+                Swal.fire(
                     'Good!',
                     'Data telah di tambahkan!',
                     'success'
@@ -378,7 +375,7 @@
                 success: function(data) {
                     $('#datatable-master-barang').DataTable().ajax.reload();
                     $('#status_modal').modal('hide');
-                    swal(
+                    Swal.fire(
                         'Sukses!',
                         'Status berhasil di ganti!!',
                         'success'
@@ -414,7 +411,7 @@
 
 <script type="text/javascript">
     function warning_delete(kode_barang) {
-        swal({
+        Swal.fire({
             title: 'Apa anda yakin akan hapus data ini?',
             text: "Semua Data Persediaan dengan kode " + kode_barang + " juga akan terhapus",
             type: 'warning',
@@ -424,7 +421,7 @@
             confirmButtonText: 'Yes, delete it!'
         }).then(function() {
             deleteData(kode_barang);
-            swal(
+            Swal.fire(
                 'Deleted!',
                 'Data ' + kode_barang + ' telah dihapus!',
                 'success'

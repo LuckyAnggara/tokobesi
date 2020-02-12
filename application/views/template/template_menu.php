@@ -44,7 +44,7 @@
                                         <li><a href="<?= base_url('manajemen_persediaan/KartuPersediaan'); ?>">Kartu Persediaan</a></li>
                                         <hr>
                                         <li><a href="<?= base_url('manajemen_persediaan/SaldoAwalPersediaan'); ?>">Saldo Awal Persediaan</a></li>
-                                        <li><a href="<?= base_url('manajemen_persediaan/stokopname'); ?>">stok Opname</a></li>
+                                        <li><a href="<?= base_url('manajemen_persediaan/stokopname'); ?>">Stok Opname</a></li>
                                     </ul>
                                 </li>
                             </ul>

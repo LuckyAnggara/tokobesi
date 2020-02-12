@@ -69,10 +69,15 @@
                     }
                 },
                 {
-                    data: "saldo_fisik",
+                    data: {
+                        "id": "id",
+                        "saldo_buku": "saldo_buku",
+                        "saldo_fisik": "saldo_fisik",
+                    },
                     targets: 4,
                     render: function(data, type, full, meta) {
-                        return data;
+                        var display = '<a class="btn" onClick="fisik_modal(\'' + data.id + '\',\'' + data.saldo_fisik + '\',\'' + data.saldo_buku + '\')"><span>' + data.saldo_fisik + '</span></a>';
+                        return display;
                     }
                 }, {
                     data: "selisih",
@@ -80,14 +85,12 @@
                     render: function(data, type, full, meta) {
                         return data;
                     }
-                },
-
-                {
-                    data: "data_barang",
+                }, {
+                    data: "id",
                     searching: true,
                     targets: 6,
                     render: function(data, type, full, meta) {
-                        var display1 = '<a type="button" onClick = "show_view_modal(\'' + data.kode_barang + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
+                        var display1 = '<a type="button" onClick = "show_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
                         return display1;
                     }
                 }
@@ -168,20 +171,20 @@
 
     $('#upload').on('click', function() {
 
-            var nomor_referensi = $('#nomor_referensi').val();
-            var data = new FormData(document.getElementById("upload_form"));
-            data.append('nomor_referensi', nomor_referensi);
-            $.ajax({
-                url: "<?= Base_url('Manajemen_Persediaan/stokopname/import_data/'); ?>",
-                type: "post",
-                data: data,
-                async: false,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-                    $('#datatable-stok-opname').DataTable().ajax.reload();
-                }
-            })
+        var nomor_referensi = $('#nomor_referensi').val();
+        var data = new FormData(document.getElementById("upload_form"));
+        data.append('nomor_referensi', nomor_referensi);
+        $.ajax({
+            url: "<?= Base_url('Manajemen_Persediaan/stokopname/import_data/'); ?>",
+            type: "post",
+            data: data,
+            async: false,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $('#datatable-stok-opname').DataTable().ajax.reload();
+            }
+        })
         // } else {
         //     Swal.fire(
         //         'Data Stok Opname belum di isi !',
@@ -189,5 +192,240 @@
         //         'error'
         //     )
         // }
+    })
+</script>
+
+<!-- script modal -->
+
+<script>
+    function show_modal(id, saldo) {
+        $("#data_selisih").empty()
+        show_detail_selisih_stok_opname(id);
+        $('#box_selisih').attr('hidden', false);
+        $('html, body').animate({
+            scrollTop: $('#box_selisih').offset().top
+        }, 'slow', function() {
+            $('#box_selisih').focus();
+        });
+    }
+
+    function fisik_modal(id, saldo_fisik, saldo_fisik) {
+        $('#fisik_id').text(id);
+        $('#saldo_fisik').val(saldo_fisik)
+        $('#saldo_buku').val(saldo_fisik)
+        $('#fisik_modal').modal('show');
+    }
+
+
+    function show_detail_selisih_stok_opname(id) {
+        $.ajax({
+            url: '<?= base_url("Manajemen_Persediaan/stokopname/show_detail_selisih_stok_opname"); ?>',
+            type: "POST",
+            data: {
+                id: id
+            },
+            dataType: "JSON",
+            async: false,
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            success: function(data) {
+                $('#detail_kode_barang').val(data.kode_barang);
+                $('#detail_qty_selisih').val(data.selisih);
+                $('#detail_sisa_selisih').val(data.selisih - data.koreksi);
+                $('#id').text(data.id);
+                if (data.data.length > 0) {
+                    for (var i in data.data) {
+                        id = data.data[i].id
+                        qty = data.data[i].qty
+                        ket = data.data[i].keterangan
+                        display_li(id, qty, ket);
+                    }
+                }
+
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            }
+        });
+    }
+</script>
+
+<!-- operator -->
+<script>
+    $('#add_data').on('click', function(e) {
+        e.preventDefault();
+        var id = $('#id').text();
+        $.ajax({
+            url: '<?= base_url("Manajemen_Persediaan/stokopname/tambah_detail_selisih"); ?>',
+            type: "POST",
+            data: {
+                id: id
+            },
+            dataType: "JSON",
+            async: false,
+            beforeSend: function() {
+                $("#data_selisih").LoadingOverlay("show");
+            },
+            success: function(data) {
+                tambah_li(data);
+            },
+            complete: function() {
+                $("#data_selisih").LoadingOverlay("hide");
+            }
+        });
+
+    })
+
+    function display_li(id, qty, ket) {
+
+        var display = '<li id=' + id + ' data-edit="no"><div class="form-group row">' +
+            '<div class="col-sm-3">' +
+            '<input type="number" id="qty' + id + '"  class="form-control" placeholder="Qty" readonly value="' + qty + '">' +
+            '</div>' +
+            '<div class="col-sm-6">' +
+            '<input type="text" class="form-control"  id="ket' + id + '" placeholder="-" readonly value="' + ket + '">' +
+            '</div>' +
+            '<div class="col-1">' +
+            '<button type="button" onClick="apply_data(\'' + id + '\')" id="btn' + id + '"  class="btn btn-warning waves-effect waves-light"><i class="fa fa-edit"></i></button>' +
+            '</div>' +
+            '<div class="col-1">' +
+            '<button type="button" onClick="remove_data(\'' + id + '\')" class="btn btn-danger waves-effect waves-light"><i class="fa  fa-times"></i></button>' +
+            '</div>' +
+            '</div></li>';
+        $('#data_selisih').append(display)
+    }
+
+    function tambah_li(data) {
+
+        var display = '<li id=' + data + ' data-edit="yes"><div class="form-group row">' +
+            '<div class="col-sm-12 col-lg-3 col-md-3">' +
+            '<input type="number" id="qty' + data + '"  class="form-control" placeholder="Qty">' +
+            '</div>' +
+            '<div class="col-sm-6">' +
+            '<input type="text" class="form-control"  id="ket' + data + '" placeholder="Keterangan">' +
+            '</div>' +
+            '<div class="col-1">' +
+            '<button type="button" onClick="apply_data(\'' + data + '\')" id="btn' + data + '" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i></button>' +
+            '</div>' +
+            '<div class="col-1">' +
+            '<button type="button" onClick="remove_data(\'' + data + '\')" class="btn btn-danger waves-effect waves-light"><i class="fa  fa-times"></i></button>' +
+            '</div>' +
+            '</div></li>';
+        $('#data_selisih').append(display)
+    }
+
+    function remove_data(id) {
+        var id_ref = $('#id').text();
+        $.ajax({
+            url: '<?= base_url("Manajemen_Persediaan/stokopname/delete_detail_selisih"); ?>',
+            type: "POST",
+            data: {
+                id_ref: id_ref,
+                id: id
+            },
+            dataType: "JSON",
+            async: false,
+            beforeSend: function() {
+                $("#data_selisih").LoadingOverlay("show");
+            },
+            success: function(data) {
+                $('#' + id).remove()
+                $('#detail_sisa_selisih').val($('#detail_qty_selisih').val() - data);
+            },
+            complete: function() {
+                $("#data_selisih").LoadingOverlay("hide");
+            }
+        })
+    }
+
+    function apply_data(id) {
+        var qty = $('#qty' + id);
+        var ket = $('#ket' + id);
+        var id_ref = $('#id').text();
+        var selisih = $('#detail_sisa_selisih').val();
+
+        if ($('#' + id).data('edit') == 'yes') {
+            if (qty.val() == "" && ket.val() == "") {
+                Swal.fire(
+                    'Data belum di isi !',
+                    'Silahkan Cek Kembali',
+                    'error'
+                )
+            } else {
+                if (qty.val() <= parseInt(selisih)) {
+
+                    $.ajax({
+                        url: '<?= base_url("Manajemen_Persediaan/stokopname/edit_detail_selisih"); ?>',
+                        type: "POST",
+                        data: {
+                            id_ref: id_ref,
+                            id: id,
+                            qty: qty.val(),
+                            ket: ket.val(),
+                        },
+                        dataType: "JSON",
+                        async: false,
+                        beforeSend: function() {
+                            $("#data_selisih").LoadingOverlay("show");
+                        },
+                        success: function(data) {
+                            $('#btn' + id).toggleClass(function() {
+                                $(this).empty()
+                                $(this).append('<i class="fa fa-edit"></i>')
+                                $('#' + id).data('edit', 'no')
+                                qty.attr('readonly', true)
+                                ket.attr('readonly', true)
+                                return $(this).is('.btn-primary, .btn-warning') ? 'btn-primary btn-warning' : 'btn-primary';
+                            })
+
+                            $('#detail_sisa_selisih').val($('#detail_qty_selisih').val() - data);
+                        },
+                        complete: function() {
+                            $("#data_selisih").LoadingOverlay("hide");
+                        }
+                    })
+                } else {
+                    Swal.fire(
+                        'Jumlah input lebih besar dari sisa selisih !',
+                        'Silahkan Cek Kembali',
+                        'error'
+                    )
+                }
+
+            }
+        } else {
+            $('#btn' + id).toggleClass(function() {
+                var qty = $('#qty' + id);
+                var ket = $('#ket' + id);
+                $(this).empty()
+                $(this).append('<i class="fa fa-check"></i>')
+                $('#' + id).data('edit', 'yes')
+                qty.attr('readonly', false)
+                ket.attr('readonly', false)
+                return $(this).is('.btn-warning, .btn-primary') ? 'btn-warning btn-primary' : 'btn-warning';
+            })
+        }
+    }
+
+    $(document).ready(function() {
+        $('#saldoFisikForm').submit(function(e) {
+            e.preventDefault();
+            id = $('#fisik_id').text();
+            var data = new FormData(document.getElementById("saldoFisikForm"));
+            data.append('id', id);
+            $.ajax({
+                url: "<?= base_url("manajemen_persediaan/stokopname/tambah_saldo_fisik"); ?>",
+                type: "post",
+                data: data,
+                async: false,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    $('#fisik_modal').modal('hide');
+                    $('#datatable-stok-opname').DataTable().ajax.reload();
+                }
+            })
+        })
     })
 </script>
