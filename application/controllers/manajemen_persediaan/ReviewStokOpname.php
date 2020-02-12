@@ -67,6 +67,7 @@ class ReviewStokOpname extends CI_Controller
         $post = $this->input->post();
         $kode_barang = $this->modelMasterPersediaan->treeviewkodebarang($post);
         $output = array();
+        $detail_data = array();
 
 
         foreach ($kode_barang as $key => $value) {
