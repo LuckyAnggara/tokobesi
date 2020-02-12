@@ -18,16 +18,16 @@ class StokOpname extends CI_Controller
 
     public function index()
     {
-        $data['css'] = 'manajemen_persediaan/stok_opname/stok_opname_css';
+        $data['css'] = 'manajemen_persediaan/stok_opname/daftar_data/stok_opname_css';
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
-        $this->load->view('manajemen_persediaan/stok_opname/stok_opname');
+        $this->load->view('manajemen_persediaan/stok_opname/daftar_data/stok_opname');
         $this->load->view('template/template_right');
         // $this->load->view('manajemen_persediaan/stok_opname/stok_opname_modal');
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
-        $this->load->view('manajemen_persediaan/stok_opname/stok_opname_js');
+        $this->load->view('manajemen_persediaan/stok_opname/daftar_data/stok_opname_js');
         $this->load->view('template/template_app_js');
     }
 
@@ -96,9 +96,9 @@ class StokOpname extends CI_Controller
         echo $output;
     }
 
-    public function getMasterStokOpname()
+    public function getMasterStokOpnameUser()
     {
-        $database = $this->modelMasterPersediaan->getMasterStokOpname();
+        $database = $this->modelMasterPersediaan->getMasterStokOpnameUser();
         $dataBarang = $database->result_array();
         $output = array(
             "recordsTotal" => $this->db->count_all_results(),
@@ -172,5 +172,17 @@ class StokOpname extends CI_Controller
     {
         $post = $this->input->post();
         $this->modelMasterPersediaan->tambah_saldo_fisik($post);
+    }
+
+    public function delete_master_stok_opname()
+    {
+        $no_ref = $this->input->post('no_ref');
+        $this->modelMasterPersediaan->delete_master_stok_opname($no_ref);
+    }
+
+    public function proses_spv()
+    {
+        $post = $this->input->post();
+        $this->modelMasterPersediaan->proses_spv($post);
     }
 }

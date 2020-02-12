@@ -14,7 +14,6 @@
             orientation: "bottom left",
         });
         init_data($('#nomor_referensi').val());
-
         init_table($('#nomor_referensi').val());
     })
 
@@ -32,6 +31,16 @@
                 $.LoadingOverlay("show");
             },
             success: function(data) {
+                if (data.status == 1) {
+                    $('#confirm').toggleClass(function() {
+                        $('#confirm').text('Send');
+                        $('#confirm').attr('disabled', true);
+                        $('#keterangan').attr('disabled', true);
+                        $('#tanggal').attr('disabled', true);
+                        return $(this).is('.btn-success, .btn-dark') ? 'btn-success btn-dark' : 'btn-success';
+                    })
+                }
+                $('#keterangan').val(data.keterangan);
                 $('#tanggal').datepicker("setDate", new Date(data.tanggal));
             },
             complete: function() {
@@ -397,4 +406,51 @@
             })
         })
     })
+
+    $('#confirm').on('click', function() {
+        Swal.fire({
+            title: 'Kirim ke Supervisor?',
+            text: "Data Stok Opname akan di kirim ke SPV untuk persetujuan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Kirim!'
+        }).then((result) => {
+            if (result.value) {
+                proses_spv()
+            }
+        })
+    })
+
+    function proses_spv() {
+        var no_ref = $('#nomor_referensi').val();
+        var tanggal = $('#keterangan').val();
+        if (no_ref == "" && tanggal == "") {
+            Swal.fire(
+                'Data masih Kosong !',
+                'Silahkan Cek Kembali',
+                'error'
+            )
+        } else {
+            $.ajax({
+                url: "<?= base_url("manajemen_persediaan/stokopname/proses_spv"); ?>",
+                type: 'post',
+                data: {
+                    no_ref: no_ref,
+                    keterangan: $('#keterangan').val(),
+                    tanggal: tanggal,
+                },
+                async: false,
+                success: function(data) {
+                    $('#confirm').toggleClass(function() {
+                        $('#confirm').text('Send');
+                        $('#confirm').attr('disabled', true);
+                        return $(this).is('.btn-success, .btn-dark') ? 'btn-success btn-dark' : 'btn-success';
+                    })
+                }
+            })
+        }
+
+    }
 </script>

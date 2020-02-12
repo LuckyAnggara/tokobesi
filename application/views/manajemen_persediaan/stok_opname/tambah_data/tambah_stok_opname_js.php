@@ -140,6 +140,7 @@
         var ket = $('#keterangan').val();
         if (no_ref.val() !== "" && tanggal.val() !== "") {
             $('#button_data_div').attr('hidden', false);
+            $('#confirm').attr('hidden', false);
             tambah_master(no_ref.val(), tanggal.val(), ket)
             init_table(no_ref.val());
             no_ref.attr('readonly', true);
@@ -428,4 +429,35 @@
             })
         })
     })
+
+    function proses_spv() {
+        var no_ref = $('#nomor_referensi').val();
+        var tanggal = $('#keterangan').val();
+        if (no_ref == "" && tanggal == "") {
+            Swal.fire(
+                'Data masih Kosong !',
+                'Silahkan Cek Kembali',
+                'error'
+            )
+        } else {
+            $.ajax({
+                url: "<?= base_url("manajemen_persediaan/stokopname/proses_spv"); ?>",
+                type: 'post',
+                data: {
+                    no_ref: no_ref,
+                    keterangan: $('#keterangan').val(),
+                    tanggal: tanggal,
+                },
+                async: false,
+                success: function(data) {
+                    $('#confirm').toggleClass(function() {
+                        $('#confirm').text('Send');
+                        $('#confirm').attr('disabled', true);
+                        return $(this).is('.btn-success, .btn-dark') ? 'btn-success btn-dark' : 'btn-success';
+                    })
+                }
+            })
+        }
+
+    }
 </script>

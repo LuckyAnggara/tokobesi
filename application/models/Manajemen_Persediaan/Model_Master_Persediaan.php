@@ -133,10 +133,11 @@ class Model_Master_Persediaan extends CI_Model
 
     // STOCK OPNAME
 
-    function getMasterStokOpname()
+    function getMasterStokOpnameUser()
     {
         $this->db->select('*, DATE_FORMAT(tanggal, "%d-%b-%y") as tanggal');
         $this->db->from('master_stok_opname');
+        $this->db->where('user', $this->session->userdata['username']);
         return $this->db->get();
     }
 
@@ -163,11 +164,16 @@ class Model_Master_Persediaan extends CI_Model
         $this->db->select('qty_awal, saldo_awal, harga_awal');
         $this->db->from('master_saldo_awal');
         $this->db->where('kode_barang', $kode_barang);
-    
+
         $data = $this->db->get()->row_array();
-      
-        $saldoAwal = $data['qty_awal'];
-        
+        print_r($data);
+        echo "<br>";
+        if ($data == null) {
+            $saldoAwal = 0;
+        } else {
+            $saldoAwal = $data['qty_awal'];
+        }
+
         // saldo masuk
         $this->db->select_sum('jumlah_pembelian');
         $this->db->from('detail_pembelian');
@@ -224,6 +230,12 @@ class Model_Master_Persediaan extends CI_Model
         $this->db->insert('master_stok_opname', $data);
     }
 
+    function delete_master_stok_opname($no_ref)
+    {
+        $this->db->where('nomor_referensi', $no_ref);
+        $this->db->delete('master_stok_opname');
+    }
+
     function tambah_detail_data($post)
     {
         $database = $this->getDataBarang();
@@ -236,8 +248,7 @@ class Model_Master_Persediaan extends CI_Model
             $value['data_barang'] = $data_barang;
             $value['saldo_buku'] = $saldo_buku;
             $value['saldo_fisik'] = "0";
-            $value['data_selisih']['selisih'] = $saldo_buku - $value['saldo_fisik'];
-            $value['data_selisih']['id'] = 
+            $value['selisih'] = $saldo_buku - $value['saldo_fisik'];
             $output[] = $value;
         }
 
@@ -262,7 +273,6 @@ class Model_Master_Persediaan extends CI_Model
         $this->db->from('detail_stok_opname');
         $this->db->where('nomor_referensi', $no_ref);
         $this->db->order_by('kode_barang', 'ASC');
-
         return $this->db->get();
     }
 
@@ -363,12 +373,53 @@ class Model_Master_Persediaan extends CI_Model
 
     function tambah_saldo_fisik($post)
     {
-        $selisih = $post['saldo_buku']- $post['saldo_fisik'];
+        $selisih = $post['saldo_buku'] - $post['saldo_fisik'];
         $data = [
             'saldo_fisik' => $post['saldo_fisik'],
             'selisih' => $selisih
         ];
         $this->db->where('id', $post['id']);
         $this->db->update('detail_stok_opname', $data);
+    }
+
+    function proses_spv($post)
+    {
+        $data = [
+            'status' => 1,
+            'tanggal' =>  date('Y-m-d H:i:s', strtotime($post['tanggal'])),
+            'keterangan' => $post['keterangan'],
+        ];
+        $this->db->where('nomor_referensi', $post['no_ref']);
+        $this->db->update('master_stok_opname', $data);
+    }
+
+
+    // script review stok opname
+
+
+
+    function getMasterStokOpnameSpv()
+    {
+        $this->db->select('*, DATE_FORMAT(tanggal, "%d-%b-%y") as tanggal');
+        $this->db->from('master_stok_opname');
+        $this->db->where('status', 1);
+        return $this->db->get();
+    }
+
+    function treeviewkodebarang($post)
+    {
+        $this->db->select('*, master_barang.nama_barang');
+        $this->db->from('detail_stok_opname');
+        $this->db->join('master_barang', 'master_barang.kode_barang = detail_stok_opname.kode_barang');
+        $this->db->where('nomor_referensi', $post['no_ref']);
+        return $this->db->get()->result_array();
+    }
+
+    function treeviewdetail($string)
+    {
+        $this->db->select('*');
+        $this->db->from('detail_detail_stok_opname');
+        $this->db->where('id_detail_stok_opname', $string);
+        return $this->db->get()->result_array();
     }
 }

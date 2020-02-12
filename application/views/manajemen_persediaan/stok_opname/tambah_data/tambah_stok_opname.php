@@ -89,8 +89,11 @@
         <div class="col-md-8 col-xs-12">
             <div class="card-box">
                 <div class="row">
-                    <div class="col-6">
-                        <h4 class="m-t-0 header-title">Data Barang</h4>
+                    <div class="col-12">
+                        <div class="pull-right">
+                            <button type="button" id="confirm" class="btn btn-success waves-effect waves-light" hidden>Confirm</button>
+                        </div>
+                        <h4 class="m-t-0 header-title">Data</h4>
                     </div>
                 </div>
                 <hr>
@@ -132,7 +135,7 @@
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-12 col-lg-3 col-md-3 col-form-label">Jumlah Selisih</label>
-                            <div class="col-sm-12 col-lg-9 col-md-9">
+                            <div class="col-sm-12 col-lg-3 col-md-3">
                                 <div class="input-group">
                                     <input name="detail_qty_selisih" id="detail_qty_selisih" type="text" class="form-control" readonly>
                                     <div class="input-group-append">
@@ -142,7 +145,7 @@
                             </div>
 
                             <label class="col-sm-12 col-lg-3 col-md-3 col-form-label">Sisa Selisih</label>
-                            <div class="col-sm-12 col-lg-9 col-md-9">
+                            <div class="col-sm-12 col-lg-3 col-md-3">
                                 <div class="input-group">
                                     <input name="detail_sisa_selisih" id="detail_sisa_selisih" type="text" class="form-control" readonly>
                                     <div class="input-group-append">

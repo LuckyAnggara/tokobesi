@@ -18,7 +18,7 @@
                         <div class="form-group row">
                             <label class="col-5 col-sm-form-label  m-t-10 ">Nomor Referensi</label>
                             <div class="col-7">
-                                <input id="nomor_referensi" autocomplete="off" name="nomor_referensi" type="text" class="form-control" value="<?= $stok_opname['nomor_referensi']; ?>">
+                                <input id="nomor_referensi" autocomplete="off" name="nomor_referensi" type="text" class="form-control" readonly value="<?= $stok_opname['nomor_referensi']; ?>">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -47,7 +47,10 @@
 
             <div class="card-box">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-12">
+                        <div class="pull-right">
+                            <button type="button" id="confirm" class="btn btn-success waves-effect waves-light">Confirm</button>
+                        </div>
                         <h4 class="m-t-0 header-title">Data</h4>
                     </div>
                 </div>
@@ -103,7 +106,7 @@
                             </div>
 
                             <label class="col-sm-12 col-lg-3 col-md-3 col-form-label">Sisa Selisih</label>
-                            <div class="col-sm-12 col-lg-9 col-md-9">
+                            <div class="col-sm-12 col-lg-3 col-md-3">
                                 <div class="input-group">
                                     <input name="detail_sisa_selisih" id="detail_sisa_selisih" type="text" class="form-control" readonly>
                                     <div class="input-group-append">
@@ -125,9 +128,7 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="form-group row pull-right">
-                            <button type="button" id="add_data" class="btn btn-success waves-effect waves-light">Confirm</button>
-                        </div>
+
                     </div>
                 </div> <!-- end row -->
             </div>
