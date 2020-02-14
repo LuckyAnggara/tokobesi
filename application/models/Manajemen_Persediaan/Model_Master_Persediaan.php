@@ -135,8 +135,9 @@ class Model_Master_Persediaan extends CI_Model
 
     function getMasterStokOpnameUser()
     {
-        $this->db->select('*, DATE_FORMAT(tanggal, "%d-%b-%y") as tanggal');
+        $this->db->select('*, DATE_FORMAT(tanggal, "%d-%b-%y") as tanggal, master_user.nama as nama_admin');
         $this->db->from('master_stok_opname');
+        $this->db->join('master_user', 'master_user.username = master_stok_opname.user');
         $this->db->where('user', $this->session->userdata['username']);
         return $this->db->get();
     }
@@ -271,8 +272,10 @@ class Model_Master_Persediaan extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('detail_stok_opname');
+        $this->db->join('master_barang', 'master_barang.kode_barang = detail_stok_opname.kode_barang');
+        $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
         $this->db->where('nomor_referensi', $no_ref);
-        $this->db->order_by('kode_barang', 'ASC');
+        $this->db->order_by('detail_stok_opname.kode_barang', 'ASC');
         return $this->db->get();
     }
 
@@ -421,5 +424,38 @@ class Model_Master_Persediaan extends CI_Model
         $this->db->from('detail_detail_stok_opname');
         $this->db->where('id_detail_stok_opname', $string);
         return $this->db->get()->result_array();
+    }
+
+    function approve_review($post)
+    {
+        $data = [
+            'status' => 2,
+            'tanggal' =>  date('Y-m-d H:i:s'),
+            'spv' => $this->session->userdata['username']
+        ];
+        $this->db->where('nomor_referensi', $post['no_ref']);
+        $this->db->update('master_stok_opname', $data);
+    }
+
+    function return_review($post)
+    {
+        $data = [
+            'status' => 3,
+            'tanggal' =>  date('Y-m-d H:i:s'),
+            'spv' => $this->session->userdata['username']
+        ];
+        $this->db->where('nomor_referensi', $post['no_ref']);
+        $this->db->update('master_stok_opname', $data);
+    }
+
+    function reject_review($post)
+    {
+        $data = [
+            'status' => 99,
+            'tanggal' =>  date('Y-m-d H:i:s'),
+            'spv' => $this->session->userdata['username']
+        ];
+        $this->db->where('nomor_referensi', $post['no_ref']);
+        $this->db->update('master_stok_opname', $data);
     }
 }

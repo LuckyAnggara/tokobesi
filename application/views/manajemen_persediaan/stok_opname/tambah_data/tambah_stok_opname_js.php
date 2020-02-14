@@ -211,10 +211,25 @@
     }
 
     function fisik_modal(id, saldo_fisik, saldo_fisik) {
-        $('#fisik_id').text(id);
-        $('#saldo_fisik').val(saldo_fisik)
-        $('#saldo_buku').val(saldo_fisik)
-        $('#fisik_modal').modal('show');
+        if ($('#confirm').text() == "Reject") {
+            swal.fire(
+                'Rejected!',
+                'Data sudah tidak bisa di <b>Ubah!</b>',
+                'error'
+            )
+        } else if ($('#confirm').text() == "Waiting Approve") {
+            swal.fire(
+                'Wait!!',
+                'Data menunggu Approve <b>Supervisor</b>',
+                'warning'
+            )
+        } else {
+            $('#fisik_id').text(id);
+            $('#saldo_fisik').val(saldo_fisik)
+            $('#saldo_buku').val(saldo_fisik)
+            $('#fisik_modal').modal('show');
+            $('#box_selisih').hide();
+        }
     }
 
 
@@ -280,38 +295,47 @@
 
     function display_li(id, qty, ket) {
 
-        var display = '<li id=' + id + ' data-edit="no"><div class="form-group row">' +
-            '<div class="col-sm-3">' +
-            '<input type="number" id="qty' + id + '"  class="form-control" placeholder="Qty" readonly value="' + qty + '">' +
-            '</div>' +
-            '<div class="col-sm-6">' +
-            '<input type="text" class="form-control"  id="ket' + id + '" placeholder="-" readonly value="' + ket + '">' +
-            '</div>' +
-            '<div class="col-1">' +
-            '<button type="button" onClick="apply_data(\'' + id + '\')" id="btn' + id + '"  class="btn btn-warning waves-effect waves-light"><i class="fa fa-edit"></i></button>' +
-            '</div>' +
-            '<div class="col-1">' +
-            '<button type="button" onClick="remove_data(\'' + id + '\')" class="btn btn-danger waves-effect waves-light"><i class="fa  fa-times"></i></button>' +
-            '</div>' +
-            '</div></li>';
+        if ($('#confirm').text() == "Reject" || $('#confirm').text() == "Waiting Approve") {
+            var display = '<li id=' + id + ' data-delete="yes"><div class="form-group row">' +
+                '<div class="col-sm-3">' +
+                '<input type="number" id="qty' + id + '"  class="form-control" placeholder="Qty" readonly value="' + qty + '">' +
+                '</div>' +
+                '<div class="col-sm-7">' +
+                '<input type="text" class="form-control"  id="ket' + id + '" placeholder="-" readonly value="' + ket + '">' +
+                '</div>' +
+                '<div class="col-1">' +
+                '<button  disabled type="button" onClick="remove_data(\'' + id + '\')" class="btn btn-danger waves-effect waves-light"><i class="fa  fa-times"></i></button>' +
+                '</div>' +
+                '</div></li>';
+        } else {
+            var display = '<li id=' + id + ' data-delete="yes"><div class="form-group row">' +
+                '<div class="col-sm-3">' +
+                '<input type="number" id="qty' + id + '"  class="form-control" placeholder="Qty" readonly value="' + qty + '">' +
+                '</div>' +
+                '<div class="col-sm-7">' +
+                '<input type="text" class="form-control"  id="ket' + id + '" placeholder="-" readonly value="' + ket + '">' +
+                '</div>' +
+                '<div class="col-1">' +
+                '<button type="button" onClick="remove_data(\'' + id + '\')" class="btn btn-danger waves-effect waves-light"><i class="fa  fa-times"></i></button>' +
+                '</div>' +
+                '</div></li>';
+        }
+
+
         $('#data_selisih').append(display)
     }
 
     function tambah_li(data) {
 
-        var display = '<li id=' + data + ' data-edit="yes"><div class="form-group row">' +
-            '<div class="col-sm-12 col-lg-3 col-md-3">' +
+        var display = '<li id=' + data + ' data-delete="no"><div class="form-group row">' +
+            '<div class="col-sm-3">' +
             '<input type="number" id="qty' + data + '"  class="form-control" placeholder="Qty">' +
             '</div>' +
-            '<div class="col-sm-6">' +
-            '<input type="text" class="form-control"  id="ket' + data + '" placeholder="Keterangan">' +
+            '<div class="col-sm-7">' +
+            '<input type="text" class="form-control"  id="ket' + data + '" placeholder="-" >' +
             '</div>' +
             '<div class="col-1">' +
             '<button type="button" onClick="apply_data(\'' + data + '\')" id="btn' + data + '" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i></button>' +
-            '</div>' +
-            '<div class="col-1">' +
-            '<button type="button" onClick="remove_data(\'' + data + '\')" class="btn btn-danger waves-effect waves-light"><i class="fa  fa-times"></i></button>' +
-            '</div>' +
             '</div></li>';
         $('#data_selisih').append(display)
     }
@@ -346,7 +370,7 @@
         var id_ref = $('#id').text();
         var selisih = $('#detail_sisa_selisih').val();
 
-        if ($('#' + id).data('edit') == 'yes') {
+        if ($('#' + id).data('delete') == 'no') {
             if (qty.val() == "" && ket.val() == "") {
                 Swal.fire(
                     'Data belum di isi !',
@@ -373,11 +397,11 @@
                         success: function(data) {
                             $('#btn' + id).toggleClass(function() {
                                 $(this).empty()
-                                $(this).append('<i class="fa fa-edit"></i>')
-                                $('#' + id).data('edit', 'no')
+                                $(this).append('<i class="fa fa-times"></i>')
+                                $('#' + id).data('delete', 'yes')
                                 qty.attr('readonly', true)
                                 ket.attr('readonly', true)
-                                return $(this).is('.btn-primary, .btn-warning') ? 'btn-primary btn-warning' : 'btn-primary';
+                                return $(this).is('.btn-primary, .btn-danger') ? 'btn-primary btn-danger' : 'btn-primary';
                             })
 
                             $('#detail_sisa_selisih').val($('#detail_qty_selisih').val() - data);
@@ -396,16 +420,7 @@
 
             }
         } else {
-            $('#btn' + id).toggleClass(function() {
-                var qty = $('#qty' + id);
-                var ket = $('#ket' + id);
-                $(this).empty()
-                $(this).append('<i class="fa fa-check"></i>')
-                $('#' + id).data('edit', 'yes')
-                qty.attr('readonly', false)
-                ket.attr('readonly', false)
-                return $(this).is('.btn-warning, .btn-primary') ? 'btn-warning btn-primary' : 'btn-warning';
-            })
+            remove_data(id);
         }
     }
 
@@ -430,6 +445,22 @@
         })
     })
 
+    $('#confirm').on('click', function() {
+        Swal.fire({
+            title: 'Kirim ke Supervisor?',
+            text: "Data Stok Opname akan di kirim ke SPV untuk persetujuan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Kirim!'
+        }).then((result) => {
+            if (result.value) {
+                proses_spv()
+            }
+        })
+    })
+
     function proses_spv() {
         var no_ref = $('#nomor_referensi').val();
         var tanggal = $('#keterangan').val();
@@ -451,9 +482,10 @@
                 async: false,
                 success: function(data) {
                     $('#confirm').toggleClass(function() {
-                        $('#confirm').text('Send');
+                        $('#confirm').text('Waiting Approve');
                         $('#confirm').attr('disabled', true);
-                        return $(this).is('.btn-success, .btn-dark') ? 'btn-success btn-dark' : 'btn-success';
+                        $('.btn').attr('disabled', true);
+                        return $(this).is('.btn-success, .btn-primary') ? 'btn-success btn-primary' : 'btn-success';
                     })
                 }
             })

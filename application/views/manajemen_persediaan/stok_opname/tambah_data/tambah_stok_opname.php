@@ -166,10 +166,6 @@
                                 </ol>
                             </div>
                         </div>
-                        <hr>
-                        <div class="form-group row pull-right">
-                            <button type="button" id="add_data" class="btn btn-success waves-effect waves-light">Confirm</button>
-                        </div>
                     </div>
                 </div> <!-- end row -->
             </div>

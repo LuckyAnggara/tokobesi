@@ -66,9 +66,28 @@
                 }, {
                     data: "keterangan",
                     targets: 3,
-                    width: 300,
+                    width: 200,
                     render: function(data, type, full, meta) {
                         return data;
+                    }
+                }, {
+                    data: "status",
+                    targets: 4,
+                    width: 200,
+                    render: function(data, type, full, meta) {
+                        if (data == "0") {
+                            var display = '<span class="badge badge-dark">Input</span>'
+                        } else if (data == "1") {
+                            var display = '<span class="badge badge-primary">Waiting Approve</span>'
+                        } else if (data == "2") {
+                            var display = '<span class="badge badge-success">Approve</span>'
+                        } else if (data == "3") {
+                            var display = '<span class="badge badge-warning">Input Ulang</span>'
+                        } else if (data == "99") {
+                            var display = '<span class="badge badge-danger">Rejected</span>'
+
+                        }
+                        return display;
                     }
                 },
                 {
@@ -76,16 +95,16 @@
                         "nomor_referensi": "nomor_referensi",
                         "status": "status"
                     },
-                    targets: 4,
+                    targets: 5,
                     width: 70,
                     render: function(data, type, full, meta) {
-                        var display1 = '<a type="button" onClick = "show_view_modal(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
+                        var display1 = '<a type="button" onClick = "detail_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
                         var display2 = '<a type="button" onClick = "warning_delete(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Delete Data"><i class="fa fa-trash" ></i> </a>';
-                        var display3 = '<span class="badge badge-warning" >Waiting</span>'
+                        var display3 = '<a type="button" onClick = "print_report(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Delete Data"><i class="fa fa-print" ></i> </a>';
                         if (data.status == 0) {
                             return display1 + ' ' + display2;
 
-                        } else if (data.status == 1) {
+                        } else if (data.status == 2) {
                             return display1 + ' ' + display3;
                         } else {
                             return display1
@@ -105,8 +124,12 @@
         });
     }
 
-    function show_view_modal(no_ref) {
+    function detail_data(no_ref) {
         window.location.href = "<?= base_url('manajemen_persediaan/stokopname/detail_stokopname/'); ?>" + no_ref
+    }
+
+    function print_report(no_ref) {
+        window.location.href = "<?= base_url('laporan/excel/reportstokopname/'); ?>" + no_ref
     }
 
     function warning_delete(no_ref) {

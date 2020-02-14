@@ -94,9 +94,8 @@
                     width: 70,
                     render: function(data, type, full, meta) {
                         var display1 = '<a type="button" onClick = "detail(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
-                        var display2 = '<a type="button" onClick = "return(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-warning btn-sm" data-toggle="tooltip" data-placement="left" title="Return Data"><i class="fa fa-share-square-o" ></i> </a>';
 
-                        return display1 + ' ' + display2;
+                        return display1;
 
                     }
                 }

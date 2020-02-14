@@ -96,7 +96,7 @@
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-12 col-lg-3 col-md-3 col-form-label">Jumlah Selisih</label>
-                            <div class="col-sm-12 col-lg-9 col-md-9">
+                            <div class="col-sm-12 col-lg-3 col-md-3">
                                 <div class="input-group">
                                     <input name="detail_qty_selisih" id="detail_qty_selisih" type="text" class="form-control" readonly>
                                     <div class="input-group-append">
@@ -123,14 +123,11 @@
                             </div>
                             <div class="col-sm-12 col-lg-9 col-md-9 m-t-5">
                                 <ol id="data_selisih" class="data_selisih">
-
                                 </ol>
                             </div>
                         </div>
-                        <hr>
-
                     </div>
-                </div> <!-- end row -->
+                </div>
             </div>
         </div>
     </div>
