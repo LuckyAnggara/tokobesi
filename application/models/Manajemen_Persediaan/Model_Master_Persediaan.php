@@ -135,7 +135,7 @@ class Model_Master_Persediaan extends CI_Model
 
     function getMasterStokOpnameUser()
     {
-        $this->db->select('*, DATE_FORMAT(tanggal, "%d-%b-%y") as tanggal, master_user.nama as nama_admin');
+        $this->db->select('master_stok_opname.id,master_stok_opname.nomor_referensi, master_stok_opname.status, master_stok_opname.keterangan, DATE_FORMAT(master_stok_opname.tanggal, "%d-%b-%y") as tanggal, master_user.nama as nama_admin,');
         $this->db->from('master_stok_opname');
         $this->db->join('master_user', 'master_user.username = master_stok_opname.user');
         $this->db->where('user', $this->session->userdata['username']);
