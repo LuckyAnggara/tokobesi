@@ -48,7 +48,7 @@
 
                     <div class="form-group">
                         <div class="col-xs-12">
-                            <input class="form-control" type="password" required autocomplete="off" placeholder="Password" name="password">
+                            <input class="form-control" id="password" type="password" required autocomplete="off" placeholder="Password" name="password">
                         </div>
                     </div>
 
@@ -113,7 +113,6 @@
         $(document).ready(function() {
 
             $('#loginForm').submit(function(e) {
-
                 e.preventDefault();
                 var data = new FormData(document.getElementById("loginForm"));
                 $.ajax({
@@ -123,25 +122,34 @@
                     async: false,
                     processData: false,
                     contentType: false,
-                    beforeSend: function() {
-                        $.LoadingOverlay("show");
+                    beforeSend: function(data) {
+                        $('#loginForm').LoadingOverlay("show");
                     },
                     success: function(data) {
-                        console.log(data);
-                        if (data == "false") {
+                        if (data == "notactive") {
+                            $('#loginForm').LoadingOverlay("hide");
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: 'Cek kembali Username dan Password serta Role',
+                                text: 'User tidak Aktif',
                             });
-                            $('#loginDiv').loading('stop');
-
                         } else {
-                            window.location.href = "<?php echo base_url('dashboard'); ?>";
+                            if (data == "false") {
+                                $('#loginForm').LoadingOverlay("hide");
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Cek kembali Username dan Password',
+                                });
+                                $('#password').val('');
+                            } else {
+                                window.location.href = "<?php echo base_url('dashboard'); ?>";
+                            }
                         }
+
                     },
                     complete: function() {
-                        $.LoadingOverlay("hide");
+                        $('#loginForm').LoadingOverlay("hide");
                     },
                 })
             });
