@@ -52,105 +52,7 @@
         },
     });
 </script>
-<!-- script validasi -->
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#submitForm').parsley();
-        $('.select2').select2({
-            minimumResultsForSearch: -1
-        });
 
-        $('#edit_satuan').select2().on('select2:select', function() {
-            var data = $("#edit_satuan option:selected").text()
-            $('#edit_satuan_minimum').val(data);
-        })
-
-        var edit_persediaan_minimum_input = document.getElementById('edit_persediaan_minimum');
-        edit_persediaan_minimum_input.addEventListener('keyup', function(e) {
-            var data = $('#edit_persediaan_minimum').val();
-            edit_persediaan_minimum_input.value = this.value.replace(/[^,\d]/g, '').toString();
-        });
-    });
-</script>
-
-<!-- Script Nominal Harga Formater -->
-<script type="text/javascript">
-    var edit_harga_satuan = document.getElementById('edit_harga_satuan_dummy');
-    edit_harga_satuan.addEventListener('keyup', function(e) {
-        var data = $('#edit_harga_satuan_dummy').val();
-        edit_harga_satuan.value = formatRupiah(this.value, 'Rp. ');
-        $('#edit_harga_satuan').val(normalrupiah(data));
-    });
-
-    var harga_pokok = document.getElementById('edit_harga_pokok_dummy');
-    harga_pokok.addEventListener('keyup', function(e) {
-        var data = $('#edit_harga_pokok_dummy').val();
-        harga_pokok.value = formatRupiah(this.value, 'Rp. ');
-        $('#edit_harga_pokok').val(normalrupiah(data));
-    });
-
-    var komisi_sales = document.getElementById('edit_komisi_sales_dummy');
-    komisi_sales.addEventListener('keyup', function(e) {
-        var data = $('#edit_komisi_sales_dummy').val();
-        komisi_sales.value = formatRupiah(this.value, 'Rp. ');
-        $('#edit_komisi_sales').val(normalrupiah(data));
-    });
-
-    /* Fungsi formatRupiah */
-    function formatRupiah(angka, prefix) {
-        var number_string = angka.replace(/[^,\d]/g, '').toString(),
-            split = number_string.split(','),
-            sisa = split[0].length % 3,
-            rupiah = split[0].substr(0, sisa),
-            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-        // tambahkan titik jika yang di input sudah menjadi angka ribuan
-        if (ribuan) {
-            separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
-        }
-
-        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-    }
-
-    function normalrupiah(angka) {
-
-        var tanparp = angka.replace("Rp", "");
-        var tanpatitik = tanparp.split(".").join("");
-        return tanpatitik;
-    }
-</script>
-
-<!-- Script Auto Generate Kode Barang -->
-
-<script>
-    var nama_barang = $('#nama_barang');
-    var kode_barang = $('#kode_barang');
-    nama_barang.on("keyup", function() {
-        string_awalan = nama_barang.val();
-        string_awalan = string_awalan.substr(0, 1);
-        string_awalan = string_awalan.toUpperCase();
-        var tambahan = cekData(string_awalan);
-        var res = string_awalan.concat(tambahan);
-        kode_barang.val(res);
-    });
-
-    function cekData(string) {
-
-        // tambah lagi if untuk string dibawah 1
-
-        $.ajax({
-            url: '<?= base_url("Manajemen_Barang/MasterBarang/cekData/"); ?>' + string,
-            success: function(result) {
-                data = result;
-            }
-        });
-        return data;
-    }
-</script>
-
-<!-- script close modal reset data -->
 
 <script>
     $(document).ready(function() {
@@ -167,243 +69,6 @@
 </script>
 
 
-<!-- Script Edit Modal -->
-<script type="text/javascript">
-    function show_edit_modal(kode_barang) {
-        fetchdata(kode_barang);
-    }
-
-    function fetchdata(kode_barang) {
-        var edit_data_label = $('#edit_data_label');
-        var edit_kode_barang = $('#edit_kode_barang');
-        var edit_nama_barang = $('#edit_nama_barang');
-        var edit_harga_satuan_dummy = $('#edit_harga_satuan_dummy');
-        var edit_harga_satuan = $('#edit_harga_satuan');
-        var edit_satuan = $('#edit_satuan');
-        var edit_tanggal_input = $('#edit_tanggal_input');
-        var edit_image = $('#edit_gambar_dropfy');
-        //var edit_image = $('#edit_image');
-
-        $.ajax({
-            url: '<?= base_url("Manajemen_Barang/MasterBarang/view_edit_data/"); ?>' + kode_barang,
-            type: "POST",
-            dataType: "JSON",
-            async: false,
-            success: function(data) {
-                rupiah = formatRupiah(data.harga_satuan, 'Rp.');
-                edit_data_label.text("Edit Data Barang Kode :" + data.kode_barang);
-                edit_kode_barang.val(data.kode_barang);
-                edit_nama_barang.val(data.nama_barang);
-                edit_harga_satuan_dummy.val(rupiah);
-                edit_harga_satuan.val(data.harga_satuan);
-                edit_satuan.val(data.satuan);
-                edit_tanggal_input.text(data.tanggal_input);
-                edit_image.attr('data-default-file', "<?= base_url('assets/images/barang/'); ?>" + data.gambar);
-                //edit_image.attr('src',"<?= base_url('assets/images/barang/'); ?>" + data.gambar);
-                $('#edit_Modal').modal('show');
-            }
-        });
-    }
-
-    // Edit Harga Satuan
-
-    var edit_rupiah = document.getElementById('edit_harga_satuan_dummy');
-    edit_rupiah.addEventListener('keyup', function(e) {
-        var data = $('#edit_harga_satuan_dummy').val();
-        // tambahkan 'Rp.' pada saat form di ketik
-        // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
-        edit_rupiah.value = formatRupiah(this.value, 'Rp. ');
-        $('#edit_harga_satuan').val(normalrupiah(data));
-    });
-
-    // submit edit data
-    $(document).ready(function() {
-        function warning_edit_umum(kode_barang) {
-            swal.fire({
-                title: 'Apa anda yakin akan mengubah data ini?',
-                text: "Semua Data Barang dengan kode " + kode_barang + " juga akan terubah",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#4fa7f3',
-                cancelButtonColor: '#d57171',
-                confirmButtonText: 'Ya, Ubah ini!'
-            }).then((result) => {
-                if (result.value) {
-                    $('#edit_button_umum_div').attr("hidden", true);
-                    $('#edit_trigger_umum').attr("hidden", false);
-                    edit_Data_Umum(kode_barang);
-                    setData(kode_barang);
-                    set_readonly('umum', true);
-                    swal.fire(
-                        'Edited!!!',
-                        'Data Umum ' + kode_barang + ' telah diubah!',
-                        'success'
-                    );
-                }
-            });
-        }
-
-        function edit_Data_Umum(kode_barang) {
-            var data = new FormData(document.getElementById("form_umum"));
-            $.ajax({
-                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data_umum/'); ?>" + kode_barang,
-                type: "post",
-                data: data,
-                async: false,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-
-                }
-            });
-        }
-        $('#form_umum').submit(function(e) {
-            var kode_barang = $('#hide_kode_barang').text();
-            e.preventDefault();
-            warning_edit_umum(kode_barang);
-        });
-
-        function warning_edit_harga(kode_barang) {
-            swal.fire({
-                title: 'Apa anda yakin akan mengubah data ini?',
-                text: "Semua Data Barang dengan kode " + kode_barang + " juga akan terubah",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#4fa7f3',
-                cancelButtonColor: '#d57171',
-                confirmButtonText: 'Ya, Ubah ini!'
-            }).then((result) => {
-                if (result.value) {
-                    $('#edit_button_harga_div').attr("hidden", true);
-                    $('#edit_trigger_harga').attr("hidden", false);
-                    edit_Data_Harga(kode_barang);
-                    setData(kode_barang);
-                    set_readonly('harga', true);
-                    swal.fire(
-                        'Edited!!!',
-                        'Data Harga ' + kode_barang + ' telah diubah!',
-                        'success'
-                    );
-                }
-            });
-        }
-
-        function edit_Data_Harga(kode_barang) {
-            var data = new FormData(document.getElementById("form_harga"));
-            $.ajax({
-                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data_harga/'); ?>" + kode_barang,
-                type: "post",
-                data: data,
-                async: false,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-
-                }
-            })
-
-        }
-        $('#form_harga').submit(function(e) {
-            var kode_barang = $('#hide_kode_barang').text();
-            e.preventDefault();
-            warning_edit_harga(kode_barang);
-        });
-
-        function warning_edit_komisi(kode_barang) {
-            swal.fire({
-                title: 'Apa anda yakin akan mengubah data ini?',
-                text: "Semua Data Barang dengan kode " + kode_barang + " juga akan terubah",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#4fa7f3',
-                cancelButtonColor: '#d57171',
-                confirmButtonText: 'Ya, Ubah ini!'
-            }).then((result) => {
-                if (result.value) {
-                    $('#edit_button_komisi_div').attr("hidden", true);
-                    $('#edit_trigger_komisi').attr("hidden", false);
-                    edit_data_komisi(kode_barang);
-                    setData(kode_barang);
-                    set_readonly('komisi', true);
-                    swal.fire(
-                        'Edited!!!',
-                        'Data Komisi ' + kode_barang + ' telah diubah!',
-                        'success'
-                    );
-                }
-            });
-        }
-
-        function edit_data_komisi(kode_barang) {
-            var data = new FormData(document.getElementById("form_komisi"));
-            $.ajax({
-                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data_komisi/'); ?>" + kode_barang,
-                type: "post",
-                data: data,
-                async: false,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-
-                }
-            })
-
-        }
-        $('#form_komisi').submit(function(e) {
-            var kode_barang = $('#hide_kode_barang').text();
-            e.preventDefault();
-            warning_edit_komisi(kode_barang);
-        });
-
-        function warning_edit_lainnya(kode_barang) {
-            swal.fire({
-                title: 'Apa anda yakin akan mengubah data ini?',
-                text: "Semua Data Barang dengan kode " + kode_barang + " juga akan terubah",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#4fa7f3',
-                cancelButtonColor: '#d57171',
-                confirmButtonText: 'Ya, Ubah ini!'
-            }).then((result) => {
-                if (result.value) {
-                    $('#edit_button_lainnya_div').attr("hidden", true);
-                    $('#edit_trigger_lainnya').attr("hidden", false);
-                    edit_data_lainnya(kode_barang);
-                    setData(kode_barang);
-                    set_readonly('lainnya', true);
-                    swal.fire(
-                        'Edited!!!',
-                        'Data Lainnya ' + kode_barang + ' telah diubah!',
-                        'success'
-                    );
-                }
-            });
-        }
-
-        function edit_data_lainnya(kode_barang) {
-            var data = new FormData(document.getElementById("form_lainnya"));
-            $.ajax({
-                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data_lainnya/'); ?>" + kode_barang,
-                type: "post",
-                data: data,
-                async: false,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-
-                }
-            })
-
-        }
-        $('#form_lainnya').submit(function(e) {
-            var kode_barang = $('#hide_kode_barang').text();
-            e.preventDefault();
-            warning_edit_lainnya(kode_barang);
-        });
-
-    });
-</script>
-
 <!-- Tampilkan Modal Edit Gambar -->
 
 <script>
@@ -415,11 +80,11 @@
         // Upload Gambar
         $('#edit_gambar_form').submit(function(e) {
             e.preventDefault();
-            var kode_barang = $('#hide_kode_barang').text();
+            var nip = $('#nip').val();
             var data = new FormData(document.getElementById("edit_gambar_form"));
-            data.append('kode_barang', kode_barang);
+            data.append('nip', nip);
             $.ajax({
-                url: '<?= base_url("Manajemen_Barang/MasterBarang/SetGambarBaru/"); ?>' + kode_barang,
+                url: '<?= base_url("manajemen_pegawai/masterpegawai/SetGambarBaru/"); ?>' + nip,
                 type: "post",
                 data: data,
                 async: false,
@@ -427,32 +92,28 @@
                 contentType: false,
                 success: function(data) {
                     $('#edit_gambar_modal').modal('hide');
-                    setGambarBaru(kode_barang);
+                    setGambarBaru(nip);
                 }
             })
         });
 
-        function setGambarBaru(kode_barang) {
+        function setGambarBaru(nip) {
             $.ajax({
-                url: '<?= base_url("Manajemen_Barang/MasterBarang/GetGambarBaru/"); ?>' + kode_barang,
+                url: '<?= base_url("manajemen_pegawai/masterpegawai/GetGambarBaru/"); ?>' + nip,
                 type: "POST",
                 dataType: "JSON",
                 async: false,
                 success: function(data) {
-                    var drEvent = $('#edit_gambar').dropify();
-                    drEvent = drEvent.data('dropify');
-                    drEvent.resetPreview();
-                    drEvent.clearElement();
-                    $('#gambar_barang').fadeOut(2000, function() {
-                        // $('#gambar_barang').remove();
-                        // display = '<img id="gambar_barang" src="<?= base_url('assets/images/barang/'); ?>' + data.gambar + '" class="img-thumbnail" alt="profile-image">';
-                        $('#gambar_barang').attr('src', "<?= base_url('assets/images/barang/'); ?>" + data.gambar)
+                    $('#gambar_pegawai').fadeOut(2000, function() {
+                        // $('#gambar_pegawai').remove();
+                        // display = '<img id="gambar_pegawai" src="<?= base_url('assets/images/pegawai/'); ?>' + data.gambar + '" class="img-thumbnail" alt="profile-image">';
+                        $('#gambar_pegawai').attr('src', "<?= base_url('assets/images/pegawai/'); ?>" + data.gambar)
                         // $('#div_gambar').append(display)
-                        $('#gambar_barang').fadeIn(2000);
+                        $('#gambar_pegawai').fadeIn(2000);
                     });
                     Swal.fire(
                         'Sukses!',
-                        'Data Supplier telah berhasil di tambahkan.',
+                        'Gambar telah di ubah.',
                         'success'
                     );
                 }
@@ -471,12 +132,12 @@
         var edit_button_umum = $('#edit_trigger_umum');
         var edit_button_umum_div = $('#edit_button_umum_div');
         var edit_batal_umum = $('#edit_batal_umum');
-        var edit_button_harga = $('#edit_trigger_harga');
-        var edit_button_harga_div = $('#edit_button_harga_div');
-        var edit_batal_harga = $('#edit_batal_harga');
-        var edit_button_komisi = $('#edit_trigger_komisi');
-        var edit_button_komisi_div = $('#edit_button_komisi_div');
-        var edit_batal_komisi = $('#edit_batal_komisi');
+        var edit_button_alamat = $('#edit_trigger_alamat');
+        var edit_button_alamat_div = $('#edit_button_alamat_div');
+        var edit_batal_alamat = $('#edit_batal_alamat');
+        var edit_button_pekerjaan = $('#edit_trigger_pekerjaan');
+        var edit_button_pekerjaan_div = $('#edit_button_pekerjaan_div');
+        var edit_batal_pekerjaan = $('#edit_batal_pekerjaan');
         var edit_button_lainnya = $('#edit_trigger_lainnya');
         var edit_button_lainnya_div = $('#edit_button_lainnya_div');
         var edit_batal_lainnya = $('#edit_batal_lainnya');
@@ -492,35 +153,32 @@
             edit_button_umum_div.attr("hidden", true);
             edit_button_umum.attr("hidden", false);
             set_readonly('umum', true);
-            setData($('#hide_kode_barang').text());
         });
 
-        // HARGA - CLICK EDIT
-        edit_button_harga.on('click', function() {
-            edit_button_harga_div.attr("hidden", false);
-            edit_button_harga.attr("hidden", true);
-            set_readonly('harga', false);
+        // ALAMAT- CLICK EDIT
+        edit_button_alamat.on('click', function() {
+            edit_button_alamat_div.attr("hidden", false);
+            edit_button_alamat.attr("hidden", true);
+            set_readonly('alamat', false);
         });
-        // HARGA - CLICK BATAL
-        edit_batal_harga.on('click', function() {
-            edit_button_harga_div.attr("hidden", true);
-            edit_button_harga.attr("hidden", false);
-            set_readonly('harga', true);
-            setData($('#hide_kode_barang').text());
+        // ALAMAT- CLICK BATAL
+        edit_batal_alamat.on('click', function() {
+            edit_button_alamat_div.attr("hidden", true);
+            edit_button_alamat.attr("hidden", false);
+            set_readonly('alamat', true);
         });
 
-        // KOMISI - CLICK EDIT
-        edit_button_komisi.on('click', function() {
-            edit_button_komisi_div.attr("hidden", false);
-            edit_button_komisi.attr("hidden", true);
-            set_readonly('komisi', false);
+        // PEKERJAAN - CLICK EDIT
+        edit_button_pekerjaan.on('click', function() {
+            edit_button_pekerjaan_div.attr("hidden", false);
+            edit_button_pekerjaan.attr("hidden", true);
+            set_readonly('pekerjaan', false);
         });
-        // KOMISI - CLICK BATAL
-        edit_batal_komisi.on('click', function() {
-            edit_button_komisi_div.attr("hidden", true);
-            edit_button_komisi.attr("hidden", false);
-            set_readonly('komisi', true);
-            setData($('#hide_kode_barang').text());
+        // PEKERJAAN - CLICK BATAL
+        edit_batal_pekerjaan.on('click', function() {
+            edit_button_pekerjaan_div.attr("hidden", true);
+            edit_button_pekerjaan.attr("hidden", false);
+            set_readonly('pekerjaan', true);
         });
 
         // LAINNYA - CLICK EDIT
@@ -534,7 +192,6 @@
             edit_button_lainnya_div.attr("hidden", true);
             edit_button_lainnya.attr("hidden", false);
             set_readonly('lainnya', true);
-            setData($('#hide_kode_barang').text());
         });
         // Fungsi Set Kolom Jadi Not Readonly
     });
@@ -542,108 +199,53 @@
     function set_readonly(div, bol) {
         if (div == "umum") {
             if (bol == false) {
-                $('#edit_tipe_barang').attr("disabled", bol);
-                $('#edit_jenis_barang').attr("disabled", bol);
-                $('#edit_merek_barang').attr("disabled", bol);
-                $('#edit_nama_barang').attr("readonly", bol);
-                $('#edit_kode_supplier').attr("disabled", bol);
-                $('#edit_keterangan').attr("readonly", bol);
+                $('#nip').attr("readonly", bol);
+                $('#ktp').attr("readonly", bol);
+                $('#nama_lengkap').attr("readonly", bol);
+                $('#tanggal_lahir').attr("disabled", bol);
+                $('#jenis_kelamin').attr("disabled", bol);
+                $('#pendidikan_terakhir').attr("readonly", bol);
             } else {
-                $('#edit_tipe_barang').attr("disabled", bol);
-                $('#edit_jenis_barang').attr("disabled", bol);
-                $('#edit_merek_barang').attr("disabled", bol);
-                $('#edit_nama_barang').attr("readonly", bol);
-                $('#edit_kode_supplier').attr("disabled", bol);
-                $('#edit_keterangan').attr("readonly", bol);
+                $('#nip').attr("readonly", bol);
+                $('#ktp').attr("readonly", bol);
+                $('#nama_lengkap').attr("readonly", bol);
+                $('#tanggal_lahir').attr("disabled", bol);
+                $('#jenis_kelamin').attr("disabled", bol);
+                $('#pendidikan_terakhir').attr("readonly", bol);
             }
-        } else if (div == "harga") {
+        } else if (div == "alamat") {
             if (bol == false) {
-                $('#edit_satuan').attr("disabled", bol);
-                $('#edit_persediaan_minimum').attr("readonly", bol);
-                $('#edit_harga_pokok_dummy').attr("readonly", bol);
-                $('#edit_harga_satuan_dummy').attr("readonly", bol);
-                $('#metode_hpp').attr("disabled", bol);
-                $('#edit_status_jual').attr("disabled", bol);
+                $('#alamat').attr("readonly", bol);
+                $('#kelurahan').attr("readonly", bol);
+                $('#kecamatan').attr("readonly", bol);
+                $('#kota').attr("readonly", bol);
             } else {
-                $('#edit_persediaan_minimum').attr("readonly", bol);
-                $('#edit_satuan').attr("disabled", bol);
-                $('#edit_harga_pokok_dummy').attr("readonly", bol);
-                $('#edit_harga_satuan_dummy').attr("readonly", bol);
-                $('#metode_hpp').attr("disabled", bol);
-                $('#edit_status_jual').attr("disabled", bol);
+                $('#alamat').attr("readonly", bol);
+                $('#kelurahan').attr("readonly", bol);
+                $('#kecamatan').attr("readonly", bol);
+                $('#kota').attr("readonly", bol);
             }
-        } else if (div == "komisi") {
+        } else if (div == "pekerjaan") {
             if (bol == false) {
-                $('#edit_komisi_sales_dummy').attr("readonly", bol);
+                $('#jabatan').attr("readonly", bol);
+                $('#tanggal_masuk').attr("disabled", bol);
             } else {
-                $('#edit_komisi_sales_dummy').attr("readonly", bol);
+                $('#jabatan').attr("readonly", bol);
+                $('#tanggal_masuk').attr("disabled", bol);
             }
         } else if (div == "lainnya") {
             if (bol == false) {
-                $('#edit_status_jual').attr("disabled", bol);
+                $('#nomor_telepon').attr("readonly", bol);
+                $('#nomor_rekening').attr("readonly", bol);
+                $('#nama_bank').attr("readonly", bol);
+                $('#npwp').attr("readonly", bol);
             } else {
-                $('#edit_status_jual').attr("disabled", bol);
+                $('#nomor_telepon').attr("readonly", bol);
+                $('#nomor_rekening').attr("readonly", bol);
+                $('#nama_bank').attr("readonly", bol);
+                $('#npwp').attr("readonly", bol);
             }
         }
-    }
-
-    setData($('#hide_kode_barang').text());
-    // Fungsi Set Data Ke Kolom Pertama Kali
-    function setData(kode_barang) {
-        var edit_tipe_barang = $('#edit_tipe_barang');
-        var edit_jenis_barang = $('#edit_jenis_barang');
-        var edit_merek_barang = $('#edit_merek_barang');
-        var edit_kode_barang = $('#edit_kode_barang');
-        var edit_nama_barang = $('#edit_nama_barang');
-        var edit_kode_supplier = $('#edit_kode_supplier');
-        var edit_keterangan = $('#edit_keterangan');
-        var edit_satuan = $('#edit_satuan');
-        var edit_persediaan_minimum = $('#edit_persediaan_minimum');
-        var edit_satuan_minimum = $('#edit_satuan_minimum');
-        var edit_harga_pokok_dummy = $('#edit_harga_pokok_dummy');
-        var edit_harga_pokok = $('#edit_harga_pokok');
-        var edit_harga_satuan_dummy = $('#edit_harga_satuan_dummy');
-        var edit_harga_satuan = $('#edit_harga_satuan');
-        var edit_komisi_sales_dummy = $('#edit_komisi_sales_dummy');
-        var edit_komisi_sales = $('#edit_komisi_sales');
-        var edit_metode_hpp = $('#metode_hpp');
-        var edit_status_jual = $('#edit_status_jual');
-        var edit_tanggal_input = $('#edit_tanggal_input');
-        //var edit_image = $('#edit_image');
-
-        $.ajax({
-            url: '<?= base_url("Manajemen_Barang/MasterBarang/get_data_for_detail/"); ?>' + kode_barang,
-            type: "POST",
-            dataType: "JSON",
-            async: false,
-            success: function(data) {
-                rupiahJual = formatRupiah(data.harga_satuan, 'Rp.');
-                rupiahPokok = formatRupiah(data.harga_pokok, 'Rp.');
-                rupiahKomisi = formatRupiah(data.komisi_sales, 'Rp.');
-                edit_tipe_barang.val(data.tipe_barang).trigger('change');
-                edit_jenis_barang.val(data.tipe_barang).trigger('change');
-                edit_merek_barang.val(data.tipe_barang).trigger('change');
-                edit_kode_barang.val(data.kode_barang);
-                edit_nama_barang.val(data.nama_barang);
-                edit_kode_supplier.val(data.kode_supplier).trigger('change');
-                edit_keterangan.val(data.keterangan);
-
-                edit_satuan.val(data.kode_satuan).trigger('change');
-                edit_persediaan_minimum.val(data.persediaan_minimum);
-                edit_satuan_minimum.val($('#edit_satuan option:selected').text());
-                edit_harga_pokok_dummy.val(rupiahPokok);
-                edit_harga_pokok.val(data.harga_pokok);
-                edit_harga_satuan_dummy.val(rupiahJual);
-                edit_harga_satuan.val(data.harga_satuan);
-                edit_komisi_sales_dummy.val(rupiahKomisi);
-                edit_komisi_sales.val(data.komisi_sales);
-                edit_metode_hpp.val(data.metode_hpp).trigger('change');
-                edit_status_jual.val(data.status_jual).trigger('change');
-                edit_tanggal_input.text(data.tanggal_input);
-                // edit_image.attr('data-default-file', "<?= base_url('assets/images/barang/'); ?>" + data.gambar);
-                //edit_image.attr('src',"<?= base_url('assets/images/barang/'); ?>" + data.gambar);
-            }
-        });
     }
 </script>
 <!-- Set Data Ke Tampilan -->
@@ -651,96 +253,80 @@
 
 
 
-<!-- Init Chart -->
-
+<!-- init datepicker--->
 <script>
-    var kode_barang = $('#hide_kode_barang').text();
-    var label_tanggal = new Array()
-
-    function renderChart(data, labels) {
-        var ctx = document.getElementById("myChart").getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Penjualan',
-                    data: data,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                }]
-            },
-            options: {},
-        });
-    }
-
-    function getChartData(tanggal_awal, tanggal_akhir) {
-
-        $.ajax({
-            type: "POST",
-            dataType: "JSON",
-            async: false,
-            data: {
-                kode_barang: kode_barang,
-                tanggal_awal: tanggal_awal,
-                tanggal_akhir: tanggal_akhir
-            },
-            url: '<?= base_url("Manajemen_Barang/MasterBarang/get_statistik_penjualan/"); ?>',
-            success: function(data) {
-                var nilai = [];
-                var labels = [];
-                for (var i in data) {
-
-                    nilai.push(data[i].nilai); // push nilai penjualan
-                    labels.push(data[i].tanggal); // push nilai penjualan
-
-                    // var t = data[i].tanggal.split(/[- :]/);
-
-                    // // Apply each element to the Date function
-                    // var d = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
-                    // var a = d.getDate() + " - " + d.getMonth();
-
-                    // labels.push(a);
-                }
-                renderChart(nilai, labels);
-            },
-        });
-    }
-
-
-    $('#tanggal_awal').on('click', function() {
-
-    })
-
     $(document).ready(function() {
-        $('#tanggal_awal').datepicker({
+        $('#tanggal_lahir').datepicker({
             autoclose: true,
-            todayHighlight: true
         });
-        $('#tanggal_akhir').datepicker({
+        $('#tanggal_masuk').datepicker({
             autoclose: true,
-            todayHighlight: true
-        });
-        var date = new Date();
-        $('#tanggal_akhir').datepicker("setDate", date)
-        date.setDate(date.getDate() - 7)
-        $('#tanggal_awal').datepicker("setDate", date)
-
-        var awal = $('#tanggal_awal').val();
-        var akhir = $('#tanggal_akhir').val();
-
-        getChartData(awal, akhir);
-
-        $("#tanggal_awal").on('change', function() {
-            var awal = $('#tanggal_awal').val();
-            var akhir = $('#tanggal_akhir').val();
-            getChartData(awal, akhir);
-        });
-
-        $("#tanggal_akhir").on('change', function() {
-            var awal = $('#tanggal_awal').val();
-            var akhir = $('#tanggal_akhir').val();
-            getChartData(awal, akhir);
         });
     });
+</script>
+
+<script>
+    $('#form_umum').submit(function(e) {
+        var nip = $('#nip').val();
+        e.preventDefault();
+        warning_edit_umum(nip);
+    });
+
+    $('#form_alamat').submit(function(e) {
+        var nip = $('#nip').val();
+        e.preventDefault();
+        warning_edit_alamat(nip);
+    });
+
+    $('#form_pekerjaan').submit(function(e) {
+        var nip = $('#nip').val();
+        e.preventDefault();
+        warning_edit_pekerjaan(nip);
+    });
+
+    $('#form_lainnya').submit(function(e) {
+        var nip = $('#nip').val();
+        e.preventDefault();
+        warning_edit_lainnya(nip);
+    });
+
+
+    function warning_edit_umum(nip) {
+        swal.fire({
+            title: 'Apa anda yakin?',
+            text: "Data pegawai akan di berubah",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4fa7f3',
+            cancelButtonColor: '#d57171',
+            confirmButtonText: 'Ya!'
+        }).then((result) => {
+            if (result.value) {
+                edit_data_alamat(nip);
+            }
+        });
+    }
+
+    function edit_data_alamat(nip) {
+        var data = new FormData(document.getElementById("form_umum"));
+        $.ajax({
+            url: "<?= Base_url('manajemen_pegawai/masterpegawai/edit_data_umum/'); ?>" + nip,
+            type: "post",
+            data: data,
+            async: false,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $('#edit_button_umum_div').attr("hidden", true);
+                $('#edit_trigger_umum').attr("hidden", false);
+                set_readonly('umum', true);
+                swal.fire(
+                    'Edited!!!',
+                    'Data Harga ' + nip + ' telah diubah!',
+                    'success'
+                );
+            }
+        })
+
+    }
 </script>

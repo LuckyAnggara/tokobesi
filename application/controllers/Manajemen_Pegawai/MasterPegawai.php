@@ -13,7 +13,7 @@ class MasterPegawai extends CI_Controller
 
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
-        }else{
+        } else {
             if ($this->session->userdata('role') != "Spv") {
                 redirect(base_url("index.html"));
                 echo $this->session->userdata('role');
@@ -77,13 +77,17 @@ class MasterPegawai extends CI_Controller
 
 
 
-    public function Detail_Pegawai()
+    public function Detail_Pegawai($nip)
     {
 
-        $data['css'] = 'manajemen_pegawai/master_pegawai/detail_pegawai/detail_pegawai_css';
+        $data['css'] = 'manajemen_pegawai/master_pegawai/master_pegawai_css';
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
 
-        $this->load->view('template/template_header',$data);
+        // data pegawai
+
+        $data['pegawai'] = $this->modelPegawai->detail_pegawai($nip);
+
+        $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_pegawai/master_pegawai/detail_pegawai/detail_pegawai');
         $this->load->view('template/template_right');
@@ -93,7 +97,37 @@ class MasterPegawai extends CI_Controller
         $this->load->view('manajemen_pegawai/master_pegawai/detail_pegawai/detail_pegawai_js');
         $this->load->view('template/template_app_js');
     }
+    public function SetGambarBaru($nip)
+    {
+        $this->modelPegawai->edit_gambar($nip);
+    }
 
 
+    public function GetGambarBaru($nip)
+    {
+        $data = $this->modelPegawai->get_gambar_baru($nip);
+        $output = json_encode($data);
+        echo $output;
+    }
 
-  }
+
+    public function edit_data_umum($nip)
+    {
+        $this->modelPegawai->edit_data_umum($nip);
+    }
+
+    public function edit_data_alamat($nip)
+    {
+        $this->modelPegawai->edit_data_alamat($nip);
+    }
+
+    public function edit_data_pekerjaan($nip)
+    {
+        $this->modelPegawai->edit_data_pekerjaan($nip);
+    }
+
+    public function edit_data_lainnya($nip)
+    {
+        $this->modelPegawai->edit_data_lainnya($nip);
+    }
+}

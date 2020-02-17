@@ -11,10 +11,10 @@ class Model_Master_Pegawai extends CI_Model
     }
     function get_master_data()
     {
-            $this->db->select('*, DATE_FORMAT(tanggal_lahir, "%d %M %Y") as tanggal');
-            $this->db->from('master_pegawai');
-            $output = $this->db->get();
-            return $output;
+        $this->db->select('*, DATE_FORMAT(tanggal_lahir, "%d %M %Y") as tanggal');
+        $this->db->from('master_pegawai');
+        $output = $this->db->get();
+        return $output;
     }
 
     function set_user_active($post)
@@ -52,7 +52,7 @@ class Model_Master_Pegawai extends CI_Model
             'pendidikan_terakhir' => strtoupper($post['pendidikan_terakhir']),
             'jabatan' =>  strtoupper($post['jabatan']),
             'nomor_telepon' => strtoupper($post["nomor_telepon"]),
-            'nomor_rekening' => strtoupper($post["nama_bank"]) . ' - '.strtoupper($post["nomor_rekening"]),
+            'nomor_rekening' => strtoupper($post["nama_bank"]) . ' - ' . strtoupper($post["nomor_rekening"]),
             'npwp' => strtoupper($post["npwp"]),
             'gambar' => $this->_uploadImage(),
             'user' => $this->session->userdata['username'],
@@ -79,4 +79,78 @@ class Model_Master_Pegawai extends CI_Model
         }
     }
 
+
+    /// detail pegawai
+
+    function detail_pegawai($nip)
+    {
+        $this->db->select('*');
+        $this->db->from('master_pegawai');
+        $this->db->where('nip', $nip);
+        return $this->db->get()->row_array();
+    }
+
+    function _uploadNewGambar()
+    {
+        $post = $this->input->post();
+        $this->_delete_gambar_sebelumnya($post['nip']);
+        $config['upload_path']          = './assets/images/pegawai/';
+        $config['allowed_types']        = 'gif|jpg|png';
+        $config['file_name']            = random_string('alnum', 16);
+        $config['overwrite']            = true;
+        $config['max_size']             = 4096; // 4MB
+        // $config['max_width']            = 1024;
+        // $config['max_height']           = 768;
+        $this->load->library('upload', $config);
+        if ($this->upload->do_upload('gambar')) {
+            return $this->upload->data("file_name");
+        } else {
+            return "default.jpg";
+        }
+    }
+
+    private function _delete_gambar_sebelumnya($nip)
+    {
+        // delete image
+
+        $this->db->select('*');
+        $this->db->from('master_pegawai');
+        $this->db->where('nip', $nip);
+        $data = $this->db->get()->row_array();
+        $data_gambar = $data['gambar'];
+        if ($data_gambar !== "") {
+            unlink('./assets/images/pegawai/' . $data_gambar);
+        }
+    }
+
+    function edit_gambar($nip)
+    {
+        $data = array(
+            'gambar' => $this->_uploadNewGambar(),
+        );
+        $this->db->where('nip', $nip);
+        $this->db->update('master_pegawai', $data);
+    }
+
+    function get_gambar_baru($nip)
+    {
+        $this->db->select('gambar');
+        $this->db->from('master_pegawai');
+        $this->db->where('nip', $nip);
+        return $this->db->get()->row_array();
+    }
+
+    function edit_data_umum($nip)
+    {
+        $post = $this->input->post();
+        $data = [
+            'ktp' => strtoupper($post['ktp']),
+            'nama_lengkap' => strtoupper($post['nama_lengkap']),
+            'jenis_kelamin' => strtoupper($post['jenis_kelamin']),
+            'user' => $this->session->userdata['username'],
+
+        ];
+        $this->db->where('nip', $nip);
+        $this->db->update('master_pegawai', $data);
+    }
 }
