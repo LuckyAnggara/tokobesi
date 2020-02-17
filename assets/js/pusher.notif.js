@@ -11,7 +11,24 @@ $(document).ready(function () { // CALL FUNCTION SHOW PRODUCT
             notiftoast();
             playAudio();
         }
+        if (data.forceLogout.pesan ===  'logout'){
+            forceLogout(data.forceLogout.username);
+        }
     });
+
+    function forceLogout(username) {
+        $.ajax({
+            url: "<?= Base_url('manajemen_pegawai/masteruser/forcelogout'); ?>",
+            type: "post",
+            data: {
+                username: username
+            },
+            async: false,
+            success: function (data) {
+                window.location.href = "<?php echo base_url('login'); ?>";
+            },
+        })
+    }
 
     function notiftoast() {
 
@@ -44,6 +61,8 @@ $(document).ready(function () { // CALL FUNCTION SHOW PRODUCT
         var audio = document.getElementById("audio");
         audio.play();
     }
+
+
 
 
 });
