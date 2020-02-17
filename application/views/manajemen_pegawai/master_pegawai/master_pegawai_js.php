@@ -8,6 +8,9 @@
 <!-- Form wizard -->
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-wizard/jquery.bootstrap.wizard.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/jquery-validation/dist/jquery.validate.min.js"></script>
+<!-- Smart Wizard -->
+<script src="<?= base_url('assets/'); ?>plugins/jquery-smartwizard/jquery.smartwizard.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>
 
 <!-- DatePicker Js -->
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
@@ -177,46 +180,153 @@
             constrainInput: false,
 
         });
-
-        $('#rootwizard').bootstrapWizard({
-            'tabClass': 'nav nav-tabs navtab-wizard nav-justified bg-muted',
-            'onTabClick': function(tab, navigation, index) {
-                Swal.fire(
-                    'Oopss!',
-                    'Tekan tombol Next',
-                    'error'
-                )
-                return false;
-            },
-            'onNext': function(tab, navigation, index) {
-                var $valid = $("#submitForm").valid();
-                if (!$valid) {
-                    return false;
-                }
-                var $total = navigation.find('li').length;
-                var $current = index + 1;
-                if ($total == $current) {
-                    $('#submit-add').text('Submit');
-                } else {
-                    $('#submit-add').text('Next');
-                }
-            },
-        });
-        $('#submit-add').on('click', function() {
-            if ($('#submit-add').text() == "Submit") {
-                tambah_data();
-                Swal.fire(
-                    'Good!',
-                    'Data telah di tambahkan!',
-                    'success'
-                )
-                $('#add_modal').modal('hide');
-                $('#rootwizard').find("a[href*='tab1']").trigger('click')
-            }
-        });
+        // $('#smartwizard').smartWizard({
+        //     selected: 0,
+        //     useURLhash: false,
+        //     backButtonSupport: true,
+        //     showStepURLhash: false,
+        //     theme: 'arrows',
+        //     transitionEffect: 'fade', // Effect on navigation, none/slide/fade
+        //     transitionSpeed: '400',
+        //     toolbarSettings: {
+        //         toolbarPosition: 'bottom', // none, top, bottom, both
+        //         toolbarButtonPosition: 'right', // left, right
+        //         toolbarExtraButtons: [
+        //             $('<button></button>').text('Submit')
+        //             .addClass('btn btn-success')
+        //             .on("beginReset", function(e) {
+        //                 return confirm("Do you want to reset the wizard?");
+        //             })
+        //         ]
+        //     },
+        //     lang: { // Language variables
+        //         next: 'Next',
+        //         previous: 'Previous'
+        //     },
+        // });
+        // $('#rootwizard').bootstrapWizard({
+        //     'tabClass': 'nav nav-tabs navtab-wizard nav-justified bg-muted',
+        //     'onTabClick': function(tab, navigation, index) {
+        //         Swal.fire(
+        //             'Oopss!',
+        //             'Tekan tombol Next',
+        //             'error'
+        //         )
+        //         return false;
+        //     },
+        //     'onNext': function(tab, navigation, index) {
+        //         var $valid = $("#submitForm").valid();
+        //         if (!$valid) {
+        //             return false;
+        //         }
+        //         var $total = navigation.find('li').length;
+        //         var $current = index + 1;
+        //         if ($total == $current) {
+        //             $('#submit-add').text('Submit');
+        //         } else {
+        //             $('#submit-add').text('Next');
+        //         }
+        //     },
+        // });
+        // $('#submit-add').on('click', function() {
+        //     if ($('#submit-add').text() == "Submit") {
+        //         tambah_data();
+        //         Swal.fire(
+        //             'Good!',
+        //             'Data telah di tambahkan!',
+        //             'success'
+        //         )
+        //         $('#add_modal').modal('hide');
+        //         $('#rootwizard').find("a[href*='tab1']").trigger('click')
+        //     }
+        // });
 
     }
 </script>
+
+<script>
+    $(document).ready(function() {
+
+        // Toolbar extra buttons
+        var btnFinish = $('<button></button>').text('Submit')
+            .addClass('btn btn-success')
+            .on('click', function() {
+                if (!$(this).hasClass('disabled')) {
+                    var elmForm = $("#submitForm");
+                    if (elmForm) {
+                        elmForm.validator('validate');
+                        var elmErr = elmForm.find('.has-error');
+                        if (elmErr && elmErr.length > 0) {
+                            Swal.fire(
+                                'Oopss!',
+                                'Data masih ada yang kosong',
+                                'error'
+                            )
+                            return false;
+                        } else {
+                            tambah_data();
+                            elmForm.submit();
+                            return false;
+                        }
+                    }
+                }
+            });
+        var btnCancel = $('<button></button>').text('Batal')
+            .addClass('btn btn-danger')
+            .on('click', function() {
+                $('#smartwizard').smartWizard("reset");
+                $('#submitForm').find("input, textarea").val("");
+            });
+
+
+
+        // Smart Wizard
+        $('#smartwizard').smartWizard({
+            selected: 0,
+            theme: 'arrows',
+            useURLhash: false,
+            backButtonSupport: true,
+            showStepURLhash: false,
+            transitionEffect: 'fade',
+            toolbarSettings: {
+                toolbarPosition: 'bottom',
+                toolbarExtraButtons: [btnFinish, btnCancel]
+            },
+            anchorSettings: {
+                markDoneStep: true, // add done css
+                markAllPreviousStepsAsDone: true, // When a step selected by url hash, all previous steps are marked done
+                removeDoneStepOnNavigateBack: true, // While navigate back done step after active step will be cleared
+                enableAnchorOnDoneStep: true // Enable/Disable the done steps navigation
+            }
+        });
+
+        $("#smartwizard").on("leaveStep", function(e, anchorObject, stepNumber, stepDirection) {
+            var elmForm = $("#form-step-" + stepNumber);
+            // stepDirection === 'forward' :- this condition allows to do the form validation
+            // only on forward navigation, that makes easy navigation on backwards still do the validation when going next
+            if (stepDirection === 'forward' && elmForm) {
+                elmForm.validator('validate');
+                var elmErr = elmForm.children('.has-error');
+                if (elmErr && elmErr.length > 0) {
+                    // Form validation failed
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        $("#smartwizard").on("showStep", function(e, anchorObject, stepNumber, stepDirection) {
+            // Enable finish button only on last step
+            if (stepNumber == 3) {
+                $('.btn-finish').removeClass('disabled');
+            } else {
+                $('.btn-finish').addClass('disabled');
+            }
+        });
+
+    });
+</script>
+
 
 <!-- tambah data -->
 <script>
@@ -256,6 +366,11 @@
             success: function(data) {
                 $('#datatable-master-barang').DataTable().ajax.reload();
                 $('#add_modal').modal('hide');
+                Swal.fire(
+                    'Success!',
+                    'Data pegawai baru telah di tambahkan',
+                    'success'
+                )
             }
         })
     }

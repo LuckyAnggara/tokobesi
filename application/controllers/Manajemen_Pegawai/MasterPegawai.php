@@ -77,4 +77,23 @@ class MasterPegawai extends CI_Controller
 
 
 
+    public function Detail_Pegawai()
+    {
+
+        $data['css'] = 'manajemen_pegawai/master_pegawai/detail_pegawai/detail_pegawai_css';
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        $this->load->view('template/template_header',$data);
+        $this->load->view('template/template_menu');
+        $this->load->view('manajemen_pegawai/master_pegawai/detail_pegawai/detail_pegawai');
+        $this->load->view('template/template_right');
+        $this->load->view('manajemen_pegawai/master_pegawai/detail_pegawai/detail_pegawai_modal');
+        $this->load->view('template/template_footer');
+        $this->load->view('template/template_js');
+        $this->load->view('manajemen_pegawai/master_pegawai/detail_pegawai/detail_pegawai_js');
+        $this->load->view('template/template_app_js');
+    }
+
+
+
   }
