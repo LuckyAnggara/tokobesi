@@ -86,3 +86,137 @@
                 });
             }
         </script>
+
+        <!-- scritp return & reject -->
+        <script>
+            function reject() {
+                var no_ref = $('#nomor_referensi').val()
+                Swal.fire({
+                    title: 'Reject ??',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Proses!'
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url: "<?= Base_url('manajemen_persediaan/reviewstokopname/reject/'); ?>",
+                            data: {
+                                no_ref: no_ref,
+                            },
+                            type: "post",
+                            async: false,
+                            beforeSend: function() {
+                                $.LoadingOverlay("show");
+                            },
+                            complete: function() {
+                                $.LoadingOverlay("hide");
+                            },
+                            success: function(data) {
+                                setTimeout(function() {
+                                    window.location.href = "<?= base_url('manajemen_persediaan/reviewstokopname'); ?>";
+                                }, 3000);
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Stok Opname di Reject!!',
+                                }).then((result) => {
+                                    window.location.href = "<?= base_url('manajemen_persediaan/reviewstokopname'); ?>";
+                                });
+                            }
+                        })
+                    }
+                })
+            }
+            $('#reject').on('click', function() {
+                reject();
+            })
+
+            function return_stokopname() {
+                var no_ref = $('#nomor_referensi').val()
+                Swal.fire({
+                    title: 'Return ke Admin ??',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Proses!'
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url: "<?= Base_url('manajemen_persediaan/reviewstokopname/return/'); ?>",
+                            data: {
+                                no_ref: no_ref,
+                            },
+                            type: "post",
+                            async: false,
+                            beforeSend: function() {
+                                $.LoadingOverlay("show");
+                            },
+                            complete: function() {
+                                $.LoadingOverlay("hide");
+                            },
+                            success: function(data) {
+                                setTimeout(function() {
+                                    window.location.href = "<?= base_url('manajemen_persediaan/reviewstokopname'); ?>";
+                                }, 3000);
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Stok Opname di kembalikan ke Admin!!',
+                                }).then((result) => {
+                                    window.location.href = "<?= base_url('manajemen_persediaan/reviewstokopname'); ?>";
+                                });
+                            }
+                        })
+                    }
+                })
+
+            }
+
+            $('#return').on('click', function() {
+                return_stokopname();
+            })
+
+            function approve_stokopname() {
+                var no_ref = $('#nomor_referensi').val()
+                Swal.fire({
+                    title: 'Approve Stokopname ??',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Proses!'
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url: "<?= Base_url('manajemen_persediaan/reviewstokopname/approve/'); ?>",
+                            data: {
+                                no_ref: no_ref,
+                            },
+                            type: "post",
+                            async: false,
+                            beforeSend: function() {
+                                $.LoadingOverlay("show");
+                            },
+                            complete: function() {
+                                $.LoadingOverlay("hide");
+                            },
+                            success: function(data) {
+                                setTimeout(function() {
+                                    window.location.href = "<?= base_url('manajemen_persediaan/reviewstokopname'); ?>";
+                                }, 3000);
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Stok Opname di kembalikan ke Admin!!',
+                                }).then((result) => {
+                                    window.location.href = "<?= base_url('manajemen_persediaan/reviewstokopname'); ?>";
+                                });
+                            }
+                        })
+                    }
+                })
+            }
+            $('#approve').on('click', function() {
+                approve_stokopname();
+            })
+        </script>

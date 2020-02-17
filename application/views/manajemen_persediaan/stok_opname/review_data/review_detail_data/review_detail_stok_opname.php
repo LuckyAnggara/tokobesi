@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
-            <h4 class="page-title">Daftar Stock Opname</h4>
+            <h4 class="page-title">Review Stock Opname</h4>
         </div>
     </div>
     <div class="row">
@@ -9,7 +9,7 @@
             <div class="card-box">
                 <div class="row">
                     <div class="col-6">
-                        <h4 class="m-t-0 header-title">Data Stok Opname</h4>
+                        <h4 class="m-t-0 header-title">Data Umum</h4>
                     </div>
                 </div>
                 <hr>
@@ -25,7 +25,7 @@
                             <label class="col-5 col-sm-form-label m-t-10">Tanggal Stock Opname</label>
                             <div class="col-7">
                                 <div class="input-group">
-                                    <input type="text" autocomplete="off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal">
+                                    <input readonly type="text" autocomplete="off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal">
                                     <div class="input-group-append">
                                         <span class="input-group-text btn-inverse"><i class="ti-calendar"></i></span>
                                     </div>
@@ -35,7 +35,7 @@
                         <div class="form-group row">
                             <label class="col-5 col-sm-form-label m-t-10">Keterangan</label>
                             <div class="col-7">
-                                <textarea type="text" rows="2" class="form-control" placeholder="(optional)" name="keterangan" id="keterangan"></textarea>
+                                <textarea readonly type="text" rows="2" class="form-control" placeholder="(optional)" name="keterangan" id="keterangan"></textarea>
                             </div>
                         </div>
 
@@ -45,9 +45,23 @@
         </div>
         <div class="col-md-8">
             <div class="card-box">
-                <h4 class="header-title m-t-0 m-b-30">Data</h4>
-                <div id="ajaxTree"></div>
+                <div class="row">
+                    <div class="col-6">
+                        <h4 class="m-t-0 header-title">Data Stock Opname</h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div id="ajaxTree"></div>
+                </div>
             </div>
-        </div><!-- end col -->
+            <div class="card-box">
+                <div class="text-right">
+                    <button id="approve" name="approve" type="button" class="btn btn-success waves-effect waves-light m-r-10"> <i class="fa fa-thumbs-o-up"></i> Approve</button>
+                    <button id="return" name="return" type="button" class="btn btn-warning waves-effect waves-light"><i class="fa fa-share-square-o"></i> Return</button>
+                    <button id="reject" name="reject" type="button" class="btn btn-danger waves-effect waves-light"><i class="fa fa-thumbs-o-down"></i> Reject</button>
+                </div>
+            </div>
+            <!-- end col -->
+        </div>
     </div>
-</div>

@@ -20,6 +20,7 @@
                                 <th>Tanggal</th>
                                 <th>Nomor Referensi</th>
                                 <th>Keterangan</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

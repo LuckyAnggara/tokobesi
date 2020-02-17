@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 12, 2020 at 03:26 PM
+-- Generation Time: Feb 14, 2020 at 03:07 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -42,10 +42,13 @@ CREATE TABLE `detail_detail_stok_opname` (
 --
 
 INSERT INTO `detail_detail_stok_opname` (`id`, `id_detail_stok_opname`, `qty`, `keterangan`) VALUES
-(49, 97, 1500, 'safasdfasfasfas'),
-(50, 98, 100, 'fgjfgjfgjfgj'),
-(51, 98, 50, 'fgdfgdfgd'),
-(52, 98, 30, 'dsgdgsdg');
+(56, 102, 10, 'DIcuri'),
+(57, 102, 200, 'Di paling'),
+(58, 101, 0, ''),
+(70, 105, 1000, ''),
+(71, 97, 1500, 'gdfgdfgdfgdfg'),
+(72, 98, 510, 'jhlhjlhjl'),
+(74, 110, 510, 'cvv');
 
 -- --------------------------------------------------------
 
@@ -162,7 +165,19 @@ INSERT INTO `detail_stok_opname` (`id`, `nomor_referensi`, `tanggal`, `kode_bara
 (97, 'REF2376045', '2020-02-12 00:00:00', 'B001', 1500, 0, 1500, 0, '', 'lucky15'),
 (98, 'REF2376045', '2020-02-12 00:00:00', 'BES0002', 510, 0, 510, 0, '', 'lucky15'),
 (99, 'REF2376045', '2020-02-12 00:00:00', 'K001', 0, 0, 0, 0, '', 'lucky15'),
-(100, 'REF2376045', '2020-02-12 00:00:00', 'P001', 0, 0, 0, 0, '', 'lucky15');
+(100, 'REF2376045', '2020-02-12 00:00:00', 'P001', 0, 0, 0, 0, '', 'lucky15'),
+(101, 'REF9042536', '2020-02-20 00:00:00', 'B001', 1500, 1400, 100, 0, '', 'lucky15'),
+(102, 'REF9042536', '2020-02-20 00:00:00', 'BES0002', 510, 300, 210, 0, '', 'lucky15'),
+(103, 'REF9042536', '2020-02-20 00:00:00', 'K001', 0, 0, 0, 0, '', 'lucky15'),
+(104, 'REF9042536', '2020-02-20 00:00:00', 'P001', 0, 0, 0, 0, '', 'lucky15'),
+(105, 'REF4693258', '2020-02-14 00:00:00', 'B001', 1500, 0, 1500, 0, '', 'lucky15'),
+(106, 'REF4693258', '2020-02-14 00:00:00', 'BES0002', 510, 0, 510, 0, '', 'lucky15'),
+(107, 'REF4693258', '2020-02-14 00:00:00', 'K001', 0, 0, 0, 0, '', 'lucky15'),
+(108, 'REF4693258', '2020-02-14 00:00:00', 'P001', 0, 0, 0, 0, '', 'lucky15'),
+(109, 'REF8564302', '2020-02-14 00:00:00', 'B001', 1500, 1500, 0, 0, '', 'lucky15'),
+(110, 'REF8564302', '2020-02-14 00:00:00', 'BES0002', 510, 0, 510, 0, '', 'lucky15'),
+(111, 'REF8564302', '2020-02-14 00:00:00', 'K001', 0, 0, 0, 0, '', 'lucky15'),
+(112, 'REF8564302', '2020-02-14 00:00:00', 'P001', 0, 0, 0, 0, '', 'lucky15');
 
 -- --------------------------------------------------------
 
@@ -596,7 +611,10 @@ CREATE TABLE `master_stok_opname` (
 --
 
 INSERT INTO `master_stok_opname` (`id`, `nomor_referensi`, `tanggal`, `keterangan`, `status`, `user`, `spv`) VALUES
-(33, 'REF2376045', '1970-01-01 01:00:00', 'asdasfasf', 1, 'lucky15', '');
+(33, 'REF2376045', '2020-02-14 13:22:31', 'asdasfasf', 99, 'lucky15', 'lucky15'),
+(34, 'REF9042536', '1970-01-01 01:00:00', 'aADadASFAS', 3, 'lucky15', ''),
+(35, 'REF4693258', '2020-02-14 13:20:54', 'kl;kl;', 3, 'lucky15', 'lucky15'),
+(36, 'REF8564302', '2020-02-14 14:18:57', 'ghdfhd', 2, 'lucky15', 'lucky15');
 
 -- --------------------------------------------------------
 
@@ -672,7 +690,7 @@ CREATE TABLE `master_user` (
 
 INSERT INTO `master_user` (`username`, `kode_pegawai`, `password`, `role`, `nama`, `avatar`, `status`, `timestamp`) VALUES
 ('desi10', '10002', '123', 'Sales', 'Desi Evilia A', 'avatar-3.jpg', 'logout', '2020-02-09 10:40:25'),
-('lucky15', '10001', '123', 'Sales', 'Lucky Anggara', 'avatar-2.jpg', 'logout', '2020-02-09 16:13:43');
+('lucky15', '10001', '123', 'Sales', 'Lucky Anggara', 'avatar-2.jpg', 'logout', '2020-02-12 15:31:03');
 
 -- --------------------------------------------------------
 
@@ -1104,7 +1122,7 @@ ALTER TABLE `timeline_po`
 -- AUTO_INCREMENT for table `detail_detail_stok_opname`
 --
 ALTER TABLE `detail_detail_stok_opname`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `detail_pembelian`
@@ -1128,7 +1146,7 @@ ALTER TABLE `detail_persediaan`
 -- AUTO_INCREMENT for table `detail_stok_opname`
 --
 ALTER TABLE `detail_stok_opname`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT for table `master_harga_pokok_penjualan`
@@ -1176,7 +1194,7 @@ ALTER TABLE `master_saldo_awal`
 -- AUTO_INCREMENT for table `master_stok_opname`
 --
 ALTER TABLE `master_stok_opname`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `temp_purchase_order`

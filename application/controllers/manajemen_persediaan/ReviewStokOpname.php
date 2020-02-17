@@ -69,13 +69,13 @@ class ReviewStokOpname extends CI_Controller
         $output = array();
         $detail_data = array();
 
-
+        $char = range('A', 'Z');
         foreach ($kode_barang as $key => $value) {
-            $data_barang = $value['kode_barang'] . ' - ' . $value['nama_barang'] . ' <span class="text-danger">(' . $value['selisih'] . ')</span>';
+            $data_barang = $char[$key] . '.   ' . $value['kode_barang'] . ' - ' . $value['nama_barang'] . ' (Selisih : <span class="text-danger">' . $value['selisih'] . '</span>)';
             $detail = $this->modelMasterPersediaan->treeviewdetail($value['id']);
 
             foreach ($detail as $key => $value) {
-                $detail_data[] = 'Koreksi - <span class="text-danger">(' . $value['qty'] . ')</span> - ' . $value['keterangan'];
+                $detail_data[] = 'Koreksi - (<span class="text-danger">' . $value['qty'] . '</span>) - ' . $value['keterangan'];
             }
 
             $output[] = array(
@@ -92,5 +92,23 @@ class ReviewStokOpname extends CI_Controller
 
         $output = json_encode($output);
         echo $output;
+    }
+
+    function approve()
+    {
+        $post = $this->input->post();
+        $this->modelMasterPersediaan->approve_review($post);
+    }
+
+    function return()
+    {
+        $post = $this->input->post();
+        $this->modelMasterPersediaan->return_review($post);
+    }
+
+    function reject()
+    {
+        $post = $this->input->post();
+        $this->modelMasterPersediaan->reject_review($post);
     }
 }
