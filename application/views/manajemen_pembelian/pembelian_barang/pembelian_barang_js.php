@@ -251,9 +251,10 @@
         // },
         processResults: function(data) {
           var results = [];
+          console.log(results);
           for (var i in data.data) {
             results.push({
-              "id": data.data[i].kode_barang + '-' + data.data[i].harga_satuan + '-' + data.data[i].jumlah_persediaan + '-' + data.data[i].nama_satuan,
+              "id": data.data[i].kode_barang + '-' + data.data[i].nama_satuan,
               "text": data.data[i].kode_barang + ' - ' + data.data[i].nama_barang
             });
           };

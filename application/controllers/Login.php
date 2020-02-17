@@ -11,6 +11,8 @@ class Login extends CI_Controller
 		$this->load->model('Login/Model_Login', 'modelLogin');
 	}
 
+	
+
 
 	public function index()
 	{
@@ -20,35 +22,43 @@ class Login extends CI_Controller
 
 	function aksi_login()
 	{
+		$post = $this->input->post();
+		$this->db->where('username', $post["username"]);
+		$user = $this->db->get('master_user')->row();
+
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
-		$role = $this->input->post('role');
-		$where = array(
-			'username' => $username,
-			'password' => $password, // md5($password)
-		);
 
-		$cek = $this->modelLogin->cek_login("master_user", $where)->row_array();
+		if($user){
+			$isPasswordTrue = password_verify($post["password"], $user->password);
+			$isActive = $user->isActive;
 
-		if (isset($cek)) {
-			echo "login";
-			// if ($cek['status'] == "login") {
-			// 	echo "login";
-			// } else {
-			$data_session = array(
-				'username' => $username,
-				'status' => "login",
-				'role' => $role,
-				'avatar' => $cek['avatar'],
-				'faktur_prefix' => $this->modelSetting->prefixFaktur()
-			);
-			$this->session->set_userdata($data_session);
-			// 	$this->modelLogin->update_status($username);
-			// }
-		} else {
-			echo "false";
+			if($isActive == "0"){
+				echo "notactive";
+			}else{
+				if ($isPasswordTrue) {
+					$data_session = array(
+						'username' => $username,
+						'nama' => $user->nama,
+						'status' => "login",
+						'role' => $user->role,
+						'avatar' => $user->avatar,
+						'faktur_prefix' => $this->modelSetting->prefixFaktur()
+					);
+					$this->session->set_userdata($data_session);
+					return true;
+				} else {
+					echo "false";
+				}
+			}
+			// jika password benar dan dia admin
+			
 		}
+
+		// login gagal
+		return false;
 	}
+
 
 	function logout()
 	{

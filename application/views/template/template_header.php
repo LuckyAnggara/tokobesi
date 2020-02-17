@@ -89,7 +89,7 @@
                             <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
                                 <!-- item-->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="ti-user m-r-5"></i> <?= $this->session->userdata['username']; ?>
+                                    <i class="ti-user m-r-5"></i> <?= $this->session->userdata['nama']; ?>
                                 </a>
 
                                 <!-- item-->

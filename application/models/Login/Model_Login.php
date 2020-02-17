@@ -21,7 +21,7 @@ class Model_Login extends CI_Model
     {
         $data = array(
             'status' => 'logout',
-            'timestamp' => date("Y-m-d H:i:s"),
+            'last_activity' => date("Y-m-d H:i:s"),
         );
         $this->db->where('username', $username);
         $this->db->update('master_user', $data);

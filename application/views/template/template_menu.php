@@ -69,6 +69,20 @@
                             </ul>
                         </li>
 
+                        <li class="has-submenu">
+                            <a href="#"><i class="mdi mdi-invert-colors"></i> <span> Master Pegawai </span> </a>
+                            <ul class="submenu">
+                                <li>
+                                    <ul>
+                                        <li><a href="<?= base_url('manajemen_pegawai/masteruser'); ?>">Master User</a></li>
+                                        <li><a href="<?= base_url('manajemen_pegawai/masterpegawai'); ?>">Master Pegawai</a></li>
+                                        <hr>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
+
                     </ul>
                     <!-- End navigation menu -->
                 </div> <!-- end #navigation -->

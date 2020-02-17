@@ -1,0 +1,411 @@
+<!-- Required datatable js -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- file uploads js -->
+<script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
+
+<!-- Form wizard -->
+<script src="<?= base_url('assets/'); ?>plugins/bootstrap-wizard/jquery.bootstrap.wizard.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/jquery-validation/dist/jquery.validate.min.js"></script>
+
+<!-- DatePicker Js -->
+<script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<!-- Select2 js -->
+<script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
+<!-- Isi Data Tabel -->
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        setting_awal();
+        init_table();
+        $('#role').select2({
+            dropdownParent: $('#add_modal'),
+            placeholder: "Select a state",
+            allowClear: true
+        });
+
+        function init_table() {
+            $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+                return {
+                    "iStart": oSettings._iDisplayStart,
+                    "iEnd": oSettings.fnDisplayEnd(),
+                    "iLength": oSettings._iDisplayLength,
+                    "iTotal": oSettings.fnRecordsTotal(),
+                    "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                    "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                    "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+                };
+            };
+            var table = $('#datatable-master-pegawai').DataTable({
+                destroy: true,
+                paging: true,
+                "oLanguage": {
+                    sProcessing: "Sabar yah...",
+                    sZeroRecords: "Tidak ada Data..."
+                },
+                "searching": true,
+                "processing": true,
+                "serverSide": false,
+                "ajax": {
+                    "url": '<?= base_url("manajemen_pegawai/masterpegawai/getData/"); ?>',
+                    "type": "POST",
+                },
+                "columnDefs": [{
+                        data: "nip",
+                        targets: 0,
+                        render: function(data, type, full, meta) {
+                            return data;
+                        }
+                    },
+                    {
+                        data: "nip",
+                        targets: 1,
+                        render: function(data, type, full, meta) {
+                            return data;
+                        }
+                    },
+                    {
+                        data: "nama_lengkap",
+                        targets: 2,
+                        render: function(data, type, full, meta) {
+                            return data;
+                        }
+                    }, {
+                        data: "jenis_kelamin",
+                        targets: 3,
+                        render: function(data, type, full, meta) {
+                            if (data == 0) {
+                                return "Pria"
+                            } else {
+                                return "Wanita"
+                            }
+                        }
+                    },
+                    {
+                        data: "tanggal",
+                        targets: 4,
+                        render: function(data, type, full, meta) {
+                            return data
+                        }
+                    },
+                    {
+                        data: "pendidikan_terakhir",
+                        targets: 5,
+                        render: function(data, type, full, meta) {
+                            return data
+                        }
+                    }, {
+                        data: "jabatan",
+                        targets: 6,
+                        render: function(data, type, full, meta) {
+                            return data
+                        }
+                    },
+                    {
+                        data: {
+                            "status": "status",
+                            "nip": "nip"
+                        },
+                        targets: 7,
+                        render: function(data, type, full, meta) {
+                            if (data.status == 1) {
+                                var display = '<a  href="javascript:void(0)" class="badge badge-primary" onClick="force(\'' + data.nip + '\')"><span>Aktif</span></a>';
+                            } else {
+                                var display = '<a  href="javascript:void(0)" class="badge badge-danger" onClick="force(\'' + data.nip + '\')"><span>Tidak Aktif</span></a>';
+                            }
+                            return display;
+
+                        }
+                    },
+                    {
+                        data: {
+                            "nip": "nip",
+                            "status": "status"
+                        },
+                        targets: 8,
+                        render: function(data, type, full, meta) {
+                            var display1 = '<a type="button" onClick = "view_modal(\'' + data.nip + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
+                            var display2 = '<a type="button" onClick = "setActive(\'' + data.nip + '\')"  class="btn btn-icon waves-effect waves-light btn-primary btn-sm">Active</a>';
+                            var display3 = '<a type="button" onClick = "setInActive(\'' + data.nip + '\')"  class="btn btn-icon waves-effect waves-light btn-danger btn-sm">inActive</a>';
+                            if (data.status == "1") {
+                                return display1 + " " + display3;
+                            } else {
+                                return display1 + " " + display2;
+                            }
+                        }
+
+                    }
+                ],
+                "deferRender": true,
+                "rowCallback": function(row, data, iDisplayIndex) {
+                    var info = this.fnPagingInfo();
+                    var page = info.iPage;
+                    var length = info.iLength;
+                    var index = page * length + (iDisplayIndex + 1);
+                    $('td:eq(0)', row).html(index);
+                }
+            });
+        }
+
+        function init_role() {}
+
+        function formatState(data) {
+            if (data.kelamin == 0) {
+                var kelamin = "<i class='mdi mdi-human-male'> " + data.id + ' - ' + data.nama + "</i>"
+            } else {
+                var kelamin = "<i class='mdi mdi-human-female'> " + data.id + ' - ' + data.nama + "</i>"
+            }
+            var $display = $(kelamin);
+
+            return $display;
+        };
+
+    });
+</script>
+
+<!-- init setting awal -->
+<script>
+    function setting_awal() {
+
+        $('#tanggal_lahir').datepicker({
+            autoclose: true,
+        });
+        $('#tanggal_masuk').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            constrainInput: false,
+
+        });
+
+        $('#rootwizard').bootstrapWizard({
+            'tabClass': 'nav nav-tabs navtab-wizard nav-justified bg-muted',
+            'onTabClick': function(tab, navigation, index) {
+                Swal.fire(
+                    'Oopss!',
+                    'Tekan tombol Next',
+                    'error'
+                )
+                return false;
+            },
+            'onNext': function(tab, navigation, index) {
+                var $valid = $("#submitForm").valid();
+                if (!$valid) {
+                    return false;
+                }
+                var $total = navigation.find('li').length;
+                var $current = index + 1;
+                if ($total == $current) {
+                    $('#submit-add').text('Submit');
+                } else {
+                    $('#submit-add').text('Next');
+                }
+            },
+        });
+        $('#submit-add').on('click', function() {
+            if ($('#submit-add').text() == "Submit") {
+                tambah_data();
+                Swal.fire(
+                    'Good!',
+                    'Data telah di tambahkan!',
+                    'success'
+                )
+                $('#add_modal').modal('hide');
+                $('#rootwizard').find("a[href*='tab1']").trigger('click')
+            }
+        });
+
+    }
+</script>
+
+<!-- tambah data -->
+<script>
+    $('#add_modal').on('hidden.bs.modal', function(e) {
+        $(this)
+            .find("input,textarea,select")
+            .val('')
+            .end()
+            .find("input[type=checkbox], input[type=radio]")
+            .prop("checked", "")
+            .end();
+        $('#rootwizard').bootstrapWizard({
+            firstSelector: 'wizard li.first'
+        })
+    });
+
+    $('#view_modal').on('hidden.bs.modal', function(e) {
+        $(this)
+            .find("input,textarea,select")
+            .val('')
+            .end()
+            .find("input[type=checkbox], input[type=radio]")
+            .prop("checked", "")
+            .end();
+        $('#view_role').val(1).trigger('change')
+    });
+
+    function tambah_data() {
+        var data = new FormData(document.getElementById("submitForm"));
+        $.ajax({
+            url: "<?= Base_url('manajemen_pegawai/masterpegawai/tambahdatapegawai'); ?>",
+            type: "post",
+            data: data,
+            async: false,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $('#datatable-master-barang').DataTable().ajax.reload();
+                $('#add_modal').modal('hide');
+            }
+        })
+    }
+</script>
+
+<!-- view modal set Aktif Tidak Aktif -->
+
+<script>
+    function view_modal(data) {
+        $.ajax({
+            url: "<?= Base_url('manajemen_pegawai/masterpegawai/getdatauser'); ?>",
+            type: "post",
+            dataType: 'json',
+            data: {
+                username: data
+            },
+            async: false,
+            beforeSend: function(data) {
+                $.LoadingOverlay("show");
+            },
+            success: function(data) {
+                $('#view_nip').val(data.nip);
+                $('#view_username').val(data.username);
+                $('#view_role').val(data.role).trigger('change')
+                $('#view_nama_pegawai').val(data.nama);
+                $('#view_modal').modal('show');
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            },
+        })
+    }
+
+    function setActive(nip) {
+        $.ajax({
+            url: "<?= Base_url('manajemen_pegawai/masterpegawai/setactive'); ?>",
+            type: "post",
+            data: {
+                nip: nip
+            },
+            async: false,
+            beforeSend: function(data) {
+                $.LoadingOverlay("show");
+            },
+            success: function(data) {
+                $('#datatable-master-pegawai').DataTable().ajax.reload();
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            },
+        })
+    }
+
+    function setInActive(nip) {
+        $.ajax({
+            url: "<?= Base_url('manajemen_pegawai/masterpegawai/setinactive'); ?>",
+            type: "post",
+            data: {
+                nip: nip
+            },
+            async: false,
+            beforeSend: function(data) {
+                $.LoadingOverlay("show");
+            },
+            success: function(data) {
+                $('#datatable-master-pegawai').DataTable().ajax.reload();
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            },
+        })
+    }
+
+    $('#reset_pw').on('click', function() {
+        var data = new FormData(document.getElementById("viewForm"));
+        swal.fire({
+            title: 'Reset Password?',
+            text: "Password akan di ubah ke Default",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Reset!'
+        }).then((result) => {
+            if (result.value) {
+                reset(data);
+
+            }
+        });
+    });
+
+    function reset(data) {
+        $.ajax({
+            url: "<?= Base_url('manajemen_pegawai/masterpegawai/resetpassword'); ?>",
+            type: "post",
+            data: data,
+            async: false,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                swal.fire(
+                    'Reset!',
+                    'Password telah di Reset!',
+                    'success'
+                )
+            }
+        })
+    }
+</script>
+
+<!-- force logout -->
+
+<script>
+    function force(data) {
+        if (data == 1) {
+            swal.fire({
+                title: 'Force Logout?',
+                text: "User akan di logout dari sistem",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Logout!'
+            }).then((result) => {
+                if (result.value) {
+                    logout(data);
+                }
+            });
+        }
+
+    }
+
+    function logout(username) {
+        $.ajax({
+            url: "<?= Base_url('manajemen_pegawai/masteruser/forcelogout'); ?>",
+            type: "post",
+            data: {
+                username: username
+            },
+            async: false,
+            beforeSend: function(data) {
+                $.LoadingOverlay("show");
+            },
+            success: function(data) {
+                $('#datatable-master-pegawai').DataTable().ajax.reload();
+
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            },
+        })
+    }
+</script>
