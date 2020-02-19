@@ -113,7 +113,8 @@ class MasterPegawai extends CI_Controller
 
     public function edit_data_umum($nip)
     {
-        $this->modelPegawai->edit_data_umum($nip);
+        $data = $this->modelPegawai->edit_data_umum($nip);
+        return $data;
     }
 
     public function edit_data_alamat($nip)

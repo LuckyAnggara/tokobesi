@@ -24,9 +24,7 @@ class ReviewPurchaseOrder extends CI_Controller
         $data['css'] = 'manajemen_penjualan/purchase_order_sales/review/review_purchase_order_css';
         $data['timeline'] = $this->modelPO->timeline($string);
         $data['no_order'] = $string;
-
         $cek = $this->modelPO->cekData($string);
-
         if ($cek == false) {
             $this->load->view('template/template_header', $data);
             $this->load->view('template/template_menu');

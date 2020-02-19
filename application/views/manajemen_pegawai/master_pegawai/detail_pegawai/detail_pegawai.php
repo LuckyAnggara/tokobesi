@@ -43,25 +43,25 @@ $str = explode("-", $pegawai['nomor_rekening']);
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Nomor Induk Pegawai</label>
                                     <div class="col-9">
-                                        <input name="nip" id="nip" type="text" class="form-control" value="<?= $pegawai['nip']; ?>" required readonly>
+                                        <input name="nip" id="nip" type="text" class="form-control" value="<?= $pegawai['nip']; ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Nomor KTP</label>
                                     <div class="col-9">
-                                        <input name="ktp" id="ktp" type="number" class="form-control" value="<?= $pegawai['ktp']; ?>" required readonly>
+                                        <input name="ktp" id="ktp" type="number" class="form-control" value="<?= $pegawai['ktp']; ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Nama Lengkap</label>
                                     <div class="col-9">
-                                        <input name="nama_lengkap" id="nama_lengkap" type="text" class="form-control" value="<?= $pegawai['nama_lengkap']; ?>" required readonly>
+                                        <input name="nama_lengkap" id="nama_lengkap" type="text" class="form-control" value="<?= $pegawai['nama_lengkap']; ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Tanggal Lahir</label>
                                     <div class="col-9">
-                                        <input name="tanggal_lahir" id="tanggal_lahir" type="text" class="form-control" value="<?= $pegawai['tanggal_lahir']; ?>" required disabled>
+                                        <input name="tanggal_lahir" id="tanggal_lahir" type="text" class="form-control" value="<?= $pegawai['tanggal_lahir']; ?>" disabled>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -76,7 +76,7 @@ $str = explode("-", $pegawai['nomor_rekening']);
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Pendidikan Terkhir</label>
                                     <div class="col-9">
-                                        <input name="pendidikan_terakhir" id="pendidikan_terakhir" type="text" class="form-control" value="<?= $pegawai['pendidikan_terakhir']; ?>" required readonly>
+                                        <input name="pendidikan_terakhir" id="pendidikan_terakhir" type="text" class="form-control" value="<?= $pegawai['pendidikan_terakhir']; ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -97,23 +97,23 @@ $str = explode("-", $pegawai['nomor_rekening']);
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Alamat Rumah</label>
                                     <div class="col-9">
-                                        <textarea name="alamat" id="alamat" type="text" rows="2" class="form-control" required readonly>value="<?= $pegawai['alamat']; ?>"</textarea>
+                                        <textarea name="alamat" id="alamat" type="text" rows="2" class="form-control" readonly><?= $pegawai['alamat']; ?></textarea>
                                     </div>
                                 </div>
                                 <div class=" form-group row">
                                     <label class="col-3 col-form-label">Kelurahan</label>
                                     <div class="col-3">
-                                        <input name="kelurahan" id="kelurahan" type="text" class="form-control" value="<?= $pegawai['kelurahan']; ?>" required readonly>
+                                        <input name="kelurahan" id="kelurahan" type="text" class="form-control" value="<?= $pegawai['kelurahan']; ?>" readonly>
                                     </div>
                                     <label class="col-3 col-form-label">Kecamatan</label>
                                     <div class="col-3">
-                                        <input name="kecamatan" id="kecamatan" type="text" class="form-control" value="<?= $pegawai['kecamatan']; ?>" required readonly>
+                                        <input name="kecamatan" id="kecamatan" type="text" class="form-control" value="<?= $pegawai['kecamatan']; ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Kota / Kabupaten</label>
                                     <div class="col-9">
-                                        <input name="kota" id="kota" type="text" class="form-control" value="<?= $pegawai['kota']; ?>" required readonly>
+                                        <input name="kota" id="kota" type="text" class="form-control" value="<?= $pegawai['kota']; ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -134,13 +134,13 @@ $str = explode("-", $pegawai['nomor_rekening']);
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Jabatan</label>
                                     <div class="col-9">
-                                        <input name="jabatan" id="jabatan" type="text" class="form-control" value="<?= $pegawai['jabatan']; ?>" required readonly>
+                                        <input name="jabatan" id="jabatan" type="text" class="form-control" value="<?= $pegawai['jabatan']; ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Tanggal Mulai Bekerja</label>
                                     <div class="col-9">
-                                        <input name="tanggal_masuk" id="tanggal_masuk" type="text" class="form-control" value="<?= $pegawai['tanggal_masuk']; ?>" required readonly>
+                                        <input name="tanggal_masuk" id="tanggal_masuk" type="text" class="form-control" value="<?= $pegawai['tanggal_masuk']; ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -161,23 +161,23 @@ $str = explode("-", $pegawai['nomor_rekening']);
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Nomor Telepon / HP</label>
                                     <div class="col-9">
-                                        <input name="nomor_telepon" id="nomor_telepon" type="number" class="form-control" value="<?= $pegawai['nomor_telepon']; ?>" required readonly>
+                                        <input name="nomor_telepon" id="nomor_telepon" type="number" class="form-control" value="<?= $pegawai['nomor_telepon']; ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Nomor Rekening</label>
                                     <div class="col-3">
-                                        <input name="nomor_rekening" id="nomor_rekening" type="number" class="form-control" value="<?= $str[0]; ?>" required readonly>
+                                        <input name="nomor_rekening" id="nomor_rekening" type="number" class="form-control" value="<?= $str[0]; ?>" readonly>
                                     </div>
                                     <label class="col-3 col-form-label">Nama Bank</label>
                                     <div class="col-3">
-                                        <input name="nama_bank" id="nama_bank" type="text" class="form-control" value="<?= $str[1]; ?>" required readonly>
+                                        <input name="nama_bank" id="nama_bank" type="text" class="form-control" value="<?= $str[1]; ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">NPWP</label>
                                     <div class="col-9">
-                                        <input name="npwp" id="npwp" type="text" class="form-control" value="<?= $pegawai['npwp']; ?>" required readonly>
+                                        <input name="npwp" id="npwp" type="text" class="form-control" value="<?= $pegawai['npwp']; ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="modal-footer">

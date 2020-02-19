@@ -199,14 +199,12 @@
     function set_readonly(div, bol) {
         if (div == "umum") {
             if (bol == false) {
-                $('#nip').attr("readonly", bol);
                 $('#ktp').attr("readonly", bol);
                 $('#nama_lengkap').attr("readonly", bol);
                 $('#tanggal_lahir').attr("disabled", bol);
                 $('#jenis_kelamin').attr("disabled", bol);
                 $('#pendidikan_terakhir').attr("readonly", bol);
             } else {
-                $('#nip').attr("readonly", bol);
                 $('#ktp').attr("readonly", bol);
                 $('#nama_lengkap').attr("readonly", bol);
                 $('#tanggal_lahir').attr("disabled", bol);
@@ -302,12 +300,12 @@
             confirmButtonText: 'Ya!'
         }).then((result) => {
             if (result.value) {
-                edit_data_alamat(nip);
+                edit_data_umum(nip);
             }
         });
     }
 
-    function edit_data_alamat(nip) {
+    function edit_data_umum(nip) {
         var data = new FormData(document.getElementById("form_umum"));
         $.ajax({
             url: "<?= Base_url('manajemen_pegawai/masterpegawai/edit_data_umum/'); ?>" + nip,
@@ -322,7 +320,125 @@
                 set_readonly('umum', true);
                 swal.fire(
                     'Edited!!!',
-                    'Data Harga ' + nip + ' telah diubah!',
+                    'Data ' + nip + ' telah diubah!',
+                    'success'
+                );
+            }
+        })
+
+    }
+
+    function warning_edit_alamat(nip) {
+        swal.fire({
+            title: 'Apa anda yakin?',
+            text: "Data pegawai akan di berubah",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4fa7f3',
+            cancelButtonColor: '#d57171',
+            confirmButtonText: 'Ya!'
+        }).then((result) => {
+            if (result.value) {
+                edit_data_alamat(nip);
+            }
+        });
+    }
+
+    function edit_data_alamat(nip) {
+        var data = new FormData(document.getElementById("form_alamat"));
+        $.ajax({
+            url: "<?= Base_url('manajemen_pegawai/masterpegawai/edit_data_alamat/'); ?>" + nip,
+            type: "post",
+            data: data,
+            async: false,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $('#edit_button_alamat_div').attr("hidden", true);
+                $('#edit_trigger_alamat').attr("hidden", false);
+                set_readonly('alamat', true);
+                swal.fire(
+                    'Edited!!!',
+                    'Data ' + nip + ' telah diubah!',
+                    'success'
+                );
+
+            }
+        })
+
+    }
+
+    function warning_edit_pekerjaan(nip) {
+        swal.fire({
+            title: 'Apa anda yakin?',
+            text: "Data pegawai akan di berubah",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4fa7f3',
+            cancelButtonColor: '#d57171',
+            confirmButtonText: 'Ya!'
+        }).then((result) => {
+            if (result.value) {
+                edit_data_pekerjaan(nip);
+            }
+        });
+    }
+
+    function edit_data_pekerjaan(nip) {
+        var data = new FormData(document.getElementById("form_pekerjaan"));
+        $.ajax({
+            url: "<?= Base_url('manajemen_pegawai/masterpegawai/edit_data_pekerjaan/'); ?>" + nip,
+            type: "post",
+            data: data,
+            async: false,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $('#edit_button_pekerjaan_div').attr("hidden", true);
+                $('#edit_trigger_pekerjaan').attr("hidden", false);
+                set_readonly('pekerjaan', true);
+                swal.fire(
+                    'Edited!!!',
+                    'Data ' + nip + ' telah diubah!',
+                    'success'
+                );
+            }
+        })
+
+    }
+
+    function warning_edit_lainnya(nip) {
+        swal.fire({
+            title: 'Apa anda yakin?',
+            text: "Data pegawai akan di berubah",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4fa7f3',
+            cancelButtonColor: '#d57171',
+            confirmButtonText: 'Ya!'
+        }).then((result) => {
+            if (result.value) {
+                edit_data_lainnya(nip);
+            }
+        });
+    }
+
+    function edit_data_lainnya(nip) {
+        var data = new FormData(document.getElementById("form_lainnya"));
+        $.ajax({
+            url: "<?= Base_url('manajemen_pegawai/masterpegawai/edit_data_lainnya/'); ?>" + nip,
+            type: "post",
+            data: data,
+            async: false,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $('#edit_button_lainnya_div').attr("hidden", true);
+                $('#edit_trigger_lainnya').attr("hidden", false);
+                set_readonly('lainnya', true);
+                swal.fire(
+                    'Edited!!!',
+                    'Data ' + nip + ' telah diubah!',
                     'success'
                 );
             }

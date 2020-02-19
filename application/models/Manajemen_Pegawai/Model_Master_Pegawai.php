@@ -24,6 +24,12 @@ class Model_Master_Pegawai extends CI_Model
         ];
         $this->db->where('nip', $post['nip']);
         $this->db->update('master_pegawai', $data);
+
+        $data = [
+            'isactive' => 1,
+        ];
+        $this->db->where('nip', $post['nip']);
+        $this->db->update('master_user', $data);
     }
 
     function set_user_inactive($post)
@@ -33,6 +39,12 @@ class Model_Master_Pegawai extends CI_Model
         ];
         $this->db->where('nip', $post['nip']);
         $this->db->update('master_pegawai', $data);
+
+        $data = [
+            'isactive' => 0,
+        ];
+        $this->db->where('nip', $post['nip']);
+        $this->db->update('master_user', $data);
     }
 
 
@@ -143,12 +155,56 @@ class Model_Master_Pegawai extends CI_Model
     function edit_data_umum($nip)
     {
         $post = $this->input->post();
+
         $data = [
             'ktp' => strtoupper($post['ktp']),
             'nama_lengkap' => strtoupper($post['nama_lengkap']),
             'jenis_kelamin' => strtoupper($post['jenis_kelamin']),
+            'tanggal_lahir' => date('Y-m-d H:i:s', strtotime($post['tanggal_lahir'])),
+            'pendidikan_terakhir' => strtoupper($post['jenis_kelamin']),
             'user' => $this->session->userdata['username'],
+        ];
+        $this->db->where('nip', $nip);
+        $this->db->update('master_pegawai', $data);
+    }
 
+    function edit_data_alamat($nip)
+    {
+        $post = $this->input->post();
+
+        $data = [
+            'alamat' => strtoupper($post['alamat']),
+            'kelurahan' => strtoupper($post['kelurahan']),
+            'kecamatan' => strtoupper($post['kecamatan']),
+            'kota' => strtoupper($post['kota']),
+            'user' => $this->session->userdata['username'],
+        ];
+        $this->db->where('nip', $nip);
+        $this->db->update('master_pegawai', $data);
+    }
+
+    function edit_data_pekerjaan($nip)
+    {
+        $post = $this->input->post();
+
+        $data = [
+            'jabatan' => strtoupper($post['jabatan']),
+            'tanggal_masuk' => date('Y-m-d H:i:s', strtotime($post['tanggal_masuk'])),
+            'user' => $this->session->userdata['username'],
+        ];
+        $this->db->where('nip', $nip);
+        $this->db->update('master_pegawai', $data);
+    }
+
+    function edit_data_lainnya($nip)
+    {
+        $post = $this->input->post();
+
+        $data = [
+            'nomor_telepon' => strtoupper($post["nomor_telepon"]),
+            'nomor_rekening' => strtoupper($post["nama_bank"]) . ' - ' . strtoupper($post["nomor_rekening"]),
+            'npwp' => strtoupper($post["npwp"]),
+            'user' => $this->session->userdata['username'],
         ];
         $this->db->where('nip', $nip);
         $this->db->update('master_pegawai', $data);

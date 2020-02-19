@@ -178,7 +178,7 @@
                                     <a href="javascript:void(0);" class="dropdown-item">Lihat lebih.</a>
                                 </div>
                             </div>
-                            <h4 class="header-title mt-0">Top Produk</h4>
+                            <h4 class="header-title mt-0">Produktifitas Sales</h4>
                             <div class="form-group row m-b-10 col-xl-6 col-sm-12 col-lg-6 col-md-6">
                                 <label class="col-5 col-form-label">Nama Sales</label>
                                 <div class="col-7">
@@ -186,7 +186,6 @@
                                         <?php foreach ($sales as $key => $value) : ?>
                                             <option value="<?= $value['username']; ?>"><?= $value['nama']; ?></option>
                                         <?php endforeach; ?>
-
                                     </select>
                                 </div>
                             </div>

@@ -27,8 +27,9 @@
                             <select name="role" id="role" type="text" class="form-control" required>
                                 <option value="1">Manajer</option>
                                 <option value="2">Supervisor</option>
-                                <option value="3">Admin</option>
-                                <option value="4">Cashier</option>
+                                <option value="3">Sales</option>
+                                <option value="4">Admin</option>
+                                <option value="5">Cashier</option>
                             </select>
                         </div>
                     </div>

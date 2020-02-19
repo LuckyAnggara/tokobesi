@@ -164,7 +164,7 @@ class Model_Purchase_Order_Admin extends CI_Model
 
             $this->db->insert('master_piutang', $data);
         }
-
+        $this->_update_master_insentif($no_faktur);
         $this->_update_timeline_po($post, 'approve');
     }
 
@@ -347,7 +347,7 @@ class Model_Purchase_Order_Admin extends CI_Model
     private function _delete_perhitungan($post) // delete di tabel perhitungan karena sudah di proses
     {
         $this->db->select('*');
-        $this->db->where('no_order', $post['no_order']);
+        $this->db->where('no_order', $post['no_order_penjualan']);
         $this->db->delete('tabel_perhitungan_order');
     }
 
@@ -386,7 +386,7 @@ class Model_Purchase_Order_Admin extends CI_Model
     {
         $this->db->select('no_order');
         $this->db->from('timeline_po');
-        $this->db->where('no_order', $post['no_order']);
+        $this->db->where('no_order', $post['no_order_penjualan']);
         $cek = $this->db->get()->num_rows();
 
         if ($cek > 0) {
@@ -397,9 +397,9 @@ class Model_Purchase_Order_Admin extends CI_Model
         switch ($x) {
             case 'reject':
                 $data = array(
-                    'no_order' => $post['no_order'],
+                    'no_order' =>  $post['no_order_penjualan'],
                     'tanggal' =>  date("Y-m-d H:i:s"),
-                    'pesan' => '<span class="text-danger">Reject</span><br>' . $post['pesan'],
+                    'pesan' => '<span class="text-danger">Reject</span><br>',
                     'urutan' => $urutan,
                     'user' =>  $this->session->userdata['username'],
                 );
@@ -407,9 +407,9 @@ class Model_Purchase_Order_Admin extends CI_Model
                 break;
             case 'approve':
                 $data = array(
-                    'no_order' => $post['no_order'],
+                    'no_order' => $post['no_order_penjualan'],
                     'tanggal' =>  date("Y-m-d H:i:s"),
-                    'pesan' => '<span class="text-success">Approve</span><br>' . $post['pesan'],
+                    'pesan' => '<span class="text-success">Approve</span><br>',
                     'urutan' => $urutan,
                     'user' =>  $this->session->userdata['username'],
                 );
@@ -417,9 +417,9 @@ class Model_Purchase_Order_Admin extends CI_Model
                 break;
             case 'return':
                 $data = array(
-                    'no_order' => $post['no_order'],
+                    'no_order' =>  $post['no_order_penjualan'],
                     'tanggal' =>  date("Y-m-d H:i:s"),
-                    'pesan' => '<span class="text-warning">return</span><br>' . $post['pesan'],
+                    'pesan' => '<span class="text-warning">return</span><br>',
                     'urutan' => $urutan,
                     'user' =>  $this->session->userdata['username'],
                 );
@@ -427,9 +427,8 @@ class Model_Purchase_Order_Admin extends CI_Model
                 break;
             case 'open':
                 $data = array(
-                    'no_order' => $post['no_order'],
+                    'no_order' =>  $post['no_order_penjualan'],
                     'tanggal' =>  date("Y-m-d H:i:s"),
-                    'pesan' => $post['pesan'],
                     'urutan' => $urutan,
                     'user' =>  $this->session->userdata['username'],
                 );
@@ -446,5 +445,28 @@ class Model_Purchase_Order_Admin extends CI_Model
         ];
         $this->db->where('no_order', $no_order);
         $this->db->update('temp_purchase_order', $data);
+    }
+
+    private function _update_master_insentif($no_faktur)
+    {
+        $this->db->select('insentif');
+        $data = $this->db->get('setting_perusahaan')->row_array();
+        $insentif = $data['insentif'];
+
+        $this->db->select('*');
+        $this->db->from('master_penjualan');
+        $this->db->where('no_faktur', $no_faktur);
+        $data_penjualan = $this->db->get()->row_array();
+
+        $data = array(
+            'nomor_faktur' => $no_faktur,
+            'gross_penjualan' =>  $data_penjualan['total_penjualan'],
+            'insentif' => $insentif,
+            'total_insentif' => ($insentif / 100) *  $data_penjualan['total_penjualan'],
+            'sales' =>  $data_penjualan['sales'],
+            'status' => 0,
+            'tanggal' => $data_penjualan['tanggal_transaksi']
+        );
+        $this->db->insert('master_insentif', $data);
     }
 }

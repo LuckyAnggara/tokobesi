@@ -11,8 +11,6 @@ class Login extends CI_Controller
 		$this->load->model('Login/Model_Login', 'modelLogin');
 	}
 
-	
-
 
 	public function index()
 	{
@@ -29,13 +27,12 @@ class Login extends CI_Controller
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
 
-		if($user){
+		if ($user) {
 			$isPasswordTrue = password_verify($post["password"], $user->password);
-			$isActive = $user->isActive;
-
-			if($isActive == "0"){
+			$isactive = $user->isactive;
+			if ($isactive == "0") {
 				echo "notactive";
-			}else{
+			} else {
 				if ($isPasswordTrue) {
 					$data_session = array(
 						'username' => $username,
@@ -52,11 +49,10 @@ class Login extends CI_Controller
 				}
 			}
 			// jika password benar dan dia admin
-			
-		}
 
+		}
 		// login gagal
-		return false;
+		echo "none";
 	}
 
 

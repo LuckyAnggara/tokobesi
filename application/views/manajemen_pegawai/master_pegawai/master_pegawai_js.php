@@ -180,67 +180,6 @@
             constrainInput: false,
 
         });
-        // $('#smartwizard').smartWizard({
-        //     selected: 0,
-        //     useURLhash: false,
-        //     backButtonSupport: true,
-        //     showStepURLhash: false,
-        //     theme: 'arrows',
-        //     transitionEffect: 'fade', // Effect on navigation, none/slide/fade
-        //     transitionSpeed: '400',
-        //     toolbarSettings: {
-        //         toolbarPosition: 'bottom', // none, top, bottom, both
-        //         toolbarButtonPosition: 'right', // left, right
-        //         toolbarExtraButtons: [
-        //             $('<button></button>').text('Submit')
-        //             .addClass('btn btn-success')
-        //             .on("beginReset", function(e) {
-        //                 return confirm("Do you want to reset the wizard?");
-        //             })
-        //         ]
-        //     },
-        //     lang: { // Language variables
-        //         next: 'Next',
-        //         previous: 'Previous'
-        //     },
-        // });
-        // $('#rootwizard').bootstrapWizard({
-        //     'tabClass': 'nav nav-tabs navtab-wizard nav-justified bg-muted',
-        //     'onTabClick': function(tab, navigation, index) {
-        //         Swal.fire(
-        //             'Oopss!',
-        //             'Tekan tombol Next',
-        //             'error'
-        //         )
-        //         return false;
-        //     },
-        //     'onNext': function(tab, navigation, index) {
-        //         var $valid = $("#submitForm").valid();
-        //         if (!$valid) {
-        //             return false;
-        //         }
-        //         var $total = navigation.find('li').length;
-        //         var $current = index + 1;
-        //         if ($total == $current) {
-        //             $('#submit-add').text('Submit');
-        //         } else {
-        //             $('#submit-add').text('Next');
-        //         }
-        //     },
-        // });
-        // $('#submit-add').on('click', function() {
-        //     if ($('#submit-add').text() == "Submit") {
-        //         tambah_data();
-        //         Swal.fire(
-        //             'Good!',
-        //             'Data telah di tambahkan!',
-        //             'success'
-        //         )
-        //         $('#add_modal').modal('hide');
-        //         $('#rootwizard').find("a[href*='tab1']").trigger('click')
-        //     }
-        // });
-
     }
 </script>
 
@@ -276,6 +215,7 @@
             .on('click', function() {
                 $('#smartwizard').smartWizard("reset");
                 $('#submitForm').find("input, textarea").val("");
+                $('#add_modal').modal('hide');
             });
 
 
@@ -380,28 +320,7 @@
 
 <script>
     function view_modal(data) {
-        $.ajax({
-            url: "<?= Base_url('manajemen_pegawai/masterpegawai/getdatauser'); ?>",
-            type: "post",
-            dataType: 'json',
-            data: {
-                username: data
-            },
-            async: false,
-            beforeSend: function(data) {
-                $.LoadingOverlay("show");
-            },
-            success: function(data) {
-                $('#view_nip').val(data.nip);
-                $('#view_username').val(data.username);
-                $('#view_role').val(data.role).trigger('change')
-                $('#view_nama_pegawai').val(data.nama);
-                $('#view_modal').modal('show');
-            },
-            complete: function() {
-                $.LoadingOverlay("hide");
-            },
-        })
+        window.location.href = "<?php echo base_url('manajemen_pegawai/masterpegawai/detail_pegawai/'); ?>" + data;
     }
 
     function setActive(nip) {

@@ -103,7 +103,6 @@ class Model_Purchase_Order extends CI_Model
         $this->db->select('*');
         $this->db->from('master_purchase_order');
         $this->db->where('no_order', $string);
-        $this->db->where('sales', $this->session->userdata['username']);
         $this->db->where('status_po !=', 99);
 
         $cek = $this->db->get()->num_rows();

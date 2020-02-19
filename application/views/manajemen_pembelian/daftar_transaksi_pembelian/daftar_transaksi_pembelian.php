@@ -68,10 +68,14 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th>#</th>
-                                <th>Tanggal Transaksi</th>
-                                <th>Nomor Transaksi</th>
-                                <th>Nama Pelanggan</th>
+                                <th>Tanggal</th>
+                                <th>No Transaksi</th>
+                                <th>Nama Supplier</th>
                                 <th>Total Pembayaran</th>
+                                <th>Diskon</th>
+                                <th>Pajak</th>
+                                <th>Ongkir</th>
+                                <th>Grand Total</th>
                                 <th>Status Bayar</th>
                                 <th>Action</th>
                             </tr>

@@ -126,24 +126,32 @@
                         $('#loginForm').LoadingOverlay("show");
                     },
                     success: function(data) {
-                        if (data == "notactive") {
-                            $('#loginForm').LoadingOverlay("hide");
+                        if (data == "none") {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: 'User tidak Aktif',
+                                text: 'User tidak Ada!!',
                             });
                         } else {
-                            if (data == "false") {
+                            if (data == "notactive") {
                                 $('#loginForm').LoadingOverlay("hide");
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'Cek kembali Username dan Password',
+                                    text: 'User tidak Aktif',
                                 });
-                                $('#password').val('');
                             } else {
-                                window.location.href = "<?php echo base_url('dashboard'); ?>";
+                                if (data == "false") {
+                                    $('#loginForm').LoadingOverlay("hide");
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Cek kembali Username dan Password',
+                                    });
+                                    $('#password').val('');
+                                } else {
+                                    window.location.href = "<?php echo base_url('dashboard'); ?>";
+                                }
                             }
                         }
 

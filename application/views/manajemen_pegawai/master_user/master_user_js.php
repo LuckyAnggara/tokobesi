@@ -91,7 +91,7 @@
 
                         }
                     }, {
-                        data: "isActive",
+                        data: "isactive",
                         targets: 5,
                         render: function(data, type, full, meta) {
                             if (data == 0) {
@@ -105,14 +105,14 @@
                     {
                         data: {
                             "username": "username",
-                            "isActive": "isActive"
+                            "isactive": "isactive"
                         },
                         targets: 6,
                         render: function(data, type, full, meta) {
                             var display1 = '<a type="button" onClick = "view_modal(\'' + data.username + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
                             var display2 = '<a type="button" onClick = "setActive(\'' + data.username + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-primary btn-sm">Active</a>';
                             var display3 = '<a type="button" onClick = "setInActive(\'' + data.username + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm">inActive</a>';
-                            if (data.isActive == "1") {
+                            if (data.isactive == "1") {
                                 return display1 + " " + display3;
                             } else {
                                 return display1 + " " + display2;

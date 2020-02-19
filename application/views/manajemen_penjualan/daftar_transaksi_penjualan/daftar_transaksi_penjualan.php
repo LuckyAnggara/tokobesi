@@ -71,11 +71,12 @@
                                 <th>Tanggal Transaksi</th>
                                 <th>Nomor Faktur</th>
                                 <th>Nama Pelanggan</th>
+                                <th>Total Penjualan</th>
+                                <th>Diskon</th>
+                                <th>Pajak</th>
                                 <th>Grand Total</th>
                                 <th>Status Bayar</th>
-
                                 <th>User</th>
-
                                 <th>Action</th>
                             </tr>
                         </thead>

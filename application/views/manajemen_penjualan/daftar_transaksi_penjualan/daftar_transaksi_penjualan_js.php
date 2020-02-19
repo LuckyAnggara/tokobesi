@@ -117,18 +117,39 @@
                         render: function(data, type, full, meta) {
                             return data;
                         }
-                    },
-                    {
-                        data: "grand_total",
+                    }, {
+                        data: "total_penjualan",
                         targets: 4,
+                        render: function(data, type, full, meta) {
+                            var display = formatRupiah(data.toString(), 'Rp.');
+                            return display;
+                        }
+                    }, {
+                        data: "diskon",
+                        targets: 5,
+                        render: function(data, type, full, meta) {
+                            var display = '<span class="text-danger">' + formatRupiah(data.toString(), 'Rp.') + '</span>'
+                            return display;
+                        }
+                    }, {
+                        data: "pajak_masukan",
+                        targets: 6,
                         render: function(data, type, full, meta) {
                             var display = formatRupiah(data.toString(), 'Rp.');
                             return display;
                         }
                     },
                     {
+                        data: "grand_total",
+                        targets: 7,
+                        render: function(data, type, full, meta) {
+                            var display = '<b>' + formatRupiah(data.toString(), 'Rp.'); + '</b>'
+                            return display;
+                        }
+                    },
+                    {
                         data: "kredit",
-                        targets: 5,
+                        targets: 8,
                         render: function(data, type, full, meta) {
                             var date = new Date(data.tanggal_jatuh_tempo);
                             date = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
@@ -151,7 +172,7 @@
                     {
 
                         data: "user",
-                        targets: 6,
+                        targets: 9,
                         visible: visible,
                         render: function(data, type, full, meta) {
                             return data
@@ -159,7 +180,7 @@
                     },
                     {
                         data: "no_faktur",
-                        targets: 7,
+                        targets: 10,
                         render: function(data, type, full, meta) {
                             var display1 = '<a type="button" onClick = "view_detail(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Detail"><i class="fa fa-search" ></i> </a>';
                             var display2 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';

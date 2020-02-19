@@ -449,7 +449,7 @@ class Model_Dashboard extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('master_user');
-        $this->db->where('role', 'Sales');
+        $this->db->where('role', '3');
 
         return $this->db->get()->result_array();
     }
