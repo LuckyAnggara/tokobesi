@@ -108,7 +108,7 @@
                                      <div class="clearfix">
                                          <div class="widget-user row">
                                              <div class="col-9">
-                                                 <img src="<?= base_url('assets/images/logo-perusahaan.png'); ?>" class="m-t-30 col-1 img-responsive" alt="user">
+                                                 <img src="<?= base_url('assets/images/') . $setting_perusahaan['logo_perusahaan']; ?>" class="m-t-30 col-1 img-responsive" alt="user">
                                                  <div class="wid-u-info col-9">
                                                      <ul style="list-style-type:none">
                                                          <li>
@@ -210,7 +210,7 @@
                                              <div class="clearfix m-t-10">
                                                  <h4 class="text-inverse"><b><u>Note</u></b></h4>
                                                  <p>
-                                                     <?= nl2br($setting_perusahaan['note_faktur_jual']); ?>
+                                                     <?= nl2br($setting_perusahaan['catatan_faktur_cash']); ?>
                                                  </p>
                                              </div>
                                          </div>

@@ -107,6 +107,10 @@
                             </ul>
                         </li>
 
+                        <li class="has-submenu">
+                            <a href="<?= base_url('setting/setting'); ?>"> <i class="mdi mdi-invert-colors"></i> <span> Setting </span> </a>
+                        </li>
+
 
 
                     </ul>

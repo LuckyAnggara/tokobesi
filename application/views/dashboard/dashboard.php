@@ -255,7 +255,6 @@
                                             <th>Saldo</th>
                                         </tr>
                                     </thead>
-
                                 </table>
                             </div>
                         </div>

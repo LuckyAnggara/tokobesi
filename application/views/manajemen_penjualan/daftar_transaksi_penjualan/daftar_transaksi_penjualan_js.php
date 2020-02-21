@@ -168,7 +168,7 @@
                                     '<a class="dropdown-item"><b><u>Jatuh Tempo</u></b></a>' +
                                     '<a class="dropdown-item">' + date + '</a>' +
                                     '<a class="dropdown-item"><b><u>Sisa</u></b></a>' +
-                                    '<a class="dropdown-item">' + formatRupiah(data.sisa_pembayaran.toString(), 'Rp.') + '</a>' +
+                                    '<a class="dropdown-item">' + formatRupiah(data.sisa_piutang.toString(), 'Rp.') + '</a>' +
                                     '</div></div>'
                             } else {
                                 var display = '<span class="badge badge-success">Lunas</span>'
