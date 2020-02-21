@@ -62,6 +62,12 @@
                     "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
                 };
             };
+            var role = "<?php echo $this->session->userdata('role'); ?>";
+            if (role == "1" || role == "2") {
+                var visible = true
+            } else {
+                var visible = false
+            }
             var table = $('#datatable-daftar-pembelian').DataTable({
                 destroy: true,
                 paging: true,
@@ -165,10 +171,18 @@
                             }
                             return display;
                         }
+                    }, {
+
+                        data: "nama_pegawai",
+                        targets: 10,
+                        visible: visible,
+                        render: function(data, type, full, meta) {
+                            return data
+                        }
                     },
                     {
                         data: "nomor_transaksi",
-                        targets: 10,
+                        targets: 11,
                         render: function(data, type, full, meta) {
                             var display1 = '<a type="button" onClick = "view_detail(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Detail"><i class="fa fa-search" ></i> </a>';
                             var display2 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';

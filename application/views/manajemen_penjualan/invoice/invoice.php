@@ -155,15 +155,12 @@
                                              <div class="clearfix row m-t-10">
                                                  <ul class="col-4" style="list-style-type:none">
                                                      <li class="text-left m-b-3">Nomor Faktur</li>
-                                                     <li class="text-left m-b-3">Tanggal</li>
                                                  </ul>
                                                  <ul class="col-1" style="list-style-type:none">
-                                                     <li class="text-left m-b-3"> : </li>
                                                      <li class="text-left m-b-3"> : </li>
                                                  </ul>
                                                  <ul class="col-7" style="list-style-type:none">
                                                      <li class="text-left m-b-3">#<?= $data_order['no_faktur']; ?></li>
-                                                     <li class="text-left m-b-3"><?= $data_order['tanggal_input']; ?></li>
                                                  </ul>
                                              </div>
                                              <!-- end row -->
@@ -213,10 +210,7 @@
                                              <div class="clearfix m-t-10">
                                                  <h4 class="text-inverse"><b><u>Note</u></b></h4>
                                                  <p>
-                                                     <!-- Tanggal Jatuh Tempo : <b><u><?= $tanggal_jatuh_tempo; ?></u></b><br><br>
-                                                     Pembayaran dapat dilakukan secara 3 (tiga) kali.<br>
-
-                                                     Pembayaran di Transfer ke .........xxxx -->
+                                                     <?= nl2br($setting_perusahaan['note_faktur_jual']); ?>
                                                  </p>
                                              </div>
                                          </div>
@@ -265,8 +259,8 @@
                                      <hr>
                                      <div class="row text-center">
                                          <div class="col-6">
-                                             <p>Cashier</p> <br>
-                                             <p>( Udin )</p>
+                                             <p>Hormat Kami</p> <br>
+                                             <p>( <?= $data_order['nama_pegawai']; ?> )</p>
                                          </div>
                                          <!-- <div class="col-6">
                                                 <p>Pelanggan</p><br><br>

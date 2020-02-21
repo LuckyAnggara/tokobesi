@@ -11,8 +11,9 @@ class Model_Invoice extends CI_Model
 
     function get_data_order($no_order_penjualan) // udah include nominal pembayaran dan status
     {
-        $this->db->select('*');
+        $this->db->select('*, master_user.nama as nama_pegawai');
         $this->db->from('master_penjualan');
+        $this->db->join('master_user', 'master_user.username = master_penjualan.user');
         $this->db->join('master_pelanggan', 'master_pelanggan.id_pelanggan = master_penjualan.id_pelanggan');
         $this->db->where('no_order_penjualan', $no_order_penjualan);
         return $this->db->get()->row_array();
@@ -20,8 +21,9 @@ class Model_Invoice extends CI_Model
 
     function get_data_order_kredit($no_order_penjualan) // udah include nominal pembayaran dan status serta kredit / piutang
     {
-        $this->db->select('*');
+        $this->db->select('*, master_user.nama as nama_pegawai');
         $this->db->from('master_penjualan');
+        $this->db->join('master_user', 'master_user.username = master_penjualan.user');
         $this->db->join('master_pelanggan', 'master_pelanggan.id_pelanggan = master_penjualan.id_pelanggan');
         $this->db->join('master_piutang', 'master_piutang.no_faktur = master_penjualan.no_faktur');
         $this->db->where('no_order_penjualan', $no_order_penjualan);

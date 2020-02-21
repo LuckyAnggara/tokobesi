@@ -12,8 +12,9 @@ class Model_Daftar_Transaksi_Penjualan extends CI_Model
 
     function get_data($post)
     {
-        $this->db->select('master_penjualan.*,master_pelanggan.nama_pelanggan ');
+        $this->db->select('master_penjualan.*,master_pelanggan.nama_pelanggan, master_user.nama as nama_pegawai  ');
         $this->db->from('master_penjualan');
+        $this->db->join('master_user', 'master_user.username = master_penjualan.user');
         $this->db->join('master_pelanggan', 'master_pelanggan.id_pelanggan = master_penjualan.id_pelanggan');
         if ($post['status_bayar'] == null) {
         } else {

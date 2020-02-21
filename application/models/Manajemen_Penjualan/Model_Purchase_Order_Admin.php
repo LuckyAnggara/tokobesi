@@ -151,18 +151,30 @@ class Model_Purchase_Order_Admin extends CI_Model
             $this->db->from('master_penjualan');
             $this->db->where('no_faktur', $no_faktur);
             $grand_total = $this->db->get()->row_array();
-            $sisa_pembayaran = $grand_total['grand_total'] - $post['down_payment'];
+            $sisa_piutang = $grand_total['grand_total'] - $post['down_payment'];
 
             $data = array(
                 'no_faktur' => $no_faktur,
                 'tanggal_jatuh_tempo' => date('Y-m-d H:i:s', strtotime($post['tanggal_jatuh_tempo'])),
                 'down_payment' => $post['down_payment'],
-                'sisa_pembayaran' => $sisa_pembayaran,
+                'total_tagihan' => $post['grand_total'],
+                'total_pembayaran' => $post['down_payment'],
+                'sisa_piutang' => $sisa_piutang,
                 'tanggal_input' =>  date("Y-m-d H:i:s"),
                 'user' => $this->session->userdata['username'],
             );
-
             $this->db->insert('master_piutang', $data);
+
+            $data = array(
+                'nomor_faktur' => $no_faktur,
+                'nominal_pembayaran' => $post['down_payment'],
+                'saldo_piutang' => $sisa_piutang,
+                'tanggal' => date("Y-m-d H:i:s"),
+                'user' => $this->session->userdata['username'],
+                'bukti' => '<?= base_url("manajemen_penjualan/penjualanbarang/invoice/' . $post['no_order_penjualan'] . '");?>',
+                'keterangan' => 'Down Payment',
+            );
+            $this->db->insert('detail_piutang', $data);
         }
         $this->_update_master_insentif($no_faktur);
         $this->_update_timeline_po($post, 'approve');

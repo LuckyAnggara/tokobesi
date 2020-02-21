@@ -230,9 +230,6 @@ class Model_Purchase_Order extends CI_Model
         $this->db->update('master_persediaan', $data);
     }
 
-    public function persediaan_temp_batal($value)
-    {
-    }
 
     public function get_data_keranjang_clear($no_order)
     {
@@ -248,10 +245,6 @@ class Model_Purchase_Order extends CI_Model
             $this->db->from('temp_tabel_keranjang_penjualan');
             $this->db->where('no_order_penjualan', $no_order);
             $data = $this->db->get()->result_array();
-
-            foreach ($data as $value) {
-                $this->persediaan_temp_batal($value);
-            }
             $this->db->where('no_order_penjualan', $no_order);
             $this->db->delete('temp_tabel_keranjang_penjualan');
         } else {

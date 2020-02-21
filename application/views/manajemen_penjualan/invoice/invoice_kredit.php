@@ -155,15 +155,15 @@
                                              <div class="clearfix row m-t-10">
                                                  <ul class="col-4" style="list-style-type:none">
                                                      <li class="text-left m-b-3">Nomor Faktur</li>
-                                                     <li class="text-left m-b-3">Tanggal</li>
+                                                     <!-- <li class="text-left m-b-3">Tanggal</li> -->
                                                  </ul>
                                                  <ul class="col-1" style="list-style-type:none">
                                                      <li class="text-left m-b-3"> : </li>
-                                                     <li class="text-left m-b-3"> : </li>
+                                                     <!-- <li class="text-left m-b-3"> : </li> -->
                                                  </ul>
                                                  <ul class="col-7" style="list-style-type:none">
                                                      <li class="text-left m-b-3">#<?= $data_order['no_faktur']; ?></li>
-                                                     <li class="text-left m-b-3"><?= $data_order['tanggal_input']; ?></li>
+                                                     <!-- <li class="text-left m-b-3"><?= $data_order['tanggal_input']; ?></li> -->
                                                  </ul>
                                              </div>
                                              <!-- end row -->
@@ -282,22 +282,22 @@
                                                  </ul>
                                                  <ul class="col-4" style="list-style-type:none">
                                                      <li class="text-right">
-                                                         <h4 class="text-right"><b><?= rupiah($data_order['sisa_pembayaran']); ?></h4></b>
+                                                         <h4 class="text-right"><b><?= rupiah($data_order['sisa_piutang']); ?></h4></b>
                                                      </li>
                                                  </ul>
-                                                 <ul class="col-10" style="list-style-type:none">
+                                                 <!-- <ul class="col-10" style="list-style-type:none">
                                                      <li class="text-right">
-                                                         <h4 class="text-right"><b>( <?= terbilang($data_order['sisa_pembayaran']); ?> Rupiah )</b></h4>
+                                                         <h4 class="text-right"><b>( <?= terbilang($data_order['sisa_piutang']); ?> Rupiah )</b></h4>
                                                      </li>
-                                                 </ul>
+                                                 </ul> -->
                                              </div>
                                          </div>
                                      </div>
                                      <hr>
                                      <div class="row text-center">
                                          <div class="col-6">
-                                             <p>Cashier</p> <br>
-                                             <p>( Udin )</p>
+                                             <p>Hormat Kami</p> <br>
+                                             <p>( <?= $data_order['nama_pegawai']; ?> )</p>
                                          </div>
                                          <!-- <div class="col-6">
                                                 <p>Pelanggan</p><br><br>

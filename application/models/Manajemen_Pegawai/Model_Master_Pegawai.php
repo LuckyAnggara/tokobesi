@@ -77,7 +77,7 @@ class Model_Master_Pegawai extends CI_Model
     {
         $post = $this->input->post();
         $config['upload_path']          = './assets/images/pegawai/';
-        $config['allowed_types']        = 'gif|jpg|png';
+        $config['allowed_types']        = 'jpeg|jpg|png';
         $config['file_name']            = $post['nip'];
         $config['overwrite']            = true;
         $config['max_size']             = 4096; // 4MB

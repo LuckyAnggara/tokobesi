@@ -24,11 +24,12 @@
                                 <li>
                                     <ul>
                                         <li><a href="<?= base_url('manajemen_penjualan/PenjualanBarang'); ?>">Penjualan Barang</a></li>
+                                        <li><a href="<?= base_url('manajemen_penjualan/DaftarTransaksiPenjualan'); ?>">Daftar Transaksi</a></li>
                                         <hr>
                                         <li><a href="<?= base_url('manajemen_penjualan/purchaseorderadmin'); ?>">P.O Sales - Admin</a></li>
                                         <hr>
-                                        <li><a href="<?= base_url('manajemen_penjualan/DaftarTransaksiPenjualan'); ?>">Daftar Transaksi</a></li>
                                         <li><a href="<?= base_url('manajemen_penjualan/returpenjualan'); ?>">Retur Transaksi Penjualan</a></li>
+                                        <li><a href="<?= base_url('manajemen_penjualan/returpenjualan/daftar_retur'); ?>">Daftar Retur Penjualan</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -39,8 +40,10 @@
                                 <li>
                                     <ul>
                                         <li><a href="<?= base_url('manajemen_pembelian/PembelianBarang'); ?>">Pembelian Barang</a></li>
-                                        <hr>
                                         <li><a href="<?= base_url('manajemen_pembelian/DaftarTransaksiPembelian'); ?>">Daftar Transaksi</a></li>
+                                        <hr>
+                                        <li><a href="<?= base_url('manajemen_pembelian/returpembelian'); ?>">Retur Transaksi Pembelian</a></li>
+                                        <li><a href="<?= base_url('manajemen_pembelian/returpembelian/daftar_retur'); ?>">Daftar Retur Pembelian</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -92,6 +95,18 @@
                                 </li>
                             </ul>
                         </li>
+
+                        <li class="has-submenu">
+                            <a href="#"><i class="mdi mdi-invert-colors"></i> <span> Master Keuangan </span> </a>
+                            <ul class="submenu">
+                                <li>
+                                    <ul>
+                                        <li><a href="<?= base_url('manajemen_keuangan/masterpiutang/daftar_piutang'); ?>">Master Piutang</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
 
 
                     </ul>

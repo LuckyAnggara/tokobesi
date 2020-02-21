@@ -163,11 +163,8 @@ if ($data_order['status_bayar'] == 1) {
                         </div>
 
                         <div class="dropdown-menu">
-                            <!-- item-->
                             <a class="dropdown-item"><b><u>Diskon</u></b> : <?= rupiah($data_order['diskon']); ?></a>
-                            <!-- item-->
                             <a class="dropdown-item"><b><u>Pajak</u></b> : <?= rupiah($data_order['pajak_masukan']); ?></a>
-                            <!-- item-->
                             <a class="dropdown-item"><b><u>Ongkos Kirim</u></b> : <?= rupiah($data_order['ongkir']); ?></a>
                         </div>
 

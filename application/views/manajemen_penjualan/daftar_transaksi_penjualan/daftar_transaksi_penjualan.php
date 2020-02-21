@@ -74,9 +74,10 @@
                                 <th>Total Penjualan</th>
                                 <th>Diskon</th>
                                 <th>Pajak</th>
+                                <th>Ongkir</th>
                                 <th>Grand Total</th>
                                 <th>Status Bayar</th>
-                                <th>User</th>
+                                <th>Admin / Cashier</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

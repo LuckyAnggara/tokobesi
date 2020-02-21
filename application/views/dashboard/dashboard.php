@@ -7,9 +7,44 @@
                         <h4 class="page-title">Dashboard Executive</h4>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card-box">
+                            <div class="dropdown pull-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="javascript:void(0);" class="dropdown-item">Action</a>
+                                </div>
+                            </div>
+                            <h4 class="header-title mt-0">Total Laba</h4>
+                            <div class="form-group row m-b-10 col-xl-6 col-sm-12 col-lg-6 col-md-6">
+                                <label class="col-2 col-form-label">Bulan</label>
+                                <div class="col-9">
+                                    <select class="form-control" id="laba_bulan">
+                                        <option value="1">Januari</option>
+                                        <option value="2">Februari</option>
+                                        <option value="3">Maret</option>
+                                        <option value="4">April</option>
+                                        <option value="5">Mei</option>
+                                        <option value="6">Juni</option>
+                                        <option value="7">Juli</option>
+                                        <option value="8">Agustus</option>
+                                        <option value="9">September</option>
+                                        <option value="10">Oktober</option>
+                                        <option value="11">November</option>
+                                        <option value="12">Desember</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <canvas id="myChart" height="100"></canvas>
+                        </div>
+                    </div><!-- end col -->
+                </div>
+                <!-- end row -->
 
                 <div class="row">
-
                     <div class="col-xl-3 col-md-6">
                         <div class="card-box">
                             <h4 class="header-title mt-0 m-b-30">Total Penjualan</h4>
@@ -29,7 +64,6 @@
 
                     <div class="col-xl-3 col-md-6">
                         <div class="card-box">
-
                             <h4 class="header-title mt-0 m-b-30">Total Pembelian</h4>
                             <div class="widget-box-2">
                                 <div class="widget-detail-2">
@@ -48,9 +82,7 @@
 
                     <div class="col-xl-3 col-md-6">
                         <div class="card-box">
-
                             <h4 class="header-title mt-0 m-b-30">Produk Terjual</h4>
-
                             <div class="widget-box-2">
                                 <div class="widget-detail-2">
                                     <div class="btn-group  pull-left">
@@ -116,12 +148,9 @@
                             </div>
                         </div>
                     </div><!-- end col -->
-
                     <div class="col-xl-8">
                         <div class="card-box">
-
                             <h4 class="header-title mt-0 m-b-30">Penjualan Terakhir</h4>
-
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered  dt-responsive nowrap" id="table-penjualan-terakhir">
                                     <thead class="thead-dark">
@@ -139,7 +168,6 @@
                             </div>
                         </div>
                     </div><!-- end col -->
-
                 </div>
                 <!-- end row -->
 
@@ -195,39 +223,41 @@
 
                 </div>
                 <!-- end row -->
-
                 <div class="row">
-                    <div class="col-xl-12">
+                    <div class="col-xl-6">
                         <div class="card-box">
-                            <div class="dropdown pull-right">
-                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
-                                    <i class="mdi mdi-dots-vertical"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                </div>
+                            <h4 class="header-title mt-0 m-b-30">Top Piutang</h4>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered  dt-responsive nowrap" id="table-piutang">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nomor Faktur</th>
+                                            <th>Tangal Jt Tempo</th>
+                                            <th>Saldo</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
                             </div>
-                            <h4 class="header-title mt-0">Total Laba</h4>
-                            <div class="form-group row m-b-10 col-xl-6 col-sm-12 col-lg-6 col-md-6">
-                                <label class="col-2 col-form-label">Bulan</label>
-                                <div class="col-9">
-                                    <select class="form-control" id="laba_bulan">
-                                        <option value="1">Januari</option>
-                                        <option value="2">Februari</option>
-                                        <option value="3">Maret</option>
-                                        <option value="4">April</option>
-                                        <option value="5">Mei</option>
-                                        <option value="6">Juni</option>
-                                        <option value="7">Juli</option>
-                                        <option value="8">Agustus</option>
-                                        <option value="9">September</option>
-                                        <option value="10">Oktober</option>
-                                        <option value="11">November</option>
-                                        <option value="12">Desember</option>
-                                    </select>
-                                </div>
+                        </div>
+                    </div><!-- end col -->
+                    <div class="col-xl-6">
+                        <div class="card-box">
+                            <h4 class="header-title mt-0 m-b-30">Top Utang</h4>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered  dt-responsive nowrap" id="table-hutang">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nomor Faktur</th>
+                                            <th>Tangal Jt Tempo</th>
+                                            <th>Saldo</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
                             </div>
-                            <canvas id="myChart" height="150"></canvas>
                         </div>
                     </div><!-- end col -->
                 </div>

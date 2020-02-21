@@ -7,6 +7,7 @@
 
 <!-- Sweet Alert Js  -->
 <script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
+<!-- <script src="<?= base_url('assets/'); ?>plugins/currency/currency.js"></script> -->
 <script src="<?= base_url('assets/'); ?>js/jquery.core.js"></script>
 <script src="<?= base_url('assets/'); ?>js/jquery.app.js"></script>
 <script src="<?= base_url('assets/'); ?>js/logout.js"></script>

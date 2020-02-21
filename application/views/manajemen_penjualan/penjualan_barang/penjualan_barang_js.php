@@ -386,6 +386,13 @@
           });
       }
     }
+
+    $('#datatable-master-pelanggan').on('click', 'tbody td', function() {
+      //get textContent of the TD
+      var data = this.textContent;
+      $('#pelanggan_modal').modal('hide');
+      $('#id_pelanggan').val(data);
+    })
   </script>
 
   <!-- Script Pencarian Barang Fitur Gambar -->
@@ -491,7 +498,6 @@
 
 
     $('#button-penjualan-add').on('click', function() {
-
       var kode_barang = $('#label_kode_barang').text();
       var jumlah = $('#qty').val();
       var harga_jual = $('#harga_jual').val();
@@ -523,6 +529,7 @@
       }
       $('#select_nama_barang').val(null).trigger('change');
       $('#cari_barang').val('');
+      $('#checkout').attr('disabled', false);
       $("#result_page").empty();
       display_none = '<div class="col-12 text-center"><p>Cari Data Barang di Kolom Pencarian</p></div>';
       $("#result_page").append(display_none);
@@ -1140,10 +1147,7 @@
             text: 'Tanggal jatuh tempo belum di Isi!!',
           });
         } else {
-
           proses();
-
-
         }
       } else {
         var status = 1
@@ -1165,6 +1169,7 @@
           confirmButtonText: 'Proses!'
         }).then((result) => {
           if (result.value) {
+            $.LoadingOverlay("show");
             $.ajax({
               url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/bayar_checkout/'); ?>",
               type: "post",
@@ -1181,10 +1186,6 @@
               },
               cache: false,
               async: false,
-              beforeSend: function() {
-                // Show image container
-                $.LoadingOverlay("show");
-              },
               success: function(data) {
                 if (data == "error") {
                   Swal.fire({

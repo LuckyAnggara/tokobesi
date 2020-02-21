@@ -344,7 +344,6 @@
     }
 
     $('#datatable-master-pelanggan').on('click', 'tbody td', function() {
-
         //get textContent of the TD
         var data = this.textContent;
         $('#pelanggan_modal').modal('hide');

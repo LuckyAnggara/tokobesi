@@ -103,7 +103,7 @@ class Model_Master_Barang extends CI_Model
     {
         $post = $this->input->post();
         $config['upload_path']          = './assets/images/barang/';
-        $config['allowed_types']        = 'gif|jpg|png';
+        $config['allowed_types']        = 'jpeg|jpg|png';
         $config['file_name']            = $post['edit_kode_barang'];
         $config['overwrite']            = true;
         $config['max_size']             = 4096; // 4MB

@@ -67,7 +67,7 @@
                 };
             };
             var role = "<?php echo $this->session->userdata('role'); ?>";
-            if (role == "Direktur") {
+            if (role == "1" || role == "2") {
                 var visible = true
             } else {
                 var visible = false
@@ -138,9 +138,8 @@
                             var display = formatRupiah(data.toString(), 'Rp.');
                             return display;
                         }
-                    },
-                    {
-                        data: "grand_total",
+                    }, {
+                        data: "ongkir",
                         targets: 7,
                         render: function(data, type, full, meta) {
                             var display = '<b>' + formatRupiah(data.toString(), 'Rp.'); + '</b>'
@@ -148,8 +147,16 @@
                         }
                     },
                     {
-                        data: "kredit",
+                        data: "grand_total",
                         targets: 8,
+                        render: function(data, type, full, meta) {
+                            var display = '<b>' + formatRupiah(data.toString(), 'Rp.'); + '</b>'
+                            return display;
+                        }
+                    },
+                    {
+                        data: "kredit",
+                        targets: 9,
                         render: function(data, type, full, meta) {
                             var date = new Date(data.tanggal_jatuh_tempo);
                             date = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
@@ -171,8 +178,8 @@
                     },
                     {
 
-                        data: "user",
-                        targets: 9,
+                        data: "nama_pegawai",
+                        targets: 10,
                         visible: visible,
                         render: function(data, type, full, meta) {
                             return data
@@ -180,7 +187,7 @@
                     },
                     {
                         data: "no_faktur",
-                        targets: 10,
+                        targets: 11,
                         render: function(data, type, full, meta) {
                             var display1 = '<a type="button" onClick = "view_detail(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Detail"><i class="fa fa-search" ></i> </a>';
                             var display2 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';

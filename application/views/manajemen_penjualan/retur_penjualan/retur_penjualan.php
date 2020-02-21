@@ -2,7 +2,7 @@
     <!-- Page-Title -->
     <div class="row">
         <div class="col-sm-12">
-            <h4 class="page-title">Transaksi Pembelian</h4>
+            <h4 class="page-title">Retur Penjualan</h4>
         </div>
     </div>
     <div class="row">
@@ -81,6 +81,22 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-sm-4 col-sm-form-label m-t-10">Total Penjualan</label>
+                    <div class="col-sm-8">
+                        <input id="total_penjualan" name="total_penjualan" type="text" class="form-control" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-sm-form-label m-t-10">Diskon</label>
+                    <div class="col-sm-3">
+                        <input id="diskon" name="diskon" type="text" class="form-control" readonly>
+                    </div>
+                    <label class="col-sm-2 col-sm-form-label m-t-10">Pajak</label>
+                    <div class="col-sm-3">
+                        <input id="pajak" name="pajak" type="text" class="form-control" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label class="col-sm-4 col-sm-form-label m-t-10">Grand Total</label>
                     <div class="col-sm-8">
                         <input id="grand_total" name="grand_total" type="text" class="form-control" readonly>
@@ -92,7 +108,7 @@
 
     </div>
 
-    <div class="row">
+    <div class="row" id="detail_div" hidden>
         <div class="col-12">
             <div class="card-box">
                 <div class="form-group row">
@@ -119,7 +135,7 @@
                         </div>
                     </div>
                     <div class="form-group col-md-2">
-                        <label class="col-form-label"><b>Harga</b></label>
+                        <label class="col-form-label"><b>Harga (Setelah Diskon)</b></label>
                         <hr>
                         <div id="harga">
                         </div>
@@ -130,18 +146,54 @@
                         <div id="qty_retur">
                         </div>
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-3">
                         <label class="col-form-label"><b>Keterangan</b></label>
                         <hr>
                         <div id="keterangan">
 
                         </div>
                     </div>
-                    <div class="form-group col-md-1">
-                        <label class="col-form-label"><b>Action</b></label>
+                </div>
+                <hr>
+                <div class="form-group col-md-12 text-right">
+                    <button id="hitung" class="btn btn-primary waves-effect waves-light" type="button"><i class="fa fa-calculator"> Hitung</i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card-box">
+                <div class="form-group row">
+                    <h4 class="m-t-0 header-title">Data Perhitungan Pengembalian</h4>
+                </div>
+                <hr>
+                <div class="form-row text-center">
+                    <div class="form-group col-md-4">
+                        <label class="col-form-label"><b>Sub Total</b></label>
                         <hr>
-                        <button class="btn btn-primary waves-effect waves-light" type="button"><i class="fa fa-edit"></i></button>
+                        <input id="retur_total" type="text" class="form-control" readonly>
                     </div>
+                    <div class="form-group col-md-2">
+                        <label id="retur_diskon" class="col-form-label"><b>Diskon</b></label>
+                        <hr>
+                        <input type="text" class="form-control" readonly>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="col-form-label"><b>Pajak</b></label>
+                        <hr>
+                        <input id="retur_pajak" type="text" class="form-control" readonly>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-form-label"><b>Grand Total</b></label>
+                        <hr>
+                        <input id="retur_grand_total" type="text" class="form-control" readonly>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group col-md-12 text-right">
+                    <button hidden id="proses" class="btn btn-success waves-effect waves-light" type="button"><i class="fa fa-check"> Proses</i></button>
                 </div>
             </div>
         </div>

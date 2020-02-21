@@ -12,8 +12,9 @@ class Model_Daftar_Transaksi_Pembelian extends CI_Model
 
     function get_data($post)
     {
-        $this->db->select('master_pembelian.*,master_supplier.nama_supplier ');
+        $this->db->select('master_pembelian.*,master_supplier.nama_supplier, master_user.nama as nama_pegawai');
         $this->db->from('master_pembelian');
+        $this->db->join('master_user', 'master_user.username = master_pembelian.user');
         $this->db->join('master_supplier', 'master_supplier.kode_supplier = master_pembelian.kode_supplier');
         if ($post['status_bayar'] == null) {
         } else {
