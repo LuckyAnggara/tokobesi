@@ -4,20 +4,21 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h4 class="page-title">Selamat Datang <u><b><?= $this->session->userdata['nama']; ?></b></u></h4>
+                        <h4 class="page-title">Selamat Datang <i><b><?= $this->session->userdata['nama']; ?></b></i></h4>
+
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xl-6">
                         <div class="card-box">
-                            <h4 class="header-title mt-0 m-b-30">Penjualan Terakhir</h4>
+                            <h4 class="header-title mt-0 m-b-30">Pembelian</h4>
                             <div class="table-responsive">
-                                <table class="table" id="table-penjualan-terakhir">
+                                <table class="table" id="table-pembelian-terakhir">
                                     <thead>
                                         <tr>
                                             <th>#</th>
                                             <th>##</th>
-                                            <th>Nomor Faktur</th>
+                                            <th>Nomor Transaksi</th>
                                             <th>Total</th>
                                             <th>Status</th>
                                         </tr>
@@ -29,22 +30,22 @@
                     </div><!-- end col -->
                     <div class="col-xl-6">
                         <div class="card-box">
-                            <div class="dropdown pull-right">
-                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
-                                    <i class="mdi mdi-dots-vertical"></i>
-                                </a>
+                            <h4 class="header-title mt-0 m-b-30">Daftar Pending P.O Sales</h4>
+                            <div class="table-responsive">
+                                <table class="table" id="table-po-sales">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>##</th>
+                                            <th>Nomor Transaksi</th>
+                                            <th>Total</th>
+                                            <th>Sales</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
-                            <h4 class="header-title mt-0">Top Produk</h4>
-                            <div class="form-group row m-b-10 col-xl-6 col-sm-12 col-lg-6 col-md-6">
-                                <label class="col-3 col-form-label">Waktu</label>
-                                <div class="col-9">
-                                    <select class="form-control" id="top_produk">
-                                        <option value="1">Hari Ini</option>
-                                        <option value="2">Bulan Ini</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <canvas id="topProdukChart"></canvas>
                         </div>
                     </div><!-- end col -->
                 </div>

@@ -18,8 +18,11 @@ class StokOpname extends CI_Controller
 
     public function index()
     {
-        $data['css'] = 'manajemen_persediaan/stok_opname/daftar_data/stok_opname_css';
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        $data['css'] = 'manajemen_persediaan/stok_opname/daftar_data/stok_opname_css';
+
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_persediaan/stok_opname/daftar_data/stok_opname');
@@ -34,8 +37,11 @@ class StokOpname extends CI_Controller
 
     public function tambah_data()
     {
-        $data['css'] = 'manajemen_persediaan/stok_opname/tambah_data/tambah_stok_opname_css';
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        $data['css'] = 'manajemen_persediaan/stok_opname/tambah_data/tambah_stok_opname_css';
+
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_persediaan/stok_opname/tambah_data/tambah_stok_opname');
@@ -49,9 +55,10 @@ class StokOpname extends CI_Controller
 
     public function detail_stokopname($no_ref)
     {
+        $data['menu'] = $this->modelSetting->data_menu();
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
 
         $data['css'] = 'manajemen_persediaan/stok_opname/detail_data/detail_stok_opname_css';
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['stok_opname'] = $this->modelMasterPersediaan->getDetailMasterStokOpname($no_ref);
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');

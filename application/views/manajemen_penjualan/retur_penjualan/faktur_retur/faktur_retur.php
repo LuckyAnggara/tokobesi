@@ -209,7 +209,7 @@
                                              <div class="clearfix m-t-10">
                                                  <h4 class="text-inverse"><b><u>Note</u></b></h4>
                                                  <p>
-                                                     <?= nl2br($setting_perusahaan['note_retur_faktur_jual']); ?>
+                                                     <?= nl2br($setting_perusahaan['catatan_retur_jual']); ?>
                                                  </p>
                                              </div>
                                          </div>

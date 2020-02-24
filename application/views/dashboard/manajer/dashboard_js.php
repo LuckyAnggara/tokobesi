@@ -1,5 +1,3 @@
-<script src="<?= base_url('assets/'); ?>plugins/jquery-loader/jquery.loading.js"></script>
-
 <script src="<?= base_url('assets/'); ?>plugins/counterup/waypoint.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/counterup/jquery.counterup.min.js"></script>
 

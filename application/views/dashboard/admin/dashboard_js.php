@@ -16,6 +16,7 @@
     $(document).ready(function() {
 
         initTableLatestOrder();
+        init_table()
     })
 
 
@@ -99,9 +100,11 @@
                 "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
             };
         };
-        var table = $('#table-penjualan-terakhir').DataTable({
+        var table = $('#table-pembelian-terakhir').DataTable({
             destroy: true,
             paging: false,
+            scrollY: '50vh',
+            scrollCollapse: true,
             "oLanguage": {
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
@@ -112,32 +115,32 @@
             "serverSide": false,
             "ordering": false,
             "ajax": {
-                "url": '<?= base_url("Dashboard/data_penjualan_terakhir_kasir/"); ?>',
+                "url": '<?= base_url("dashboard/data_pembelian_terakhir/"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
-                    data: "no_faktur",
+                    data: "nomor_transaksi",
                     targets: 0,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    data: "tanggal",
+                    data: "tanggal_transaksi",
                     targets: 1,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    data: "no_faktur",
+                    data: "nomor_transaksi",
                     targets: 2,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    data: "total_penjualan",
+                    data: "total_pembelian",
                     targets: 3,
                     render: function(data, type, full, meta) {
                         var display = formatRupiah(data, 'Rp.')
@@ -158,7 +161,7 @@
                                 '<a class="dropdown-item"><b><u>Jatuh Tempo</u></b></a>' +
                                 '<a class="dropdown-item">' + date + '</a>' +
                                 '<a class="dropdown-item"><b><u>Sisa</u></b></a>' +
-                                '<a class="dropdown-item">' + formatRupiah(data.sisa_piutang.toString(), 'Rp.') + '</a>' +
+                                '<a class="dropdown-item">' + formatRupiah(data.sisa_pembayaran.toString(), 'Rp.') + '</a>' +
                                 '</div></div>'
                         } else {
                             var display = '<span class="badge badge-success">Lunas</span>'
@@ -166,6 +169,125 @@
                         return display;
                     }
                 },
+            ],
+            "deferRender": true,
+            "rowCallback": function(row, data, iDisplayIndex) {
+                var info = this.fnPagingInfo();
+                var page = info.iPage;
+                var length = info.iLength;
+                var index = page * length + (iDisplayIndex + 1);
+                $('td:eq(0)', row).html(index);
+            }
+        });
+    }
+
+    function init_table(status = null, tanggal_awal = "01-01-" + new Date().getFullYear(), tanggal_akhir = "31-12-" + new Date().getFullYear()) {
+        var input = {
+            status: status,
+            tanggal_awal: tanggal_awal,
+            tanggal_akhir: tanggal_akhir
+        }
+
+        console.log(input)
+        $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+            return {
+                "iStart": oSettings._iDisplayStart,
+                "iEnd": oSettings.fnDisplayEnd(),
+                "iLength": oSettings._iDisplayLength,
+                "iTotal": oSettings.fnRecordsTotal(),
+                "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+            };
+        };
+        var role = "<?php echo $this->session->userdata('role'); ?>";
+        if (role == "Direktur") {
+            var visible = true
+        } else {
+            var visible = false
+        }
+        var table = $('#table-po-sales').DataTable({
+            destroy: true,
+            paging: true,
+            "oLanguage": {
+                sProcessing: "Sabar yah...",
+                sZeroRecords: "Tidak ada Data..."
+            },
+            scrollY: '50vh',
+            scrollCollapse: true,
+            "searching": true,
+            "processing": true,
+            "serverSide": false,
+            "ordering": false,
+            "ajax": {
+                "url": '<?= base_url("dashboard/getDataPendingPO/"); ?>',
+                "data": input,
+                "type": "POST",
+            },
+            "columnDefs": [{
+                    data: "id",
+                    targets: 0,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "tanggal_input",
+                    targets: 1,
+                    render: function(data, type, full, meta) {
+                        var date = new Date(data);
+                        date = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
+                        return date;
+                    }
+                },
+                {
+                    data: "no_order",
+                    targets: 2,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "grand_total",
+                    targets: 3,
+                    render: function(data, type, full, meta) {
+                        var display = formatRupiah(data, 'Rp.');
+                        return display;
+                    }
+                },
+                {
+                    data: "sales",
+                    targets: 4,
+                    render: function(data, type, full, meta) {
+                        return data.nama;
+                    }
+                },
+                {
+                    data: "status_po",
+                    targets: 5,
+                    render: function(data, type, full, meta) {
+                        if (data == "1") {
+                            var display = '<span class="badge badge-primary" >Waiting Approve</span>'
+                        } else if (data == "2") {
+                            var display = '<span class="badge badge-success" >Approve</span>'
+                        } else if (data == "3") {
+                            var display = '<span class="badge badge-warning" >Review Sales</span>'
+                        } else if (data == "99") {
+                            var display = '<span class="badge badge-danger" >Rejected</span>'
+
+                        }
+                        return display;
+                    }
+                },
+                {
+                    data: "no_order",
+                    targets: 6,
+                    render: function(data, type, full, meta) {
+                        var display1 = '<a type="button" href="<?= base_url('manajemen_penjualan/purchaseorderadmin/review/'); ?>' + data + '" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Review"><i class="fa fa-sticky-note-o" ></i> </a>';
+                        var display2 = '<a type="button" href="<?= base_url('manajemen_penjualan/reviewpurchaseorder/timeline/'); ?>' + data + '" class="btn btn-icon waves-effect waves-light btn-inverse btn-sm" data-toggle="tooltip" data-placement="left" title="Timeline"><i class="fa fa-clock-o"></i> </a>';
+                        return display1 + ' ' + display2;
+                    }
+                }
             ],
             "deferRender": true,
             "rowCallback": function(row, data, iDisplayIndex) {

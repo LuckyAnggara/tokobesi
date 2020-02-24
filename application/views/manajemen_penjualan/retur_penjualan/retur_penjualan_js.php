@@ -19,24 +19,32 @@
                 $.LoadingOverlay("show");
             },
             success: function(data) {
-                $('#id_pelanggan').val(data.id_pelanggan);
-                $('#nama_pelanggan').val(data.nama_pelanggan);
-                $('#nomor_telepon').val(data.nomor_telepon);
-                $('#alamat').val(data.alamat);
-                $('#tanggal_transaksi').val(data.tanggal_transaksi);
-                if (data.status_bayar == 1) {
-                    var display = "Lunas";
+                if (data == null) {
+                    Swal.fire(
+                        'Data tidak ditemukan !',
+                        'Silahkan Cek Kembali',
+                        'error'
+                    )
                 } else {
-                    var display = "Belum Lunas"
+                    $('#id_pelanggan').val(data.id_pelanggan);
+                    $('#nama_pelanggan').val(data.nama_pelanggan);
+                    $('#nomor_telepon').val(data.nomor_telepon);
+                    $('#alamat').val(data.alamat);
+                    $('#tanggal_transaksi').val(data.tanggal_transaksi);
+                    if (data.status_bayar == 1) {
+                        var display = "Lunas";
+                    } else {
+                        var display = "Belum Lunas"
+                    }
+                    $('#status_pembayaran').val(display);
+                    $('#total_penjualan').val(formatRupiah(data.total_penjualan, 'Rp.'));
+                    $('#diskon').val(formatRupiah(data.diskon, 'Rp.'));
+                    $('#pajak').val(formatRupiah(data.pajak_masukan, 'Rp.'));
+                    $('#grand_total').val(formatRupiah(data.grand_total, 'Rp.'));
+                    $('#data_div').attr('hidden', false);
+                    panggil_detail(nomor_faktur)
                 }
-                $('#status_pembayaran').val(display);
-                $('#total_penjualan').val(formatRupiah(data.total_penjualan, 'Rp.'));
-                $('#diskon').val(formatRupiah(data.diskon, 'Rp.'));
-                $('#pajak').val(formatRupiah(data.pajak_masukan, 'Rp.'));
-                $('#grand_total').val(formatRupiah(data.grand_total, 'Rp.'));
-                $('#data_div').attr('hidden', false);
 
-                panggil_detail(nomor_faktur)
             },
             complete: function() {
                 $.LoadingOverlay("hide");
@@ -192,12 +200,23 @@
             var harga = $('#harga' + i).val();
             var diskon = $('#harga' + i).data('diskon');
             var keterangan = $('#keterangan' + i).val();
-
             var retur_total = qty * normalrupiah(harga);
             if (qty > 0) {
                 do_retur_detail(id, nomor_faktur, kode_barang, keterangan, qty, harga, diskon, retur_total)
             }
         }
+
+        setTimeout(function() {
+            window.location.href = "<?php echo base_url('manajemen_penjualan/returpenjualan/faktur/'); ?>" + nomor_faktur;
+        }, 5000);
+        Swal.fire(
+            'Proses retur selesai !',
+            '',
+            'success'
+        ).then((result) => {
+            window.location.href = "<?php echo base_url('manajemen_penjualan/returpenjualan/faktur/'); ?>" + nomor_faktur;
+        });
+
     }
 
     function do_retur_master(nomor_faktur, id_pelanggan, retur_total, retur_diskon, retur_pajak, retur_grand_total) {

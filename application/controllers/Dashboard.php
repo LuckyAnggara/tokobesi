@@ -11,12 +11,13 @@ class Dashboard extends CI_Controller
 		$this->load->model('Manajemen_Penjualan/Model_Daftar_Transaksi_Penjualan', 'modelDaftarTransaksiPenjualan');
 		$this->load->model('Dashboard/Model_Dashboard', 'modelDashboard');
 		$this->load->model('Dashboard/Model_Dashboard_Kasir', 'modelDashboardKasir');
+		$this->load->model('Dashboard/Model_Dashboard_Admin', 'modelDashboardAdmin');
 		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("login"));
 		}
 	}
 
-	
+
 	// dashboard manajer
 	public function data()
 	{
@@ -145,8 +146,6 @@ class Dashboard extends CI_Controller
 	}
 
 	// dashboard kasir
-
-
 	public function data_penjualan_terakhir_kasir()
 	{
 		$database = $this->modelDashboardKasir->get_data_penjualan_terakhir();
@@ -161,6 +160,63 @@ class Dashboard extends CI_Controller
 		foreach ($data as $key => $value) {
 			if ($value['status_bayar'] == 0) {
 				$data =  $this->modelDaftarTransaksiPenjualan->get_data_kredit($value['no_faktur']);
+				$value['kredit'] = $data;
+				$output['data'][] = $value;
+			} else {
+				$value['kredit'] = "";
+				$output['data'][] = $value;
+			}
+		}
+
+		$output = json_encode($output);
+		echo $output;
+	}
+
+	// dashboard admin
+
+	public function getDataPendingPO()
+	{
+		$post = $this->input->post();
+		$database = $this->modelDashboardAdmin->get_data_po();
+		$data = $database->result_array();
+		$output = array(
+			// "draw" => $_POST['draw'],
+			"recordsTotal" => $this->db->count_all_results('master_penjualan'),
+			"recordsFiltered"  => $database->num_rows(),
+			"data" => array()
+		);
+
+		foreach ($data as $key => $value) {
+			$sales =  $this->modelDashboardAdmin->data_sales($value['sales']);
+			$admin =  $this->modelDashboardAdmin->data_admin($value['admin']);
+			$pelanggan =  $this->modelDashboardAdmin->data_pelanggan($value['id_pelanggan']);
+
+			$value['sales'] = $sales;
+			$value['admin'] = $admin;
+			$value['pelanggan'] = $pelanggan;
+
+			$output['data'][] = $value;
+		}
+
+		$output = json_encode($output);
+		echo $output;
+	}
+
+	public function data_pembelian_terakhir()
+	{
+		$post = $this->input->post();
+		$database = $this->modelDashboardAdmin->get_data($post);
+		$data = $database->result_array();
+		$output = array(
+			// "draw" => $_POST['draw'],
+			"recordsTotal" => $this->db->count_all_results('master_pembelian'),
+			"recordsFiltered"  => $database->num_rows(),
+			"data" => array()
+		);
+
+		foreach ($data as $key => $value) {
+			if ($value['status_bayar'] == 0) {
+				$data =  $this->modelDashboardAdmin->get_data_kredit($value['nomor_transaksi']);
 				$value['kredit'] = $data;
 				$output['data'][] = $value;
 			} else {
@@ -202,7 +258,7 @@ class Dashboard extends CI_Controller
 		if ($this->session->userdata('role') != "1") {
 			redirect(base_url("dashboard"));
 		} else {
-			
+
 			$this->load->view('template/template_header', $data);
 			$this->load->view('template/template_menu', $data);
 			$this->load->view('dashboard/kasir/dashboard', $data);
@@ -214,6 +270,25 @@ class Dashboard extends CI_Controller
 		}
 	}
 
+	public function admin()
+	{
+		$data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+		$data['menu'] = $this->modelSetting->data_menu();
+		$data['css'] = 'dashboard/admin/dashboard_css';
+		if ($this->session->userdata('role') != "2") {
+			redirect(base_url("dashboard"));
+		} else {
+
+			$this->load->view('template/template_header', $data);
+			$this->load->view('template/template_menu', $data);
+			$this->load->view('dashboard/admin/dashboard', $data);
+			$this->load->view('template/template_right');
+			$this->load->view('template/template_footer');
+			$this->load->view('template/template_js');
+			$this->load->view('dashboard/admin/dashboard_js');
+			$this->load->view('template/template_app_js');
+		}
+	}
 
 	public function manajer()
 	{
@@ -238,8 +313,4 @@ class Dashboard extends CI_Controller
 			$this->load->view('template/template_app_js');
 		}
 	}
-
-
-
-
 }

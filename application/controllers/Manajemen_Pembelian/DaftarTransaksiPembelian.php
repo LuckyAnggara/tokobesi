@@ -17,8 +17,11 @@ class DaftarTransaksiPembelian extends CI_Controller
 
     public function index()
     {
-        $data['css'] = 'manajemen_pembelian/daftar_transaksi_pembelian/daftar_transaksi_pembelian_css';
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        $data['css'] = 'manajemen_pembelian/daftar_transaksi_pembelian/daftar_transaksi_pembelian_css';
+
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_pembelian/daftar_transaksi_pembelian/daftar_transaksi_pembelian');

@@ -20,7 +20,9 @@ class ReviewPurchaseOrder extends CI_Controller
 
     public function timeline($string = null)
     {
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['css'] = 'manajemen_penjualan/purchase_order_sales/review/review_purchase_order_css';
         $data['timeline'] = $this->modelPO->timeline($string);
         $data['no_order'] = $string;

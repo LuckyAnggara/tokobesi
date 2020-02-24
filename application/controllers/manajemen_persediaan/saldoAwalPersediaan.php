@@ -17,8 +17,11 @@ class SaldoAwalPersediaan extends CI_Controller
 
     public function index()
     {
-        $data['css'] = 'manajemen_persediaan/saldo_awal_persediaan/saldo_awal_persediaan_css';
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        $data['css'] = 'manajemen_persediaan/saldo_awal_persediaan/saldo_awal_persediaan_css';
+
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_persediaan/saldo_awal_persediaan/saldo_awal_persediaan');

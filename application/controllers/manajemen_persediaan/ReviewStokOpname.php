@@ -18,8 +18,11 @@ class ReviewStokOpname extends CI_Controller
 
     public function index()
     {
-        $data['css'] = 'manajemen_persediaan/stok_opname/review_data/review_stok_opname_css';
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        $data['css'] = 'manajemen_persediaan/stok_opname/review_data/review_stok_opname_css';
+
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_persediaan/stok_opname/review_data/review_stok_opname');
@@ -47,9 +50,12 @@ class ReviewStokOpname extends CI_Controller
 
     public function Review_Detail($no_ref)
     {
-        $data['css'] = 'manajemen_persediaan/stok_opname/review_data/review_detail_data/review_detail_stok_opname_css';
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['stok_opname'] = $this->modelMasterPersediaan->getDetailMasterStokOpname($no_ref);
+
+        $data['css'] = 'manajemen_persediaan/stok_opname/review_data/review_detail_data/review_detail_stok_opname_css';
 
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');

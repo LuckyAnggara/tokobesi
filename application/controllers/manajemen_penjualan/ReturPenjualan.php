@@ -17,7 +17,9 @@ class ReturPenjualan extends CI_Controller
 
     public function index()
     {
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['css'] = 'manajemen_penjualan/retur_penjualan/retur_penjualan_css';
 
         $this->load->view('template/template_header', $data);
@@ -64,6 +66,7 @@ class ReturPenjualan extends CI_Controller
 
     public function daftar_retur()
     {
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['css'] = 'manajemen_penjualan/retur_penjualan/daftar_retur_penjualan/daftar_retur_penjualan_css';
 
@@ -102,14 +105,17 @@ class ReturPenjualan extends CI_Controller
 
     function faktur($nomor_faktur)
     {
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['data_order'] = $this->modelReturPenjualan->get_data_faktur($nomor_faktur);
+
         $data['detail_order'] = $this->modelReturPenjualan->get_detail_faktur($nomor_faktur);
         $data['css'] = 'manajemen_penjualan/retur_penjualan/faktur_retur/faktur_retur_css';
         $data['title'] = "Cetak Faktur";
         if (!isset($data['data_order']['nomor_faktur'])) {
             $this->load->view('template/template_header', $data);
-            $this->load->view('template/template_menu');
+            $this->load->view('template/template_menu', $data);
             $this->load->view('template/template_page_not_found');
             $this->load->view('template/template_right');
             $this->load->view('template/template_footer');
@@ -117,7 +123,7 @@ class ReturPenjualan extends CI_Controller
             $this->load->view('template/template_app_js');
         } else {
             $this->load->view('template/template_header', $data);
-            $this->load->view('template/template_menu');
+            $this->load->view('template/template_menu', $data);
             $this->load->view('manajemen_penjualan/retur_penjualan/faktur_retur/faktur_retur', $data);
             $this->load->view('template/template_right');
             $this->load->view('template/template_footer');

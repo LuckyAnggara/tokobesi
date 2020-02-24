@@ -17,8 +17,11 @@ class MasterMerekBarang extends CI_Controller
 
     public function index()
     {
-        $data['css'] = 'manajemen_data/master_merek_barang/master_merek_barang_css';
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        $data['css'] = 'manajemen_data/master_merek_barang/master_merek_barang_css';
+
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_data/master_merek_barang/master_merek_barang');

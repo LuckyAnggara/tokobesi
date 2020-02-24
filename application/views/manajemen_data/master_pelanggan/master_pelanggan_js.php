@@ -10,10 +10,7 @@
 <script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
 
 <!-- Chart JS -->
-<script src="<?= base_url('assets/'); ?>plugins/chart.js/Chart.bundle.min.js"></script>
-
-<!-- Sweet Alert Js  -->
-<script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/chart.js/chart.bundle.min.js"></script>
 
 <!-- Select2 js -->
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
@@ -146,7 +143,7 @@
                     sProcessing: "Sabar yah...",
                     sZeroRecords: "Tidak ada Data..."
                 },
-                "searching": false,
+                "searching": true,
                 "processing": true,
                 "serverSide": false,
                 "ajax": {

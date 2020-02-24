@@ -18,9 +18,12 @@ class KartuPersediaan extends CI_Controller
 
     public function index()
     {
+        $data['menu'] = $this->modelSetting->data_menu();
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['kartu'] = $this->modelPersediaan->get_kartu_persediaan();
         $data['css'] = 'manajemen_persediaan/kartu_persediaan/kartu_persediaan_css';
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_persediaan/kartu_persediaan/kartu_persediaan', $data);
@@ -48,17 +51,16 @@ class KartuPersediaan extends CI_Controller
             "data" =>  array()
         );
 
-        if($data == ""){
+        if ($data == "") {
             $output['data'] = "";
-        }else{
+        } else {
             foreach ($data as $data2) {
                 $value['detail'] = $data2;
                 $output['data'][] = $value;
             }
-            
         }
 
-       
+
         $output = json_encode($output);
         echo $output;
     }
@@ -84,5 +86,4 @@ class KartuPersediaan extends CI_Controller
         $output = json_encode($output);
         echo $output;
     }
-
 }

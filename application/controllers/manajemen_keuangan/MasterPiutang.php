@@ -18,6 +18,7 @@ class MasterPiutang extends CI_Controller
 
     public function daftar_piutang()
     {
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['css'] = 'manajemen_keuangan/master_piutang/daftar_piutang/daftar_piutang_css';
 
@@ -60,14 +61,18 @@ class MasterPiutang extends CI_Controller
 
     public function detail_piutang($no_faktur)
     {
+
+        $data['menu'] = $this->modelSetting->data_menu();
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['data_order'] = $this->modelDetailTransaksiPenjualan->get_data($no_faktur);
         $data['detail_order'] = $this->modelDetailTransaksiPenjualan->get_detail($no_faktur);
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['css'] =  'manajemen_keuangan/master_piutang/detail_piutang/detail_piutang_css';
 
         if (!isset($data['data_order']['no_faktur'])) {
             $this->load->view('template/template_header', $data);
-            $this->load->view('template/template_menu');
+            $this->load->view('template/template_menu', $data);
             $this->load->view('template/template_page_not_found');
             $this->load->view('template/template_right');
             $this->load->view('template/template_footer');
@@ -76,7 +81,8 @@ class MasterPiutang extends CI_Controller
         } else {
 
             $this->load->view('template/template_header', $data);
-            $this->load->view('template/template_menu');
+            $this->load->view('template/template_menu', $data);
+
             $this->load->view('manajemen_keuangan/master_piutang/detail_piutang/detail_piutang', $data);
             $this->load->view('template/template_right');
             $this->load->view('manajemen_keuangan/master_piutang/detail_piutang/detail_piutang_modal');

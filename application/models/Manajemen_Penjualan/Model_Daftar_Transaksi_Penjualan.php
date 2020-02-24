@@ -20,6 +20,10 @@ class Model_Daftar_Transaksi_Penjualan extends CI_Model
         } else {
             $this->db->where('status_bayar', $post['status_bayar']);
         }
+        if ($this->session->userdata['role'] != 4 || $this->session->userdata['role'] = !5) {
+            $this->db->where('master_penjualan.user', $this->session->userdata['username']);
+        }
+
         $this->db->where('tanggal_transaksi >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
         $this->db->where('tanggal_transaksi <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
         $this->db->order_by('tanggal_transaksi', 'DESC');

@@ -17,9 +17,12 @@ class DetailTransaksiPenjualan extends CI_Controller
 
     public function nomor_faktur($no_faktur)
     {
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+        $data['menu'] = $this->modelSetting->data_menu();
+
         $data['data_order'] = $this->modelDetailTransaksiPenjualan->get_data($no_faktur);
         $data['detail_order'] = $this->modelDetailTransaksiPenjualan->get_detail($no_faktur);
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['css'] = 'manajemen_penjualan/detail_transaksi_penjualan/detail_transaksi_penjualan_css';
 
         if (!isset($data['data_order']['no_faktur'])) {

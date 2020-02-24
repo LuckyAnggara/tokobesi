@@ -17,8 +17,11 @@ class MasterSatuan extends CI_Controller
 
     public function index()
     {
-        $data['css'] = 'manajemen_data/master_satuan/master_satuan_css';
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        $data['css'] = 'manajemen_data/master_satuan/master_satuan_css';
+
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_data/master_satuan/master_satuan');

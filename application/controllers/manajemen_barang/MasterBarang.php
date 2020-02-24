@@ -20,13 +20,16 @@ class MasterBarang extends CI_Controller
 
     public function index()
     {
+        $data['menu'] = $this->modelSetting->data_menu();
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['tipe'] = $this->modelBarang->get_data_tjms('master_tipe_barang');
         $data['jenis'] = $this->modelBarang->get_data_tjms('master_jenis_barang');
         $data['merek'] = $this->modelBarang->get_data_tjms('master_merek_barang');
         $data['satuan'] = $this->modelBarang->get_data_tjms('master_satuan_barang');
         $data['supplier'] = $this->modelBarang->get_data_tjms('master_supplier');
         $data['css'] = 'manajemen_barang/master_barang/master_barang_css';
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['title'] = "Data Barang";
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
@@ -140,6 +143,8 @@ class MasterBarang extends CI_Controller
 
     public function Detail_Barang($kode_barang)
     {
+        $data['menu'] = $this->modelSetting->data_menu();
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
 
         $data['detail'] = $this->modelDetailBarang->get_data_for_detail($kode_barang);
 
@@ -148,7 +153,7 @@ class MasterBarang extends CI_Controller
         $data['merek'] = $this->modelBarang->get_data_tjms('master_merek_barang');
         $data['satuan'] = $this->modelBarang->get_data_tjms('master_satuan_barang');
         $data['supplier'] = $this->modelBarang->get_data_tjms('master_supplier');
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['css'] = 'manajemen_barang/master_barang/master_barang_css';
         $data['title'] = "Data Barang " . $kode_barang;
         $data['kode_barang'] = $kode_barang;

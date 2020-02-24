@@ -18,8 +18,10 @@ class PurchaseOrderAdmin extends CI_Controller
 
     public function index()
     {
-        $data['css'] = 'manajemen_penjualan/purchase_order_admin/purchase_order_admin_css';
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        $data['css'] = 'manajemen_penjualan/purchase_order_admin/purchase_order_admin_css';
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_penjualan/purchase_order_admin/purchase_order_admin');
@@ -73,11 +75,12 @@ class PurchaseOrderAdmin extends CI_Controller
 
     public function review($no_order)
     {
-        $data['css'] = 'manajemen_penjualan/purchase_order_admin/review/review_purchase_order_admin_css';
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['data_po'] = $this->modelPOAdmin->getDataMasterPO($no_order);
         $data['review_order'] = $this->modelPOAdmin->getDataReview($no_order);
 
+        $data['css'] = 'manajemen_penjualan/purchase_order_admin/review/review_purchase_order_admin_css';
 
         if (!isset($data['data_po']['no_order'])) {
             $this->load->view('template/template_header', $data);

@@ -5,19 +5,19 @@
                     <ul class="navigation-menu">
                         <?php foreach ($menu as $key => $value) : ?>
                             <li class="has-submenu">
-                                <a href="<?= $value['link']; ?>"><i class="<?= $value['icon']; ?>"></i> <span> <?= $value['nama_menu']; ?> </span> </a>
-                                <?php if($value['sub_menu'] !== null){;?>
-                                <ul class="submenu">
-                                    <li>
-                                        <ul>
-                                            <?php foreach ($value['sub_menu'] as $key => $value) : ?>
-                                                <li><a href="<?= base_url($value['link']); ?>"><?= $value['nama_submenu']; ?></a></li>
-                                            <?php endforeach; ?>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                <?php };?>
-                                
+                                <a href="<?= base_url($value['link']); ?>"><i class="<?= $value['icon']; ?>"></i> <span> <?= $value['nama_menu']; ?> </span> </a>
+                                <?php if ($value['sub_menu'] !== null) {; ?>
+                                    <ul class="submenu">
+                                        <li>
+                                            <ul>
+                                                <?php foreach ($value['sub_menu'] as $key => $value) : ?>
+                                                    <li><a href="<?= base_url($value['link']); ?>"><?= $value['nama_submenu']; ?></a></li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                <?php }; ?>
+
                             </li>
                         <?php endforeach; ?>
 

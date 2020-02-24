@@ -87,7 +87,7 @@
             };
         };
         var role = "<?php echo $this->session->userdata('role'); ?>";
-        if (role == "1" || role == "2") {
+        if (role == "4" || role == "5") {
             var visible = true
         } else {
             var visible = false

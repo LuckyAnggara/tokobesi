@@ -18,10 +18,12 @@ class PembelianBarang extends CI_Controller
 
     public function index()
     {
-        $data['no_order_pembelian'] = $this->_generateNomor();
-        $data['css'] = 'manajemen_pembelian/pembelian_barang/pembelian_barang_css';
+
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-        $data['title'] = "Pembelian Barang";
+        $data['no_order_pembelian'] = $this->_generateNomor();
+
+        $data['css'] = 'manajemen_pembelian/pembelian_barang/pembelian_barang_css';
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_pembelian/pembelian_barang/pembelian_barang', $data);
