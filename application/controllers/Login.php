@@ -22,7 +22,8 @@ class Login extends CI_Controller
 	{
 		$post = $this->input->post();
 		$this->db->where('username', $post["username"]);
-		$user = $this->db->get('master_user')->row();
+		//$user = $this->db->get('master_user')->row();
+		$user = $this->modelLogin->detail_user($post["username"]);
 
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
@@ -37,12 +38,18 @@ class Login extends CI_Controller
 					$data_session = array(
 						'username' => $username,
 						'nama' => $user->nama,
-						'status' => "login",
+						'status' => "login",	
 						'role' => $user->role,
 						'avatar' => $user->avatar,
+						'menu' => $user->menu,
 						'faktur_prefix' => $this->modelSetting->prefixFaktur()
 					);
 					$this->session->set_userdata($data_session);
+					switch ($user->role) {
+						case '1':
+							echo "kasir";
+							break;
+					}
 					return true;
 				} else {
 					echo "false";

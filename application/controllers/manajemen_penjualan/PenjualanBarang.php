@@ -45,6 +45,7 @@ class PenjualanBarang extends CI_Controller
     public function index()
     {
         $this->init_no_order();
+		$data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['no_order'] = $this->session->userdata('no_order_dummy');
         $data['css'] = 'manajemen_penjualan/penjualan_barang/penjualan_barang_css';

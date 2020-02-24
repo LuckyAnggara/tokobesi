@@ -26,4 +26,13 @@ class Model_Login extends CI_Model
         $this->db->where('username', $username);
         $this->db->update('master_user', $data);
     }
+
+    function detail_user($username)
+    {
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->join('tabel_role', 'tabel_role.id = master_user.role');
+        $this->db->where('username', $username);
+        return $this->db->get()->row();
+    }
 }

@@ -3,7 +3,25 @@
                 <div id="navigation">
                     <!-- Navigation Menu-->
                     <ul class="navigation-menu">
-                        <li class="has-submenu">
+                        <?php foreach ($menu as $key => $value) : ?>
+                            <li class="has-submenu">
+                                <a href="<?= $value['link']; ?>"><i class="<?= $value['icon']; ?>"></i> <span> <?= $value['nama_menu']; ?> </span> </a>
+                                <?php if($value['sub_menu'] !== null){;?>
+                                <ul class="submenu">
+                                    <li>
+                                        <ul>
+                                            <?php foreach ($value['sub_menu'] as $key => $value) : ?>
+                                                <li><a href="<?= base_url($value['link']); ?>"><?= $value['nama_submenu']; ?></a></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <?php };?>
+                                
+                            </li>
+                        <?php endforeach; ?>
+
+                        <!-- <li class="has-submenu">
                             <a href="<?= base_url('Dashboard'); ?>"><i class="mdi mdi-view-dashboard"></i> <span> Dashboard </span> </a>
                         </li>
                         <li class="has-submenu">
@@ -23,7 +41,7 @@
                             <ul class="submenu">
                                 <li>
                                     <ul>
-                                        <li><a href="<?= base_url('manajemen_penjualan/PenjualanBarang'); ?>">Penjualan Barang</a></li>
+                                        <li><a href="<?= base_url('manajemen_penjualan/penjualanbarang'); ?>">Penjualan Barang</a></li>
                                         <li><a href="<?= base_url('manajemen_penjualan/DaftarTransaksiPenjualan'); ?>">Daftar Transaksi</a></li>
                                         <hr>
                                         <li><a href="<?= base_url('manajemen_penjualan/purchaseorderadmin'); ?>">P.O Sales - Admin</a></li>
@@ -109,7 +127,7 @@
 
                         <li class="has-submenu">
                             <a href="<?= base_url('setting/setting'); ?>"> <i class="mdi mdi-invert-colors"></i> <span> Setting </span> </a>
-                        </li>
+                        </li> -->
 
 
 

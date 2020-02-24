@@ -10,27 +10,14 @@ class Dashboard extends CI_Controller
 		$this->load->model('Setting/Model_Setting', 'modelSetting');
 		$this->load->model('Manajemen_Penjualan/Model_Daftar_Transaksi_Penjualan', 'modelDaftarTransaksiPenjualan');
 		$this->load->model('Dashboard/Model_Dashboard', 'modelDashboard');
+		$this->load->model('Dashboard/Model_Dashboard_Kasir', 'modelDashboardKasir');
 		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("login"));
 		}
 	}
 
-
-	public function index()
-	{
-		$data['css'] = 'dashboard/dashboard_css';
-		$data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-		$data['sales'] = $this->modelDashboard->getDataSales();
-		$this->load->view('template/template_header', $data);
-		$this->load->view('template/template_menu');
-		$this->load->view('dashboard/dashboard', $data);
-		$this->load->view('template/template_right');
-		$this->load->view('template/template_footer');
-		$this->load->view('template/template_js');
-		$this->load->view('dashboard/dashboard_js');
-		$this->load->view('template/template_app_js');
-	}
-
+	
+	// dashboard manajer
 	public function data()
 	{
 		$data['transaksi'] = $this->modelDashboard->data_transaksi(date("Y-m-d"));
@@ -156,4 +143,103 @@ class Dashboard extends CI_Controller
 		$output = json_encode($data);
 		echo $output;
 	}
+
+	// dashboard kasir
+
+
+	public function data_penjualan_terakhir_kasir()
+	{
+		$database = $this->modelDashboardKasir->get_data_penjualan_terakhir();
+		$data = $database->result_array();
+		$output = array(
+			// "draw" => $_POST['draw'],
+			"recordsTotal" => $this->db->count_all_results('master_penjualan'),
+			"recordsFiltered"  => $database->num_rows(),
+			"data" => array()
+		);
+
+		foreach ($data as $key => $value) {
+			if ($value['status_bayar'] == 0) {
+				$data =  $this->modelDaftarTransaksiPenjualan->get_data_kredit($value['no_faktur']);
+				$value['kredit'] = $data;
+				$output['data'][] = $value;
+			} else {
+				$value['kredit'] = "";
+				$output['data'][] = $value;
+			}
+		}
+
+		$output = json_encode($output);
+		echo $output;
+	}
+
+
+	// VIEW
+	public function index()
+	{
+		if ($this->session->userdata('role') == "1") {
+			redirect(base_url("dashboard/kasir"));
+		}
+		if ($this->session->userdata('role') == "2") {
+			redirect(base_url("dashboard/admin"));
+		}
+		if ($this->session->userdata('role') == "3") {
+			redirect(base_url("dashboard/sales"));
+		}
+		if ($this->session->userdata('role') == "4") {
+			redirect(base_url("dashboard/supervisor"));
+		}
+		if ($this->session->userdata('role') == "5") {
+			redirect(base_url("dashboard/manajer"));
+		}
+	}
+
+	public function kasir()
+	{
+		$data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+		$data['menu'] = $this->modelSetting->data_menu();
+		$data['css'] = 'dashboard/kasir/dashboard_css';
+		if ($this->session->userdata('role') != "1") {
+			redirect(base_url("dashboard"));
+		} else {
+			
+			$this->load->view('template/template_header', $data);
+			$this->load->view('template/template_menu', $data);
+			$this->load->view('dashboard/kasir/dashboard', $data);
+			$this->load->view('template/template_right');
+			$this->load->view('template/template_footer');
+			$this->load->view('template/template_js');
+			$this->load->view('dashboard/kasir/dashboard_js');
+			$this->load->view('template/template_app_js');
+		}
+	}
+
+
+	public function manajer()
+	{
+
+		$data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+		$data['menu'] = $this->modelSetting->data_menu();
+
+		$data['css'] = 'dashboard/manajer/dashboard_css';
+
+		if ($this->session->userdata('role') != "5") {
+			redirect(base_url("dashboard"));
+		} else {
+
+			$data['sales'] = $this->modelDashboard->getDataSales();
+			$this->load->view('template/template_header', $data);
+			$this->load->view('template/template_menu', $data);
+			$this->load->view('dashboard/manajer/dashboard', $data);
+			$this->load->view('template/template_right');
+			$this->load->view('template/template_footer');
+			$this->load->view('template/template_js');
+			$this->load->view('dashboard/manajer/dashboard_js');
+			$this->load->view('template/template_app_js');
+		}
+	}
+
+
+
+
 }

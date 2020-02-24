@@ -150,7 +150,7 @@
                                     });
                                     $('#password').val('');
                                 } else {
-                                    window.location.href = "<?php echo base_url('dashboard'); ?>";
+                                    window.location.href = "<?php echo base_url('dashboard/'); ?>" + data;
                                 }
                             }
                         }

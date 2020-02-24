@@ -178,9 +178,6 @@
                                 <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
                                     <i class="mdi mdi-dots-vertical"></i>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="javascript:void(0);" class="dropdown-item">Lihat lebih.</a>
-                                </div>
                             </div>
                             <h4 class="header-title mt-0">Top Produk</h4>
                             <div class="form-group row m-b-10 col-xl-6 col-sm-12 col-lg-6 col-md-6">
@@ -202,9 +199,6 @@
                                 <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
                                     <i class="mdi mdi-dots-vertical"></i>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="javascript:void(0);" class="dropdown-item">Lihat lebih.</a>
-                                </div>
                             </div>
                             <h4 class="header-title mt-0">Produktifitas Sales</h4>
                             <div class="form-group row m-b-10 col-xl-6 col-sm-12 col-lg-6 col-md-6">

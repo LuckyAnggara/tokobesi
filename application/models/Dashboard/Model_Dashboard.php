@@ -464,4 +464,6 @@ class Model_Dashboard extends CI_Model
         $this->db->order_by('bulan', 'DESC');
         return $this->db->get()->result_array();
     }
+
+
 }

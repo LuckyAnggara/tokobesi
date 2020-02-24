@@ -12,15 +12,8 @@ class Model_Setting extends CI_Model
     function get_data_perusahaan()
     {
         $this->db->select('*');
-        $this->db->from('master_setting');
-        $data = $this->db->get()->result_array();
-
-        $output = array();
-        foreach ($data as $key => $value) {
-            $output[$value['nama_setting']] = $value['value'];
-        }
-
-        return $output;
+        $this->db->from('setting_perusahaan');
+        return $this->db->get()->row_array();
     }
 
     function prefixFaktur()
@@ -79,53 +72,4 @@ class Model_Setting extends CI_Model
     }
 
 
-    // script confirm perubahan setting
-
-    function confirm_setting($key, $value)
-    {
-        $data = [
-            'value' => $value
-        ];
-
-        $this->db->where('nama_setting', $key);
-        $this->db->update('master_setting', $data);
-    }
-
-    function data_menu()
-    {
-        $role = $this->session->userdata('menu');
-        $role_menu = explode(',',$role);
-        
-       
-        foreach ($role_menu as $key => $value) {
-
-           $menu = $this->_push_menu($value);
-
-           $menu['sub_menu'] = $this->_push_sub_menu($menu['id']);
-
-           $main_menu[] = $menu;
-        }
-        return $main_menu;
-    }
-
-    private function _push_menu($id){
-        $this->db->select('*');
-        $this->db->from('tabel_menu');
-        $this->db->where('id', $id);
-        return $this->db->get()->row_array();
-    }
-
-    private function _push_sub_menu($id)
-    {
-        $this->db->select('*');
-        $this->db->from('tabel_submenu');
-        $this->db->where('main_menu', $id);
-        $data = $this->db->get();
-        $cek = $data->num_rows();
-        if($cek > 0){
-            return  $data->result_array();
-        }
-
-
-    }
 }
