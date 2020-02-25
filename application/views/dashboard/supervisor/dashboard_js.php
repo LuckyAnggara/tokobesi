@@ -15,8 +15,8 @@
 <script>
     $(document).ready(function() {
 
-        initTableLatestOrder();
-        init_table()
+        init_pending_task()
+        init_table_persediaan()
     })
 
 
@@ -85,10 +85,9 @@
     }
 </script>
 
-<!-- SCRIPT LATEST ORDER PENJUALAN -->
-
+<!-- script table pending task -->
 <script>
-    function initTableLatestOrder() {
+    function init_pending_task() {
         $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
             return {
                 "iStart": oSettings._iDisplayStart,
@@ -100,112 +99,7 @@
                 "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
             };
         };
-        var table = $('#table-pembelian-terakhir').DataTable({
-            destroy: true,
-            scrollY: '50vh',
-            scrollCollapse: true,
-            "oLanguage": {
-                sProcessing: "Sabar yah...",
-                sZeroRecords: "Tidak ada Data..."
-            },
-            "bInfo": false,
-            "paging": false,
-            "searching": true,
-            "processing": true,
-            "serverSide": false,
-            "ordering": false,
-            "ajax": {
-                "url": '<?= base_url("dashboard/data_pembelian_terakhir/"); ?>',
-                "type": "POST",
-            },
-            "columnDefs": [{
-                    data: "nomor_transaksi",
-                    targets: 0,
-                    render: function(data, type, full, meta) {
-                        return data;
-                    }
-                },
-                {
-                    data: "tanggal_transaksi",
-                    targets: 1,
-                    render: function(data, type, full, meta) {
-                        return data;
-                    }
-                },
-                {
-                    data: "nomor_transaksi",
-                    targets: 2,
-                    render: function(data, type, full, meta) {
-                        return data;
-                    }
-                },
-                {
-                    data: "total_pembelian",
-                    targets: 3,
-                    render: function(data, type, full, meta) {
-                        var display = formatRupiah(data, 'Rp.')
-                        return display;
-                    }
-                },
-                {
-                    data: "kredit",
-                    targets: 4,
-                    render: function(data, type, full, meta) {
-                        var date = new Date(data.tanggal_jatuh_tempo);
-                        date = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
-                        if (data !== "") {
-                            var display =
-                                '<div class="btn-group">' +
-                                '<span class="badge badge-danger dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Belum Lunas <span class="caret"></span></span>' +
-                                '<div class="dropdown-menu">' +
-                                '<a class="dropdown-item"><b><u>Jatuh Tempo</u></b></a>' +
-                                '<a class="dropdown-item">' + date + '</a>' +
-                                '<a class="dropdown-item"><b><u>Sisa</u></b></a>' +
-                                '<a class="dropdown-item">' + formatRupiah(data.sisa_pembayaran.toString(), 'Rp.') + '</a>' +
-                                '</div></div>'
-                        } else {
-                            var display = '<span class="badge badge-success">Lunas</span>'
-                        }
-                        return display;
-                    }
-                },
-            ],
-            "deferRender": true,
-            "rowCallback": function(row, data, iDisplayIndex) {
-                var info = this.fnPagingInfo();
-                var page = info.iPage;
-                var length = info.iLength;
-                var index = page * length + (iDisplayIndex + 1);
-                $('td:eq(0)', row).html(index);
-            }
-        });
-    }
-
-    function init_table(status = null, tanggal_awal = "01-01-" + new Date().getFullYear(), tanggal_akhir = "31-12-" + new Date().getFullYear()) {
-        var input = {
-            status: status,
-            tanggal_awal: tanggal_awal,
-            tanggal_akhir: tanggal_akhir
-        }
-
-        $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
-            return {
-                "iStart": oSettings._iDisplayStart,
-                "iEnd": oSettings.fnDisplayEnd(),
-                "iLength": oSettings._iDisplayLength,
-                "iTotal": oSettings.fnRecordsTotal(),
-                "iFilteredTotal": oSettings.fnRecordsDisplay(),
-                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
-                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
-            };
-        };
-        var role = "<?php echo $this->session->userdata('role'); ?>";
-        if (role == "Direktur") {
-            var visible = true
-        } else {
-            var visible = false
-        }
-        var table = $('#table-po-sales').DataTable({
+        var table = $('#datatable-daftar-pending').DataTable({
             destroy: true,
             "oLanguage": {
                 sProcessing: "Sabar yah...",
@@ -213,79 +107,44 @@
             },
             scrollY: '50vh',
             scrollCollapse: true,
-            "searching": true,
+            "searching": false,
             "processing": true,
             "bInfo": false,
             "paging": false,
             "serverSide": false,
             "ordering": false,
             "ajax": {
-                "url": '<?= base_url("dashboard/getDataPendingPO/"); ?>',
-                "data": input,
+                "url": '<?= base_url("dashboard/data_pending_spv/"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
-                    data: "id",
+                    data: "tanggal",
                     targets: 0,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    data: "tanggal_input",
+                    data: "tanggal",
                     targets: 1,
                     render: function(data, type, full, meta) {
-                        var date = new Date(data);
-                        date = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
-                        return date;
+                        return data;
                     }
                 },
                 {
-                    data: "no_order",
+                    data: "task",
                     targets: 2,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    data: "grand_total",
+                    data: 'link',
                     targets: 3,
                     render: function(data, type, full, meta) {
-                        var display = formatRupiah(data, 'Rp.');
-                        return display;
-                    }
-                },
-                {
-                    data: "sales",
-                    targets: 4,
-                    render: function(data, type, full, meta) {
-                        return data.nama;
-                    }
-                },
-                {
-                    data: "status_po",
-                    targets: 5,
-                    render: function(data, type, full, meta) {
-                        if (data == "1") {
-                            var display = '<span class="badge badge-primary" >Waiting Approve</span>'
-                        } else if (data == "2") {
-                            var display = '<span class="badge badge-success" >Approve</span>'
-                        } else if (data == "3") {
-                            var display = '<span class="badge badge-warning" >Review Sales</span>'
-                        } else if (data == "99") {
-                            var display = '<span class="badge badge-danger" >Rejected</span>'
+                        var display = '<a type="button" onClick = "detail_data(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-search" ></i> </a>';
 
-                        }
                         return display;
-                    }
-                },
-                {
-                    data: "no_order",
-                    targets: 6,
-                    render: function(data, type, full, meta) {
-                        var display1 = '<a type="button" href="<?= base_url('manajemen_penjualan/purchaseorderadmin/review/'); ?>' + data + '" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Review"><i class="fa fa-sticky-note-o" ></i> </a>';
-                        var display2 = '<a type="button" href="<?= base_url('manajemen_penjualan/reviewpurchaseorder/timeline/'); ?>' + data + '" class="btn btn-icon waves-effect waves-light btn-inverse btn-sm" data-toggle="tooltip" data-placement="left" title="Timeline"><i class="fa fa-clock-o"></i> </a>';
-                        return display1 + ' ' + display2;
                     }
                 }
             ],
@@ -299,4 +158,159 @@
             }
         });
     }
+
+    function detail_data(data) {
+        window.location.href = "<?= base_url(''); ?>" + data
+    }
+</script>
+
+<!-- Script Minimal Persediaan -->
+
+<script>
+    function init_table_persediaan(status = 0, tanggal_awal = "01-01-" + new Date().getFullYear(), tanggal_akhir = "31-12-" + new Date().getFullYear()) {
+        var input = {
+            status: status,
+            tanggal_awal: tanggal_awal,
+            tanggal_akhir: tanggal_akhir
+        }
+        $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+            return {
+                "iStart": oSettings._iDisplayStart,
+                "iEnd": oSettings.fnDisplayEnd(),
+                "iLength": oSettings._iDisplayLength,
+                "iTotal": oSettings.fnRecordsTotal(),
+                "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+            };
+        };
+
+        //Init Datatabel Master Stock Persediaan 
+        var table = $('#datatable-master-persediaan').DataTable({
+            "destroy": true,
+            "oLanguage": {
+                sProcessing: "Sabar yah...",
+                sZeroRecords: "Tidak ada Data..."
+            },
+            "scrollY": '50vh',
+            "scrollCollapse": true,
+            "bInfo": false,
+            "paging": false,
+            "searching": false,
+            "info": false,
+            "processing": true,
+            "serverSide": false,
+            "ajax": {
+                "url": '<?= base_url("manajemen_persediaan/MasterPersediaan/getData"); ?>',
+                "type": "POST",
+                "data": input,
+            },
+            "columnDefs": [{
+                    data: "kode_barang",
+                    width: 20,
+                    targets: 0,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "kode_barang",
+                    width: 80,
+                    targets: 1,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "nama_barang",
+                    width: 200,
+                    targets: 2,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "saldo_akhir",
+                    width: 20,
+                    targets: 3,
+                    render: function(data, type, full, meta) {
+                        if (data == null) {
+                            data = "0";
+                        }
+                        return formatSatuan(data.toString());
+                    }
+                },
+            ],
+            "rowCallback": function(row, data, iDisplayIndex) {
+                var info = this.fnPagingInfo();
+                var page = info.iPage;
+                var length = info.iLength;
+                var index = page * length + (iDisplayIndex + 1);
+                $('td:eq(0)', row).html(index);
+            }
+        });
+    }
+</script>
+
+
+
+
+<!-- Chart Js Top Produk -->
+
+<script>
+    $(document).ready(function() {
+        var ctx = document.getElementById('topProdukChart').getContext('2d');
+        var myDoughnutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: []
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+            },
+        });
+        $('#top_produk').change(function() {
+            var data = $(this).val();
+            updateDonutTopProduk(data)
+        }); // kenapa di tambah 1, karena default nya januari itu 0 biar ga binggung di tambah 1 aja
+        $('#top_produk').val(2).trigger('change'); // init laba dari auto pilih bulan berjalan
+        function updateDonutTopProduk(option) {
+
+            var label;
+            var total;
+            var harian;
+            // init data dan label
+            $.ajax({
+                url: "<?= Base_url('dashboard/data_top_produk'); ?>",
+                async: false,
+                type: "post",
+                data: {
+                    option: option
+                },
+                dataType: "JSON",
+                beforeSend: function() {
+
+                },
+                success: function(data) {
+                    label = data.nama_barang;
+                    value = data.jumlah_penjualan;
+                }
+            });
+            myDoughnutChart.data.labels = label;
+            myDoughnutChart.data.datasets[0] = {
+                data: value,
+                backgroundColor: [
+                    "#188ae2",
+                    "#10c469",
+                    "#f9c851"
+                ],
+                hoverBackgroundColor: [
+                    "#188ae2",
+                    "#10c469",
+                    "#f9c851"
+                ],
+                hoverBorderColor: "#fff"
+            }
+
+            myDoughnutChart.update();
+        }
+    })
 </script>

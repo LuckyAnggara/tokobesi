@@ -141,7 +141,7 @@
                                     text: 'User tidak Aktif',
                                 });
                             } else {
-                                if (data == "false") {
+                                if (data == "false" || data == "falsenone") {
                                     $('#loginForm').LoadingOverlay("hide");
                                     Swal.fire({
                                         icon: 'error',

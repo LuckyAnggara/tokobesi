@@ -6,7 +6,14 @@ class Model_Penjualan_Barang extends CI_Model
     function __construct()
     {
         parent::__construct();
-        $this->load->helper(array('form', 'url', 'string'));
+        $this->load->model('Setting/Model_Faktur', 'modelFaktur');
+        $this->load->helper(array('form', 'url','string'));
+    }
+
+    function fakturfaktur()
+    {
+        $no_faktur = $this->modelFaktur->set_faktur();
+        return $no_faktur;
     }
 
     function get_data_by_id($id_pelanggan)
@@ -17,8 +24,6 @@ class Model_Penjualan_Barang extends CI_Model
 
         return $this->db->get()->row_array();
     }
-
-
 
     function get_data_barang($string)
     {
@@ -313,7 +318,7 @@ class Model_Penjualan_Barang extends CI_Model
             $id_pelanggan = $post['id_pelanggan'];
         }
 
-        $no_faktur = $this->_generate_no_faktur();
+        $no_faktur = $this->modelFaktur->set_faktur();
 
         $data = array(
             'no_order_penjualan' => $post['no_order_penjualan'],

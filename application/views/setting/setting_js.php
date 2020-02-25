@@ -95,12 +95,11 @@
                 },
                 {
                     value: 2,
+                    text: 'Nomor Urut'
+                }, {
+                    value: 3,
                     text: 'Tanggal + Nomor Urut'
                 },
-                {
-                    value: 3,
-                    text: 'Nomor Urut'
-                }
             ]
         });
 
@@ -166,7 +165,7 @@
     });
 
     function confirm_setting() {
-        var data = $('.edit_input, .edit_textarea, #prefix_nomor, .edit_number, #notifikasi').editable('getValue');
+        var data = $('.edit_input, .edit_textarea, #prefix_nomor, .edit_number, #notifikasi, #nomor_faktur, #password_harga').editable('getValue');
         $.ajax({
             url: '<?= base_url("setting/setting/confirmSetting/"); ?>',
             type: "POST",
@@ -202,10 +201,40 @@
                 $('#alamat_email').editable('setValue', data.alamat_email)
                 $('#prefix_faktur').editable('setValue', data.prefix_faktur)
                 $('#nomor_faktur').editable('setValue', data.nomor_faktur)
+                $('#catatan_faktur_cash').editable('setValue', data.catatan_faktur_cash)
+                $('#catatan_faktur_kredit').editable('setValue', data.catatan_faktur_kredit)
+                $('#catatan_retur_jual').editable('setValue', data.catatan_retur_jual)
+                $('#catatan_retur_beli').editable('setValue', data.catatan_retur_beli)
+                $('#password_harga').editable('setValue', data.password_harga)
+
                 $('#gambar_logo').attr('src', '<?= base_url('assets/images/'); ?>' + data.logo_perusahaan)
+
+                $('#prefix_example').text(data.prefix_faktur);
             }
         });
     }
+
+    $('#prefix_faktur').on('save', function(e, params) {
+        $('#prefix_example').text(params.newValue);
+    });
+
+    $('#nomor_faktur').on('save', function(e, params) {
+        console.log(params.newValue);
+
+        $.ajax({
+            url: '<?= base_url("setting/faktur/set_dummy/"); ?>',
+            type: "post",
+            data: {
+                id: params.newValue,
+            },
+            cache: false,
+            async: false,
+            success: function(data) {
+                console.log(data);
+                $('#prefix_nomor_example').text(data);
+            }
+        })
+    });
 </script>
 
 <!-- EDIT GAMBAR -->

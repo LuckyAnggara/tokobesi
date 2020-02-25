@@ -18,11 +18,15 @@
 
         setData();
         initTableLatestOrder();
+        init_tabel_piutang();
+        init_tabel_utang();
+        init_table_persediaan();
         // trigger top sales berdasarkan bulan berjalan
         var dt = new Date();
         var d = dt.getMonth() + 1; // kenapa di tambah 1, karena default nya januari itu 0 biar ga binggung di tambah 1 aja
         $('#top_sales_bulan').val(d).trigger('change'); // init sales dari auto pilih bulan berjalan
         counterJalan();
+
     })
 
     function setData() {
@@ -121,7 +125,6 @@
         }
     }
 
-
     function counterJalan() {
         $('.counter').counterUp();
         $('.counterRupiah').counterUp({
@@ -160,7 +163,6 @@
         });
 
     }
-
 
     function formatRupiah(angka, prefix) {
         var number_string = angka.replace(/[^,\d]/g, '').toString(),
@@ -592,4 +594,246 @@
             barChart.update();
         }
     })
+</script>
+
+<!-- tabel hutang dan piutang -->
+
+<script>
+    function init_tabel_piutang() {
+        $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+            return {
+                "iStart": oSettings._iDisplayStart,
+                "iEnd": oSettings.fnDisplayEnd(),
+                "iLength": oSettings._iDisplayLength,
+                "iTotal": oSettings.fnRecordsTotal(),
+                "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+            };
+        };
+        var table = $('#table-piutang').DataTable({
+            destroy: true,
+            paging: true,
+            "oLanguage": {
+                sProcessing: "Sabar yah...",
+                sZeroRecords: "Tidak ada Data..."
+            },
+            "scrollY": '50vh',
+            "scrollCollapse": true,
+            "searching": true,
+            "bInfo": false,
+            "paging": false,
+            "searching": false,
+            "ordering": false,
+            "info": false,
+            "processing": true,
+            "serverSide": false,
+            "ajax": {
+                "url": '<?= base_url("dashboard/data_piutang"); ?>',
+                "type": "POST",
+            },
+            "columnDefs": [{
+                    data: "id",
+                    targets: 0,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "no_faktur",
+                    targets: 1,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "tanggal_tempo",
+                    targets: 2,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "sisa_piutang",
+                    targets: 3,
+                    render: function(data, type, full, meta) {
+                        var display = '<span class="text-danger"><b>' + formatRupiah(data.toString(), 'Rp.') + '</b></span>'
+                        return display;
+                    }
+                },
+            ],
+            "deferRender": true,
+            "rowCallback": function(row, data, iDisplayIndex) {
+                var info = this.fnPagingInfo();
+                var page = info.iPage;
+                var length = info.iLength;
+                var index = page * length + (iDisplayIndex + 1);
+                $('td:eq(0)', row).html(index);
+            }
+        });
+    }
+
+    function init_tabel_utang() {
+        $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+            return {
+                "iStart": oSettings._iDisplayStart,
+                "iEnd": oSettings.fnDisplayEnd(),
+                "iLength": oSettings._iDisplayLength,
+                "iTotal": oSettings.fnRecordsTotal(),
+                "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+            };
+        };
+        var table = $('#table-utang').DataTable({
+            destroy: true,
+            paging: true,
+            "oLanguage": {
+                sProcessing: "Sabar yah...",
+                sZeroRecords: "Tidak ada Data..."
+            },
+            "scrollY": '50vh',
+            "scrollCollapse": true,
+            "searching": true,
+            "bInfo": false,
+            "paging": false,
+            "searching": false,
+            "ordering": false,
+            "info": false,
+            "processing": true,
+            "serverSide": false,
+            "ajax": {
+                "url": '<?= base_url("dashboard/data_utang"); ?>',
+                "type": "POST",
+            },
+            "columnDefs": [{
+                    data: "id",
+                    targets: 0,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "no_faktur",
+                    targets: 1,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "tanggal_tempo",
+                    targets: 2,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "sisa_utang",
+                    targets: 3,
+                    render: function(data, type, full, meta) {
+                        var display = '<span class="text-danger"><b>' + formatRupiah(data.toString(), 'Rp.') + '</b></span>'
+                        return display;
+                    }
+                },
+            ],
+            "deferRender": true,
+            "rowCallback": function(row, data, iDisplayIndex) {
+                var info = this.fnPagingInfo();
+                var page = info.iPage;
+                var length = info.iLength;
+                var index = page * length + (iDisplayIndex + 1);
+                $('td:eq(0)', row).html(index);
+            }
+        });
+    }
+</script>
+
+
+<!-- Script Minimal Persediaan -->
+
+<script>
+    function init_table_persediaan(status = 0, tanggal_awal = "01-01-" + new Date().getFullYear(), tanggal_akhir = "31-12-" + new Date().getFullYear()) {
+        var input = {
+            status: status,
+            tanggal_awal: tanggal_awal,
+            tanggal_akhir: tanggal_akhir
+        }
+        $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+            return {
+                "iStart": oSettings._iDisplayStart,
+                "iEnd": oSettings.fnDisplayEnd(),
+                "iLength": oSettings._iDisplayLength,
+                "iTotal": oSettings.fnRecordsTotal(),
+                "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+            };
+        };
+
+        //Init Datatabel Master Stock Persediaan 
+        var table = $('#datatable-master-persediaan').DataTable({
+            "destroy": true,
+            "oLanguage": {
+                sProcessing: "Sabar yah...",
+                sZeroRecords: "Tidak ada Data..."
+            },
+            "order": [3, 'asc'],
+            "scrollY": '50vh',
+            "scrollCollapse": true,
+            "bInfo": false,
+            "paging": false,
+            "searching": false,
+            "info": false,
+            "processing": true,
+            "serverSide": false,
+            "ajax": {
+                "url": '<?= base_url("manajemen_persediaan/MasterPersediaan/getData"); ?>',
+                "type": "POST",
+                "data": input,
+            },
+            "columnDefs": [{
+                    data: "kode_barang",
+                    width: 20,
+                    targets: 0,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "kode_barang",
+                    width: 80,
+                    targets: 1,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "nama_barang",
+                    width: 200,
+                    targets: 2,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "saldo_akhir",
+                    width: 20,
+                    targets: 3,
+                    render: function(data, type, full, meta) {
+                        if (data == null) {
+                            data = "0";
+                        }
+                        return formatSatuan(data.toString());
+                    }
+                },
+            ],
+            "rowCallback": function(row, data, iDisplayIndex) {
+                var info = this.fnPagingInfo();
+                var page = info.iPage;
+                var length = info.iLength;
+                var index = page * length + (iDisplayIndex + 1);
+                $('td:eq(0)', row).html(index);
+            }
+        });
+    }
 </script>

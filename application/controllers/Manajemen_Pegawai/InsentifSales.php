@@ -11,31 +11,32 @@ class InsentifSales extends CI_Controller
         $this->load->model('Setting/Model_Setting', 'modelSetting');
         $this->load->model('Setting/Model_Pusher', 'modelPusher');
 
-        if ($this->session->userdata('status') != "login") {
+        if ($this->session->userdata('status') != "login" ) {
             redirect(base_url("login"));
-        } else {
-            if ($this->session->userdata('role') != "2") {
-                redirect(base_url("index.html"));
-                echo $this->session->userdata('role');
-            }
-        }
+        } 
     }
 
     public function index()
     {
-        $data['css'] = 'manajemen_pegawai/insentif_sales/insentif_sales_css';
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-        $this->load->view('template/template_header', $data);
-        $this->load->view('template/template_menu');
-        $this->load->view('manajemen_pegawai/insentif_sales/insentif_sales');
-        $this->load->view('template/template_right');
-        $this->load->view('template/template_footer');
-        $this->load->view('template/template_js');
-        $this->load->view('manajemen_pegawai/insentif_sales/insentif_sales_js');
-        $this->load->view('template/template_app_js');
+        $role = $this->session->userdata('role');
+        if (($role < 4)) {
+            redirect(base_url("dashboard"));
+        } else {
+            $data['menu'] = $this->modelSetting->data_menu();
+            $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+            $data['css'] = 'manajemen_pegawai/insentif_sales/insentif_sales_css';
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('manajemen_pegawai/insentif_sales/insentif_sales');
+            $this->load->view('template/template_right');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('manajemen_pegawai/insentif_sales/insentif_sales_js');
+            $this->load->view('template/template_app_js');
+        }
+      
     }
-
-
 
     public function getData()
     {

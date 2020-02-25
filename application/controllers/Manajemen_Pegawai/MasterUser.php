@@ -13,18 +13,20 @@ class MasterUser extends CI_Controller
 
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
-        }else{
-            if ($this->session->userdata('role') != "Spv") {
+        } else {
+            $role = $this->session->userdata('role');
+            if ($role  < 4) {
                 redirect(base_url("index.html"));
-                echo $this->session->userdata('role');
             }
         }
     }
 
     public function index()
     {
-        $data['css'] = 'manajemen_pegawai/master_user/master_user_css';
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+        
+        $data['css'] = 'manajemen_pegawai/master_user/master_user_css';
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_pegawai/master_user/master_user');

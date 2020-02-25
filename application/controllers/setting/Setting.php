@@ -18,8 +18,11 @@ class Setting extends CI_Controller
 
     public function index()
     {
-        $data['css'] = 'setting/setting_css';
+		$data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+        
+        $data['css'] = 'setting/setting_css';
+
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
         $this->load->view('setting/setting');

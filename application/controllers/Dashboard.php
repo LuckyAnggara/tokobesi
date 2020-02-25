@@ -12,6 +12,7 @@ class Dashboard extends CI_Controller
 		$this->load->model('Dashboard/Model_Dashboard', 'modelDashboard');
 		$this->load->model('Dashboard/Model_Dashboard_Kasir', 'modelDashboardKasir');
 		$this->load->model('Dashboard/Model_Dashboard_Admin', 'modelDashboardAdmin');
+		$this->load->model('Dashboard/Model_Dashboard_Supervisor', 'modelDashboardSpv');
 		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("login"));
 		}
@@ -229,7 +230,84 @@ class Dashboard extends CI_Controller
 		echo $output;
 	}
 
+	// dashboard spv
+	public function data_pending_spv()
+	{
+		$output = array(
+			// "draw" => $_POST['draw'],
+			"recordsTotal" => 0,
+			"recordsFiltered"  => 0,
+			"data" => array()
+		);
 
+		$data_stok_opname = $this->modelDashboardSpv->data_pending_stok_opname();
+		$data_insentif = $this->modelDashboardSpv->data_pending_insentif();
+		foreach ($data_stok_opname as $key => $value) {
+			$pending = [
+				'tanggal' => $value['tanggal'],
+				'task' => 'Stok Opname No Ref # ' . $value['nomor_referensi'],
+				'link' => 'manajemen_persediaan/reviewstokopname/review_detail/' . $value['nomor_referensi'],
+			];
+
+			$ouput['data'][] = $pending;
+		}
+
+		foreach ($data_insentif as $key => $value) {
+			$pending = [
+				'tanggal' => $value['tanggal'],
+				'task' => 'Isentif a.n ' . $value['nama'],
+				'link' => 'manajemen_pegawai/insentifsales/',
+			];
+			$ouput['data'][] = $pending;
+
+		}
+
+		$output = json_encode($ouput);
+		echo $output;
+	}
+
+	// dashboard manajer
+
+	public function data_piutang()
+	{
+		$post = $this->input->post();
+		$database = $this->modelDashboard->get_data_piutang($post);
+		$data = $database->result_array();
+		$output = array(
+			// "draw" => $_POST['draw'],
+			"recordsTotal" => $this->db->count_all_results('master_piutang'),
+			"recordsFiltered"  => $database->num_rows(),
+			"data" => array()
+		);
+
+		foreach ($data as $key => $value) {
+			$output['data'][] = $value;
+		}
+		$output = json_encode($output);
+		echo $output;
+	}
+
+	public function data_utang()
+	{
+		$post = $this->input->post();
+		$database = $this->modelDashboard->get_data_utang($post);
+		$data = $database->result_array();
+		$output = array(
+			// "draw" => $_POST['draw'],
+			"recordsTotal" => $this->db->count_all_results('master_utang'),
+			"recordsFiltered"  => $database->num_rows(),
+			"data" => array()
+		);
+
+		foreach ($data as $key => $value) {
+			$output['data'][] = $value;
+		}
+		$output = json_encode($output);
+		echo $output;
+	}
+
+
+	
 	// VIEW
 	public function index()
 	{
@@ -258,7 +336,6 @@ class Dashboard extends CI_Controller
 		if ($this->session->userdata('role') != "1") {
 			redirect(base_url("dashboard"));
 		} else {
-
 			$this->load->view('template/template_header', $data);
 			$this->load->view('template/template_menu', $data);
 			$this->load->view('dashboard/kasir/dashboard', $data);
@@ -278,7 +355,6 @@ class Dashboard extends CI_Controller
 		if ($this->session->userdata('role') != "2") {
 			redirect(base_url("dashboard"));
 		} else {
-
 			$this->load->view('template/template_header', $data);
 			$this->load->view('template/template_menu', $data);
 			$this->load->view('dashboard/admin/dashboard', $data);
@@ -286,6 +362,44 @@ class Dashboard extends CI_Controller
 			$this->load->view('template/template_footer');
 			$this->load->view('template/template_js');
 			$this->load->view('dashboard/admin/dashboard_js');
+			$this->load->view('template/template_app_js');
+		}
+	}
+
+	public function sales()
+	{
+		$data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+		$data['menu'] = $this->modelSetting->data_menu();
+		$data['css'] = 'dashboard/sales/dashboard_css';
+		if ($this->session->userdata('role') != "3") {
+			redirect(base_url("dashboard"));
+		} else {
+			$this->load->view('template/template_header', $data);
+			$this->load->view('template/template_menu', $data);
+			$this->load->view('dashboard/sales/dashboard', $data);
+			$this->load->view('template/template_right');
+			$this->load->view('template/template_footer');
+			$this->load->view('template/template_js');
+			$this->load->view('dashboard/sales/dashboard_js');
+			$this->load->view('template/template_app_js');
+		}
+	}
+
+	public function supervisor()
+	{
+		$data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+		$data['menu'] = $this->modelSetting->data_menu();
+		$data['css'] = 'dashboard/supervisor/dashboard_css';
+		if ($this->session->userdata('role') != "4") {
+			redirect(base_url("dashboard"));
+		} else {
+			$this->load->view('template/template_header', $data);
+			$this->load->view('template/template_menu', $data);
+			$this->load->view('dashboard/supervisor/dashboard', $data);
+			$this->load->view('template/template_right');
+			$this->load->view('template/template_footer');
+			$this->load->view('template/template_js');
+			$this->load->view('dashboard/supervisor/dashboard_js');
 			$this->load->view('template/template_app_js');
 		}
 	}

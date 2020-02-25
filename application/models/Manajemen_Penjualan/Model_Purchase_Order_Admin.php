@@ -6,6 +6,7 @@ class Model_Purchase_Order_Admin extends CI_Model
     function __construct()
     {
         parent::__construct();
+        $this->load->model('Setting/Model_Faktur', 'modelFaktur');
         $this->load->helper(array('form', 'url'));
         $this->load->helper('string');
     }
@@ -131,7 +132,7 @@ class Model_Purchase_Order_Admin extends CI_Model
             $id_pelanggan = $post['id_pelanggan'];
         }
 
-        $no_faktur = $this->_generate_no_faktur($post);
+        $no_faktur = $this->modelFaktur->set_faktur();
         $tanggal_transaksi = date('Y-m-d H:i:s', strtotime($post['tanggal_faktur']));
         $user = $this->session->userdata['username'];
 

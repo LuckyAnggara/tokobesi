@@ -83,6 +83,10 @@ class Model_Setting extends CI_Model
 
     function confirm_setting($key, $value)
     {
+        if(is_array($value))
+        {
+            $value = join(',', $value);   
+        }
         $data = [
             'value' => $value
         ];

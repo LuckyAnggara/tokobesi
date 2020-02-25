@@ -14,7 +14,7 @@ class Model_Insentif_Sales extends CI_Model
 
     function get_data()
     {
-        $this->db->select('master_insentif.id, master_insentif.nomor_faktur, master_insentif.gross_penjualan,  master_insentif.total_insentif, master_insentif.status, DATE_FORMAT(master_insentif.tanggal,"%d-%b-%Y") as tanggal, master_user.nama as nama_sales');
+        $this->db->select('master_insentif.id, master_insentif.nomor_faktur, master_insentif.gross_penjualan,  master_insentif.total_insentif, master_insentif.status, DATE_FORMAT(master_insentif.tanggal,"%d %b %Y") as tanggal, master_user.nama as nama_sales');
         $this->db->from('master_insentif');
         $this->db->join('master_user', 'master_user.username = master_insentif.sales');
         $output = $this->db->get();

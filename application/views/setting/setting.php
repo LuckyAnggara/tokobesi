@@ -92,6 +92,14 @@
                                                     <td>Catatan Faktur Kredit</td>
                                                     <td><a href="javascript:void(0);" id="catatan_faktur_kredit" class="edit_textarea"></a></td>
                                                 </tr>
+                                                <tr>
+                                                    <td>Catatan Faktur Retur Penjualan</td>
+                                                    <td><a href="javascript:void(0);" id="catatan_retur_jual" class="edit_textarea"></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Catatan Faktur Retur Pembelian</td>
+                                                    <td><a href="javascript:void(0);" id="catatan_retur_beli" class="edit_textarea"></a></td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -99,7 +107,7 @@
                                         <h4 class="header-title mt-0 m-b-30">Preview Faktur</h4>
                                         <div class="widget-chart-1">
                                             <div class="widget-detail-1">
-                                                <h2 class="p-t-10 mb-0"> BBM120412049 </h2>
+                                                <h2 class="p-t-10 mb-0"><span class="text-dark" id="prefix_example"></span><span id="prefix_nomor_example" class="text-danger"></span></h2>
                                             </div>
                                         </div>
                                     </div>
@@ -110,7 +118,7 @@
                                     <tbody>
                                         <tr>
                                             <td width="35%">Komisi Sales</td>
-                                            <td width="65%"><a href="javascript:void(0);" id="komisi_sales">0</a></td>
+                                            <td width="65%"><a href="javascript:void(0);" id="komisi_sales" class="edit_input">0</a></td>
                                         </tr>
                                         <tr>
                                             <td>Password Harga</td>
@@ -128,7 +136,7 @@
                                         </tr>
                                         <tr>
                                             <td>Frequensi (Dalam Menit)</td>
-                                            <td><a href="javascript:void(0);" class="edit_number" id="notifikasi_timer"></a></td>
+                                            <td><a href="javascript:void(0);" class="edit_number" id="frekuensi_notifikasi"></a></td>
                                         </tr>
                                     </tbody>
                                 </table>

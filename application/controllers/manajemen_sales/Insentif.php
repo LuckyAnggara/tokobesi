@@ -22,6 +22,7 @@ class Insentif extends CI_Controller
 
     public function index()
     {
+		$data['menu'] = $this->modelSetting->data_menu();
         $data['css'] = 'manajemen_sales/insentif/insentif_css';
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $this->load->view('template/template_header', $data);

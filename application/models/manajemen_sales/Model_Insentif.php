@@ -14,7 +14,7 @@ class Model_Insentif extends CI_Model
 
     function get_data($bulan)
     {
-        $this->db->select('*');
+        $this->db->select('*, DATE_FORMAT(tanggal, "%d %b %Y") as tanggal');
         $this->db->from('master_insentif');
         $this->db->where('EXTRACT( MONTH FROM `tanggal`) = ', $bulan);
         $this->db->where('sales', $this->session->userdata['username']);

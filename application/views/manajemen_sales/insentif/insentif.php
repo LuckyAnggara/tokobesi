@@ -51,7 +51,7 @@
         <div class="col-12">
             <div class="card-box">
                 <div class="form-group">
-                    <label><b>Total Insentif di Bayarkan <span id="label_bulan">Januari</span></b></label>
+                    <label><b>Total Perolehan Insentif <span id="label_bulan">Januari</span></b></label>
                     <h4 class="counterRupiah" id='insentif'>null</h4>
                 </div>
             </div>

@@ -240,7 +240,7 @@
                         <div class="card-box">
                             <h4 class="header-title mt-0 m-b-30">Top Utang</h4>
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered  dt-responsive nowrap" id="table-hutang">
+                                <table class="table table-striped table-bordered  dt-responsive nowrap" id="table-utang">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>#</th>
@@ -256,5 +256,23 @@
                 </div>
                 <!-- end row -->
 
-
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card-box">
+                            <h4 class="header-title mt-0 m-b-30">Monitor Persediaan</h4>
+                            <div class="table-responsive">
+                                <table class="table" id="datatable-master-persediaan">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Kode Barang</th>
+                                            <th>Nama Barang</th>
+                                            <th>Persediaan</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div><!-- end col -->
+                </div>
             </div> <!-- container -->

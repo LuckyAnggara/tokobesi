@@ -466,4 +466,27 @@ class Model_Dashboard extends CI_Model
     }
 
 
+    function get_data_piutang()
+    {
+        $this->db->select('*, master_user.nama as nama_pegawai, DATE_FORMAT(master_piutang.tanggal_jatuh_tempo, "%d %b %Y") as tanggal_tempo, DATE_FORMAT(master_piutang.tanggal_input, "%d %b %Y") as tanggal');
+        $this->db->from('master_piutang');
+        $this->db->join('master_user', 'master_user.username = master_piutang.user');
+        $this->db->where('sisa_piutang !=', 0);
+        $this->db->order_by('master_piutang.tanggal_jatuh_tempo', 'ASC');
+        $output = $this->db->get();
+        return $output;
+    }
+
+
+    function get_data_utang()
+    {
+        $this->db->select('*, master_user.nama as nama_pegawai, DATE_FORMAT(master_utang.tanggal_jatuh_tempo, "%d %b %Y") as tanggal_tempo, DATE_FORMAT(master_utang.tanggal_input, "%d %b %Y") as tanggal');
+        $this->db->from('master_utang');
+        $this->db->join('master_user', 'master_user.username = master_utang.user');
+        $this->db->where('sisa_utang !=', 0);
+        $this->db->order_by('master_utang.tanggal_jatuh_tempo', 'ASC');
+        $output = $this->db->get();
+        return $output;
+    }
+
 }

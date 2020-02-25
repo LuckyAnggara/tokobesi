@@ -67,7 +67,9 @@ class PurchaseOrderSales extends CI_Controller
     public function index()
     {
         $this->init_no_order();
+		$data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['no_order'] = $this->session->userdata('no_order_dummy');
         $data['css'] = 'manajemen_penjualan/purchase_order_sales/purchase_order_sales_css';
         $data['title'] = "Penjualan Barang";
@@ -84,7 +86,9 @@ class PurchaseOrderSales extends CI_Controller
 
     public function daftar()
     {
+		$data['menu'] = $this->modelSetting->data_menu();
         $data['css'] = 'manajemen_penjualan/purchase_order_sales/daftar/daftar_purchase_order_css';
+
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
@@ -327,8 +331,6 @@ class PurchaseOrderSales extends CI_Controller
 
             $output['data'][] = $value;
         }
-
-
 
         $output = json_encode($output);
         echo $output;
