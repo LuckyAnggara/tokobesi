@@ -110,7 +110,7 @@
             },
             "bInfo": false,
             "paging": false,
-            "searching": true,
+            "searching": false,
             "processing": true,
             "serverSide": false,
             "ordering": false,

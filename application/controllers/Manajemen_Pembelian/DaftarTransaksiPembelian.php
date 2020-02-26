@@ -26,6 +26,7 @@ class Daftartransaksipembelian extends CI_Controller
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_pembelian/daftar_transaksi_pembelian/daftar_transaksi_pembelian');
         $this->load->view('template/template_right');
+        $this->load->view('manajemen_pembelian/daftar_transaksi_pembelian/daftar_transaksi_pembelian_modal', $data);
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
         $this->load->view('manajemen_pembelian/daftar_transaksi_pembelian/daftar_transaksi_pembelian_js');
@@ -67,5 +68,11 @@ class Daftartransaksipembelian extends CI_Controller
         } else {
             $this->modelDaftarTransaksiPembelian->delete_data($nomor_transaksi); // tambah data siswa
         }
+    }
+
+    public function setlampiran()
+    {
+        $nomor_transaksi = $this->input->post('nomor_transaksi');
+        $this->modelDaftarTransaksiPembelian->set_lampiran($nomor_transaksi);
     }
 }

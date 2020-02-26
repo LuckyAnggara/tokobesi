@@ -34,6 +34,9 @@
             'remove': 'Hapus',
             'error': 'Ooops, terjadi sesuatu, silahkan coba lagi.'
         },
+        tpl: {
+            clearButton: '<button type="button" class="dropify-clear">{{ remove }}</button>',
+        },
         error: {
             'fileSize': 'File terlalu besar (3 Mb max).',
             'imageFormat': 'Format Gambar tidak Support, hanya ({{ value }} saja).'
@@ -45,6 +48,9 @@
             'replace': 'Drag dan drop gambar untuk mengganti',
             'remove': 'Hapus',
             'error': 'Ooops, terjadi sesuatu, silahkan coba lagi.'
+        },
+        tpl: {
+            clearButton: '<button type="button" class="dropify-clear">{{ remove }}</button>',
         },
         error: {
             'fileSize': 'File terlalu besar (3 Mb max).',
@@ -162,6 +168,7 @@
                 .find("input[type=checkbox], input[type=radio]")
                 .prop("checked", "")
                 .end();
+            $('.dropify-clear').click();
         });
     });
 </script>

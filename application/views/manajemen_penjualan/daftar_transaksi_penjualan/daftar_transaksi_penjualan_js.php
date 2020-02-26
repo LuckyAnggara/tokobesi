@@ -67,7 +67,7 @@
                 };
             };
             var role = "<?php echo $this->session->userdata('role'); ?>";
-            if (role == "1" || role == "2") {
+            if (role > 3) {
                 var visible = true
             } else {
                 var visible = false
@@ -238,16 +238,16 @@
 
 <script>
     function view_detail(no_faktur) {
-        window.location.href = "<?= base_url('manajemen_penjualan/DetailTransaksiPenjualan/Nomor_Faktur/'); ?>" + no_faktur;
+        window.location.href = "<?= base_url('manajemen_penjualan/detailtransaksipenjualan/nomor_faktur/'); ?>" + no_faktur;
     }
 </script>
 <!-- Script Delete Data -->
 
 <script type="text/javascript">
-    function warning_delete(id_pelanggan) {
+    function warning_delete(no_faktur) {
         swal.fire({
-            title: 'Apa anda yakin akan hapus data ini?',
-            text: "Semua Data Pelanggan dengan kode " + id_pelanggan + " juga akan terhapus",
+            title: 'Hapus data ini?',
+            text: "Data " + no_faktur + " terhapus",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -255,7 +255,7 @@
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                deleteData(id_pelanggan);
+                deleteData(no_faktur);
                 swal.fire(
                     'Deleted!',
                     'Data telah dihapus!',
@@ -265,9 +265,9 @@
         });
     }
 
-    function deleteData(id_pelanggan) {
+    function deleteData(no_faktur) {
         $.ajax({
-            url: "<?= base_url('manajemen_penjualan/daftartransaksipenjualan/delete_data/'); ?>" + id_pelanggan,
+            url: "<?= base_url('manajemen_penjualan/daftartransaksipenjualan/delete_data/'); ?>" + no_faktur,
             async: false,
             success: function(data) {
                 $('#datatable-master-pelanggan').DataTable().ajax.reload();

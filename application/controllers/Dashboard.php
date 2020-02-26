@@ -259,7 +259,6 @@ class Dashboard extends CI_Controller
 				'link' => 'manajemen_pegawai/insentifsales/',
 			];
 			$ouput['data'][] = $pending;
-
 		}
 
 		$output = json_encode($output);
@@ -307,7 +306,7 @@ class Dashboard extends CI_Controller
 	}
 
 
-	
+
 	// VIEW
 	public function index()
 	{
@@ -329,6 +328,10 @@ class Dashboard extends CI_Controller
 		if ($this->session->userdata('role') == "6") {
 			redirect(base_url("dashboard/superuser"));
 		}
+	}
+	function cekcek()
+	{
+		print_r($this->session->userdata());
 	}
 
 	public function kasir()

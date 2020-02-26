@@ -38,18 +38,13 @@ class Login extends CI_Controller
 					$data_session = array(
 						'username' => $username,
 						'nama' => $user->nama,
-						'status' => "login",	
+						'status' => "login",
 						'role' => $user->role,
 						'avatar' => $user->avatar,
 						'menu' => $user->menu,
-						'faktur_prefix' => $this->modelSetting->prefixFaktur()
 					);
 					$this->session->set_userdata($data_session);
-					switch ($user->role) {
-						case '1':
-							echo "kasir";
-							break;
-					}
+
 					return true;
 				} else {
 					echo "false";

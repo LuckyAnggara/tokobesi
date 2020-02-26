@@ -8,7 +8,8 @@
 
 <!-- DatePicker Js -->
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-
+<!-- file uploads js -->
+<script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
 
 <!-- Select2 js -->
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
@@ -63,7 +64,7 @@
                 };
             };
             var role = "<?php echo $this->session->userdata('role'); ?>";
-            if (role == "4" || role == "5") {
+            if (role > 3) {
                 var visible = true
             } else {
                 var visible = false
@@ -181,12 +182,22 @@
                         }
                     },
                     {
-                        data: "nomor_transaksi",
+                        data: {
+                            "nomor_transaksi": "nomor_transaksi",
+                            "lampiran": "lampiran",
+                        },
                         targets: 11,
                         render: function(data, type, full, meta) {
-                            var display1 = '<a type="button" onClick = "view_detail(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Detail"><i class="fa fa-search" ></i> </a>';
-                            var display2 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
-                            return display1;
+                            var display1 = '<a type="button" onClick = "view_detail(\'' + data.nomor_transaksi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-search" ></i> </a>';
+                            var upload = '<a type="button" onClick = "upload_lampiran(\'' + data.nomor_transaksi + '\')" data-button="' + data.nomor_transaksi + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm"><i class="fa fa-upload" ></i> </a>';
+                            var download = '<a type="button" onClick = "download_lampiran(\'' + data.lampiran + '\')" data-button="' + data.nomor_transaksi + '" class="btn btn-icon waves-effect waves-light btn-inverse btn-sm"><i class="fa fa-download" ></i> </a>';
+
+                            var del = '<a type="button" onClick = "warning_delete(\'' + data.nomor_transaksi + '\')" data-button="' + data.nomor_transaksi + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm"><i class="fa fa-trash" ></i> </a>';
+                            if (data.lampiran == "") {
+                                return display1 + ' ' + upload;
+                            } else {
+                                return display1 + ' ' + download;
+                            }
                         }
                     }
                 ],
@@ -233,40 +244,72 @@
 
 <script>
     function view_detail(nomor_transaksi) {
-        window.location.href = "<?= base_url('manajemen_pembelian/DetailTransaksiPembelian/Nomor_Transaksi/'); ?>" + nomor_transaksi;
+        window.location.href = "<?= base_url('manajemen_pembelian/detailtransaksipembelian/nomor_transaksi/'); ?>" + nomor_transaksi;
     }
 </script>
-<!-- Script Delete Data -->
 
-<script type="text/javascript">
-    function warning_delete(id_pelanggan) {
-        swal.fire({
-            title: 'Apa anda yakin akan hapus data ini?',
-            text: "Semua Data Pelanggan dengan kode " + id_pelanggan + " juga akan terhapus",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.value) {
-                deleteData(id_pelanggan);
-                swal.fire(
-                    'Deleted!',
-                    'Data telah dihapus!',
-                    'success'
-                )
-            }
-        });
+<!-- Script Download dan Upload -->
+<script>
+    $('#lampiran').dropify({
+        messages: {
+            'default': 'Drag dan drop Lampiran disini',
+            'replace': 'Drag dan drop Lampiran untuk mengganti',
+            'remove': 'Hapus',
+            'error': 'Ooops, terjadi sesuatu, silahkan coba lagi.'
+        },
+        tpl: {
+            clearButton: '<button type="button" class="dropify-clear">{{ remove }}</button>',
+        },
+        error: {
+            'fileSize': 'File terlalu besar (10 Mb max).',
+            'imageFormat': 'Format Lampiran tidak Support, hanya ({{ value }} saja).'
+        },
+    });
+
+    $('#upload_lampiran').on('hidden.bs.modal', function(e) {
+        $(this)
+            .find("input,textarea,select")
+            .val('')
+            .end()
+            .find("input[type=checkbox], input[type=radio]")
+            .prop("checked", "")
+            .end();
+        $('.dropify-clear').click();
+    });
+
+
+    function upload_lampiran(nomor_transaksi) {
+        $('#nomor_transaksi_lampiran').text(nomor_transaksi);
+        $('#upload_lampiran').modal('show');
     }
 
-    function deleteData(id_pelanggan) {
+    // Upload Lampiran
+    $('#lampiran_form').submit(function(e) {
+        e.preventDefault();
+        var nomor_transaksi = $('#nomor_transaksi_lampiran').text();
+        var data = new FormData(document.getElementById("lampiran_form"));
+        data.append('nomor_transaksi', nomor_transaksi);
         $.ajax({
-            url: "<?= base_url('manajemen_pembelian/daftartransaksipembelian/delete_data/'); ?>" + id_pelanggan,
+            url: '<?= base_url("manajemen_pembelian/daftartransaksipembelian/setlampiran/"); ?>',
+            type: "post",
+            data: data,
             async: false,
+            processData: false,
+            contentType: false,
             success: function(data) {
-                $('#datatable-master-pelanggan').DataTable().ajax.reload();
+                $('#lampiran_form').modal('hide');
+                Swal.fire(
+                    'Sukes',
+                    'Lampiran telah di Upload!',
+                    'success'
+                );
+                $('#datatable-daftar-pembelian').DataTable().ajax.reload();
             }
-        });
+        })
+    })
+
+    function download_lampiran(lampiran) {
+        window.location.href = "<?= base_url('assets/upload/bukti/pembelian/'); ?>" + lampiran;
+
     }
 </script>

@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-xl-6">
                         <div class="card-box">
-                            <h4 class="header-title mt-0 m-b-30">Pembelian</h4>
+                            <h4 class="header-title mt-0 m-b-30">Daftar Pembelian</h4>
                             <div class="table-responsive">
                                 <table class="table" id="table-pembelian-terakhir">
                                     <thead>

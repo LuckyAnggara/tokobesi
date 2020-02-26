@@ -20,7 +20,7 @@ class Model_Daftar_Transaksi_Penjualan extends CI_Model
         } else {
             $this->db->where('status_bayar', $post['status_bayar']);
         }
-        if ($this->session->userdata['role'] != 4 || $this->session->userdata['role'] = !5) {
+        if ($this->session->userdata('role') < 4) {
             $this->db->where('master_penjualan.user', $this->session->userdata['username']);
         }
 

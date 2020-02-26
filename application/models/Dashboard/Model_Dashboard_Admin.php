@@ -55,6 +55,7 @@ class Model_Dashboard_Admin extends CI_Model
         $this->db->join('master_supplier', 'master_supplier.kode_supplier = master_pembelian.kode_supplier');
         $this->db->where('master_pembelian.user', $this->session->userdata['username']);
         $this->db->order_by('tanggal_transaksi', 'DESC');
+        $this->db->limit('20');
         $output = $this->db->get();
         return $output;
     }

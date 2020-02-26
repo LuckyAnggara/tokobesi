@@ -18,9 +18,13 @@ class Detailtransaksipembelian extends CI_Controller
 
     public function nomor_transaksi($nomor_transaksi)
     {
+
+        $data['menu'] = $this->modelSetting->data_menu();
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['data_order'] = $this->modelDetailTransaksiPembelian->get_data($nomor_transaksi);
         $data['detail_order'] = $this->modelDetailTransaksiPembelian->get_detail($nomor_transaksi);
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
         $data['css'] = 'manajemen_pembelian/detail_transaksi_pembelian/detail_transaksi_pembelian_css';
 
         if (!isset($data['data_order']['nomor_transaksi'])) {

@@ -20,7 +20,7 @@ class Model_Daftar_Transaksi_Pembelian extends CI_Model
         } else {
             $this->db->where('status_bayar', $post['status_bayar']);
         }
-        if ($this->session->userdata['role'] != 4 || $this->session->userdata['role'] = !5) {
+        if ($this->session->userdata('role') < 4) {
             $this->db->where('master_pembelian.user', $this->session->userdata['username']);
         }
         $this->db->where('tanggal_transaksi >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
@@ -44,5 +44,45 @@ class Model_Daftar_Transaksi_Pembelian extends CI_Model
     {
         $this->db->where('nomor_transaksi', $nomor_transaksi);
         $this->db->delete('master_pembelian');
+    }
+
+    function _uploadNewLampiran()
+    {
+        $post = $this->input->post();
+        $this->_delete_lampiran_sebelumnya($post['nomor_transaksi']);
+        $config['upload_path']          = '.assets/upload/bukti/pembelian/';
+        $config['allowed_types']        = 'pdf|jpeg|jpg|png';
+        $config['file_name']            = random_string('alnum', 16);
+        $config['overwrite']            = true;
+        $config['max_size']             = 4096; // 4MB
+        // $config['max_width']            = 1024;
+        // $config['max_height']           = 768;
+        $this->load->library('upload', $config);
+        if ($this->upload->do_upload('lampiran')) {
+            return $this->upload->data("file_name");
+        } else {
+            return "";
+        }
+    }
+
+    private function _delete_lampiran_sebelumnya($nomor_transaksi)
+    {
+        // delete image
+
+        $this->db->select('*');
+        $this->db->from('master_pembelian');
+        $this->db->where('nomor_transaksi', $nomor_transaksi);
+        $data = $this->db->get()->row_array();
+        $data = $data['lampiran'];
+        unlink('.assets/upload/bukti/pembelian/' . $data);
+    }
+
+    function set_lampiran($nomor_transaksi)
+    {
+        $data = array(
+            'lampiran' => $this->_uploadNewLampiran(),
+        );
+        $this->db->where('nomor_transaksi', $nomor_transaksi);
+        $this->db->update('master_pembelian', $data);
     }
 }
