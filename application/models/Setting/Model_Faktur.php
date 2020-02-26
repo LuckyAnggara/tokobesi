@@ -60,6 +60,7 @@ class Model_Faktur extends CI_Model
             $tgl = date('dmy');
             return $tgl. sprintf("%03d", $number);
         } else {
+            $tgl = date('dmy');
             return $tgl . sprintf("%03d", 1);
         }
     }

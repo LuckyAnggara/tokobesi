@@ -21,7 +21,6 @@
                                 <th>Nama Barang</th>
                                 <th>Jenis Barang</th>
                                 <th>Merek Barang</th>
-                                <th>Persediaan</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>

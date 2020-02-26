@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class PurchaseOrderSales extends CI_Controller
+class Purchaseordersales extends CI_Controller
 {
 
     function __construct()

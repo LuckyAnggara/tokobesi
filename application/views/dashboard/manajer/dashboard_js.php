@@ -274,7 +274,7 @@
             "serverSide": false,
             "ordering": false,
             "ajax": {
-                "url": '<?= base_url("Dashboard/data_penjualan_terakhir/"); ?>',
+                "url": '<?= base_url("dashboard/data_penjualan_terakhir/"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
@@ -787,7 +787,7 @@
             "processing": true,
             "serverSide": false,
             "ajax": {
-                "url": '<?= base_url("manajemen_persediaan/MasterPersediaan/getData"); ?>',
+                "url": '<?= base_url("manajemen_persediaan/masterpersediaan/getData"); ?>',
                 "type": "POST",
                 "data": input,
             },

@@ -141,7 +141,7 @@
         // tambah lagi if untuk string dibawah 1
 
         $.ajax({
-            url: '<?= base_url("Manajemen_Barang/MasterBarang/cekData/"); ?>' + string,
+            url: '<?= base_url("manajemen_barang/masterbarang/cekData/"); ?>' + string,
             success: function(result) {
                 data = result;
             }
@@ -185,7 +185,7 @@
         //var edit_image = $('#edit_image');
 
         $.ajax({
-            url: '<?= base_url("Manajemen_Barang/MasterBarang/view_edit_data/"); ?>' + kode_barang,
+            url: '<?= base_url("manajemen_barang/masterbarang/view_edit_data/"); ?>' + kode_barang,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -246,7 +246,7 @@
         function edit_Data_Umum(kode_barang) {
             var data = new FormData(document.getElementById("form_umum"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data_umum/'); ?>" + kode_barang,
+                url: "<?= Base_url('manajemen_barang/masterbarang/edit_data_umum/'); ?>" + kode_barang,
                 type: "post",
                 data: data,
                 async: false,
@@ -291,7 +291,7 @@
         function edit_Data_Harga(kode_barang) {
             var data = new FormData(document.getElementById("form_harga"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data_harga/'); ?>" + kode_barang,
+                url: "<?= Base_url('manajemen_barang/masterbarang/edit_data_harga/'); ?>" + kode_barang,
                 type: "post",
                 data: data,
                 async: false,
@@ -337,7 +337,7 @@
         function edit_data_komisi(kode_barang) {
             var data = new FormData(document.getElementById("form_komisi"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data_komisi/'); ?>" + kode_barang,
+                url: "<?= Base_url('manajemen_barang/masterbarang/edit_data_komisi/'); ?>" + kode_barang,
                 type: "post",
                 data: data,
                 async: false,
@@ -383,7 +383,7 @@
         function edit_data_lainnya(kode_barang) {
             var data = new FormData(document.getElementById("form_lainnya"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Barang/MasterBarang/edit_data_lainnya/'); ?>" + kode_barang,
+                url: "<?= Base_url('manajemen_barang/masterbarang/edit_data_lainnya/'); ?>" + kode_barang,
                 type: "post",
                 data: data,
                 async: false,
@@ -419,7 +419,7 @@
             var data = new FormData(document.getElementById("edit_gambar_form"));
             data.append('kode_barang', kode_barang);
             $.ajax({
-                url: '<?= base_url("Manajemen_Barang/MasterBarang/SetGambarBaru/"); ?>' + kode_barang,
+                url: '<?= base_url("manajemen_barang/masterbarang/SetGambarBaru/"); ?>' + kode_barang,
                 type: "post",
                 data: data,
                 async: false,
@@ -434,7 +434,7 @@
 
         function setGambarBaru(kode_barang) {
             $.ajax({
-                url: '<?= base_url("Manajemen_Barang/MasterBarang/GetGambarBaru/"); ?>' + kode_barang,
+                url: '<?= base_url("manajemen_barang/masterbarang/GetGambarBaru/"); ?>' + kode_barang,
                 type: "POST",
                 dataType: "JSON",
                 async: false,
@@ -612,7 +612,7 @@
         //var edit_image = $('#edit_image');
 
         $.ajax({
-            url: '<?= base_url("Manajemen_Barang/MasterBarang/get_data_for_detail/"); ?>' + kode_barang,
+            url: '<?= base_url("manajemen_barang/masterbarang/get_data_for_detail/"); ?>' + kode_barang,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -685,7 +685,7 @@
                 tanggal_awal: tanggal_awal,
                 tanggal_akhir: tanggal_akhir
             },
-            url: '<?= base_url("Manajemen_Barang/MasterBarang/get_statistik_penjualan/"); ?>',
+            url: '<?= base_url("manajemen_barang/masterbarang/get_statistik_penjualan/"); ?>',
             success: function(data) {
                 var nilai = [];
                 var labels = [];

@@ -193,7 +193,7 @@
         // tambah lagi if untuk string dibawah 1
 
         $.ajax({
-            url: '<?= base_url("Manajemen_Barang/MasterBarang/cekData/"); ?>' + string,
+            url: '<?= base_url("manajemen_barang/masterbarang/cekData/"); ?>' + string,
             success: function(result) {
 
                 data = result;
@@ -248,7 +248,7 @@
             "processing": true,
             // "serverSide": true,
             "ajax": {
-                "url": '<?= base_url("Manajemen_Barang/MasterBarang/getData"); ?>',
+                "url": '<?= base_url("manajemen_barang/masterbarang/getData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
@@ -310,17 +310,8 @@
                     }
                 },
                 {
-                    data: "jumlah_persediaan",
-                    targets: 6,
-                    render: function(data, type, full, meta) {
-                        var display1 = formatSatuan(data);
-
-                        return display1;
-                    }
-                },
-                {
                     data: "kode_barang",
-                    targets: 7,
+                    targets: 6,
                     render: function(data, type, full, meta) {
                         var display1 = '<a type="button" onClick = "detail_barang(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
                         var display2 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
@@ -366,7 +357,7 @@
             var data = new FormData(document.getElementById("statusUpdateForm"));
             data.append('kode_barang', kode_barang);
             $.ajax({
-                url: "<?= Base_url('Manajemen_Barang/MasterBarang/status_update'); ?>",
+                url: "<?= Base_url('manajemen_barang/masterbarang/status_update'); ?>",
                 type: "post",
                 data: data,
                 async: false,
@@ -393,7 +384,7 @@
     function tambah_data() {
         var data = new FormData(document.getElementById("submitForm"));
         $.ajax({
-            url: "<?= Base_url('Manajemen_Barang/MasterBarang/tambah_data'); ?>",
+            url: "<?= Base_url('manajemen_barang/masterbarang/tambah_data'); ?>",
             type: "post",
             data: data,
             async: false,
@@ -412,26 +403,28 @@
 <script type="text/javascript">
     function warning_delete(kode_barang) {
         Swal.fire({
-            title: 'Apa anda yakin akan hapus data ini?',
-            text: "Semua Data Persediaan dengan kode " + kode_barang + " juga akan terhapus",
-            type: 'warning',
+            title: 'Apa anda yakin?',
+            text: "Proses ini dapat mempengaruhi Sistem",
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#4fa7f3',
             cancelButtonColor: '#d57171',
             confirmButtonText: 'Yes, delete it!'
-        }).then(function() {
-            deleteData(kode_barang);
-            Swal.fire(
-                'Deleted!',
-                'Data ' + kode_barang + ' telah dihapus!',
-                'success'
-            )
-        });
+        }).then((result) => {
+            if (result.value) {
+                deleteData(kode_barang);
+                Swal.fire(
+                    'Deleted!',
+                    'Data ' + kode_barang + ' telah dihapus!',
+                    'success'
+                )
+            }
+        })
     }
 
     function deleteData(kode_barang) {
         $.ajax({
-            url: "<?= base_url('Manajemen_Barang/MasterBarang/delete_data/'); ?>" + kode_barang,
+            url: "<?= base_url('manajemen_barang/masterbarang/delete_data/'); ?>" + kode_barang,
             async: false,
             success: function(data) {
                 $('#datatable-master-barang').DataTable().ajax.reload();
@@ -443,6 +436,6 @@
 <!-- Script Edit Modal -->
 <script type="text/javascript">
     function detail_barang(kode_barang) {
-        window.location.href = "<?= base_url('Manajemen_Barang/MasterBarang/Detail_Barang/'); ?>" + kode_barang;
+        window.location.href = "<?= base_url('manajemen_barang/masterbarang/Detail_Barang/'); ?>" + kode_barang;
     }
 </script>

@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class StokOpname extends CI_Controller
+class Stokopname extends CI_Controller
 {
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('manajemen_persediaan/Model_Master_Persediaan', 'modelMasterPersediaan');
+        $this->load->model('Manajemen_Persediaan/Model_Master_Persediaan', 'modelMasterPersediaan');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
         $this->load->helper(array('form', 'url'));
 

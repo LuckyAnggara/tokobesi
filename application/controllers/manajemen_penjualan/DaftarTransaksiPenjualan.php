@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class DaftarTransaksiPenjualan extends CI_Controller
+class Daftartransaksipenjualan extends CI_Controller
 {
 
     function __construct()

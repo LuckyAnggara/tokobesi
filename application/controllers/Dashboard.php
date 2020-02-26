@@ -262,7 +262,7 @@ class Dashboard extends CI_Controller
 
 		}
 
-		$output = json_encode($ouput);
+		$output = json_encode($output);
 		echo $output;
 	}
 
@@ -325,6 +325,9 @@ class Dashboard extends CI_Controller
 		}
 		if ($this->session->userdata('role') == "5") {
 			redirect(base_url("dashboard/manajer"));
+		}
+		if ($this->session->userdata('role') == "6") {
+			redirect(base_url("dashboard/superuser"));
 		}
 	}
 
@@ -413,6 +416,30 @@ class Dashboard extends CI_Controller
 		$data['css'] = 'dashboard/manajer/dashboard_css';
 
 		if ($this->session->userdata('role') != "5") {
+			redirect(base_url("dashboard"));
+		} else {
+
+			$data['sales'] = $this->modelDashboard->getDataSales();
+			$this->load->view('template/template_header', $data);
+			$this->load->view('template/template_menu', $data);
+			$this->load->view('dashboard/manajer/dashboard', $data);
+			$this->load->view('template/template_right');
+			$this->load->view('template/template_footer');
+			$this->load->view('template/template_js');
+			$this->load->view('dashboard/manajer/dashboard_js');
+			$this->load->view('template/template_app_js');
+		}
+	}
+
+	public function superuser()
+	{
+
+		$data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+		$data['menu'] = $this->modelSetting->data_menu();
+
+		$data['css'] = 'dashboard/manajer/dashboard_css';
+
+		if ($this->session->userdata('role') != "6") {
 			redirect(base_url("dashboard"));
 		} else {
 

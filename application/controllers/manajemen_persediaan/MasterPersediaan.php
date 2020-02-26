@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class MasterPersediaan extends CI_Controller
+class Masterpersediaan extends CI_Controller
 {
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('manajemen_persediaan/Model_Master_Persediaan', 'modelMasterPersediaan');
+        $this->load->model('Manajemen_Persediaan/Model_Master_Persediaan', 'modelMasterPersediaan');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
 
         if ($this->session->userdata('status') != "login") {

@@ -201,7 +201,7 @@
             "processing": true,
             "serverSide": false,
             "ajax": {
-                "url": '<?= base_url("manajemen_persediaan/MasterPersediaan/getData"); ?>',
+                "url": '<?= base_url("manajemen_persediaan/masterpersediaan/getData"); ?>',
                 "type": "POST",
                 "data": input,
             },

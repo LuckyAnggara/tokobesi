@@ -35,7 +35,6 @@
             "order": [],
             "processing": true,
             "serverSide": false,
-            scrollY: "400px",
 
             "fixedColumns": true,
             "ajax": {

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class DetailTransaksiPembelian extends CI_Controller
+class Detailtransaksipembelian extends CI_Controller
 {
 
     function __construct()

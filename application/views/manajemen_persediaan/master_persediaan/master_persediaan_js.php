@@ -135,7 +135,7 @@
             "processing": true,
             "serverSide": false,
             "ajax": {
-                "url": '<?= base_url("manajemen_persediaan/MasterPersediaan/getData"); ?>',
+                "url": '<?= base_url("manajemen_persediaan/masterpersediaan/getData"); ?>',
                 "type": "POST",
                 "data": input,
             },
@@ -288,7 +288,7 @@
             "processing": true,
             "serverSide": false,
             "ajax": {
-                "url": '<?= base_url("manajemen_persediaan/MasterPersediaan/getDataMasuk"); ?>',
+                "url": '<?= base_url("manajemen_persediaan/masterpersediaan/getDataMasuk"); ?>',
                 "type": "POST",
                 "data": input,
             },
@@ -368,7 +368,7 @@
             "processing": true,
             "serverSide": false,
             "ajax": {
-                "url": '<?= base_url("manajemen_persediaan/MasterPersediaan/getDataKeluar"); ?>',
+                "url": '<?= base_url("manajemen_persediaan/masterpersediaan/getDataKeluar"); ?>',
                 "type": "POST",
                 "data": input,
             },
@@ -448,7 +448,7 @@
             "processing": true,
             "serverSide": false,
             "ajax": {
-                "url": '<?= base_url("manajemen_persediaan/MasterPersediaan/getDataCart"); ?>',
+                "url": '<?= base_url("manajemen_persediaan/masterpersediaan/getDataCart"); ?>',
                 "type": "POST",
                 "data": input,
             },
@@ -528,7 +528,7 @@
             "processing": true,
             "serverSide": false,
             "ajax": {
-                "url": '<?= base_url("manajemen_persediaan/MasterPersediaan/getDataCartPo"); ?>',
+                "url": '<?= base_url("manajemen_persediaan/masterpersediaan/getDataCartPo"); ?>',
                 "type": "POST",
                 "data": input,
             },

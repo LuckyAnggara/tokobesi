@@ -80,7 +80,7 @@
                 "serverSide": false,
                 "ordering": false,
                 "ajax": {
-                    "url": '<?= base_url("Manajemen_Pembelian/DaftarTransaksiPembelian/getData/"); ?>',
+                    "url": '<?= base_url("manajemen_pembelian/daftartransaksipembelian/getData/"); ?>',
                     "data": input,
                     "type": "POST",
                 },
@@ -233,7 +233,7 @@
 
 <script>
     function view_detail(nomor_transaksi) {
-        window.location.href = "<?= base_url('Manajemen_Pembelian/DetailTransaksiPembelian/Nomor_Transaksi/'); ?>" + nomor_transaksi;
+        window.location.href = "<?= base_url('manajemen_pembelian/DetailTransaksiPembelian/Nomor_Transaksi/'); ?>" + nomor_transaksi;
     }
 </script>
 <!-- Script Delete Data -->
@@ -262,7 +262,7 @@
 
     function deleteData(id_pelanggan) {
         $.ajax({
-            url: "<?= base_url('Manajemen_Pembelian/DaftarTransaksiPembelian/delete_data/'); ?>" + id_pelanggan,
+            url: "<?= base_url('manajemen_pembelian/daftartransaksipembelian/delete_data/'); ?>" + id_pelanggan,
             async: false,
             success: function(data) {
                 $('#datatable-master-pelanggan').DataTable().ajax.reload();

@@ -96,7 +96,7 @@ class Model_Master_Barang extends CI_Model
         ];
         $this->db->insert('master_barang', $data);
 
-        $this->_push_data_persediaan($post['kode_barang']);
+        // $this->_push_data_persediaan($post['kode_barang']);
     }
 
     private function _editUploadImage()

@@ -9,7 +9,7 @@
 
     <link rel="shortcut icon" href="<?= base_url('assets/'); ?>images/favicon.ico">
 
-    <title>Adminto - Responsive Admin Dashboard Template</title>
+    <title><?= $setting_perusahaan['nama_perusahaan']; ?></title>
 
     <!-- App css -->
     <link href="<?= base_url('assets/'); ?>css/bootstrap.min.css" rel="stylesheet" type="text/css" />

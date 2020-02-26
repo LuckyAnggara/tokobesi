@@ -36,7 +36,7 @@
 <script>
     $('#kode_jenis_barang').on('keyup', function() {
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterJenisBarang/Cek_Kode_Jenis_Barang_Input/"); ?>' + $('#kode_jenis_barang').val(),
+            url: '<?= base_url("manajemen_data/masterjenisbarang/Cek_Kode_Jenis_Barang_Input/"); ?>' + $('#kode_jenis_barang').val(),
             success: function(result) {
                 if (result == "ada") {
                     $('#inputhelp').text('Kode Jenis Barang Sudah Ada di Database!!')
@@ -140,7 +140,7 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": '<?= base_url("Manajemen_Data/MasterJenisBarang/getData"); ?>',
+                "url": '<?= base_url("manajemen_data/masterjenisbarang/getData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
@@ -208,7 +208,7 @@
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": '<?= base_url("Manajemen_Data/MasterJenisBarang/getData/"); ?>' + input,
+                        "url": '<?= base_url("manajemen_data/masterjenisbarang/getData/"); ?>' + input,
                         "type": "POST",
                     },
                     "columnDefs": [{
@@ -272,7 +272,7 @@
             e.preventDefault();
             var data = new FormData(document.getElementById("submitForm"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Data/MasterJenisBarang/tambah_data'); ?>",
+                url: "<?= Base_url('manajemen_data/masterjenisbarang/tambah_data'); ?>",
                 type: "post",
                 data: data,
                 async: false,
@@ -318,7 +318,7 @@
 
     function deleteData(id_jenis_barang) {
         $.ajax({
-            url: "<?= base_url('Manajemen_Data/MasterJenisBarang/delete_data/'); ?>" + id_jenis_barang,
+            url: "<?= base_url('manajemen_data/masterjenisbarang/delete_data/'); ?>" + id_jenis_barang,
             async: false,
             success: function(data) {
                 $('#datatable-master-jenis_barang').DataTable().ajax.reload();
@@ -341,7 +341,7 @@
         var edit_keterangan = $('#edit_keterangan');
         var edit_tanggal_input = $('#edit_tanggal_input');
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterJenisBarang/view_edit_data/"); ?>' + id_jenis_barang,
+            url: '<?= base_url("manajemen_data/masterjenisbarang/view_edit_data/"); ?>' + id_jenis_barang,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -385,7 +385,7 @@
         function editData(id_jenis_barang) {
             var data = new FormData(document.getElementById("edit_form"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Data/MasterJenisBarang/edit_data/'); ?>" + id_jenis_barang,
+                url: "<?= Base_url('manajemen_data/masterjenisbarang/edit_data/'); ?>" + id_jenis_barang,
                 type: "post",
                 data: data,
                 async: false,
@@ -422,7 +422,7 @@
         var view_keterangan = $('#view_keterangan');
         var nav_tabel_data_jenis_barang = $('#nav_tabel_data_jenis_barang');
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterJenisBarang/view_edit_data/"); ?>' + id_jenis_barang,
+            url: '<?= base_url("manajemen_data/masterjenisbarang/view_edit_data/"); ?>' + id_jenis_barang,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -453,7 +453,7 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": '<?= base_url("Manajemen_Data/MasterJenisBarang/get_Data_Dengan_Jenis_Barang/"); ?>' + id,
+                "url": '<?= base_url("manajemen_data/masterjenisbarang/get_Data_Dengan_Jenis_Barang/"); ?>' + id,
                 "type": "POST",
             },
             "columnDefs": [{

@@ -73,7 +73,7 @@
     function cek_last_order() {
       var no_order = $('#no_order').text();
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/cek_last_order'); ?>",
+        url: "<?= Base_url('manajemen_penjualan/purchaseordersales/cek_last_order'); ?>",
         type: "post",
         data: {
           no_order: no_order,
@@ -110,7 +110,7 @@
         if (result.value) {
           var no_order = $('#no_order').text();
           $.ajax({
-            url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/push_review_temp'); ?>",
+            url: "<?= Base_url('manajemen_penjualan/purchaseordersales/push_review_temp'); ?>",
             type: "post",
             data: {
               no_order: no_order,
@@ -121,7 +121,7 @@
               $.LoadingOverlay("show");
             },
             success: function(data) {
-              window.location.href = "<?= base_url('Manajemen_Penjualan/ReviewPurchaseOrder/review/'); ?>" + no_order
+              window.location.href = "<?= base_url('manajemen_penjualan/ReviewPurchaseOrder/review/'); ?>" + no_order
             },
             complete: function() {
               $.LoadingOverlay("hide");
@@ -145,7 +145,7 @@
         if (result.value) {
           $.ajax({
             async: false,
-            url: '<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/clear_keranjang_belanja/"); ?>' + $('#no_order').text(),
+            url: '<?= base_url("manajemen_penjualan/purchaseordersales/clear_keranjang_belanja/"); ?>' + $('#no_order').text(),
             success: function(data) {
               deleteMasterPo($('#no_order').text())
               $("#keranjang").empty();
@@ -170,7 +170,7 @@
 
     function deleteMasterPo(no_order) {
       $.ajax({
-        url: "<?= base_url('Manajemen_Penjualan/PurchaseOrderSales/delete_data_po/'); ?>" + no_order,
+        url: "<?= base_url('manajemen_penjualan/purchaseordersales/delete_data_po/'); ?>" + no_order,
         async: false,
       });
     }
@@ -355,7 +355,7 @@
       var nomor_telepon = $('#nomor_telepon');
       if (id_pelanggan.val() !== "") {
         $.ajax({
-          url: '<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/get_data_pelanggan/"); ?>' + id_pelanggan.val(),
+          url: '<?= base_url("manajemen_penjualan/purchaseordersales/get_data_pelanggan/"); ?>' + id_pelanggan.val(),
           type: "POST",
           dataType: "JSON",
           async: false,
@@ -411,7 +411,7 @@
     function search(kata_kunci) {
       if (kata_kunci !== "") {
         $.ajax({
-          url: '<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/get_data_barang/"); ?>' + kata_kunci,
+          url: '<?= base_url("manajemen_penjualan/purchaseordersales/get_data_barang/"); ?>' + kata_kunci,
           type: "POST",
           dataType: "JSON",
           async: false,
@@ -522,7 +522,7 @@
       var diskon = $('#diskon').val();
       var persediaan = $.ajax({
         type: "POST",
-        url: '<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/get_data_persediaan/"); ?>' + kode_barang,
+        url: '<?= base_url("manajemen_penjualan/purchaseordersales/get_data_persediaan/"); ?>' + kode_barang,
         dataType: "text",
         async: false
       }).responseText;
@@ -579,7 +579,7 @@
     $('#button-password-add').on('click', function() {
       var password = $('#password_input').val();
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/cekPasswordDirektur'); ?>",
+        url: "<?= Base_url('manajemen_penjualan/purchaseordersales/cekPasswordDirektur'); ?>",
         type: "post",
         data: {
           password: password
@@ -608,7 +608,7 @@
       var no_order = $('#no_order').text();
 
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/push_data_barang'); ?>",
+        url: "<?= Base_url('manajemen_penjualan/purchaseordersales/push_data_barang'); ?>",
         type: "post",
         data: {
           no_order_penjualan: no_order,
@@ -640,7 +640,7 @@
 
     function push_persediaan_temporary_tambah(jumlah_penjualan, kode_barang) {
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/persediaan_temp_tambah/'); ?>",
+        url: "<?= Base_url('manajemen_penjualan/purchaseordersales/persediaan_temp_tambah/'); ?>",
         type: "post",
         data: {
           kode_barang: kode_barang,
@@ -654,7 +654,7 @@
 
     function push_persediaan_temporary_batal(id) {
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/persediaan_temp_batal/'); ?>",
+        url: "<?= Base_url('manajemen_penjualan/purchaseordersales/persediaan_temp_batal/'); ?>",
         type: "post",
         data: {
           id: id,
@@ -667,7 +667,7 @@
 
     function total_harga_keranjang() {
       $.ajax({
-        url: "<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/get_sum_keranjang/"); ?>" + $('#no_order').text(),
+        url: "<?= base_url("manajemen_penjualan/purchaseordersales/get_sum_keranjang/"); ?>" + $('#no_order').text(),
         type: "post",
         dataType: "JSON",
         async: false,
@@ -713,7 +713,7 @@
     function notifKeranjang() {
       var no_order = $('#no_order').text();
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/notif_keranjang/'); ?>",
+        url: "<?= Base_url('manajemen_penjualan/purchaseordersales/notif_keranjang/'); ?>",
         type: "post",
         dataType: 'json',
         data: {
@@ -747,7 +747,7 @@
     function notifTotalKeranjang() {
       var no_order = $('#no_order').text();
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/get_total_perhitungan/'); ?>",
+        url: "<?= Base_url('manajemen_penjualan/purchaseordersales/get_total_perhitungan/'); ?>",
         type: "post",
         dataType: 'json',
         data: {
@@ -796,7 +796,7 @@
     function deleteData_keranjang(id) {
       var no_order = $('#no_order').text();
       $.ajax({
-        url: "<?= base_url('Manajemen_Penjualan/PurchaseOrderSales/delete_data_keranjang/'); ?>" + id,
+        url: "<?= base_url('manajemen_penjualan/purchaseordersales/delete_data_keranjang/'); ?>" + id,
         async: false,
         success: function(data) {
           push_total_perhitungan(no_order, 0, 0);
@@ -808,7 +808,7 @@
 
     function push_total_perhitungan(no_order, pajak, ongkir) {
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/push_total_perhitungan_sales'); ?>",
+        url: "<?= Base_url('manajemen_penjualan/purchaseordersales/push_total_perhitungan_sales'); ?>",
         type: "post",
         data: {
           no_order: no_order,
@@ -826,7 +826,7 @@
     function clear_data(no_order) {
 
       $.ajax({
-        url: '<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/clear_keranjang_belanja/"); ?>' + no_order,
+        url: '<?= base_url("manajemen_penjualan/purchaseordersales/clear_keranjang_belanja/"); ?>' + no_order,
         async: false,
         success: function(data) {
           console.log('harus nya ad sukses');

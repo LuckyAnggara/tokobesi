@@ -14,7 +14,8 @@ class Setting extends CI_Controller
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
         } else {
-            if ($this->session->userdata('role') != "5") {
+            $role = $this->session->userdata('role');
+            if ($role  < 4) {
                 redirect(base_url("index.html"));
             }
         }

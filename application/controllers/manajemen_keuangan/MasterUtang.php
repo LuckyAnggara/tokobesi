@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class MasterUtang extends CI_Controller
+class Masterutang extends CI_Controller
 {
 
     function __construct()

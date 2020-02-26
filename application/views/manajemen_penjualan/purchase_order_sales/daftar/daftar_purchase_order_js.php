@@ -100,7 +100,7 @@
                 "serverSide": false,
                 "ordering": false,
                 "ajax": {
-                    "url": '<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/getDataPOSales/"); ?>',
+                    "url": '<?= base_url("manajemen_penjualan/purchaseordersales/getDataPOSales/"); ?>',
                     "data": input,
                     "type": "POST",
                 },
@@ -255,7 +255,7 @@
 
     function deleteData(no_order) {
         $.ajax({
-            url: "<?= base_url('Manajemen_Penjualan/PurchaseOrderSales/delete_data_po/'); ?>" + no_order,
+            url: "<?= base_url('manajemen_penjualan/purchaseordersales/delete_data_po/'); ?>" + no_order,
             async: false,
             success: function(data) {
                 $('#datatable-daftar-po').DataTable().ajax.reload();

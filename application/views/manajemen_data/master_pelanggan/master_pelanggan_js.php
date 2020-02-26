@@ -41,7 +41,7 @@
             console.log('aw');
             var id_pelanggan = $('#edit_id_pelanggan');
             $.ajax({
-                url: '<?= base_url("Manajemen_Data/MasterPelanggan/generate_id_pelanggan/"); ?>',
+                url: '<?= base_url("manajemen_data/masterpelanggan/generate_id_pelanggan/"); ?>',
                 success: function(result) {
                     id_pelanggan.val(result);
                 }
@@ -57,7 +57,7 @@
     var id_pelanggan = $('#id_pelanggan');
     nama_pelanggan.focusout(function() {
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterPelanggan/generate_id_pelanggan/"); ?>',
+            url: '<?= base_url("manajemen_data/masterpelanggan/generate_id_pelanggan/"); ?>',
             success: function(result) {
                 id_pelanggan.val(result);
             }
@@ -147,7 +147,7 @@
                 "processing": true,
                 "serverSide": false,
                 "ajax": {
-                    "url": '<?= base_url("Manajemen_Data/MasterPelanggan/getData/"); ?>' + input,
+                    "url": '<?= base_url("manajemen_data/masterpelanggan/getData/"); ?>' + input,
                     "type": "POST",
                 },
                 "columnDefs": [{
@@ -219,7 +219,7 @@
             e.preventDefault();
             var data = new FormData(document.getElementById("submitForm"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Data/MasterPelanggan/tambah_data'); ?>",
+                url: "<?= Base_url('manajemen_data/masterpelanggan/tambah_data'); ?>",
                 type: "post",
                 data: data,
                 async: false,
@@ -266,7 +266,7 @@
 
     function deleteData(id_pelanggan) {
         $.ajax({
-            url: "<?= base_url('Manajemen_Data/MasterPelanggan/delete_data/'); ?>" + id_pelanggan,
+            url: "<?= base_url('manajemen_data/masterpelanggan/delete_data/'); ?>" + id_pelanggan,
             async: false,
             success: function(data) {
                 $('#datatable-master-pelanggan').DataTable().ajax.reload();
@@ -297,7 +297,7 @@
         var edit_keterangan = $('#edit_keterangan');
         var edit_tanggal_input = $('#edit_tanggal_input');
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterPelanggan/view_edit_data/"); ?>' + id_pelanggan,
+            url: '<?= base_url("manajemen_data/masterpelanggan/view_edit_data/"); ?>' + id_pelanggan,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -350,7 +350,7 @@
         function editData(id_pelanggan) {
             var data = new FormData(document.getElementById("edit_form"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Data/MasterPelanggan/edit_data/'); ?>" + id_pelanggan,
+                url: "<?= Base_url('manajemen_data/masterpelanggan/edit_data/'); ?>" + id_pelanggan,
                 type: "post",
                 data: data,
                 async: false,
@@ -392,7 +392,7 @@
         var view_tanggal_input = $('#view_tanggal_input');
         var histori_tanggal_input = $('#histori_tanggal_input');
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterPelanggan/view_edit_data/"); ?>' + id_pelanggan,
+            url: '<?= base_url("manajemen_data/masterpelanggan/view_edit_data/"); ?>' + id_pelanggan,
             type: "POST",
             dataType: "JSON",
             async: false,

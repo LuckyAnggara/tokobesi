@@ -29,7 +29,7 @@
     function cari_versi_select2() {
       $("#select_nama_barang").select2({
         ajax: {
-          url: '<?= base_url("Manajemen_Persediaan/KartuPersediaan/get_data_barang_versi_select2"); ?>',
+          url: '<?= base_url("manajemen_persediaan/kartupersediaan/get_data_barang_versi_select2"); ?>',
           type: "post",
           dataType: 'json',
           delay: 250,
@@ -64,7 +64,7 @@
   <script>
     function setData(kode_barang) {
       $.ajax({
-        url: "<?= Base_url('Manajemen_Persediaan/KartuPersediaan/getDetailBarang'); ?>",
+        url: "<?= Base_url('manajemen_persediaan/kartupersediaan/getDetailBarang'); ?>",
         type: "post",
         data: {
           kode_barang: kode_barang
@@ -100,7 +100,7 @@
         "ordering": false,
         "paging": true,
         "ajax": {
-          "url": '<?= base_url("Manajemen_Persediaan/KartuPersediaan/get_data_ajax/"); ?>',
+          "url": '<?= base_url("manajemen_persediaan/kartupersediaan/get_data_ajax/"); ?>',
           "type": "POST",
           data: {
             kode_barang: kode_barang
@@ -169,7 +169,7 @@
 
     function setSaldoAkhir(kode_barang) {
       $.ajax({
-        url: '<?= base_url("Manajemen_Persediaan/KartuPersediaan/get_data_ajax/"); ?>',
+        url: '<?= base_url("manajemen_persediaan/kartupersediaan/get_data_ajax/"); ?>',
         type: "POST",
         dataType: "JSON",
         data: {

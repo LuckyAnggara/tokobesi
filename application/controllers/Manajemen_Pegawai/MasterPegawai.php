@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class MasterPegawai extends CI_Controller
+class Masterpegawai extends CI_Controller
 {
 
     function __construct()
@@ -57,7 +57,8 @@ class MasterPegawai extends CI_Controller
     public function tambahdatapegawai()
     {
         $post = $this->input->post();
-        $this->modelPegawai->tambah_data_pegawai($post);
+        $data = $this->modelPegawai->tambah_data_pegawai($post);
+        echo $data;
     }
 
     public function setactive()
@@ -83,11 +84,12 @@ class MasterPegawai extends CI_Controller
     public function Detail_Pegawai($nip)
     {
 
-        $data['css'] = 'manajemen_pegawai/master_pegawai/master_pegawai_css';
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
 
         // data pegawai
 
+        $data['css'] = 'manajemen_pegawai/master_pegawai/master_pegawai_css';
         $data['pegawai'] = $this->modelPegawai->detail_pegawai($nip);
 
         $this->load->view('template/template_header', $data);

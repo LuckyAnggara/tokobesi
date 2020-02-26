@@ -125,7 +125,7 @@
             "serverSide": false,
             "ordering": false,
             "ajax": {
-                "url": '<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/getDataPOSales/"); ?>',
+                "url": '<?= base_url("manajemen_penjualan/purchaseordersales/getDataPOSales/"); ?>',
                 "data": input,
                 "type": "POST",
             },

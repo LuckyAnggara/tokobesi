@@ -180,13 +180,13 @@
     $(window).on("unload", function(e) {
       $.ajax({
         async: false,
-        url: '<?= base_url("Manajemen_Pembelian/PembelianBarang/clear_keranjang_pembelian/"); ?>' + sessionStorage.getItem("no_order_pembelian"),
+        url: '<?= base_url("manajemen_pembelian/pembelianbarang/clear_keranjang_pembelian/"); ?>' + sessionStorage.getItem("no_order_pembelian"),
       });
       console.log('unload');
     });
     $("#select_nama_supplier").select2({
       ajax: {
-        url: '<?= base_url("Manajemen_Pembelian/PembelianBarang/get_data_supplier"); ?>',
+        url: '<?= base_url("manajemen_pembelian/pembelianbarang/get_data_supplier"); ?>',
         type: "post",
         dataType: 'json',
         delay: 250,
@@ -240,7 +240,7 @@
   function cari_versi_select2() {
     $("#select_nama_barang").select2({
       ajax: {
-        url: '<?= base_url("Manajemen_Pembelian/PembelianBarang/get_data_barang_versi_select2"); ?>',
+        url: '<?= base_url("manajemen_pembelian/pembelianbarang/get_data_barang_versi_select2"); ?>',
         type: "post",
         dataType: 'json',
         delay: 250,
@@ -284,7 +284,7 @@
   function search(kata_kunci) {
     if (kata_kunci !== "") {
       $.ajax({
-        url: '<?= base_url("Manajemen_Pembelian/PembelianBarang/get_data_barang/"); ?>' + kata_kunci,
+        url: '<?= base_url("manajemen_pembelian/pembelianbarang/get_data_barang/"); ?>' + kata_kunci,
         type: "POST",
         dataType: "JSON",
         async: false,
@@ -413,7 +413,7 @@
 
   function deleteData_pembelian(id) {
     $.ajax({
-      url: "<?= base_url('Manajemen_Pembelian/PembelianBarang/delete_data_keranjang/'); ?>" + id,
+      url: "<?= base_url('manajemen_pembelian/pembelianbarang/delete_data_keranjang/'); ?>" + id,
       async: false,
       success: function(data) {
         $('#datatable-keranjang-pembelian').DataTable().ajax.reload();
@@ -433,7 +433,7 @@
     $('#proses_button').attr('disabled', false);
     $('#grand_total_div').attr('hidden', false);
     $.ajax({
-      url: "<?= Base_url('Manajemen_Pembelian/PembelianBarang/push_data_barang'); ?>",
+      url: "<?= Base_url('manajemen_pembelian/pembelianbarang/push_data_barang'); ?>",
       type: "post",
       data: {
         no_order_pembelian: no_order_pembelian,
@@ -467,7 +467,7 @@
   function total_harga_keranjang() {
 
     $.ajax({
-      url: "<?= base_url("Manajemen_Pembelian/PembelianBarang/get_sum_keranjang/"); ?>" + $('#no_order_pembelian').text(),
+      url: "<?= base_url("manajemen_pembelian/pembelianbarang/get_sum_keranjang/"); ?>" + $('#no_order_pembelian').text(),
       type: "post",
       dataType: "JSON",
       async: false,
@@ -524,7 +524,7 @@
 
   function push_total_perhitungan(no_order, pajak, ongkir) {
     $.ajax({
-      url: "<?= Base_url('Manajemen_Pembelian/PembelianBarang/push_total_perhitungan'); ?>",
+      url: "<?= Base_url('manajemen_pembelian/pembelianbarang/push_total_perhitungan'); ?>",
       type: "post",
       data: {
         no_order_pembelian: no_order,
@@ -546,7 +546,7 @@
     var total2 = Math.round(total1 * (pajak / 100)); // data total setalah di tambah pajak 10%
     var grand_total = total1 + total2 // data grand_total setalah Pajak
     $.ajax({
-      url: "<?= Base_url('Manajemen_Pembelian/PembelianBarang/push_grand_total'); ?>",
+      url: "<?= Base_url('manajemen_pembelian/pembelianbarang/push_grand_total'); ?>",
       type: "post",
       data: {
         no_order_pembelian: no_order_pembelian,
@@ -574,7 +574,7 @@
     var terbilang_grand_total = $('#terbilang_grand_total');
 
     $.ajax({
-      url: '<?= base_url("Manajemen_Pembelian/PembelianBarang/get_total_perhitungan/"); ?>' + no_order_pembelian,
+      url: '<?= base_url("manajemen_pembelian/pembelianbarang/get_total_perhitungan/"); ?>' + no_order_pembelian,
       type: "POST",
       dataType: "JSON",
       async: false,
@@ -652,7 +652,7 @@
       "lengthChange": false,
       "paging": false,
       "ajax": {
-        "url": '<?= base_url("Manajemen_Pembelian/PembelianBarang/get_data_keranjang/"); ?>' + $('#no_order_pembelian').text(),
+        "url": '<?= base_url("manajemen_pembelian/pembelianbarang/get_data_keranjang/"); ?>' + $('#no_order_pembelian').text(),
         "type": "POST",
       },
       "columnDefs": [{
@@ -879,7 +879,7 @@
 
 
     $.ajax({
-      url: "<?= Base_url('Manajemen_Pembelian/PembelianBarang/proses_kredit'); ?>",
+      url: "<?= Base_url('manajemen_pembelian/pembelianbarang/proses_kredit'); ?>",
       type: "post",
       data: {
         no_order_pembelian: no_order_pembelian,
@@ -920,7 +920,7 @@
     var tanggal_transaksi = $('#tanggal_transaksi').val();
 
     $.ajax({
-      url: "<?= Base_url('Manajemen_Pembelian/PembelianBarang/proses_tunai'); ?>",
+      url: "<?= Base_url('manajemen_pembelian/pembelianbarang/proses_tunai'); ?>",
       type: "post",
       data: {
         no_order_pembelian: no_order_pembelian,

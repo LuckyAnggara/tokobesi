@@ -12,7 +12,7 @@
                         <ul class="nav nav-pills nav-tabs nav-justified">
                             <li class="nav-item"><a href="#first" data-toggle="tab" class="nav-link">Umum</a></li>
                             <li class="nav-item"><a href="#second" data-toggle="tab" class="nav-link">Satuan & Harga</a></li>
-                            <li class="nav-item"><a href="#third" data-toggle="tab" class="nav-link">Insentif</a></li>
+                            <!-- <li class="nav-item"><a href="#third" data-toggle="tab" class="nav-link">Insentif</a></li> -->
                             <li class="nav-item"><a href="#forth" data-toggle="tab" class="nav-link">Lainnya</a></li>
                         </ul>
 
@@ -104,7 +104,7 @@
                                             <option value="0" selected disabled hidden>--</option>
                                             <option value="FIFO">FIFO</option>
                                             <option value="LIFO">LIFO</option>
-                                            <option value="AVERAGE">AVERAGE</option>
+                                            <!-- <option value="AVERAGE">AVERAGE</option> -->
                                         </select>
                                     </div>
                                 </div>
@@ -139,8 +139,8 @@
                                     <label class="col-3 col-form-label">Status Jual</label>
                                     <div class="col-9">
                                         <select name="status_jual" id="status_jual" class="form-control select2" placeholder="ssss" required>
-                                            <option value="0" selected disabled hidden>-Status-</option>
-                                            <option value="1">Dijual</option>
+                                            <option selected disabled hidden>-Status-</option>
+                                            <option value="0">Dijual</option>
                                             <option value="1">Tidak Dijual</option>
                                         </select>
                                     </div>

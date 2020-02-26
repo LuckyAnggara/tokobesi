@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class KartuPersediaan extends CI_Controller
+class Kartupersediaan extends CI_Controller
 {
 
     function __construct()

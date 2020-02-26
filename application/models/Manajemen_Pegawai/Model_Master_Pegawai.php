@@ -50,27 +50,37 @@ class Model_Master_Pegawai extends CI_Model
 
     function tambah_data_pegawai($post)
     {
-        $data = [
-            'nip' => strtoupper($post['nip']),
-            'ktp' => strtoupper($post['ktp']),
-            'nama_lengkap' => strtoupper($post['nama_lengkap']),
-            'jenis_kelamin' => strtoupper($post['jenis_kelamin']),
-            'alamat' => strtoupper($post['alamat']),
-            'kelurahan' => strtoupper($post["kelurahan"]),
-            'kecamatan' => strtoupper($post["kecamatan"]),
-            'kota' => strtoupper($post["kota"]),
-            'tanggal_lahir' => date('Y-m-d H:i:s', strtotime($post['tanggal_lahir'])),
-            'tanggal_masuk' => date('Y-m-d H:i:s', strtotime($post['tanggal_masuk'])),
-            'pendidikan_terakhir' => strtoupper($post['pendidikan_terakhir']),
-            'jabatan' =>  strtoupper($post['jabatan']),
-            'nomor_telepon' => strtoupper($post["nomor_telepon"]),
-            'nomor_rekening' => strtoupper($post["nama_bank"]) . ' - ' . strtoupper($post["nomor_rekening"]),
-            'npwp' => strtoupper($post["npwp"]),
-            'gambar' => $this->_uploadImage(),
-            'user' => $this->session->userdata['username'],
+        $this->db->select('nip');
+        $this->db->from('master_pegawai');
+        $this->db->where('nip', $post['nip']);
+        $cek = $this->db->get()->num_rows();
+        if ($cek > 0)
+        {
+            return 'duplikat';
+        }else{
+            $data = [
+                'nip' => strtoupper($post['nip']),
+                'ktp' => strtoupper($post['ktp']),
+                'nama_lengkap' => strtoupper($post['nama_lengkap']),
+                'jenis_kelamin' => strtoupper($post['jenis_kelamin']),
+                'alamat' => strtoupper($post['alamat']),
+                'kelurahan' => strtoupper($post["kelurahan"]),
+                'kecamatan' => strtoupper($post["kecamatan"]),
+                'kota' => strtoupper($post["kota"]),
+                'tanggal_lahir' => date('Y-m-d H:i:s', strtotime($post['tanggal_lahir'])),
+                'tanggal_masuk' => date('Y-m-d H:i:s', strtotime($post['tanggal_masuk'])),
+                'pendidikan_terakhir' => strtoupper($post['pendidikan_terakhir']),
+                'jabatan' =>  strtoupper($post['jabatan']),
+                'nomor_telepon' => strtoupper($post["nomor_telepon"]),
+                'nomor_rekening' => strtoupper($post["nama_bank"]) . ' - ' . strtoupper($post["nomor_rekening"]),
+                'npwp' => strtoupper($post["npwp"]),
+                'gambar' => $this->_uploadImage(),
+                'user' => $this->session->userdata['username'],
 
-        ];
-        $this->db->insert('master_pegawai', $data);
+            ];
+            $this->db->insert('master_pegawai', $data);
+        }
+       
     }
 
     private function _uploadImage()

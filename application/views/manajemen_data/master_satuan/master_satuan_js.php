@@ -36,7 +36,7 @@
 <script>
     $('#kode_satuan').on('keyup', function() {
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterSatuan/Cek_Kode_Satuan_Input/"); ?>' + $('#kode_satuan').val(),
+            url: '<?= base_url("manajemen_data/mastersatuan/Cek_Kode_Satuan_Input/"); ?>' + $('#kode_satuan').val(),
             success: function(result) {
                 if (result == "ada") {
                     $('#inputhelp').text('Kode Satuan Sudah Ada di Database!!')
@@ -140,7 +140,7 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": '<?= base_url("Manajemen_Data/MasterSatuan/getData"); ?>',
+                "url": '<?= base_url("manajemen_data/mastersatuan/getData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
@@ -208,7 +208,7 @@
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": '<?= base_url("Manajemen_Data/MasterSatuan/getData/"); ?>' + input,
+                        "url": '<?= base_url("manajemen_data/mastersatuan/getData/"); ?>' + input,
                         "type": "POST",
                     },
                     "columnDefs": [{
@@ -272,7 +272,7 @@
             e.preventDefault();
             var data = new FormData(document.getElementById("submitForm"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Data/MasterSatuan/tambah_data'); ?>",
+                url: "<?= Base_url('manajemen_data/mastersatuan/tambah_data'); ?>",
                 type: "post",
                 data: data,
                 async: false,
@@ -318,7 +318,7 @@
 
     function deleteData(id_satuan) {
         $.ajax({
-            url: "<?= base_url('Manajemen_Data/MasterSatuan/delete_data/'); ?>" + id_satuan,
+            url: "<?= base_url('manajemen_data/mastersatuan/delete_data/'); ?>" + id_satuan,
             async: false,
             success: function(data) {
                 $('#datatable-master-satuan').DataTable().ajax.reload();
@@ -341,7 +341,7 @@
         var edit_keterangan = $('#edit_keterangan');
         var edit_tanggal_input = $('#edit_tanggal_input');
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterSatuan/view_edit_data/"); ?>' + id_satuan,
+            url: '<?= base_url("manajemen_data/mastersatuan/view_edit_data/"); ?>' + id_satuan,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -385,7 +385,7 @@
         function editData(id_satuan) {
             var data = new FormData(document.getElementById("edit_form"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Data/MasterSatuan/edit_data/'); ?>" + id_satuan,
+                url: "<?= Base_url('manajemen_data/mastersatuan/edit_data/'); ?>" + id_satuan,
                 type: "post",
                 data: data,
                 async: false,
@@ -422,7 +422,7 @@
         var view_keterangan = $('#view_keterangan');
         var nav_tabel_data_satuan = $('#nav_tabel_data_satuan');
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterSatuan/view_edit_data/"); ?>' + id_satuan,
+            url: '<?= base_url("manajemen_data/mastersatuan/view_edit_data/"); ?>' + id_satuan,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -453,7 +453,7 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": '<?= base_url("Manajemen_Data/MasterSatuan/get_Data_Dengan_Satuan/"); ?>' + id,
+                "url": '<?= base_url("manajemen_data/mastersatuan/get_Data_Dengan_Satuan/"); ?>' + id,
                 "type": "POST",
             },
             "columnDefs": [{

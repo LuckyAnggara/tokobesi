@@ -100,7 +100,7 @@
                 "serverSide": false,
                 "ordering": false,
                 "ajax": {
-                    "url": '<?= base_url("Manajemen_Penjualan/PurchaseOrderAdmin/getDataPO/"); ?>',
+                    "url": '<?= base_url("manajemen_penjualan/purchaseorderadmin/getDataPO/"); ?>',
                     "data": input,
                     "type": "POST",
                 },

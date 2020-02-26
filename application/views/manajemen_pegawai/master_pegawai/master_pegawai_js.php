@@ -304,13 +304,22 @@
             processData: false,
             contentType: false,
             success: function(data) {
-                $('#datatable-master-barang').DataTable().ajax.reload();
-                $('#add_modal').modal('hide');
-                Swal.fire(
-                    'Success!',
-                    'Data pegawai baru telah di tambahkan',
-                    'success'
-                )
+                if (data == "duplikat") {
+                    Swal.fire(
+                        'Oopss!',
+                        'Duplikat Nomor Induk Pegawai',
+                        'error'
+                    )
+                } else {
+                    $('#datatable-master-barang').DataTable().ajax.reload();
+                    $('#add_modal').modal('hide');
+                    Swal.fire(
+                        'Success!',
+                        'Data pegawai baru telah di tambahkan',
+                        'success'
+                    )
+                }
+
             }
         })
     }

@@ -35,7 +35,7 @@
     var kode_supplier = $('#kode_supplier');
     nama_supplier.focusout(function() {
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterSupplier/generate_kode_supplier/"); ?>',
+            url: '<?= base_url("manajemen_data/mastersupplier/generate_kode_supplier/"); ?>',
             success: function(result) {
                 kode_supplier.val(result);
                 console.log(result);
@@ -137,7 +137,7 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": '<?= base_url("Manajemen_Data/MasterSupplier/getData"); ?>',
+                "url": '<?= base_url("manajemen_data/mastersupplier/getData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
@@ -215,7 +215,7 @@
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": '<?= base_url("Manajemen_Data/MasterSupplier/getData/"); ?>' + input,
+                        "url": '<?= base_url("manajemen_data/mastersupplier/getData/"); ?>' + input,
                         "type": "POST",
                     },
                     "columnDefs": [{
@@ -288,7 +288,7 @@
             e.preventDefault();
             var data = new FormData(document.getElementById("submitForm"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Data/MasterSupplier/tambah_data'); ?>",
+                url: "<?= Base_url('manajemen_data/mastersupplier/tambah_data'); ?>",
                 type: "post",
                 data: data,
                 async: false,
@@ -335,7 +335,7 @@
 
     function deleteData(kode_supplier) {
         $.ajax({
-            url: "<?= base_url('Manajemen_Data/MasterSupplier/delete_data/'); ?>" + kode_supplier,
+            url: "<?= base_url('manajemen_data/mastersupplier/delete_data/'); ?>" + kode_supplier,
             async: false,
             success: function(data) {
                 $('#datatable-master-supplier').DataTable().ajax.reload();
@@ -363,7 +363,7 @@
         var edit_keterangan = $('#edit_keterangan');
         var edit_tanggal_input = $('#edit_tanggal_input');
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterSupplier/view_edit_data/"); ?>' + kode_supplier,
+            url: '<?= base_url("manajemen_data/mastersupplier/view_edit_data/"); ?>' + kode_supplier,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -413,7 +413,7 @@
         function editData(kode_supplier) {
             var data = new FormData(document.getElementById("edit_form"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Data/MasterSupplier/edit_data/'); ?>" + kode_supplier,
+                url: "<?= Base_url('manajemen_data/mastersupplier/edit_data/'); ?>" + kode_supplier,
                 type: "post",
                 data: data,
                 async: false,
@@ -453,7 +453,7 @@
         var view_tanggal_input = $('#view_tanggal_input');
         var histori_tanggal_input = $('#histori_tanggal_input');
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterSupplier/view_edit_data/"); ?>' + kode_supplier,
+            url: '<?= base_url("manajemen_data/mastersupplier/view_edit_data/"); ?>' + kode_supplier,
             type: "POST",
             dataType: "JSON",
             async: false,

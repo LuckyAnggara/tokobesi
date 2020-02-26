@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class MasterPelanggan extends CI_Controller
+class Masterpelanggan extends CI_Controller
 {
 
     function __construct()

@@ -36,7 +36,7 @@
 <script>
     $('#kode_merek_barang').on('keyup', function() {
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterMerekBarang/Cek_Kode_Merek_Barang_Input/"); ?>' + $('#kode_merek_barang').val(),
+            url: '<?= base_url("manajemen_data/mastermerekbarang/Cek_Kode_Merek_Barang_Input/"); ?>' + $('#kode_merek_barang').val(),
             success: function(result) {
                 if (result == "ada") {
                     $('#inputhelp').text('Kode Merek Barang Sudah Ada di Database!!')
@@ -140,7 +140,7 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": '<?= base_url("Manajemen_Data/MasterMerekBarang/getData"); ?>',
+                "url": '<?= base_url("manajemen_data/mastermerekbarang/getData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
@@ -208,7 +208,7 @@
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": '<?= base_url("Manajemen_Data/MasterMerekBarang/getData/"); ?>' + input,
+                        "url": '<?= base_url("manajemen_data/mastermerekbarang/getData/"); ?>' + input,
                         "type": "POST",
                     },
                     "columnDefs": [{
@@ -272,7 +272,7 @@
             e.preventDefault();
             var data = new FormData(document.getElementById("submitForm"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Data/MasterMerekBarang/tambah_data'); ?>",
+                url: "<?= Base_url('manajemen_data/mastermerekbarang/tambah_data'); ?>",
                 type: "post",
                 data: data,
                 async: false,
@@ -318,7 +318,7 @@
 
     function deleteData(id_merek_barang) {
         $.ajax({
-            url: "<?= base_url('Manajemen_Data/MasterMerekBarang/delete_data/'); ?>" + id_merek_barang,
+            url: "<?= base_url('manajemen_data/mastermerekbarang/delete_data/'); ?>" + id_merek_barang,
             async: false,
             success: function(data) {
                 $('#datatable-master-merek_barang').DataTable().ajax.reload();
@@ -341,7 +341,7 @@
         var edit_keterangan = $('#edit_keterangan');
         var edit_tanggal_input = $('#edit_tanggal_input');
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterMerekBarang/view_edit_data/"); ?>' + id_merek_barang,
+            url: '<?= base_url("manajemen_data/mastermerekbarang/view_edit_data/"); ?>' + id_merek_barang,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -385,7 +385,7 @@
         function editData(id_merek_barang) {
             var data = new FormData(document.getElementById("edit_form"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Data/MasterMerekBarang/edit_data/'); ?>" + id_merek_barang,
+                url: "<?= Base_url('manajemen_data/mastermerekbarang/edit_data/'); ?>" + id_merek_barang,
                 type: "post",
                 data: data,
                 async: false,
@@ -422,7 +422,7 @@
         var view_keterangan = $('#view_keterangan');
         var nav_tabel_data_merek_barang = $('#nav_tabel_data_merek_barang');
         $.ajax({
-            url: '<?= base_url("Manajemen_Data/MasterMerekBarang/view_edit_data/"); ?>' + id_merek_barang,
+            url: '<?= base_url("manajemen_data/mastermerekbarang/view_edit_data/"); ?>' + id_merek_barang,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -453,7 +453,7 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": '<?= base_url("Manajemen_Data/MasterMerekBarang/get_Data_Dengan_Merek_Barang/"); ?>' + id,
+                "url": '<?= base_url("manajemen_data/mastermerekbarang/get_Data_Dengan_Merek_Barang/"); ?>' + id,
                 "type": "POST",
             },
             "columnDefs": [{

@@ -114,7 +114,7 @@
 <script>
     function tambah_master(no_ref, tanggal, ket) {
         $.ajax({
-            url: '<?= base_url("Manajemen_Persediaan/stokopname/tambah_stokopname"); ?>',
+            url: '<?= base_url("manajemen_persediaan/stokopname/tambah_stokopname"); ?>',
             type: "POST",
             data: {
                 nomor_referensi: no_ref,
@@ -156,7 +156,7 @@
     });
     $('#apply_random').on('click', function() {
         $.ajax({
-            url: '<?= base_url("Manajemen_Persediaan/stokopname/random_ref/"); ?>',
+            url: '<?= base_url("manajemen_persediaan/stokopname/random_ref/"); ?>',
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -176,7 +176,7 @@
         var data = new FormData(document.getElementById("upload_form"));
         data.append('nomor_referensi', nomor_referensi);
         $.ajax({
-            url: "<?= Base_url('Manajemen_Persediaan/stokopname/import_data/'); ?>",
+            url: "<?= Base_url('manajemen_persediaan/stokopname/import_data/'); ?>",
             type: "post",
             data: data,
             async: false,
@@ -235,7 +235,7 @@
 
     function show_detail_selisih_stok_opname(id) {
         $.ajax({
-            url: '<?= base_url("Manajemen_Persediaan/stokopname/show_detail_selisih_stok_opname"); ?>',
+            url: '<?= base_url("manajemen_persediaan/stokopname/show_detail_selisih_stok_opname"); ?>',
             type: "POST",
             data: {
                 id: id
@@ -273,7 +273,7 @@
         e.preventDefault();
         var id = $('#id').text();
         $.ajax({
-            url: '<?= base_url("Manajemen_Persediaan/stokopname/tambah_detail_selisih"); ?>',
+            url: '<?= base_url("manajemen_persediaan/stokopname/tambah_detail_selisih"); ?>',
             type: "POST",
             data: {
                 id: id
@@ -343,7 +343,7 @@
     function remove_data(id) {
         var id_ref = $('#id').text();
         $.ajax({
-            url: '<?= base_url("Manajemen_Persediaan/stokopname/delete_detail_selisih"); ?>',
+            url: '<?= base_url("manajemen_persediaan/stokopname/delete_detail_selisih"); ?>',
             type: "POST",
             data: {
                 id_ref: id_ref,
@@ -381,7 +381,7 @@
                 if (qty.val() <= parseInt(selisih)) {
 
                     $.ajax({
-                        url: '<?= base_url("Manajemen_Persediaan/stokopname/edit_detail_selisih"); ?>',
+                        url: '<?= base_url("manajemen_persediaan/stokopname/edit_detail_selisih"); ?>',
                         type: "POST",
                         data: {
                             id_ref: id_ref,

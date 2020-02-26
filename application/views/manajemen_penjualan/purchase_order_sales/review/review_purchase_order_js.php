@@ -71,7 +71,7 @@
     function setData() {
         var no_order = $('#no_order').text();
         $.ajax({
-            url: "<?= Base_url('Manajemen_Penjualan/ReviewPurchaseOrder/setDataReview'); ?>",
+            url: "<?= Base_url('manajemen_penjualan/reviewpurchaseorder/setDataReview'); ?>",
             type: "post",
             data: {
                 no_order: no_order,
@@ -120,7 +120,7 @@
     function deleteData_keranjang(id) {
         var no_order = $('#no_order').text()
         $.ajax({
-            url: "<?= base_url('Manajemen_Penjualan/PurchaseOrderSales/delete_data_keranjang/'); ?>" + id,
+            url: "<?= base_url('manajemen_penjualan/purchaseordersales/delete_data_keranjang/'); ?>" + id,
             async: false,
             success: function(data) {
                 $('#loading').empty();
@@ -134,7 +134,7 @@
                         'Data keranjang Kosong, Kembali ke halaman Belanja!',
                         'warning'
                     ).then((result) => {
-                        window.location.href = "<?= base_url('Manajemen_Penjualan/purchaseordersales'); ?>"
+                        window.location.href = "<?= base_url('manajemen_penjualan/purchaseordersales'); ?>"
                     })
                 }
             }
@@ -143,7 +143,7 @@
 
     function deleteMasterPo(no_order) {
         $.ajax({
-            url: "<?= base_url('Manajemen_Penjualan/PurchaseOrderSales/delete_data_po/'); ?>" + no_order,
+            url: "<?= base_url('manajemen_penjualan/purchaseordersales/delete_data_po/'); ?>" + no_order,
             async: false,
         });
     }
@@ -160,7 +160,7 @@
         var total_pajak = $('#total_pajak'); // text
         var no_order = $('#no_order').text();
         $.ajax({
-            url: '<?= base_url("Manajemen_Penjualan/ReviewPurchaseOrder/get_total_perhitungan/"); ?>',
+            url: '<?= base_url("manajemen_penjualan/reviewpurchaseorder/get_total_perhitungan/"); ?>',
             type: "POST",
             data: {
                 no_order: no_order,
@@ -186,7 +186,7 @@
 
     function push_total_perhitungan(no_order, pajak, ongkir) {
         $.ajax({
-            url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderSales/push_total_perhitungan_review'); ?>",
+            url: "<?= Base_url('manajemen_penjualan/purchaseordersales/push_total_perhitungan_review'); ?>",
             type: "post",
             data: {
                 no_order: no_order,
@@ -249,7 +249,7 @@
         var nomor_telepon = $('#nomor_telepon');
         if (id_pelanggan.val() !== "") {
             $.ajax({
-                url: '<?= base_url("Manajemen_Penjualan/PurchaseOrderSales/get_data_pelanggan/"); ?>' + id_pelanggan.val(),
+                url: '<?= base_url("manajemen_penjualan/purchaseordersales/get_data_pelanggan/"); ?>' + id_pelanggan.val(),
                 type: "POST",
                 dataType: "JSON",
                 async: false,
@@ -424,7 +424,7 @@
         var nomor_telepon = $('#nomor_telepon').val()
         var no_order = $('#no_order').text();
         $.ajax({
-            url: '<?= base_url("Manajemen_Penjualan/ReviewPurchaseOrder/proses_ke_admin/"); ?>',
+            url: '<?= base_url("manajemen_penjualan/reviewpurchaseorder/proses_ke_admin/"); ?>',
             type: "POST",
             data: {
                 id_pelanggan: id_pelanggan,
@@ -440,14 +440,14 @@
             },
             success: function(data) {
                 setTimeout(function() {
-                    window.location.href = "<?= base_url('Manajemen_Penjualan/reviewpurchaseorder/timeline/'); ?>" + no_order;
+                    window.location.href = "<?= base_url('manajemen_penjualan/reviewpurchaseorder/timeline/'); ?>" + no_order;
                 }, 2000);
                 Swal.fire({
                     title: "Terkirim",
                     text: "Order anda telah terkirim ke Admin!",
                     icon: "success"
                 }).then(function() {
-                    window.location.href = "<?= base_url('Manajemen_Penjualan/reviewpurchaseorder/timeline/'); ?>" + no_order;
+                    window.location.href = "<?= base_url('manajemen_penjualan/reviewpurchaseorder/timeline/'); ?>" + no_order;
                 });
 
             },
@@ -492,7 +492,7 @@
 
     function deleteData(no_order) {
         $.ajax({
-            url: "<?= base_url('Manajemen_Penjualan/PurchaseOrderSales/delete_data_po/'); ?>" + no_order,
+            url: "<?= base_url('manajemen_penjualan/purchaseordersales/delete_data_po/'); ?>" + no_order,
             async: false,
         });
     }

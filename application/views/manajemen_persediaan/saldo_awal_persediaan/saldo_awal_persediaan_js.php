@@ -15,9 +15,6 @@
 <!-- Chart JS -->
 <script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
 
-<!-- Sweet Alert Js  -->
-<script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
-
 <!-- Select2 js -->
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
 <!-- Input Mask Js dan Max Length-->
@@ -81,7 +78,7 @@
     function cari_versi_select2() {
         $("#kode_barang").select2({
             ajax: {
-                url: '<?= base_url("Manajemen_Persediaan/SaldoAwalPersediaan/getData"); ?>',
+                url: '<?= base_url("manajemen_persediaan/saldoawalpersediaan/getData"); ?>',
                 type: "post",
                 dataType: 'json',
                 delay: 250,
@@ -161,7 +158,7 @@
             "order": [],
             "processing": true,
             "ajax": {
-                "url": '<?= Base_url("Manajemen_Persediaan/SaldoAwalPersediaan/getAllData"); ?>',
+                "url": '<?= Base_url("manajemen_persediaan/saldoawalpersediaan/getAllData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
@@ -244,7 +241,7 @@
             e.preventDefault();
             var data = new FormData(document.getElementById("submitForm"));
             $.ajax({
-                url: "<?= Base_url('Manajemen_Persediaan/SaldoAwalPersediaan/tambah_data'); ?>",
+                url: "<?= Base_url('manajemen_persediaan/saldoawalpersediaan/tambah_data'); ?>",
                 type: "post",
                 data: data,
                 async: false,
@@ -274,13 +271,13 @@
 <script type="text/javascript">
     function warning_delete(id) {
         swal.fire({
-            title: 'Apa anda yakin akan hapus data ini?',
+            title: 'Hapus data ini?',
             text: "Merubah data ini akan mempengaruhi Persediaan!!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete!'
+            confirmButtonText: 'Ya, hapus!'
         }).then((result) => {
             if (result.value) {
                 deleteData(id);
@@ -290,7 +287,7 @@
 
     function deleteData(id) {
         $.ajax({
-            url: "<?= Base_url('Manajemen_Persediaan/SaldoAwalPersediaan/delete_data/'); ?>" + id,
+            url: "<?= Base_url('manajemen_persediaan/saldoawalpersediaan/delete_data/'); ?>" + id,
             async: false,
             success: function(data) {
                 $('#datatable-master-saldo-awal').DataTable().ajax.reload();
@@ -309,13 +306,13 @@
 <script type="text/javascript">
     function show_edit_modal(id) {
         swal.fire({
-            title: 'Anda akan merubah Saldo Awal Data Barang?',
+            title: 'Ubah data ini?',
             text: "Merubah data ini akan mempengaruhi Persediaan!!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Lanjut!'
+            confirmButtonText: 'Ya, Lanjut!'
         }).then((result) => {
             if (result.value) {
                 fetchdata_edit_modal(id);
@@ -329,7 +326,7 @@
         var edit_jumlah = $('#edit_jumlah');
         var edit_harga = $('#edit_harga');
         $.ajax({
-            url: "<?= base_url('Manajemen_Persediaan/SaldoAwalPersediaan/view_edit_data/'); ?>" + id,
+            url: "<?= base_url('manajemen_persediaan/saldoawalpersediaan/view_edit_data/'); ?>" + id,
             type: "POST",
             dataType: "JSON",
             async: false,
@@ -362,7 +359,7 @@
     function editData(id) {
         var data = new FormData(document.getElementById("edit_form"));
         $.ajax({
-            url: "<?= base_url('Manajemen_Persediaan/SaldoAwalPersediaan/edit_data/'); ?>" + id,
+            url: "<?= base_url('manajemen_persediaan/saldoawalpersediaan/edit_data/'); ?>" + id,
             type: "post",
             data: data,
             async: false,
@@ -393,7 +390,7 @@
 
     function setSubTotal() {
         $.ajax({
-            url: "<?= base_url('Manajemen_Persediaan/SaldoAwalPersediaan/subTotal/'); ?>",
+            url: "<?= base_url('manajemen_persediaan/saldoawalpersediaan/subTotal/'); ?>",
             type: "post",
             dataType: "JSON",
             async: false,

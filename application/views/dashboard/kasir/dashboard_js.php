@@ -112,7 +112,7 @@
             "serverSide": false,
             "ordering": false,
             "ajax": {
-                "url": '<?= base_url("Dashboard/data_penjualan_terakhir_kasir/"); ?>',
+                "url": '<?= base_url("dashboard/data_penjualan_terakhir_kasir/"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{

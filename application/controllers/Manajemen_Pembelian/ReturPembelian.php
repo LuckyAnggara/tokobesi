@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class ReturPembelian extends CI_Controller
+class Returpembelian extends CI_Controller
 {
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('manajemen_pembelian/Model_Retur_Pembelian', 'modelReturPembelian');
+        $this->load->model('Manajemen_Pembelian/Model_Retur_Pembelian', 'modelReturPembelian');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
 
         if ($this->session->userdata('status') != "login") {

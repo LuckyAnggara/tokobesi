@@ -84,7 +84,7 @@
                 "serverSide": false,
                 "ordering": false,
                 "ajax": {
-                    "url": '<?= base_url("Manajemen_Penjualan/DaftarTransaksiPenjualan/getData/"); ?>',
+                    "url": '<?= base_url("manajemen_penjualan/daftartransaksipenjualan/getData/"); ?>',
                     "data": input,
                     "type": "POST",
                 },
@@ -238,7 +238,7 @@
 
 <script>
     function view_detail(no_faktur) {
-        window.location.href = "<?= base_url('Manajemen_Penjualan/DetailTransaksiPenjualan/Nomor_Faktur/'); ?>" + no_faktur;
+        window.location.href = "<?= base_url('manajemen_penjualan/DetailTransaksiPenjualan/Nomor_Faktur/'); ?>" + no_faktur;
     }
 </script>
 <!-- Script Delete Data -->
@@ -267,7 +267,7 @@
 
     function deleteData(id_pelanggan) {
         $.ajax({
-            url: "<?= base_url('Manajemen_Penjualan/DaftarTransaksiPenjualan/delete_data/'); ?>" + id_pelanggan,
+            url: "<?= base_url('manajemen_penjualan/daftartransaksipenjualan/delete_data/'); ?>" + id_pelanggan,
             async: false,
             success: function(data) {
                 $('#datatable-master-pelanggan').DataTable().ajax.reload();

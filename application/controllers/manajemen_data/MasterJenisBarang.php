@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class MasterJenisBarang extends CI_Controller
+class Masterjenisbarang extends CI_Controller
 {
 
     function __construct()
@@ -24,12 +24,12 @@ class MasterJenisBarang extends CI_Controller
 
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
-        $this->load->view('manajemen_data/master_Jenis_Barang/master_jenis_barang');
+        $this->load->view('manajemen_data/master_jenis_barang/master_jenis_barang');
         $this->load->view('template/template_right');
-        $this->load->view('manajemen_data/master_Jenis_Barang/master_jenis_barang_modal');
+        $this->load->view('manajemen_data/master_jenis_barang/master_jenis_barang_modal');
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
-        $this->load->view('manajemen_data/master_Jenis_Barang/master_jenis_barang_js');
+        $this->load->view('manajemen_data/master_jenis_barang/master_jenis_barang_js');
         $this->load->view('template/template_app_js');
     }
 
