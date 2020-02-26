@@ -462,9 +462,9 @@ class Model_Purchase_Order_Admin extends CI_Model
 
     private function _update_master_insentif($no_faktur)
     {
-        $this->db->select('insentif');
+        $this->db->select('komisi_sales');
         $data = $this->db->get('setting_perusahaan')->row_array();
-        $insentif = $data['insentif'];
+        $insentif = $data['komisi_sales'];
 
         $this->db->select('*');
         $this->db->from('master_penjualan');

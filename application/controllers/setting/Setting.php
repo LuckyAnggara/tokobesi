@@ -13,14 +13,18 @@ class Setting extends CI_Controller
 
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
+        } else {
+            if ($this->session->userdata('role') != "5") {
+                redirect(base_url("index.html"));
+            }
         }
     }
 
     public function index()
     {
-		$data['menu'] = $this->modelSetting->data_menu();
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-        
+
         $data['css'] = 'setting/setting_css';
 
         $this->load->view('template/template_header', $data);

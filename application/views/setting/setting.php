@@ -118,7 +118,7 @@
                                     <tbody>
                                         <tr>
                                             <td width="35%">Komisi Sales</td>
-                                            <td width="65%"><a href="javascript:void(0);" id="komisi_sales" class="edit_input">0</a></td>
+                                            <td width="65%"><a href="javascript:void(0);" id="komisi_sales" step="0.01" min="0" max="10" class="edit_number">0</a></td>
                                         </tr>
                                         <tr>
                                             <td>Password Harga</td>

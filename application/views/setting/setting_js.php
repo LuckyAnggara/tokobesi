@@ -70,6 +70,7 @@
             },
             type: 'number',
             pk: 1,
+            step: 'any',
             mode: 'inline'
         });
 
@@ -199,17 +200,27 @@
                 $('#nomor_telepon').editable('setValue', data.nomor_telepon)
                 $('#nomor_fax').editable('setValue', data.nomor_fax)
                 $('#alamat_email').editable('setValue', data.alamat_email)
+                $('#gambar_logo').attr('src', '<?= base_url('assets/images/'); ?>' + data.logo_perusahaan)
+
                 $('#prefix_faktur').editable('setValue', data.prefix_faktur)
                 $('#nomor_faktur').editable('setValue', data.nomor_faktur)
                 $('#catatan_faktur_cash').editable('setValue', data.catatan_faktur_cash)
                 $('#catatan_faktur_kredit').editable('setValue', data.catatan_faktur_kredit)
                 $('#catatan_retur_jual').editable('setValue', data.catatan_retur_jual)
                 $('#catatan_retur_beli').editable('setValue', data.catatan_retur_beli)
+                $('#prefix_example').text(data.prefix_faktur)
+                setnomorfaktur(data.nomor_faktur)
+
                 $('#password_harga').editable('setValue', data.password_harga)
+                $('#komisi_sales').editable('setValue', data.komisi_sales)
 
-                $('#gambar_logo').attr('src', '<?= base_url('assets/images/'); ?>' + data.logo_perusahaan)
+                $('#frekuensi_notifikasi').editable('setValue', data.frekuensi_notifikasi)
 
-                $('#prefix_example').text(data.prefix_faktur);
+                var notifikasi = data.notifikasi.split(',')
+
+                $('#notifikasi').editable('setValue', notifikasi)
+
+
             }
         });
     }
@@ -219,13 +230,15 @@
     });
 
     $('#nomor_faktur').on('save', function(e, params) {
-        console.log(params.newValue);
+        setnomorfaktur(params.newValue)
+    });
 
+    function setnomorfaktur(id) {
         $.ajax({
             url: '<?= base_url("setting/faktur/set_dummy/"); ?>',
             type: "post",
             data: {
-                id: params.newValue,
+                id: id,
             },
             cache: false,
             async: false,
@@ -234,7 +247,7 @@
                 $('#prefix_nomor_example').text(data);
             }
         })
-    });
+    }
 </script>
 
 <!-- EDIT GAMBAR -->
