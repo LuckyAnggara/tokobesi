@@ -11,6 +11,14 @@
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jszip.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 
 <!-- file uploads js -->
 <script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
@@ -243,6 +251,13 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ],
+            dom: 'Bfrtip',
             "searching": true,
             // "order": [],
             "processing": true,
