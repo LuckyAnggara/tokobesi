@@ -172,15 +172,15 @@
             </div>
             <div class="modal-body">
                 <div class="col-sm-12">
-                    <ul class="nav nav-tabs">
+                    <ul class="nav nav-pills nav-tabs nav-justified">
                         <li class="nav-item">
                             <a href="#detail_barang" id="nav_detail_barang" data-toggle="tab" aria-expanded="false" class="nav-link active">
-                                Detail Data Pelanggan
+                                Detail Data
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#histori" id="nav_histori" data-toggle="tab" aria-expanded="true" class="nav-link">
-                                History Pembelian dari Pelanggan
+                                History Pembelian
                             </a>
                         </li>
                     </ul>
@@ -189,7 +189,7 @@
                             <div class="form-group row">
                                 <label class="col-3 col-form-label">Kode Pelanggan</label>
                                 <div class="col-9">
-                                    <input readonly name="view_id_pelanggan" id="view_id_pelanggan" type="text" class="form-control" placeholder="Generate otomatis oleh sistem" readonly required>
+                                    <input readonly name="view_id_pelanggan" id="view_id_pelanggan" type="text" class="form-control" placeholder="Generate otomatis oleh sistem" required>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -214,7 +214,7 @@
                             <div class="form-group row">
                                 <label class="col-3 col-form-label">Email</label>
                                 <div class="col-9">
-                                    <input name="view_email" id="view_email" type="email" class="form-control" placeholder="Optional">
+                                    <input readonly name="view_email" id="view_email" type="email" class="form-control" placeholder="Optional">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -242,6 +242,13 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="histori">
                             <table id="datatable-master-pelanggan-history" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nomor Faktur</th>
+                                        <th>Total Penjualan</th>
+                                    </tr>
+                                </thead>
                             </table>
                             <div class="form-group pull-right">
                                 <h6 class="text-muted col-12">Last Update : <i id="histori_tanggal_input" readonly> </i></h6>
@@ -249,7 +256,6 @@
                             <br>
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button id="view_Md-close" name="button-close" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>

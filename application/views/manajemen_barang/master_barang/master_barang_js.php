@@ -251,24 +251,19 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
-            buttons: [
-                'copyHtml5',
-                'excelHtml5',
-                'csvHtml5',
-                'pdfHtml5'
-            ],
+            "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
             dom: 'Bfrtip',
             "searching": true,
-            // "order": [],
+            "fixedColumns": true,
             "processing": true,
-            // "serverSide": true,
+            "serverSide": false,
             "ajax": {
                 "url": '<?= base_url("manajemen_barang/masterbarang/getData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
                     data: "kode_barang",
-                    searching: true,
+                    width: 20,
                     targets: 0,
                     render: function(data, type, full, meta) {
                         return data;
@@ -276,7 +271,7 @@
                 },
                 {
                     data: "kode_barang",
-                    searching: true,
+                    width: 75,
                     targets: 1,
                     render: function(data, type, full, meta) {
                         return data;
@@ -284,6 +279,7 @@
                 },
                 {
                     data: "nama_barang",
+                    width: 350,
                     targets: 2,
                     render: function(data, type, full, meta) {
                         return data;
@@ -291,6 +287,7 @@
                 },
                 {
                     data: "nama_jenis_barang",
+                    width: 50,
                     targets: 3,
                     render: function(data, type, full, meta) {
                         return data;
@@ -298,6 +295,7 @@
                 },
                 {
                     data: "nama_merek_barang",
+                    width: 100,
                     targets: 4,
                     render: function(data, type, full, meta) {
                         return data;
@@ -314,6 +312,7 @@
                 // },
                 {
                     data: "status",
+                    width: 50,
                     targets: 5,
                     render: function(data, type, full, meta) {
                         if (data.status_jual == "0") {
@@ -326,6 +325,7 @@
                 },
                 {
                     data: "kode_barang",
+                    width: 50,
                     targets: 6,
                     render: function(data, type, full, meta) {
                         var display1 = '<a type="button" onClick = "detail_barang(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';

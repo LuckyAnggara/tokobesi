@@ -125,4 +125,13 @@ class Model_Master_Pelanggan extends CI_Model
             return strtoupper($id);
         }
     }
+
+    function get_data_penjualan($id_pelanggan)
+    {
+        $this->db->select('*');
+        $this->db->from('master_penjualan');
+        $this->db->where('id_pelanggan', $id_pelanggan);
+        $output = $this->db->get();
+        return $output;
+    }
 }

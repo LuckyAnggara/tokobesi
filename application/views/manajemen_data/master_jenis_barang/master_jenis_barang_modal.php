@@ -93,7 +93,7 @@
             </div>
             <div class="modal-body">
                 <div class="col-sm-12">
-                    <ul class="nav nav-tabs">
+                    <ul class="nav nav-pills nav-tabs nav-justified">
                         <li class="nav-item">
                             <a href="#detail_data_jenis_barang" id="nav_detail_data_jenis_barang" data-toggle="tab" aria-expanded="false" class="nav-link active">
                                 Detail Data Jenis Barang
@@ -132,6 +132,12 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="tabel_data_jenis_barang">
                             <table id="datatable-daftar-master-jenis-barang" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Kode</th>
+                                        <th>Nama</th>
+                                    </tr>
+                                </thead>
                             </table>
                             <div class="form-group pull-right">
                                 <h6 class="text-muted col-12">Last Update : <i id="histori_tanggal_input" readonly> </i></h6>

@@ -95,4 +95,20 @@ class Masterpelanggan extends CI_Controller
         $data =  $this->modelPelanggan->get_data_satuan();
         return $data;
     }
+
+    public function getDataPenjualan()
+    {
+        $id_pelanggan = $this->input->post('id_pelanggan');
+        $database = $this->modelPelanggan->get_data_penjualan($id_pelanggan);
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
+    }
 }

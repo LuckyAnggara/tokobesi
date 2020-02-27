@@ -39,7 +39,7 @@ class Mastersupplier extends CI_Controller
         $database = $this->modelSupplier->get_data($string);
         $data = $database->result_array();
         $output = array(
-            "draw" => $_POST['draw'],
+            // "draw" => $_POST['draw'],
             "recordsTotal" => $this->db->count_all_results(),
             "recordsFiltered"  => $database->num_rows(),
             "data" => $data
@@ -94,5 +94,21 @@ class Mastersupplier extends CI_Controller
     {
         $data =  $this->modelSupplier->get_data_satuan();
         return $data;
+    }
+
+    public function getDataPembelian()
+    {
+        $kode_supplier = $this->input->post('kode_supplier');
+        $database = $this->modelSupplier->get_data_pembelian($kode_supplier);
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
     }
 }

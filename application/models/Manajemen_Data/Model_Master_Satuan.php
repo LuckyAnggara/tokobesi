@@ -94,7 +94,7 @@ class Model_Master_Satuan extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('master_barang');
-        $this->db->where('satuan', $nama_satuan);
+        $this->db->where('kode_satuan', $nama_satuan);
         $output = $this->db->get();
         return $output;
     }

@@ -5,12 +5,20 @@
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jszip.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 
 <!-- file uploads js -->
 <script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
 
 <!-- Chart JS -->
-<script src="<?= base_url('assets/'); ?>plugins/chart.js/Chart.bundle.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
 
 <!-- Sweet Alert Js  -->
 <script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
@@ -53,20 +61,6 @@
             limitReachedClass: "badge badge-danger"
         });
     })
-    // var npwp = $('#npwp');
-
-    // npwp.focusout(function() {
-    //     no_npwp = npwp.val();
-    //     no_npwp = formatNpwp(no_npwp);
-    //     no_npwp = no_npwp.substring(0, 20);
-    //     npwp.val(no_npwp);
-    // });
-
-    // function formatNpwp(value) {
-    //     if (typeof value === 'string') {
-    //         return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
-    //     }
-    // }
 </script>
 
 <!-- script close modal reset data -->
@@ -103,8 +97,8 @@
                 .end();
             $("#detail_barang").addClass("active show");
             $("#nav_detail_barang").addClass("active show");
-            $("#nav_data_penjualan").removeClass("active show");
-            $("#data_penjualan").removeClass("active show");
+            $("#nav_histori").removeClass("active show");
+            $("#histori").removeClass("active show");
         });
     });
 </script>
@@ -132,55 +126,50 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
-            "searching": false,
-            "order": [],
+            "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
+            "dom": 'Bfrtip',
+            "fixedColumns": true,
             "processing": true,
-            "serverSide": true,
+            "serverSide": false,
             "ajax": {
                 "url": '<?= base_url("manajemen_data/mastersupplier/getData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
-                    title: "No",
                     data: "kode_supplier",
-                    searching: true,
+                    width: 20,
                     targets: 0,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    title: "Kode Supplier",
                     data: "kode_supplier",
-                    searching: true,
+                    width: 75,
                     targets: 1,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    title: "Nama Supplier",
                     data: "nama_supplier",
-                    searching: true,
+                    width: 325,
                     targets: 2,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    title: "Nomor Telepon",
                     data: "nomor_telepon",
-                    searching: true,
+                    width: 75,
                     targets: 3,
                     render: function(data, type, full, meta) {
-
                         return data;
                     }
                 },
                 {
-                    title: "Action",
                     data: "kode_supplier",
-                    searching: true,
+                    width: 100,
                     targets: 4,
                     render: function(data, type, full, meta) {
                         var display1 = '<a type="button" onClick = "show_view_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
@@ -199,84 +188,6 @@
             }
         });
 
-        $('#searchInput').on('keypress', function(e) {
-            var code = e.keyCode || e.which;
-            if (code == 13) {
-                $('#datatable-master-supplier').DataTable().destroy();
-                var input = $('#searchInput').val();
-                var table = $('#datatable-master-supplier').DataTable({
-                    "oLanguage": {
-                        sProcessing: "Sabar yah...",
-                        sZeroRecords: "Tidak ada Data..."
-                    },
-                    "searching": false,
-                    "deferRender": true,
-                    "order": [],
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": '<?= base_url("manajemen_data/mastersupplier/getData/"); ?>' + input,
-                        "type": "POST",
-                    },
-                    "columnDefs": [{
-                            title: "No",
-                            data: "kode_supplier",
-                            searching: true,
-                            targets: 0,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Kode Supplier",
-                            data: "kode_supplier",
-                            searching: true,
-                            targets: 1,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Nama Supplier",
-                            data: "nama_supplier",
-                            searching: true,
-                            targets: 2,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Nomor Telepon",
-                            data: "nomor_telepon",
-                            searching: true,
-                            targets: 3,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Action",
-                            data: "kode_supplier",
-                            searching: true,
-                            targets: 4,
-                            render: function(data, type, full, meta) {
-                                var display1 = '<a type="button" onClick = "show_view_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
-                                var display2 = '<a type="button" onClick = "show_edit_modal(\'' + data + '\')"" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Edit Data"><i class="fa fa-edit" ></i> </a>';
-                                var display3 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
-                                return display1 + " " + display2 + " " + display3;
-                            }
-                        }
-                    ],
-                    "rowCallback": function(row, data, iDisplayIndex) {
-                        var info = this.fnPagingInfo();
-                        var page = info.iPage;
-                        var length = info.iLength;
-                        var index = page * length + (iDisplayIndex + 1);
-                        $('td:eq(0)', row).html(index);
-                    }
-                });
-            }
-        });
     });
 </script>
 
@@ -468,8 +379,84 @@
                 view_keterangan.val(data.keterangan);
                 view_tanggal_input.text(data.tanggal_input);
                 histori_tanggal_input.text(data.tanggal_input);
+                panggildaftarpembelian(data.kode_supplier);
                 $('#view_Modal').modal('show');
             }
         });
+    }
+</script>
+
+<script>
+    function panggildaftarpembelian(kode_supplier) {
+        var table_satuan = $('#datatable-master-supplier-history').DataTable({
+            destroy: true,
+            "oLanguage": {
+                sProcessing: "Sabar yah...",
+                sZeroRecords: "Tidak ada Data..."
+            },
+            "fixedColumns": true,
+            "lengthChange": true,
+            "searching": true,
+            "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
+            "dom": 'Bfrtip',
+            "processing": true,
+            "serverSide": false,
+            "ajax": {
+                "url": '<?= base_url("manajemen_data/mastersupplier/getDataPembelian/"); ?>',
+                "type": "POST",
+                "data": {
+                    kode_supplier: kode_supplier
+                }
+            },
+            "columnDefs": [{
+                    data: "nomor_transaksi",
+                    width: 20,
+                    targets: 0,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "nomor_transaksi",
+                    width: 100,
+                    targets: 1,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "total_pembelian",
+                    width: 100,
+                    targets: 2,
+                    render: function(data, type, full, meta) {
+                        return formatRupiah(data, 'Rp.');
+                    }
+                }
+            ],
+            "rowCallback": function(row, data, iDisplayIndex) {
+                var info = this.fnPagingInfo();
+                var page = info.iPage;
+                var length = info.iLength;
+                var index = page * length + (iDisplayIndex + 1);
+                $('td:eq(0)', row).html(index);
+            }
+        });
+    }
+
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
     }
 </script>

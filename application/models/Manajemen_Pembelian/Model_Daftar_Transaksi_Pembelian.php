@@ -33,7 +33,7 @@ class Model_Daftar_Transaksi_Pembelian extends CI_Model
     function get_data_kredit($nomor_transaksi)
     {
         $this->db->select('*');
-        $this->db->from('master_hutang');
+        $this->db->from('master_utang');
         $this->db->where('nomor_transaksi', $nomor_transaksi);
         $output = $this->db->get()->row_array();
         return $output;
@@ -50,17 +50,18 @@ class Model_Daftar_Transaksi_Pembelian extends CI_Model
     {
         $post = $this->input->post();
         $this->_delete_lampiran_sebelumnya($post['nomor_transaksi']);
-        $config['upload_path']          = '.assets/upload/bukti/pembelian/';
-        $config['allowed_types']        = 'pdf|jpeg|jpg|png';
+        $config['upload_path']          = './assets/upload/bukti/pembelian/';
+        $config['allowed_types']        = 'jpeg|jpg|png|pdf';
         $config['file_name']            = random_string('alnum', 16);
         $config['overwrite']            = true;
-        $config['max_size']             = 4096; // 4MB
+        $config['max_size']             = 4096 * 3; // 4MB
         // $config['max_width']            = 1024;
         // $config['max_height']           = 768;
         $this->load->library('upload', $config);
         if ($this->upload->do_upload('lampiran')) {
             return $this->upload->data("file_name");
         } else {
+            echo $this->upload->display_errors();
             return "";
         }
     }
@@ -74,7 +75,12 @@ class Model_Daftar_Transaksi_Pembelian extends CI_Model
         $this->db->where('nomor_transaksi', $nomor_transaksi);
         $data = $this->db->get()->row_array();
         $data = $data['lampiran'];
-        unlink('.assets/upload/bukti/pembelian/' . $data);
+        if ($data !== "") {
+            unlink('./assets/upload/bukti/pembelian/' . $data);
+            echo "yiihaa";
+        } else {
+            echo "awww";
+        }
     }
 
     function set_lampiran($nomor_transaksi)

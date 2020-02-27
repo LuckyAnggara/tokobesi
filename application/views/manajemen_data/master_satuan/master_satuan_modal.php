@@ -93,15 +93,15 @@
             </div>
             <div class="modal-body">
                 <div class="col-sm-12">
-                    <ul class="nav nav-tabs">
+                    <ul class="nav nav-pills nav-tabs nav-justified">
                         <li class="nav-item">
                             <a href="#detail_data_satuan" id="nav_detail_data_satuan" data-toggle="tab" aria-expanded="false" class="nav-link active">
                                 Detail Data Satuan
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#detail_data_satuan_barang" id="nav_detail_satuan_barang" data-toggle="tab" aria-expanded="true" class="nav-link">
-                                Satuan Barang
+                            <a href="#detail_data_barang" id="nav_data_barang" data-toggle="tab" aria-expanded="true" class="nav-link">
+                                Daftar Barang
                             </a>
                         </li>
                     </ul>
@@ -130,8 +130,14 @@
                             </div>
                             <br>
                         </div>
-                        <div role="tabpanel" class="tab-pane fade" id="detail_data_satuan_barang">
+                        <div role="tabpanel" class="tab-pane fade" id="detail_data_barang">
                             <table id="datatable-daftar-master-satuan" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Kode</th>
+                                        <th>Nama</th>
+                                    </tr>
+                                </thead>
                             </table>
                             <div class="form-group pull-right">
                                 <h6 class="text-muted col-12">Last Update : <i id="histori_tanggal_input" readonly> </i></h6>

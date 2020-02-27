@@ -219,7 +219,7 @@ class Model_Pembelian_Barang extends CI_Model
 
         $this->_tambah_detail_pembelian($post);
         $this->_delete_detail_pembelian_temp($post);
-        $this->_tambah_data_persediaan($post);
+        // $this->_tambah_data_persediaan($post);
         // $this->_tambah_detail_persediaan($post);
         $this->_proses_kredit($post);
     }
@@ -237,11 +237,11 @@ class Model_Pembelian_Barang extends CI_Model
             'nomor_transaksi' => $post['nomor_transaksi'],
             'tanggal_jatuh_tempo' => date('Y-m-d H:i:s', strtotime($post['tanggal_jatuh_tempo'])),
             'down_payment' => $post['down_payment'],
-            'sisa_pembayaran' => $sisa_pembayaran,
+            'sisa_utang' => $sisa_pembayaran,
             'tanggal_input' =>  date("Y-m-d H:i:s"),
             'user' => $this->session->userdata['username'],
         );
-        $this->db->insert('master_hutang', $data);
+        $this->db->insert('master_utang', $data);
     }
 
     private function _tambah_detail_pembelian($post)

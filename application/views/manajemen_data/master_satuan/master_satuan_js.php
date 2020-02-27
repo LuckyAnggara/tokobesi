@@ -1,10 +1,17 @@
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
 <!-- Validation js (Parsleyjs) -->
 <script type="text/javascript" src="<?= base_url('assets/'); ?>plugins/parsleyjs/dist/parsley.min.js"></script>
-
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jszip.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 
 <!-- shake effect -->
 <script src="<?= base_url('assets/'); ?>plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -13,7 +20,7 @@
 <script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
 
 <!-- Chart JS -->
-<script src="<?= base_url('assets/'); ?>plugins/chart.js/Chart.bundle.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
 
 <!-- Sweet Alert Js  -->
 <script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
@@ -105,9 +112,8 @@
                 .end();
             $("#nav_detail_data_satuan").addClass("active show");
             $("#detail_data_satuan").addClass("active show");
-            $("#nav_tabel_data_satuan").removeClass("active show");
-            $("#tabel_data_satuan").removeClass("active show");
-            $('#datatable-daftar-master-satuan').DataTable().destroy();
+            $("#nav_data_barang").removeClass("active show");
+            $("#detail_data_barang").removeClass("active show");
         });
     });
 </script>
@@ -135,36 +141,34 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
-            "searching": false,
-            "order": [],
+            "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
+            "dom": 'Bfrtip',
+            "fixedColumns": true,
             "processing": true,
-            "serverSide": true,
+            "serverSide": false,
             "ajax": {
                 "url": '<?= base_url("manajemen_data/mastersatuan/getData"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
-                    title: "No",
                     data: "id_satuan",
-                    searching: true,
+                    width: 20,
                     targets: 0,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    title: "Kode Satuan",
                     data: "kode_satuan",
-                    searching: true,
+                    width: 75,
                     targets: 1,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    title: "Nama Satuan",
                     data: "nama_satuan",
-                    searching: true,
+                    width: 400,
                     targets: 2,
                     render: function(data, type, full, meta) {
                         return data;
@@ -172,8 +176,8 @@
                 },
                 {
                     title: "Action",
+                    width: 100,
                     data: "id_satuan",
-                    searching: true,
                     targets: 3,
                     render: function(data, type, full, meta) {
                         var display1 = '<a type="button" onClick = "show_view_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
@@ -189,76 +193,6 @@
                 var length = info.iLength;
                 var index = page * length + (iDisplayIndex + 1);
                 $('td:eq(0)', row).html(index);
-            }
-        });
-
-        $('#searchInput').on('keypress', function(e) {
-            var code = e.keyCode || e.which;
-            if (code == 13) {
-                $('#datatable-master-satuan').DataTable().destroy();
-                var input = $('#searchInput').val();
-                var table = $('#datatable-master-satuan').DataTable({
-                    "oLanguage": {
-                        sProcessing: "Sabar yah...",
-                        sZeroRecords: "Tidak ada Data..."
-                    },
-                    "searching": false,
-                    "deferRender": true,
-                    "order": [],
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": '<?= base_url("manajemen_data/mastersatuan/getData/"); ?>' + input,
-                        "type": "POST",
-                    },
-                    "columnDefs": [{
-                            title: "No",
-                            data: "id",
-                            searching: true,
-                            targets: 0,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Kode Satuan",
-                            data: "kode_satuan",
-                            searching: true,
-                            targets: 1,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Nama Satuan",
-                            data: "nama_satuan",
-                            searching: true,
-                            targets: 2,
-                            render: function(data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        {
-                            title: "Action",
-                            data: "id_satuan",
-                            searching: true,
-                            targets: 3,
-                            render: function(data, type, full, meta) {
-                                var display1 = '<a type="button" onClick = "show_view_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
-                                var display2 = '<a type="button" onClick = "show_edit_modal(\'' + data + '\')"" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Edit Data"><i class="fa fa-edit" ></i> </a>';
-                                var display3 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
-                                return display1 + " " + display2 + " " + display3;
-                            }
-                        }
-                    ],
-                    "rowCallback": function(row, data, iDisplayIndex) {
-                        var info = this.fnPagingInfo();
-                        var page = info.iPage;
-                        var length = info.iLength;
-                        var index = page * length + (iDisplayIndex + 1);
-                        $('td:eq(0)', row).html(index);
-                    }
-                });
             }
         });
     });
@@ -444,31 +378,33 @@
 <script>
     function panggilDaftarTabelSatuan(id) {
         var table_satuan = $('#datatable-daftar-master-satuan').DataTable({
+            destroy: true,
             "oLanguage": {
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
+            "fixedColumns": true,
+            "lengthChange": true,
             "searching": true,
-            "order": [],
+            "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
+            "dom": 'Bfrtip',
             "processing": true,
-            "serverSide": true,
+            "serverSide": false,
             "ajax": {
                 "url": '<?= base_url("manajemen_data/mastersatuan/get_Data_Dengan_Satuan/"); ?>' + id,
                 "type": "POST",
             },
             "columnDefs": [{
-                    title: "Kode Barang",
                     data: "kode_barang",
-                    searching: true,
+                    width: 100,
                     targets: 0,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    title: "Nama Barang",
                     data: "nama_barang",
-                    searching: true,
+                    width: 300,
                     targets: 1,
                     render: function(data, type, full, meta) {
                         return data;

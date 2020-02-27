@@ -39,7 +39,7 @@ class MasterMerekBarang extends CI_Controller
         $database = $this->modelMerek_Barang->get_data($string);
         $data = $database->result_array();
         $output = array(
-            "draw" => $_POST['draw'],
+            // "draw" => $_POST['draw'],
             "recordsTotal" => $this->db->count_all_results(),
             "recordsFiltered"  => $database->num_rows(),
             "data" => $data
@@ -102,7 +102,7 @@ class MasterMerekBarang extends CI_Controller
         $database = $this->modelMerek_Barang->get_Data_Dengan_Merek_Barang($string);
         $data = $database->result_array();
         $output = array(
-            "draw" => $_POST['draw'],
+            // "draw" => $_POST['draw'],
             "recordsTotal" => $this->db->count_all_results(),
             "recordsFiltered"  => $database->num_rows(),
             "data" => $data

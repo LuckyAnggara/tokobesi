@@ -17,10 +17,10 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th>#</th>
-                                <th>Kode Barang</th>
-                                <th>Nama Barang</th>
-                                <th>Jenis Barang</th>
-                                <th>Merek Barang</th>
+                                <th>Kode</th>
+                                <th>Nama</th>
+                                <th>Jenis</th>
+                                <th>Merek</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>

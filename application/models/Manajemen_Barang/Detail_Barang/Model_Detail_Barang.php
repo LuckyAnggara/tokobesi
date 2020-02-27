@@ -14,10 +14,10 @@ class Model_Detail_Barang extends CI_Model
         $post = $this->input->post();
         $this->_delete_gambar_sebelumnya($post['kode_barang']);
         $config['upload_path']          = './assets/images/barang/';
-        $config['allowed_types']        = 'gif|jpg|png';
+        $config['allowed_types']        = 'jpeg|jpg|png';
         $config['file_name']            = random_string('alnum', 16);
         $config['overwrite']            = true;
-        $config['max_size']             = 4096; // 4MB
+        $config['max_size']             = 4096 * 3; // 4MB
         // $config['max_width']            = 1024;
         // $config['max_height']           = 768;
         $this->load->library('upload', $config);
@@ -37,7 +37,9 @@ class Model_Detail_Barang extends CI_Model
         $this->db->where('kode_barang', $kode_barang);
         $data = $this->db->get()->row_array();
         $data = $data['gambar'];
-        unlink('./assets/images/barang/' . $data);
+        if ($data != "default.jpg") {
+            unlink('./assets/images/barang/' . $data);
+        }
     }
 
     function edit_gambar($kode_barang)
@@ -118,5 +120,4 @@ class Model_Detail_Barang extends CI_Model
         $this->db->where('kode_barang', $kode_barang);
         $this->db->update('master_barang', $data);
     }
-    
 }

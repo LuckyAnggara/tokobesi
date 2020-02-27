@@ -162,7 +162,7 @@
             </div>
             <div class="modal-body">
                 <div class="col-sm-12">
-                    <ul class="nav nav-tabs">
+                    <ul class="nav nav-pills nav-tabs nav-justified">
                         <li class="nav-item">
                             <a href="#detail_barang" id="nav_detail_barang" data-toggle="tab" aria-expanded="false" class="nav-link active">
                                 Detail Data Supplier
@@ -225,6 +225,13 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="histori">
                             <table id="datatable-master-supplier-history" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nomor Transaksi</th>
+                                        <th>Total Pembelian</th>
+                                    </tr>
+                                </thead>
                             </table>
                             <div class="form-group pull-right">
                                 <h6 class="text-muted col-12">Last Update : <i id="histori_tanggal_input" readonly> </i></h6>

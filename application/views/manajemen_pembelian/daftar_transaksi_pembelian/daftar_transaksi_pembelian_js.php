@@ -165,7 +165,7 @@
                                     '<a class="dropdown-item"><b><u>Jatuh Tempo</u></b></a>' +
                                     '<a class="dropdown-item">' + date + '</a>' +
                                     '<a class="dropdown-item"><b><u>Sisa</u></b></a>' +
-                                    '<a class="dropdown-item">' + formatRupiah(data.sisa_pembayaran.toString(), 'Rp.') + '</a>' +
+                                    '<a class="dropdown-item">' + formatRupiah(data.sisa_utang.toString(), 'Rp.') + '</a>' +
                                     '</div></div>'
                             } else {
                                 var display = '<span class="badge badge-success">Lunas</span>'
@@ -285,6 +285,7 @@
 
     // Upload Lampiran
     $('#lampiran_form').submit(function(e) {
+        $.LoadingOverlay("show", true);
         e.preventDefault();
         var nomor_transaksi = $('#nomor_transaksi_lampiran').text();
         var data = new FormData(document.getElementById("lampiran_form"));
@@ -297,19 +298,21 @@
             processData: false,
             contentType: false,
             success: function(data) {
-                $('#lampiran_form').modal('hide');
+                $('#upload_lampiran').modal('hide');
                 Swal.fire(
                     'Sukes',
                     'Lampiran telah di Upload!',
                     'success'
                 );
                 $('#datatable-daftar-pembelian').DataTable().ajax.reload();
+            },
+            complete: function(data) {
+                $.LoadingOverlay("show", true);
             }
         })
     })
 
     function download_lampiran(lampiran) {
         window.location.href = "<?= base_url('assets/upload/bukti/pembelian/'); ?>" + lampiran;
-
     }
 </script>

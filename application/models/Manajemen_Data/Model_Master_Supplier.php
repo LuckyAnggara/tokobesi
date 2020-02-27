@@ -104,4 +104,13 @@ class Model_Master_Supplier extends CI_Model
         $kode = $this->_generate_kode_supplier();
         return strtoupper($kode);
     }
+
+    function get_data_pembelian($kode_supplier)
+    {
+        $this->db->select('*');
+        $this->db->from('master_pembelian');
+        $this->db->where('kode_supplier', $kode_supplier);
+        $output = $this->db->get();
+        return $output;
+    }
 }

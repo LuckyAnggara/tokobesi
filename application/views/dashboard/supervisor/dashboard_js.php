@@ -200,6 +200,7 @@
             "info": false,
             "processing": true,
             "serverSide": false,
+            "fixedColumns": true,
             "ajax": {
                 "url": '<?= base_url("manajemen_persediaan/masterpersediaan/getData"); ?>',
                 "type": "POST",

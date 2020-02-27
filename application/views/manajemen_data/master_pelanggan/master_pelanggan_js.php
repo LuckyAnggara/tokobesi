@@ -5,12 +5,20 @@
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jszip.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 
 <!-- file uploads js -->
 <script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
 
 <!-- Chart JS -->
-<script src="<?= base_url('assets/'); ?>plugins/chart.js/chart.bundle.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
 
 <!-- Select2 js -->
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
@@ -110,8 +118,8 @@
                 .end();
             $("#detail_barang").addClass("active show");
             $("#nav_detail_barang").addClass("active show");
-            $("#nav_data_penjualan").removeClass("active show");
-            $("#data_penjualan").removeClass("active show");
+            $("#nav_histori").removeClass("active show");
+            $("#histori").removeClass("active show");
         });
     });
 </script>
@@ -138,12 +146,15 @@
             };
             var table = $('#datatable-master-pelanggan').DataTable({
                 destroy: true,
-                paging: true,
                 "oLanguage": {
                     sProcessing: "Sabar yah...",
                     sZeroRecords: "Tidak ada Data..."
                 },
+                "fixedColumns": true,
+                "lengthChange": true,
                 "searching": true,
+                "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
+                "dom": 'Bfrtip',
                 "processing": true,
                 "serverSide": false,
                 "ajax": {
@@ -152,6 +163,7 @@
                 },
                 "columnDefs": [{
                         data: "id_pelanggan",
+                        width: 20,
                         targets: 0,
                         render: function(data, type, full, meta) {
                             return data;
@@ -159,6 +171,7 @@
                     },
                     {
                         data: "id_pelanggan",
+                        width: 75,
                         targets: 1,
                         render: function(data, type, full, meta) {
                             return data;
@@ -166,6 +179,7 @@
                     },
                     {
                         data: "nama_pelanggan",
+                        width: 300,
                         targets: 2,
                         render: function(data, type, full, meta) {
                             return data;
@@ -173,6 +187,7 @@
                     },
                     {
                         data: "nomor_telepon",
+                        width: 100,
                         targets: 3,
                         render: function(data, type, full, meta) {
                             return data;
@@ -180,6 +195,7 @@
                     },
                     {
                         data: "id_pelanggan",
+                        width: 100,
                         targets: 4,
                         render: function(data, type, full, meta) {
                             var display1 = '<a type="button" onClick = "show_view_modal(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
@@ -409,8 +425,84 @@
                 view_keterangan.val(data.keterangan);
                 view_tanggal_input.text(data.tanggal_input);
                 histori_tanggal_input.text(data.tanggal_input);
+                panggildaftarpenjualan(data.id_pelanggan);
                 $('#view_Modal').modal('show');
             }
         });
+    }
+</script>
+
+<script>
+    function panggildaftarpenjualan(id_pelanggan) {
+        var table_satuan = $('#datatable-master-pelanggan-history').DataTable({
+            destroy: true,
+            "oLanguage": {
+                sProcessing: "Sabar yah...",
+                sZeroRecords: "Tidak ada Data..."
+            },
+            "fixedColumns": true,
+            "lengthChange": true,
+            "searching": true,
+            "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
+            "dom": 'Bfrtip',
+            "processing": true,
+            "serverSide": false,
+            "ajax": {
+                "url": '<?= base_url("manajemen_data/masterpelanggan/getDataPenjualan/"); ?>',
+                "type": "POST",
+                "data": {
+                    id_pelanggan: id_pelanggan
+                }
+            },
+            "columnDefs": [{
+                    data: "no_faktur",
+                    width: 20,
+                    targets: 0,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "no_faktur",
+                    width: 100,
+                    targets: 1,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "total_penjualan",
+                    width: 100,
+                    targets: 2,
+                    render: function(data, type, full, meta) {
+                        return formatRupiah(data, 'Rp.');
+                    }
+                }
+            ],
+            "rowCallback": function(row, data, iDisplayIndex) {
+                var info = this.fnPagingInfo();
+                var page = info.iPage;
+                var length = info.iLength;
+                var index = page * length + (iDisplayIndex + 1);
+                $('td:eq(0)', row).html(index);
+            }
+        });
+    }
+
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
     }
 </script>
