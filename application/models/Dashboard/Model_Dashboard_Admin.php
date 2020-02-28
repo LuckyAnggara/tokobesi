@@ -49,7 +49,7 @@ class Model_Dashboard_Admin extends CI_Model
     // daftar pembelian
     function get_data()
     {
-        $this->db->select('master_pembelian.*,master_supplier.nama_supplier, master_user.nama as nama_pegawai');
+        $this->db->select('master_pembelian.*,DATE_FORMAT(master_pembelian.tanggal_transaksi, "%d %b %Y") as tanggal_transaksi,master_supplier.nama_supplier, master_user.nama as nama_pegawai');
         $this->db->from('master_pembelian');
         $this->db->join('master_user', 'master_user.username = master_pembelian.user');
         $this->db->join('master_supplier', 'master_supplier.kode_supplier = master_pembelian.kode_supplier');
@@ -63,7 +63,7 @@ class Model_Dashboard_Admin extends CI_Model
     function get_data_kredit($nomor_transaksi)
     {
         $this->db->select('*');
-        $this->db->from('master_hutang');
+        $this->db->from('master_utang');
         $this->db->where('nomor_transaksi', $nomor_transaksi);
         $output = $this->db->get()->row_array();
         return $output;

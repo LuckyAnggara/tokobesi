@@ -1064,9 +1064,9 @@ CREATE TABLE `temp_purchase_order` (
 -- Dumping data for table `temp_purchase_order`
 --
 
-INSERT INTO `temp_purchase_order` (`id`, `no_order`, `kode_barang`, `jumlah_penjualan`, `harga_jual`, `diskon`, `total_harga`, `tanggal_input`, `user`, `status`) VALUES
-(209, 'PO.200220001', 'B001', 200, 2500000, 0, 500000000, '2020-02-20 08:08:36', 'lucky15', 2),
-(210, 'PO.200220001', 'B001', 100, 2500000, 100000, 249900000, '2020-02-20 08:08:49', 'lucky15', 2);
+-- INSERT INTO `temp_purchase_order` (`id`, `no_order`, `kode_barang`, `jumlah_penjualan`, `harga_jual`, `diskon`, `total_harga`, `tanggal_input`, `user`, `status`) VALUES
+-- (209, 'PO.200220001', 'B001', 200, 2500000, 0, 500000000, '2020-02-20 08:08:36', 'lucky15', 2),
+-- (210, 'PO.200220001', 'B001', 100, 2500000, 100000, 249900000, '2020-02-20 08:08:49', 'lucky15', 2);
 
 -- --------------------------------------------------------
 
