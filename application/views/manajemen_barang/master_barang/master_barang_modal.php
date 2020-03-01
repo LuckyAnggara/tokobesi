@@ -116,10 +116,26 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-3 col-form-label">Base Harga Jual</label>
+                                    <label class="col-3 col-form-label">Harga Konsumen</label>
                                     <div class="col-9">
                                         <input type="text" id="harga_satuan_dummy" name="harga_satuan_dummy" class="form-control" value="Rp.0" required>
                                         <input type="text" name="harga_satuan" id="harga_satuan" class="form-control" hidden>
+                                        <small id="inputhelp" class="form-text text-muted">*Harga jual dapat di rubah pada saat penjualan berlangsung</small>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Harga Material</label>
+                                    <div class="col-9">
+                                        <input type="text" id="harga_kedua_dummy" name="harga_kedua_dummy" class="form-control" value="Rp.0" required>
+                                        <input type="text" name="harga_kedua" id="harga_kedua" class="form-control" hidden>
+                                        <small id="inputhelp" class="form-text text-muted">*Harga jual dapat di rubah pada saat penjualan berlangsung</small>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Base Harga Toko Besar</label>
+                                    <div class="col-9">
+                                        <input type="text" id="harga_ketiga_dummy" name="harga_ketiga_dummy" class="form-control" value="Rp.0" required>
+                                        <input type="text" name="harga_ketiga" id="harga_ketiga" class="form-control" hidden>
                                         <small id="inputhelp" class="form-text text-muted">*Harga jual dapat di rubah pada saat penjualan berlangsung</small>
                                     </div>
                                 </div>

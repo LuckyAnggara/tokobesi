@@ -25,7 +25,7 @@ class Masteruser extends CI_Controller
     {
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-        
+
         $data['css'] = 'manajemen_pegawai/master_user/master_user_css';
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
@@ -72,7 +72,8 @@ class Masteruser extends CI_Controller
     public function tambahuser()
     {
         $post = $this->input->post();
-        $database = $this->modelUser->tambah_user($post);
+        $data = $this->modelUser->tambah_user($post);
+        echo $data;
     }
 
     public function setactive()
@@ -101,6 +102,12 @@ class Masteruser extends CI_Controller
         $this->modelPusher->pusher_force_logout($username);
     }
 
-
-
-  }
+    public function delete_data()
+    {
+        $username = $this->input->post('username');
+        if (empty($username)) {
+        } else {
+            $this->modelUser->delete_data($username); // tambah data siswa
+        }
+    }
+}

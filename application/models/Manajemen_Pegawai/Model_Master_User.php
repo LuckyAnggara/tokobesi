@@ -10,13 +10,13 @@ class Model_Master_User extends CI_Model
         $this->load->helper('string');
     }
 
-
-
     function get_data()
     {
         $this->db->select('*');
         $this->db->from('master_user');
+        // $this->db->where('is_del', 0);
         $this->db->where('username !=', $this->session->userdata('username'));
+        $this->db->order_by('is_del', 'ASC');
         $output = $this->db->get();
         return $output;
     }
@@ -40,23 +40,35 @@ class Model_Master_User extends CI_Model
         return $this->db->get()->row_array();
     }
 
+    function cekData($post)
+    {
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('username', $post['username']);
+        return $this->db->get()->num_rows();
+    }
+
     function tambah_user($post)
     {
-
-        $password = htmlspecialchars(trim(123456));
-        $ecnrypt_pw = password_hash($password, PASSWORD_BCRYPT);
-        $username = htmlspecialchars(trim($post['username']));
-        $data = [
-            'username' => $username,
-            'nip' => $post['nip'],
-            'nama' => $post['nama_pegawai'],
-            'role' => $post['role'],
-            'status' => 'inActive',
-            'password' => $ecnrypt_pw,
-            'isActive' => 1,
-        ];
-        $this->db->insert('master_user', $data);
-        $this->update_data_has_user($post['nip']);
+        $cek = $this->cekData($post);
+        if ($cek > 0) {
+            return 'duplikat';
+        } else {
+            $password = htmlspecialchars(trim(123456));
+            $ecnrypt_pw = password_hash($password, PASSWORD_BCRYPT);
+            $username = htmlspecialchars(trim($post['username']));
+            $data = [
+                'username' => $username,
+                'nip' => $post['nip'],
+                'nama' => $post['nama_pegawai'],
+                'role' => $post['role'],
+                'status' => 'inActive',
+                'password' => $ecnrypt_pw,
+                'isActive' => 1,
+            ];
+            $this->db->insert('master_user', $data);
+            $this->update_data_has_user($post['nip']);
+        }
     }
 
     function update_data_has_user($nip)
@@ -102,6 +114,29 @@ class Model_Master_User extends CI_Model
         $data = [
             'status' => 0, // 0 k=logout 1 login
         ];
+        $this->db->where('username', $username);
+        $this->db->update('master_user', $data);
+    }
+
+    function delete_data($username)
+    {
+        $this->db->select('nip');
+        $this->db->from('master_user');
+        $this->db->where('username', $username);
+        $data = $this->db->get()->row_array();
+
+        $nip = $data['nip'];
+
+        $data = array(
+            'has_user' => 0,
+        );
+        $this->db->where('nip', $nip);
+        $this->db->update('master_pegawai', $data);
+
+        $data = array(
+            'is_del' => 1,
+            'isactive' => 0,
+        );
         $this->db->where('username', $username);
         $this->db->update('master_user', $data);
     }

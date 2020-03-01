@@ -33,7 +33,7 @@ class Model_Master_Barang extends CI_Model
 
     function cekData()
     {
-        $query = $this->db->query("SELECT MAX(kode_barang) as kodebarang from master_barang");
+        $query = $this->db->query("SELECT COUNT(kode_barang) as kodebarang from master_barang");
         $hasil = $query->row();
         if ($hasil->kodebarang !== null) {
             return $hasil->kodebarang;
@@ -63,6 +63,8 @@ class Model_Master_Barang extends CI_Model
             'nama_barang' => strtoupper($post['edit_nama_barang']),
             'harga_pokok' => $post["edit_harga_pokok"],
             'harga_satuan' => $post["edit_harga_satuan"],
+            'harga_kedua' => $post["edit_harga_kedua"],
+            'harga_ketiga' => $post["edit_harga_ketiga"],
             'persediaan_minimum' => $post["edit_persediaan_minimum"],
             'kode_satuan' => $post['edit_satuan'],
             'gambar' => $this->_editUploadImage(),
@@ -86,10 +88,13 @@ class Model_Master_Barang extends CI_Model
             'nama_barang' => strtoupper($post['nama_barang']),
             'harga_pokok' => $post["harga_pokok"],
             'harga_satuan' => $post["harga_satuan"],
+            'harga_kedua' => $post["harga_kedua"],
+            'harga_ketiga' => $post["harga_ketiga"],
             'persediaan_minimum' => $post["persediaan_minimum"],
             'kode_satuan' => $post['satuan'],
             'metode_hpp' => $post['metode_hpp'],
             'komisi_sales' => $post['komisi_sales'],
+            'keterangan' => $post['keterangan'],
             'user' => $this->session->userdata['username'],
             'gambar' => $this->_uploadImage(),
             'status_jual' => $post["status_jual"],

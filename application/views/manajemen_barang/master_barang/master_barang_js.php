@@ -97,10 +97,22 @@
     var harga_satuan = document.getElementById('harga_satuan_dummy');
     harga_satuan.addEventListener('keyup', function(e) {
         var data = $('#harga_satuan_dummy').val();
-        // tambahkan 'Rp.' pada saat form di ketik
-        // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
         harga_satuan.value = formatRupiah(this.value, 'Rp. ');
         $('#harga_satuan').val(normalrupiah(data));
+    });
+
+    var harga_kedua = document.getElementById('harga_kedua_dummy');
+    harga_kedua.addEventListener('keyup', function(e) {
+        var data = $('#harga_kedua_dummy').val();
+        harga_kedua.value = formatRupiah(this.value, 'Rp. ');
+        $('#harga_kedua').val(normalrupiah(data));
+    });
+
+    var harga_ketiga = document.getElementById('harga_ketiga_dummy');
+    harga_ketiga.addEventListener('keyup', function(e) {
+        var data = $('#harga_ketiga_dummy').val();
+        harga_ketiga.value = formatRupiah(this.value, 'Rp. ');
+        $('#harga_ketiga').val(normalrupiah(data));
     });
 
     var harga_pokok = document.getElementById('harga_pokok_dummy');
@@ -457,17 +469,13 @@
                 )
                 return false;
             },
-            'onShow': function(tab, navigation, index) {
-
-            },
             'onNext': function(tab, navigation, index) {
                 var $valid = $("#submitForm").valid();
                 if (!$valid) {
                     return false;
                 }
                 var $total = navigation.find('li').length;
-
-                $current = index + 1;
+                var $current = index + 1;
                 if ($total == $current) {
                     $('#submit-add').text('Submit');
                 } else {

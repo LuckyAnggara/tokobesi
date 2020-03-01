@@ -82,7 +82,8 @@ class Masterbarang extends CI_Controller
             $data = $this->modelBarang->cekData($string);
             $nourut = 0;
             if ($data !== "1") {
-                $nourut = substr($data, 3, 4);
+                //$nourut = substr($data, 3, 4);
+                $nourut = $data;
             }
             $nourut++;
             $string = substr($string, 0, 3);

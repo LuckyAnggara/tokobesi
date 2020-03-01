@@ -52,6 +52,10 @@
                 },
                 "buttons": ['copy', 'excel', 'pdf', 'print'],
                 dom: 'Bfrtip',
+                "order": [
+                    [1, "desc"],
+                    [6, "asc"],
+                ],
                 "searching": true,
                 "fixedColumns": true,
                 "processing": true,
@@ -109,26 +113,37 @@
                     {
                         data: {
                             "status": "status",
-                            "username": "username"
+                            "username": "username",
+
                         },
                         targets: 4,
                         render: function(data, type, full, meta) {
+
                             if (data.status == 1) {
                                 var display = '<a  href="javascript:void(0)" class="badge badge-dark" onClick="force(\'' + data.username + '\')"><span>Login</span></a>';
                             } else {
                                 var display = '<a href="javascript:void(0)" class="badge badge-primary"><span>Logout</span></a>';
                             }
+
+
                             return display;
 
                         }
                     }, {
-                        data: "isactive",
+                        data: {
+                            'isactive': "isactive",
+                            'is_del': 'is_del'
+                        },
                         targets: 5,
                         render: function(data, type, full, meta) {
-                            if (data == 0) {
-                                var display = '<span class="badge badge-danger">Tidak Aktif</span>'
-                            } else if (data == "1") {
-                                var display = '<span class="badge badge-success" >Aktif</span>'
+                            if (data.is_del == 1) {
+                                var display = '<span class="badge badge-danger">Deleted</span>';
+                            } else {
+                                if (data.isactive == 0) {
+                                    var display = '<span class="badge badge-danger">Tidak Aktif</span>'
+                                } else if (data.isactive == "1") {
+                                    var display = '<span class="badge badge-success" >Aktif</span>'
+                                }
                             }
                             return display;
                         }
@@ -136,18 +151,26 @@
                     {
                         data: {
                             "username": "username",
-                            "isactive": "isactive"
+                            "isactive": "isactive",
+                            'is_del': 'is_del'
                         },
                         targets: 6,
                         render: function(data, type, full, meta) {
                             var display1 = '<a type="button" onClick = "view_modal(\'' + data.username + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
                             var display2 = '<a type="button" onClick = "setActive(\'' + data.username + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-primary btn-sm">Active</a>';
                             var display3 = '<a type="button" onClick = "setInActive(\'' + data.username + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm">inActive</a>';
-                            if (data.isactive == "1") {
-                                return display1 + " " + display3;
+                            var del = '<a type="button" onClick = "warning_delete(\'' + data.username + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm"><i class="fa fa-trash" ></i> </a>';
+
+                            if (data.is_del == 1) {
+                                return "";
                             } else {
-                                return display1 + " " + display2;
+                                if (data.isactive == "1") {
+                                    return display1 + " " + display3 + ' | ' + del;
+                                } else {
+                                    return display1 + " " + display2 + ' | ' + del;
+                                }
                             }
+
                         }
                     }
                 ],
@@ -260,13 +283,22 @@
             processData: false,
             contentType: false,
             success: function(data) {
-                $('#datatable-master-user').DataTable().ajax.reload();
-                $('#add_modal').modal('hide');
-                Swal.fire(
-                    'Sukses!',
-                    'User telah di buat, silahkan untuk login!.',
-                    'success'
-                );
+                if (data == "duplikat") {
+                    Swal.fire(
+                        'User sudah ada!',
+                        '',
+                        'error'
+                    );
+                } else {
+                    $('#datatable-master-user').DataTable().ajax.reload();
+                    $('#add_modal').modal('hide');
+                    Swal.fire(
+                        'Sukses!',
+                        'User telah di buat, silahkan untuk login!.',
+                        'success'
+                    );
+                }
+
             },
             complete: function() {
                 $.LoadingOverlay("hide");
@@ -421,5 +453,50 @@
                 $.LoadingOverlay("hide");
             },
         })
+    }
+</script>
+
+<!-- Script Delete Data -->
+
+<script type="text/javascript">
+    function warning_delete(username) {
+        Swal.fire({
+            title: 'Apa anda yakin?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4fa7f3',
+            cancelButtonColor: '#d57171',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                deleteData(username);
+
+            }
+        })
+    }
+
+    function deleteData(username) {
+        var nomor_faktur = $('#nomor_faktur').text();
+        $.LoadingOverlay("show", true);
+        $.ajax({
+            url: "<?= base_url('manajemen_pegawai/masteruser/delete_data/'); ?>",
+            data: {
+                username: username
+            },
+            type: "post",
+            async: false,
+            success: function(data) {
+                $('#datatable-master-user').DataTable().ajax.reload();
+            },
+            complete: function(data) {
+                $.LoadingOverlay("hide", true);
+                Swal.fire(
+                    'Deleted!',
+                    '',
+                    'success'
+                )
+            }
+        });
     }
 </script>
