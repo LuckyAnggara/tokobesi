@@ -315,7 +315,7 @@
                 $('#datatable-daftar-pembelian').DataTable().ajax.reload();
             },
             complete: function(data) {
-                $.LoadingOverlay("show", true);
+                $.LoadingOverlay("hide", true);
             }
         })
     })

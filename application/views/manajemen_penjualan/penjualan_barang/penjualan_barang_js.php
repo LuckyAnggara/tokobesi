@@ -1381,8 +1381,6 @@
           $('#harga_jual').val(data);
           $('#dummy_harga_jual').val(formatRupiah(data, 'Rp.'));
         },
-        complete: function(data) {}
       });
-      return data;
     }
   </script>

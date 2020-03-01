@@ -905,11 +905,18 @@
             footer: '<button type="button" onClick="help()">Klik Saya untuk Mengatasi ini</button>'
           })
         } else {
+          setTimeout(function() {
+            window.location.replace("<?= base_url('manajemen_pembelian/daftartransaksipembelian/'); ?>")
+          }, 3000);
           Swal.fire(
             'Proses!',
             'Data telah di Proses.',
             'success'
-          )
+          ).then((result) => {
+            if (result.value) {
+              window.location.replace("<?= base_url('manajemen_pembelian/daftartransaksipembelian/'); ?>")
+            }
+          })
         }
       },
       complete: function(data) {
@@ -948,11 +955,18 @@
             footer: '<button type="button" onClick="help()">Klik Saya untuk Mengatasi ini</button>'
           })
         } else {
+          setTimeout(function() {
+            window.location.replace("<?= base_url('manajemen_pembelian/daftartransaksipembelian/'); ?>")
+          }, 3000);
           Swal.fire(
             'Proses!',
             'Data telah di Proses.',
             'success'
-          )
+          ).then((result) => {
+            if (result.value) {
+              window.location.replace("<?= base_url('manajemen_pembelian/daftartransaksipembelian/'); ?>")
+            }
+          })
         }
       },
       complete: function(data) {

@@ -219,6 +219,7 @@ class Model_Pembelian_Barang extends CI_Model
 
         $this->_tambah_detail_pembelian($post);
         $this->_delete_detail_pembelian_temp($post);
+        $this->_tambah_detail_persediaan($post);
         $this->_proses_kredit($post);
     }
 

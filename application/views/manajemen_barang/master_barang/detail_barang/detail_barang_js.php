@@ -88,6 +88,20 @@
         $('#edit_harga_satuan').val(normalrupiah(data));
     });
 
+    var edit_harga_kedua = document.getElementById('edit_harga_kedua_dummy');
+    edit_harga_kedua.addEventListener('keyup', function(e) {
+        var data = $('#edit_harga_kedua_dummy').val();
+        edit_harga_kedua.value = formatRupiah(this.value, 'Rp. ');
+        $('#edit_harga_kedua').val(normalrupiah(data));
+    });
+
+    var edit_harga_ketiga = document.getElementById('edit_harga_ketiga_dummy');
+    edit_harga_ketiga.addEventListener('keyup', function(e) {
+        var data = $('#edit_harga_ketiga_dummy').val();
+        edit_harga_ketiga.value = formatRupiah(this.value, 'Rp. ');
+        $('#edit_harga_ketiga').val(normalrupiah(data));
+    });
+
     var harga_pokok = document.getElementById('edit_harga_pokok_dummy');
     harga_pokok.addEventListener('keyup', function(e) {
         var data = $('#edit_harga_pokok_dummy').val();
@@ -569,6 +583,8 @@
                 $('#edit_persediaan_minimum').attr("readonly", bol);
                 $('#edit_harga_pokok_dummy').attr("readonly", bol);
                 $('#edit_harga_satuan_dummy').attr("readonly", bol);
+                $('#edit_harga_kedua_dummy').attr("readonly", bol);
+                $('#edit_harga_ketiga_dummy').attr("readonly", bol);
                 $('#metode_hpp').attr("disabled", bol);
                 $('#edit_status_jual').attr("disabled", bol);
             } else {
@@ -576,6 +592,8 @@
                 $('#edit_satuan').attr("disabled", bol);
                 $('#edit_harga_pokok_dummy').attr("readonly", bol);
                 $('#edit_harga_satuan_dummy').attr("readonly", bol);
+                $('#edit_harga_kedua_dummy').attr("readonly", bol);
+                $('#edit_harga_ketiga_dummy').attr("readonly", bol);
                 $('#metode_hpp').attr("disabled", bol);
                 $('#edit_status_jual').attr("disabled", bol);
             }

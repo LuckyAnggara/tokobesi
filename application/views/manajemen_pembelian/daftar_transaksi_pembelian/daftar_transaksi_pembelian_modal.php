@@ -8,8 +8,7 @@
             <form data-parsley-validate novalidate autocomplete="off" id="lampiran_form" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-group row">
-                        <label class="col-3 col-form-label">Lampiran</label>
-                        <div class="col-9">
+                        <div class="col-12">
                             <input data-allowed-file-extensions="pdf jpg jpeg png" data-max-file-size="10M" name="lampiran" id="lampiran" type="file" />
                         </div>
                     </div>
