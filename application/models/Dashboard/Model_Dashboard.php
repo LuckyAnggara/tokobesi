@@ -427,6 +427,9 @@ class Model_Dashboard extends CI_Model
             $tanggal = date("Y-m-d");
             $tanggal1 =  date("Y-m-d 00:00:00", strtotime($tanggal));
             $tanggal2 =  date("Y-m-d 23:59:59", strtotime($tanggal));
+        } else if ($option == 2) {
+            $tanggal1 =  date("Y-m-01 00:00:00");
+            $tanggal2 =  date("Y-m-t 23:59:59");
         } else {
             $tanggal1 =  date("Y-m-01 00:00:00");
             $tanggal2 =  date("Y-m-t 23:59:59");
@@ -439,6 +442,7 @@ class Model_Dashboard extends CI_Model
         $this->db->where('tanggal_transaksi >=', $tanggal1);
         $this->db->where('tanggal_transaksi <=', $tanggal2);
         $this->db->group_by('detail_penjualan.kode_barang');
+        $this->db->limit('5');
 
         return $this->db->get()->result_array();
     }
@@ -488,5 +492,4 @@ class Model_Dashboard extends CI_Model
         $output = $this->db->get();
         return $output;
     }
-
 }

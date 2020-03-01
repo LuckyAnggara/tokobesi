@@ -7,11 +7,10 @@
             <form data-parsley-validate novalidate autocomplete="off" id="edit_gambar_form" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-group row">
-                        <label class="col-3 col-form-label">Foto Pegawai</label>
-                        <div class="col-5">
+
+                        <div class="col-12">
                             <input data-allowed-file-extensions="png jpg jpeg" data-max-file-size="3M" name="gambar" id="gambar" type="file" />
                         </div>
-                        <small class="form-text text-muted">*Upload Foto Pegawai jika Ada.. (optional)</small>
                     </div>
                 </div>
                 <div class="modal-footer">

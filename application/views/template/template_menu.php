@@ -21,7 +21,7 @@
                             </li>
                         <?php endforeach; ?>
 
-                        <li class="has-submenu">
+                        <!-- <li class="has-submenu">
                             <a href="<?= base_url('Dashboard'); ?>"><i class="mdi mdi-view-dashboard"></i> <span> Dashboard </span> </a>
                         </li>
                         <li class="has-submenu">
@@ -35,7 +35,7 @@
                                     </ul>
                                 </li>
                             </ul>
-                        </li>
+                        </li> -->
                         <!-- <li class="has-submenu">
                             <a href="#"><i class="mdi mdi-invert-colors"></i> <span> Transaksi Penjualan </span> </a>
                             <ul class="submenu">

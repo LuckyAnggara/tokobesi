@@ -71,11 +71,11 @@
                         </div>
                     </div>
 
-                    <div class="form-group m-t-30 m-b-0">
+                    <!-- <div class="form-group m-t-30 m-b-0">
                         <div class="col-sm-12">
                             <a class="text-muted"><i class="fa fa-lock m-r-5"></i> Lupa Password? Kontak Admin</a>
                         </div>
-                    </div>
+                    </div> -->
                 </form>
 
             </div>
@@ -147,6 +147,13 @@
                                         icon: 'error',
                                         title: 'Oops...',
                                         text: 'Cek kembali Username dan Password',
+                                    });
+                                    $('#password').val('');
+                                } else if (data == "notactivenone") {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'User anda tidak aktif',
                                     });
                                     $('#password').val('');
                                 } else {

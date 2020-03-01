@@ -77,9 +77,7 @@ class Model_Daftar_Transaksi_Pembelian extends CI_Model
         $data = $data['lampiran'];
         if ($data !== "") {
             unlink('./assets/upload/bukti/pembelian/' . $data);
-            echo "yiihaa";
         } else {
-            echo "awww";
         }
     }
 

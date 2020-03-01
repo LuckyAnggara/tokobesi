@@ -18,10 +18,12 @@ class Model_Persediaan_Barang extends CI_Model
         return $query->result_array();
     }
 
-    function get_data_barang()
+    function get_data_barang($string)
     {
         $this->db->select('*');
         $this->db->from('master_barang');
+        $this->db->like('kode_barang', $string);
+        $this->db->or_like('nama_barang', $string);
         return $this->db->get();
     }
 

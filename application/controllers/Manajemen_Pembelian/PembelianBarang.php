@@ -18,21 +18,24 @@ class Pembelianbarang extends CI_Controller
 
     public function index()
     {
+        if ($this->session->userdata('role') !== "2") {
+            redirect(base_url("dashboard"));
+        } else {
+            $data['menu'] = $this->modelSetting->data_menu();
+            $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+            $data['no_order_pembelian'] = $this->_generateNomor();
 
-        $data['menu'] = $this->modelSetting->data_menu();
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-        $data['no_order_pembelian'] = $this->_generateNomor();
-
-        $data['css'] = 'manajemen_pembelian/pembelian_barang/pembelian_barang_css';
-        $this->load->view('template/template_header', $data);
-        $this->load->view('template/template_menu');
-        $this->load->view('manajemen_pembelian/pembelian_barang/pembelian_barang', $data);
-        $this->load->view('template/template_right');
-        $this->load->view('manajemen_pembelian/pembelian_barang/pembelian_barang_modal', $data);
-        $this->load->view('template/template_footer');
-        $this->load->view('template/template_js');
-        $this->load->view('manajemen_pembelian/pembelian_barang/pembelian_barang_js');
-        $this->load->view('template/template_app_js');
+            $data['css'] = 'manajemen_pembelian/pembelian_barang/pembelian_barang_css';
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('manajemen_pembelian/pembelian_barang/pembelian_barang', $data);
+            $this->load->view('template/template_right');
+            $this->load->view('manajemen_pembelian/pembelian_barang/pembelian_barang_modal', $data);
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('manajemen_pembelian/pembelian_barang/pembelian_barang_js');
+            $this->load->view('template/template_app_js');
+        }
     }
 
     private function _generateNomor()
@@ -47,7 +50,8 @@ class Pembelianbarang extends CI_Controller
 
     public function get_data_supplier()
     {
-        $data = $this->modelPembelianBarang->get_data_supplier();
+        $string = $this->input->post('query');
+        $data = $this->modelPembelianBarang->get_data_supplier($string);
         $output = json_encode($data);
         echo $output;
     }
@@ -68,7 +72,7 @@ class Pembelianbarang extends CI_Controller
 
     public function get_data_barang_versi_select2()
     {
-        $string = $this->input->post('search_term');
+        $string = $this->input->post('query');
         $database = $this->modelPenjualan->get_data_barang($string);
         $data = $database->result_array();
         $output = array(

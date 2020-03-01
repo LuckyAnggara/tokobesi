@@ -85,6 +85,8 @@ function tgl_indo($tanggal)
 }
 $tanggal_transaksi = $data_order['tanggal_transaksi'];
 $tanggal_transaksi = tgl_indo(date("Y-m-d-D", strtotime($tanggal_transaksi)));
+$tanggal_jtempo = $data_piutang['tanggal_jatuh_tempo'];
+$tanggal_jtempo = tgl_indo(date("Y-m-d-D", strtotime($tanggal_jtempo)));
 
 if ($data_order['status_pelanggan'] == 1) {
     $id_pelanggan = "Walk in Costumer";
@@ -98,7 +100,7 @@ if ($data_order['status_bayar'] == 1) {
     $status_pembayaran = '<span class="badge badge-danger  m-t-15">Belum Lunas</span>';
 }
 ?>
-
+<label hidden id="saldo_piutang_text">Status Pembayaran</label>
 <div class="container-fluid">
     <!-- Page-Title -->
     <div class="row">
@@ -147,6 +149,12 @@ if ($data_order['status_bayar'] == 1) {
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-sm-4 col-sm-form-label m-t-5">Tanggal Jatuh Tempo</label>
+                    <div class="col-sm-8">
+                        <input id="tanggal_jtempo" name="tanggal_jtempo" type="text" class="form-control" value="<?= $tanggal_jtempo; ?>" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label class="col-sm-4 col-sm-form-label m-t-10">Status Pembayaran</label>
                     <div class="col-sm-8">
                         <?= $status_pembayaran; ?>
@@ -162,13 +170,11 @@ if ($data_order['status_bayar'] == 1) {
                                 <a id="cari-button" name="cari-button" class="btn btn-inverse waves-effect waves-light" type="button"><i>Klik Untuk Detail</i></a>
                             </div>
                         </div>
-
                         <div class="dropdown-menu">
                             <a class="dropdown-item"><b><u>Diskon</u></b> : <?= rupiah($data_order['diskon']); ?></a>
                             <a class="dropdown-item"><b><u>Pajak</u></b> : <?= rupiah($data_order['pajak_masukan']); ?></a>
                             <a class="dropdown-item"><b><u>Ongkos Kirim</u></b> : <?= rupiah($data_order['ongkir']); ?></a>
                         </div>
-
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -197,6 +203,7 @@ if ($data_order['status_bayar'] == 1) {
                                         <th>Nominal</th>
                                         <th>Sisa Saldo</th>
                                         <th>Bukti</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>

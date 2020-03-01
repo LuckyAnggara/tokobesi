@@ -61,31 +61,6 @@
 <!-- script validasi -->
 <script type="text/javascript">
     $(document).ready(function() {
-
-        $('#rootwizard').bootstrapWizard({
-            'tabClass': 'nav nav-tabs navtab-wizard nav-justified bg-muted',
-            'onTabClick': function(tab, navigation, index) {
-                Swal.fire(
-                    'Oopss!',
-                    'Tekan tombol Next',
-                    'error'
-                )
-                return false;
-            },
-            'onNext': function(tab, navigation, index) {
-                var $valid = $("#submitForm").valid();
-                if (!$valid) {
-                    return false;
-                }
-                var $total = navigation.find('li').length;
-                var $current = index + 1;
-                if ($total == $current) {
-                    $('#submit-add').text('Submit');
-                } else {
-                    $('#submit-add').text('Next');
-                }
-            },
-        });
         $('#submit-add').on('click', function() {
             if ($('#submit-add').text() == "Submit") {
                 tambah_data();
@@ -197,15 +172,15 @@
     });
 
     function cekData(string) {
-
         // tambah lagi if untuk string dibawah 1
-
         $.ajax({
-            url: '<?= base_url("manajemen_barang/masterbarang/cekData/"); ?>' + string,
+            url: '<?= base_url("manajemen_barang/masterbarang/cekData/"); ?>',
+            data: {
+                string: string
+            },
+            type: 'post',
             success: function(result) {
-
                 data = result;
-
             }
         });
         return data;
@@ -224,6 +199,15 @@
                 .find("input[type=checkbox], input[type=radio]")
                 .prop("checked", "")
                 .end();
+            $('#mySelect2').select2('destroy');
+            $("#nav_first").addClass("active show");
+            $("#first").addClass("active show");
+            $("#nav_second").removeClass("active show");
+            // $("#nav_third").removeClass("active show");
+            $("#nav_forth").removeClass("active show");
+            $("#second").removeClass("active show");
+            // $("#third").removeClass("active show");
+            $("#forth").removeClass("active show");
         });
     });
 </script>
@@ -452,5 +436,156 @@
 <script type="text/javascript">
     function detail_barang(kode_barang) {
         window.location.href = "<?= base_url('manajemen_barang/masterbarang/Detail_Barang/'); ?>" + kode_barang;
+    }
+</script>
+
+<!-- script select2 -->
+<script>
+    $('#contoh').on('click', function() {
+        init_jenis()
+        init_merek()
+        init_satuan()
+        init_supplier()
+
+        $('#rootwizard').bootstrapWizard({
+            'tabClass': 'nav nav-tabs navtab-wizard nav-justified bg-muted',
+            'onTabClick': function(tab, navigation, index) {
+                Swal.fire(
+                    'Oopss!',
+                    'Tekan tombol Next',
+                    'error'
+                )
+                return false;
+            },
+            'onShow': function(tab, navigation, index) {
+
+            },
+            'onNext': function(tab, navigation, index) {
+                var $valid = $("#submitForm").valid();
+                if (!$valid) {
+                    return false;
+                }
+                var $total = navigation.find('li').length;
+
+                $current = index + 1;
+                if ($total == $current) {
+                    $('#submit-add').text('Submit');
+                } else {
+                    $('#submit-add').text('Next');
+                }
+            },
+        });
+    })
+
+    function init_jenis() {
+        $('#jenis_barang').select2({
+            dropdownParent: $('#add_modal'),
+            ajax: {
+                url: '<?= base_url("manajemen_barang/masterbarang/getdatajenis/"); ?>',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        query: params.term, // search term
+                    };
+                },
+                processResults: function(data) {
+                    var results = [];
+                    $.each(data, function(index, item) {
+                        results.push({
+                            id: item.id_jenis_barang,
+                            text: item.nama_jenis_barang,
+                        });
+                    });
+                    return {
+                        results: results
+                    };
+                },
+            },
+        })
+    }
+
+    function init_merek() {
+        $('#merek_barang').select2({
+            dropdownParent: $('#add_modal'),
+            ajax: {
+                url: '<?= base_url("manajemen_barang/masterbarang/getdatamerek/"); ?>',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        query: params.term, // search term
+                    };
+                },
+                processResults: function(data) {
+                    var results = [];
+                    $.each(data, function(index, item) {
+                        results.push({
+                            id: item.id_merek_barang,
+                            text: item.nama_merek_barang,
+                        });
+                    });
+                    return {
+                        results: results
+                    };
+                },
+            },
+        })
+    }
+
+    function init_satuan() {
+        $('#satuan').select2({
+            dropdownParent: $('#add_modal'),
+            ajax: {
+                url: '<?= base_url("manajemen_barang/masterbarang/getdatasatuan/"); ?>',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        query: params.term, // search term
+                    };
+                },
+                processResults: function(data) {
+                    var results = [];
+                    $.each(data, function(index, item) {
+                        results.push({
+                            id: item.id_satuan,
+                            text: item.nama_satuan,
+                        });
+                    });
+                    return {
+                        results: results
+                    };
+                },
+            },
+        })
+    }
+
+    function init_supplier() {
+        $('#kode_supplier').select2({
+            dropdownParent: $('#add_modal'),
+            ajax: {
+                url: '<?= base_url("manajemen_barang/masterbarang/getdatasupplier/"); ?>',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        query: params.term, // search term
+                    };
+                },
+                processResults: function(data) {
+                    var results = [];
+                    $.each(data, function(index, item) {
+                        results.push({
+                            id: item.kode_supplier,
+                            text: item.nama_supplier,
+                        });
+                    });
+                    return {
+                        results: results
+                    };
+                },
+            },
+        })
     }
 </script>

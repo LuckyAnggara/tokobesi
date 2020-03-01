@@ -23,10 +23,12 @@ class Model_Pembelian_Barang extends CI_Model
         $this->_delete_detail_pembelian_temp($data);
     }
 
-    function get_data_supplier()
+    function get_data_supplier($string)
     {
         $this->db->select('*');
         $this->db->from('master_supplier');
+        $this->db->like('kode_supplier', $string);
+        $this->db->or_like('nama_supplier', $string);
         return $this->db->get()->result_array();
     }
 
@@ -195,8 +197,6 @@ class Model_Pembelian_Barang extends CI_Model
         $this->_tambah_detail_persediaan($post);
 
         $this->_delete_detail_pembelian_temp($post);
-
-        echo "ayee";
     }
 
     function proses_kredit($post)
@@ -219,8 +219,6 @@ class Model_Pembelian_Barang extends CI_Model
 
         $this->_tambah_detail_pembelian($post);
         $this->_delete_detail_pembelian_temp($post);
-        // $this->_tambah_data_persediaan($post);
-        // $this->_tambah_detail_persediaan($post);
         $this->_proses_kredit($post);
     }
 
@@ -236,12 +234,24 @@ class Model_Pembelian_Barang extends CI_Model
         $data = array(
             'nomor_transaksi' => $post['nomor_transaksi'],
             'tanggal_jatuh_tempo' => date('Y-m-d H:i:s', strtotime($post['tanggal_jatuh_tempo'])),
-            'down_payment' => $post['down_payment'],
+            'total_tagihan' => $grand_total['grand_total'],
+            'total_pembayaran' => $post['down_payment'],
             'sisa_utang' => $sisa_pembayaran,
             'tanggal_input' =>  date("Y-m-d H:i:s"),
             'user' => $this->session->userdata['username'],
         );
         $this->db->insert('master_utang', $data);
+
+        $data = array(
+            'nomor_transaksi' => $post['nomor_transaksi'],
+            'nominal_pembayaran' => $post['down_payment'],
+            'sisa_utang' => $sisa_pembayaran,
+            'tanggal' => date("Y-m-d H:i:s"),
+            'user' => $this->session->userdata['username'],
+            'bukti' => '1',
+            'keterangan' => 'Down Payment',
+        );
+        $this->db->insert('detail_utang', $data);
     }
 
     private function _tambah_detail_pembelian($post)

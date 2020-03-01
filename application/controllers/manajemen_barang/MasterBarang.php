@@ -75,8 +75,9 @@ class Masterbarang extends CI_Controller
         echo $output;
     }
     // Generate Kode Barang Automatic
-    public function cekData($string = null)
+    public function cekData()
     {
+        $string = $this->input->post('string');
         if ($string !== null) {
             $data = $this->modelBarang->cekData($string);
             $nourut = 0;
@@ -201,5 +202,42 @@ class Masterbarang extends CI_Controller
     {
         $post = $this->input->post();
         $this->modelBarang->status_update($post);
+    }
+
+    public function getdatajenis()
+    {
+        $query = $this->input->get('query');
+        $database = $this->modelBarang->get_data_jenis($query);
+        $data = $database->result_array();
+        $output = json_encode($data);
+        echo $output;
+    }
+
+    public function getdatamerek()
+    {
+        $query = $this->input->get('query');
+        $database = $this->modelBarang->get_data_merek($query);
+        $data = $database->result_array();
+        $output = json_encode($data);
+        echo $output;
+    }
+
+    public function getdatasatuan()
+    {
+        $query = $this->input->get('query');
+        $database = $this->modelBarang->get_data_satuan($query);
+        $data = $database->result_array();
+        $output = json_encode($data);
+        echo $output;
+    }
+
+
+    public function getdatasupplier()
+    {
+        $query = $this->input->get('query');
+        $database = $this->modelBarang->get_data_supplier($query);
+        $data = $database->result_array();
+        $output = json_encode($data);
+        echo $output;
     }
 }

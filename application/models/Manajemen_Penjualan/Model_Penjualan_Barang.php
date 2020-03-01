@@ -7,7 +7,7 @@ class Model_Penjualan_Barang extends CI_Model
     {
         parent::__construct();
         $this->load->model('Setting/Model_Faktur', 'modelFaktur');
-        $this->load->helper(array('form', 'url','string'));
+        $this->load->helper(array('form', 'url', 'string'));
     }
 
     function fakturfaktur()
@@ -31,18 +31,20 @@ class Model_Penjualan_Barang extends CI_Model
             $this->db->select('master_barang.*, master_satuan_barang.nama_satuan');
             $this->db->from('master_barang');
             $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
-            $this->db->where_not_in('status_jual', 1);
+            $this->db->having('status_jual', 0);
+
             $output = $this->db->get();
             return $output;
         } else {
             $this->db->select('master_barang.*, master_satuan_barang.nama_satuan');
             $this->db->from('master_barang');
             $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
-            $this->db->where_not_in('status_jual', 1);
-            $this->db->group_start();
+            // $this->db->where_not_in('status_jual', 1);
+            // $this->db->group_start();
             $this->db->like("master_barang.kode_barang", $string);
             $this->db->or_like("nama_barang", $string);
-            $this->db->group_end();
+            $this->db->having('status_jual', 0);
+            $this->db->limit('6');
 
             $output = $this->db->get();
             return $output;
@@ -59,6 +61,7 @@ class Model_Penjualan_Barang extends CI_Model
             'jumlah_penjualan' => $post["jumlah_penjualan"],
             'harga_jual' => $post["harga_jual"],
             'diskon' => $post["diskon"],
+            'user' => $this->session->userdata['username'],
             'total_harga' => $post["harga_jual"] * $post['jumlah_penjualan'] - $post['diskon'],
             'tanggal_input' => date("Y-m-d H:i:s"),
         ];
@@ -93,10 +96,6 @@ class Model_Penjualan_Barang extends CI_Model
         $this->db->where('id', $id);
         $data = $this->db->get()->result_array();
 
-        foreach ($data as $value) {
-            $this->persediaan_temp_batal($value);
-        }
-
         $this->db->where('id', $id);
         $this->db->delete('temp_tabel_keranjang_penjualan');
     }
@@ -113,30 +112,6 @@ class Model_Penjualan_Barang extends CI_Model
             'jumlah_persediaan' => $output['jumlah_persediaan'] - $post['jumlah_penjualan']
         );
         $this->db->where('kode_barang', $post['kode_barang']);
-        $this->db->update('master_persediaan', $data);
-    }
-
-    public function persediaan_temp_batal($value)
-    {
-
-        $post = $value;
-        $this->db->select('*');
-        $this->db->from('temp_tabel_keranjang_penjualan');
-        $this->db->where('id', $post['id']);
-        $output_keranjang = $this->db->get()->row_array();
-
-        $this->db->select('*');
-        $this->db->from('master_persediaan');
-        $this->db->where('kode_barang', $output_keranjang['kode_barang']);
-        $output_persediaan = $this->db->get()->row_array();
-
-        $data = array(
-            'jumlah_keranjang' => $output_persediaan['jumlah_keranjang'] - $output_keranjang['jumlah_penjualan'],
-            'jumlah_persediaan' => $output_persediaan['jumlah_persediaan'] + $output_keranjang['jumlah_penjualan']
-        );
-        print_r($data);
-
-        $this->db->where('kode_barang', $output_keranjang['kode_barang']);
         $this->db->update('master_persediaan', $data);
     }
 
@@ -293,15 +268,17 @@ class Model_Penjualan_Barang extends CI_Model
         return strtoupper($alpha) . $number;
     }
 
-    function cekPasswordDirektur($post) // overide password harga jual
+    function cekPasswordOverride($post, $role_override) // overide password harga jual
     {
+
         $this->db->select('*');
         $this->db->from('master_user');
-        $this->db->where('role', 'Direktur');
-        $this->db->where('password', $post['password']);
-        $data = $this->db->get()->num_rows();
+        $this->db->where('role', $role_override);
+        $user = $this->db->get()->row_array();
 
-        if ($data > 0) {
+        $isPasswordTrue = password_verify($post["password"], $user['password']);
+
+        if ($isPasswordTrue) {
             return 1;
         } else {
             return 0;
@@ -355,7 +332,7 @@ class Model_Penjualan_Barang extends CI_Model
                 'no_faktur' => $no_faktur,
                 'tanggal_jatuh_tempo' => date('Y-m-d H:i:s', strtotime($post['tanggal_jatuh_tempo'])),
                 'down_payment' => $post['down_payment'],
-                'total_tagihan' => $post['grand_total'],
+                'total_tagihan' => $grand_total['grand_total'],
                 'total_pembayaran' => $post['down_payment'],
                 'sisa_piutang' => $sisa_piutang,
                 'tanggal_input' =>  date("Y-m-d H:i:s"),
@@ -367,10 +344,10 @@ class Model_Penjualan_Barang extends CI_Model
             $data = array(
                 'nomor_faktur' => $no_faktur,
                 'nominal_pembayaran' => $post['down_payment'],
-                'saldo_piutang' => $sisa_piutang,
+                'sisa_piutang' => $sisa_piutang,
                 'tanggal' => date("Y-m-d H:i:s"),
                 'user' => $this->session->userdata['username'],
-                'bukti' => '<?= base_url("manajemen_penjualan/penjualanbarang/invoice/' . $post['no_order_penjualan'] . '");?>',
+                'bukti' => '1',
                 'keterangan' => 'Down Payment',
             );
             $this->db->insert('detail_piutang', $data);
@@ -391,19 +368,19 @@ class Model_Penjualan_Barang extends CI_Model
         $data = $this->db->get()->result_array();
 
         foreach ($data as $key => $value) {
-            $this->db->select('jumlah_keranjang');
-            $this->db->from('master_persediaan');
-            $this->db->where('kode_barang', $value['kode_barang']);
-            $data = $this->db->get()->row_array();
-            $keranjang = $data['jumlah_keranjang'];
-            $real = $keranjang - $value['jumlah_penjualan'];
+            // $this->db->select('jumlah_keranjang');
+            // $this->db->from('master_persediaan');
+            // $this->db->where('kode_barang', $value['kode_barang']);
+            // $data = $this->db->get()->row_array();
+            // $keranjang = $data['jumlah_keranjang'];
+            // $real = $keranjang - $value['jumlah_penjualan'];
 
-            $update = [
-                'jumlah_keranjang' => $real,
-            ];
+            // $update = [
+            //     'jumlah_keranjang' => $real,
+            // ];
 
-            $this->db->where('kode_barang', $value['kode_barang']);
-            $this->db->update('master_persediaan', $update);
+            // $this->db->where('kode_barang', $value['kode_barang']);
+            // $this->db->update('master_persediaan', $update);
 
             $this->proses_debet_persediaan($value); //proses debet persediaan untuk menentukan harga beli // fifo lifo atau average
         }
@@ -443,31 +420,52 @@ class Model_Penjualan_Barang extends CI_Model
         return $this->db->get()->num_rows();
     }
 
+    // paket proses debet persediaan untuk hpp dll nya complicated
 
-    function proses_debet_persediaan($post)
+    function saldo_awal($kode_barang)
     {
-        $kode_barang = $post['kode_barang'];
-        $qty_penjualan = $post['jumlah_penjualan'];
-        // total kan persediaan
-
-        $this->db->select('*');
-        $this->db->from('master_barang');
-        $this->db->where('kode_barang', $kode_barang);
-        $detail_barang = $this->db->get()->row_array();
-
         $this->db->select('*');
         $this->db->from('master_saldo_awal');
         $this->db->where('kode_barang', $kode_barang);
-        $saldo_awal = $this->db->get()->row_array();
+        $data = $this->db->get()->row_array();
+        if ($data == null) {
+            $ouput = [
+                'saldo_awal' => 0
+            ];
+            return $ouput;
+        } else {
+            return $data;
+        }
+    }
 
-
+    function saldo_berjalan($kode_barang)
+    {
         $this->db->select_sum('saldo');
+        $this->db->from('detail_pembelian');
         $this->db->where('kode_barang', $kode_barang);
         $this->db->where('saldo !=', 0);
-        $saldo_berjalan = $this->db->get('detail_pembelian')->row_array();
+        $data = $this->db->get()->row_array();
+        if ($data['saldo'] == null) {
+            $ouput = [
+                'saldo' => 0
+            ];
+            return $ouput;
+        } else {
+            return $data;
+        }
+    }
 
-        // cek total persediaan dari saldo awal + berjalan
-        $total_persediaan = $saldo_awal['saldo_awal'] + $saldo_berjalan['saldo'];
+    function detail_barang($kode_barang)
+    {
+        $this->db->select('*');
+        $this->db->from('master_barang');
+        $this->db->where('kode_barang', $kode_barang);
+        return $this->db->get()->row_array();
+    }
+
+    function fifo_lifo($kode_barang, $detail_barang)
+    {
+
         $this->db->select('*');
         $this->db->from('detail_pembelian');
         $this->db->where('saldo !=', 0);
@@ -477,8 +475,26 @@ class Model_Penjualan_Barang extends CI_Model
             $this->db->order_by('tanggal_transaksi', 'DESC'); // ASC untuk LIFO
         } else {
             $this->db->order_by('tanggal_transaksi', 'ASC'); // DESC untuk FIFO
+            echo "fifo";
         }
-        $data_barang = $this->db->get()->result_array();
+        return $this->db->get()->result_array();
+    }
+
+    function proses_debet_persediaan($post)
+    {
+        $kode_barang = $post['kode_barang'];
+        $qty_penjualan = $post['jumlah_penjualan'];
+        // total kan persediaan
+        $detail_barang = $this->detail_barang($kode_barang);
+
+        $saldo_awal = $this->saldo_awal($kode_barang);
+        $saldo_berjalan = $this->saldo_berjalan($kode_barang);
+
+        // cek total persediaan dari saldo awal + berjalan
+        $total_persediaan = $saldo_awal['saldo_awal'] + $saldo_berjalan['saldo'];
+        // penentuan fifo lifo
+        $data_barang = $this->fifo_lifo($kode_barang, $detail_barang);
+
         // untuk harga beli average
         $this->db->select_sum('harga_beli');
         $this->db->where('kode_barang', $kode_barang);
@@ -516,25 +532,31 @@ class Model_Penjualan_Barang extends CI_Model
                 $this->db->query("UPDATE master_saldo_awal SET saldo_awal = $stok_update WHERE kode_barang = '$kode_barang'");
             } else {
 
+                if ($saldo_awal['saldo_awal'] !== 0) {
+
+                    $data = [
+                        'nomor_faktur' => $post['nomor_faktur'],
+                        'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                        'kode_barang' => $kode_barang,
+                        'qty' => $saldo_awal['saldo_awal'],
+                        'harga_pokok' => $saldo_awal['harga_awal'],
+                        'harga_jual' => $post['harga_jual'],
+                        'keterangan' => $detail_barang['metode_hpp']
+                    ];
+                    $this->db->insert('master_harga_pokok_penjualan', $data);
+                }
+
                 $stok_update = 0;
-                $data = [
-                    'nomor_faktur' => $post['nomor_faktur'],
-                    'tanggal_transaksi' => date("Y-m-d H:i:s"),
-                    'kode_barang' => $kode_barang,
-                    'qty' => $saldo_awal['saldo_awal'],
-                    'harga_pokok' => $saldo_awal['harga_awal'],
-                    'harga_jual' => $post['harga_jual'],
-                    'keterangan' => $detail_barang['metode_hpp']
-                ];
-                $this->db->insert('master_harga_pokok_penjualan', $data);
                 $this->db->query("UPDATE master_saldo_awal SET saldo_awal = $stok_update WHERE kode_barang = '$kode_barang'");
                 $qty_penjualan = $qty_penjualan - $saldo_awal['saldo_awal']; // update qty penjualan setelah di kurangi saldo awal yang diambil
+
 
                 foreach ($data_barang as $key => $value) {
                     $id = $value['id'];
                     $tgl = $value['tanggal_transaksi'];
                     $stok = $value['saldo'];
 
+                    echo $stok;
                     // nentuain harga baragng jiga AVERAGE
                     if ($detail_barang['metode_hpp'] == "AVERAGE") {
                         $harga_beli = $pembilang / $penyebut;
@@ -574,7 +596,26 @@ class Model_Penjualan_Barang extends CI_Model
         }
     }
 
-    function coba_penjualan($post)
+    function set_harga($post)
     {
+        $this->db->select('harga_satuan, harga_kedua, harga_ketiga');
+        $this->db->from('master_barang');
+        $this->db->where('kode_barang', $post['kode_barang']);
+        $data = $this->db->get()->row_array();
+
+        switch ($post['jenis_harga']) {
+            case '1':
+                return $data['harga_satuan'];
+                break;
+            case '2':
+                return $data['harga_kedua'];
+                break;
+            case '3':
+                return $data['harga_ketiga'];
+                break;
+            default:
+                return $data['harga_satuan'];
+                break;
+        }
     }
 }

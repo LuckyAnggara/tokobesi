@@ -57,4 +57,22 @@ class Model_Pusher extends CI_Model
         $data['forceLogout']['username'] = $username;
         $pusher->trigger('my-channel', 'my-event', $data);
     }
+
+    function pusher_utangpiutang($nomor_faktur)
+    {
+        require_once(APPPATH . 'libraries/vendor/autoload.php');
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+        );
+        $pusher = new Pusher\Pusher(
+            'a198692078b54078587e',
+            'bbcd6e359ab9b8fb37d2',
+            '942885',
+            $options
+        );
+        $data['utangpiutang'] = $nomor_faktur;
+        $data['dashboard'] = 'update';
+        $pusher->trigger('my-channel', 'my-event', $data);
+    }
 }

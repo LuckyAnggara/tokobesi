@@ -21,7 +21,7 @@
                     </ul>
                     <ul class="col-6" style="list-style-type:none">
                         <b>
-                            <li class="text-left" id="grand_total">Rp. 100.000</li>
+                            <li class="text-left" id="grand_total"></li>
                         </b>
                     </ul>
                 </div>
@@ -40,8 +40,8 @@
                                 <li class="text-left m-b-3"> : </li>
                             </ul>
                             <ul class="col-8" style="list-style-type:none">
-                                <li class="text-left m-b-10" id="total_penjualan">Rp. 100.000</li>
-                                <li class="text-left m-b-10 text-danger">(<span id="total_diskon">Rp. 100.000</span>)</li>
+                                <li class="text-left m-b-10" id="total_penjualan"></li>
+                                <li class="text-left m-b-10 text-danger">(<span id="total_diskon"></span>)</li>
                                 <li class="text-left m-b-3">
                                     <div class="input-group">
                                         <input readonly id="total_pajak" autocomplete="off" name="total_pajak" type="text" class="form-control" value="Rp. 0">

@@ -2,10 +2,18 @@
 <!-- Validation js (Parsleyjs) -->
 <script type="text/javascript" src="<?= base_url('assets/'); ?>plugins/parsleyjs/dist/parsley.min.js"></script>
 
+
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
-
+<!-- Buttons examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jszip.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 <!-- DatePicker Js -->
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
@@ -130,8 +138,11 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
+            "fixedColumns": true,
+            "lengthChange": true,
             "searching": true,
-            "order": [],
+            "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
+            "dom": 'Bfrtip',
             "processing": true,
             "serverSide": false,
             "ajax": {

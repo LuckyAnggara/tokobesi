@@ -10,10 +10,10 @@
                 <div class="modal-body">
                     <div id="rootwizard" class="pull-in">
                         <ul class="nav nav-pills nav-tabs nav-justified">
-                            <li class="nav-item"><a href="#first" data-toggle="tab" class="nav-link">Umum</a></li>
-                            <li class="nav-item"><a href="#second" data-toggle="tab" class="nav-link">Satuan & Harga</a></li>
-                            <!-- <li class="nav-item"><a href="#third" data-toggle="tab" class="nav-link">Insentif</a></li> -->
-                            <li class="nav-item"><a href="#forth" data-toggle="tab" class="nav-link">Lainnya</a></li>
+                            <li class="nav-item"><a href="#first" data-toggle="tab" id="nav_first" class="nav-link">Umum</a></li>
+                            <li class="nav-item"><a href="#second" data-toggle="tab" id="nav_second" class="nav-link">Satuan & Harga</a></li>
+                            <!-- <li class="nav-item"><a href="#third" data-toggle="tab"  id="nav_third" class="nav-link">Insentif</a></li> -->
+                            <li class="nav-item"><a href="#forth" data-toggle="tab" id="nav_forth" class="nav-link">Lainnya</a></li>
                         </ul>
 
                         <div class="tab-content mb-0 b-0">
@@ -44,20 +44,20 @@
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Jenis Barang</label>
                                     <div class="col-3">
-                                        <select name="jenis_barang" id="jenis_barang" class="form-control select2">
-                                            <option value="0" selected disabled hidden>--</option>
+                                        <select name="jenis_barang" id="jenis_barang" class="form-control">
+                                            <!-- <option value="0" selected disabled hidden>--</option>
                                             <?php foreach ($jenis as $value) : ?>
                                                 <option value=<?= $value['id_jenis_barang']; ?>><?= $value['nama_jenis_barang']; ?></option>
-                                            <?php endforeach; ?>
+                                            <?php endforeach; ?> -->
                                         </select>
                                     </div>
                                     <label class="col-3 col-form-label text-right">Merek Barang</label>
                                     <div class="col-3">
                                         <select name="merek_barang" id="merek_barang" class="form-control select2">
-                                            <option value="0" selected disabled hidden>--</option>
+                                            <!-- <option value="0" selected disabled hidden>--</option>
                                             <?php foreach ($merek as $value) : ?>
                                                 <option value=<?= $value['id_merek_barang']; ?>><?= $value['nama_merek_barang']; ?></option>
-                                            <?php endforeach; ?>
+                                            <?php endforeach; ?> -->
                                         </select>
                                     </div>
                                 </div>
@@ -65,11 +65,11 @@
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Nama Supplier</label>
                                     <div class="col-9">
-                                        <select name="kode_supplier" id="kode_supplier" class="select2 form-control">
-                                            <option class="text-muted" value="0" selected disabled hidden>-Supplier-</option>
+                                        <select name="kode_supplier" id="kode_supplier" class="form-control">
+                                            <!-- <option class="text-muted" value="0" selected disabled hidden>-Supplier-</option>
                                             <?php foreach ($supplier as $value) : ?>
                                                 <option value=<?= $value['kode_supplier']; ?>><?= $value['nama_supplier']; ?></option>
-                                            <?php endforeach; ?>
+                                            <?php endforeach; ?> -->
                                         </select>
                                         <small id="inputhelp" class="form-text text-muted">*Optional</small>
                                     </div>
@@ -79,18 +79,18 @@
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Satuan Dasar*</label>
                                     <div class="col-9">
-                                        <select name="satuan" id="satuan" class="form-control select2" required>
-                                            <option value="0" selected disabled hidden>-- Satuan Barang --</option>
+                                        <select name="satuan" id="satuan" class="form-control" required>
+                                            <!-- <option value="0" selected disabled hidden>-- Satuan Barang --</option>
                                             <?php foreach ($satuan as $value) : ?>
                                                 <option value=<?= $value['kode_satuan']; ?>><?= $value['nama_satuan']; ?></option>
-                                            <?php endforeach; ?>
+                                            <?php endforeach; ?> -->
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Persediaan Minimum*</label>
                                     <div class="col-5">
-                                        <input type="text" id="persediaan_minimum" name="persediaan_minimum" class="form-control" required>
+                                        <input type="number" id="persediaan_minimum" name="persediaan_minimum" class="form-control" required>
                                     </div>
                                     <label class="col-1 col-form-label">/</label>
                                     <div class="col-3">

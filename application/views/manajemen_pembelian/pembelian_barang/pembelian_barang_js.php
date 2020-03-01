@@ -184,20 +184,26 @@
       });
       console.log('unload');
     });
+
     $("#select_nama_supplier").select2({
       ajax: {
         url: '<?= base_url("manajemen_pembelian/pembelianbarang/get_data_supplier"); ?>',
         type: "post",
         dataType: 'json',
         delay: 250,
+        data: function(params) {
+          return {
+            query: params.term, // search term
+          };
+        },
         processResults: function(data) {
           var results = [];
-          for (var i in data) {
+          $.each(data, function(index, item) {
             results.push({
-              "id": data[i].kode_supplier,
-              "text": data[i].nama_supplier
+              id: item.kode_supplier,
+              text: item.nama_supplier,
             });
-          };
+          });
           return {
             results: results
           };
@@ -244,34 +250,37 @@
         type: "post",
         dataType: 'json',
         delay: 250,
-        // data: function(params) {
-        //   return {
-        //     search_term: params.term
-        //   };
-        // },
+        data: function(params) {
+          return {
+            query: params.term, // search term
+          };
+        },
         processResults: function(data) {
           var results = [];
-          console.log(results);
-          for (var i in data.data) {
+          $.each(data.data, function(index, item) {
             results.push({
-              "id": data.data[i].kode_barang + '-' + data.data[i].nama_satuan,
-              "text": data.data[i].kode_barang + ' - ' + data.data[i].nama_barang
+              id: item.kode_barang,
+              text: item.kode_barang + ' - ' + item.nama_barang,
+              nama_satuan: item.nama_satuan,
             });
-          };
+          });
           return {
             results: results
           };
         },
       },
+      templateSelection: function(data, container) {
+        // Add custom attributes to the <option> tag for the selected option
+        $(data.element).attr('data-kode_barang', data.id);
+        $(data.element).attr('data-nama_satuan', data.nama_satuan);
+        return data.text;
+      },
       placeholder: "Pencarian Barang, menggunakan Nama Barang atau Kode Barang .."
     }).on('select2:select', function(evt) {
-      var data = $("#select_nama_barang option:selected").val();
-      str = data.split("-");
-      var kode_barang = str[0]
-      var harga_jual = str[1];
-      var sisa_persediaan = str[2];
-      var satuan = str[3];
-      choose_barang(kode_barang, sisa_persediaan, satuan, harga_jual);
+      var kode_barang = $("#select_nama_barang option:selected").data('kode_barang');
+      console.log(kode_barang)
+      var satuan = $("#select_nama_barang option:selected").data('nama_satuan');
+      choose_barang(kode_barang, satuan);
     });
   }
 
@@ -325,11 +334,10 @@
     $('#diskon').val(normalrupiah(diskon.val()));
   });
 
-  function choose_barang(kode_barang, persediaan, satuan, harga_jual) {
+  function choose_barang(kode_barang, satuan) {
     var input_harga_beli = $('#dummy_harga_beli');
     var label_kode_barang = $('#label_kode_barang');
     var label_satuan = $('#satuan');
-
     $("#qty").TouchSpin({
       min: 1,
       max: 9999999,
@@ -807,11 +815,6 @@
           }).then((result) => {
             if (result.value) {
               proses_tunai();
-              Swal.fire(
-                'Success!',
-                'Pembelian Barang telah di Proses',
-                'success'
-              )
               // setTimeout(function() {
               //   location.reload();
               // }, 2000);
@@ -842,6 +845,7 @@
       });
       dp.value = formatRupiah("0", 'Rp. ');
       $('#dp').val(normalrupiah(dp.value));
+      $('#apply_dp').text('0%');
     }
 
   });
@@ -877,6 +881,7 @@
     var dp = $('#dp').val();
     var tanggal_jatuh_tempo = $('#tanggal_jatuh_tempo').val();
 
+    $.LoadingOverlay("show");
 
     $.ajax({
       url: "<?= Base_url('manajemen_pembelian/pembelianbarang/proses_kredit'); ?>",
@@ -905,10 +910,14 @@
             'Data telah di Proses.',
             'success'
           )
-          // setTimeout(function() {
-          //   location.reload();
-          // }, 2000);
         }
+      },
+      complete: function(data) {
+        $('#proses_kredit_modal').modal('hide');
+        $('.btn').attr('disabled', 'true');
+        $('#datatable-keranjang-pembelian').empty()
+        // Hide image container
+        $.LoadingOverlay("hide");
       }
     })
   }
@@ -918,7 +927,7 @@
     var no_order_pembelian = $('#no_order_pembelian').text();
     var kode_supplier = $('#select_nama_supplier').val();
     var tanggal_transaksi = $('#tanggal_transaksi').val();
-
+    $.LoadingOverlay("show");
     $.ajax({
       url: "<?= Base_url('manajemen_pembelian/pembelianbarang/proses_tunai'); ?>",
       type: "post",
@@ -945,6 +954,12 @@
             'success'
           )
         }
+      },
+      complete: function(data) {
+        $('.btn').attr('disabled', 'true');
+        $('#datatable-keranjang-pembelian').empty()
+        // Hide image container
+        $.LoadingOverlay("hide");
       }
     })
   }

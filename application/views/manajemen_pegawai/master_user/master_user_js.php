@@ -1,6 +1,17 @@
+<script src="<?= base_url('assets/'); ?>plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
+<!-- Validation js (Parsleyjs) -->
+<script type="text/javascript" src="<?= base_url('assets/'); ?>plugins/parsleyjs/dist/parsley.min.js"></script>
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jszip.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 
 <!-- file uploads js -->
 <script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
@@ -39,7 +50,10 @@
                     sProcessing: "Sabar yah...",
                     sZeroRecords: "Tidak ada Data..."
                 },
+                "buttons": ['copy', 'excel', 'pdf', 'print'],
+                dom: 'Bfrtip',
                 "searching": true,
+                "fixedColumns": true,
                 "processing": true,
                 "serverSide": false,
                 "ajax": {
@@ -70,6 +84,25 @@
                         data: "role",
                         targets: 3,
                         render: function(data, type, full, meta) {
+                            switch (data) {
+                                case '1':
+                                    return "<b>Cashier</b>";
+                                    break;
+                                case '2':
+                                    return "<b>Administrator</b>";
+                                    break;
+                                case '3':
+                                    return "<b>Sales</b>";
+                                    break;
+                                case '4':
+                                    return "<b>Supervisor</b>";
+                                    break;
+                                case '5':
+                                    return "<b>Manager</b>";
+                                    break;
+                                default:
+                                    // code block
+                            }
                             return data;
                         }
                     },
@@ -83,10 +116,8 @@
                             if (data.status == 1) {
                                 var display = '<a  href="javascript:void(0)" class="badge badge-dark" onClick="force(\'' + data.username + '\')"><span>Login</span></a>';
                             } else {
-                                var display = '<a  href="javascript:void(0)" class="badge badge-primary" onClick="force(\'' + data.username + '\')"><span>Logout</span></a>';
+                                var display = '<a href="javascript:void(0)" class="badge badge-primary"><span>Logout</span></a>';
                             }
-
-
                             return display;
 
                         }

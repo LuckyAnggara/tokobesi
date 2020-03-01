@@ -228,6 +228,7 @@
                                             <th>#</th>
                                             <th>Nomor Faktur</th>
                                             <th>Tangal Jt Tempo</th>
+                                            <th>Total Tagihan</th>
                                             <th>Saldo</th>
                                         </tr>
                                     </thead>
@@ -246,6 +247,7 @@
                                             <th>#</th>
                                             <th>Nomor Faktur</th>
                                             <th>Tangal Jt Tempo</th>
+                                            <th>Total Tagihan</th>
                                             <th>Saldo</th>
                                         </tr>
                                     </thead>

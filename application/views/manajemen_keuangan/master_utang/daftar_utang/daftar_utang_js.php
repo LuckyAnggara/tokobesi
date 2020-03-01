@@ -5,6 +5,14 @@
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jszip.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 
 <!-- DatePicker Js -->
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
@@ -43,7 +51,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         init_table();
-        setSaldoPiutang();
+        setSaldoUtang();
 
 
         $('#filter').on('click', function() {
@@ -99,7 +107,10 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
+            "buttons": ['copy', 'excel', 'pdf', 'print'],
+            dom: 'Bfrtip',
             "searching": true,
+            "fixedColumns": true,
             "processing": true,
             "serverSide": false,
             "ordering": false,
@@ -124,7 +135,7 @@
                     }
                 },
                 {
-                    data: "no_faktur",
+                    data: "nomor_transaksi",
                     targets: 2,
                     render: function(data, type, full, meta) {
                         return data;
@@ -164,27 +175,25 @@
                     data: "sisa_utang",
                     targets: 7,
                     render: function(data, type, full, meta) {
-                        var display = '<span class="text-danger"><b>' + formatRupiah(data.toString(), 'Rp.') + '</b></span>'
+                        if (data !== "0") {
+                            var display = '<span class="text-danger"><b>' + formatRupiah(data.toString(), 'Rp.') + '</b></span>'
+                        } else {
+                            var display = '<span class="badge badge-success">Lunas</span>'
+
+                        }
                         return display;
                     }
                 },
                 {
-                    data: "nama_sales",
+                    data: "nama_pegawai",
                     targets: 8,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    data: "nama_pegawai",
+                    data: "nomor_transaksi",
                     targets: 9,
-                    render: function(data, type, full, meta) {
-                        return data;
-                    }
-                },
-                {
-                    data: "no_faktur",
-                    targets: 10,
                     render: function(data, type, full, meta) {
                         var display1 = '<a type="button" onClick = "detail_utang(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Detail"><i class="fa fa-search" ></i> </a>';
 
@@ -204,7 +213,7 @@
         });
     }
 
-    function setSaldoPiutang() {
+    function setSaldoUtang() {
         $.ajax({
             url: '<?= base_url("manajemen_keuangan/masterutang/saldoutang/"); ?>',
             type: "POST",

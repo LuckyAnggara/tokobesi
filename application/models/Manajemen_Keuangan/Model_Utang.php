@@ -16,12 +16,12 @@ class Model_Utang extends CI_Model
         return $output;
     }
 
-    function get_data_sales($nomor_faktur)
+    function get_data_sales($nomor_transaksi)
     {
-        $this->db->select('master_penjualan.sales,master_user.nama as nama_sales');
-        $this->db->from('master_penjualan');
-        $this->db->join('master_user', 'master_user.username = master_penjualan.sales');
-        $this->db->where('no_faktur', $nomor_faktur);
+        $this->db->select('master_pembelian.sales,master_user.nama as nama_sales');
+        $this->db->from('master_pembelian');
+        $this->db->join('master_user', 'master_user.username = master_pembelian.sales');
+        $this->db->where('nomor_transaksi', $nomor_transaksi);
         $output = $this->db->get()->row_array();
         if (!isset($output)) {
             return "";
@@ -30,22 +30,32 @@ class Model_Utang extends CI_Model
         }
     }
 
-    function get_data_supplier($nomor_faktur)
+    function get_data_supplier($nomor_transaksi)
     {
         $this->db->select('master_supplier.nama_supplier as nama_supplier');
-        $this->db->from('master_penjualan');
-        $this->db->join('master_utang', 'master_utang.no_faktur = master_penjualan.no_faktur');
-        $this->db->join('master_supplier', 'master_supplier.id_supplier = master_penjualan.id_supplier');
-        $this->db->where('master_penjualan.no_faktur', $nomor_faktur);
+        $this->db->from('master_pembelian');
+        $this->db->join('master_utang', 'master_utang.nomor_transaksi = master_pembelian.nomor_transaksi');
+        $this->db->join('master_supplier', 'master_supplier.kode_supplier = master_pembelian.kode_supplier');
+        $this->db->where('master_pembelian.nomor_transaksi', $nomor_transaksi);
         $output = $this->db->get()->row_array();
         return $output['nama_supplier'];
     }
 
-    function get_detail_pembayaran($nomor_faktur)
+    function get_data_detail_utang($nomor_transaksi)
+    {
+        $this->db->select('*');
+        $this->db->from('master_utang');
+        $this->db->where('nomor_transaksi', $nomor_transaksi);
+        $output = $this->db->get()->row_array();
+        return $output;
+    }
+
+    function get_detail_pembayaran($nomor_transaksi)
     {
         $this->db->select('*, DATE_FORMAT(tanggal, "%d %b %Y") as tanggal');
         $this->db->from('detail_utang');
-        $this->db->where('nomor_faktur', $nomor_faktur);
+        $this->db->where('nomor_transaksi', $nomor_transaksi);
+        $this->db->order_by('detail_utang.tanggal', 'ASC');
         return $this->db->get();
     }
 
@@ -54,10 +64,10 @@ class Model_Utang extends CI_Model
         $nominal_pembayaran = str_replace(".", "", $post['nominal_pembayaran']);
         $nominal_pembayaran = str_replace("Rp ", "", $nominal_pembayaran);
         $data = [
-            'nomor_faktur' => $post['nomor_faktur'],
+            'nomor_transaksi' => $post['nomor_transaksi'],
             'tanggal' => date('Y-m-d H:i:s', strtotime($post['tanggal'])),
             'nominal_pembayaran' => $nominal_pembayaran,
-            'sisa_utang' => $this->_sisa_utang($post['nomor_faktur'], $nominal_pembayaran),
+            'sisa_utang' => $this->_sisa_utang($post['nomor_transaksi'], $nominal_pembayaran),
             'keterangan' => $post['keterangan'],
             'user' => $this->session->userdata['username'],
             'bukti' => $this->_uploadBukti(),
@@ -67,45 +77,45 @@ class Model_Utang extends CI_Model
 
     function update_master($post)
     {
-        $total_pembayaran = $this->_total_pembayaran($post['nomor_faktur']);
+        $total_pembayaran = $this->_total_pembayaran($post['nomor_transaksi']);
         $data = [
             'total_pembayaran' => $total_pembayaran,
             'sisa_utang' => $post['grand_total'] - $total_pembayaran,
         ];
 
-        $this->db->where('no_faktur', $post['nomor_faktur']);
+        $this->db->where('nomor_transaksi', $post['nomor_transaksi']);
         $this->db->update('master_utang', $data);
     }
 
-    private function _sisa_utang($nomor_faktur, $nominal_pembayaran)
+    private function _sisa_utang($nomor_transaksi, $nominal_pembayaran)
     {
         $this->db->select('sisa_utang');
         $this->db->from('master_utang');
-        $this->db->where('no_faktur', $nomor_faktur);
+        $this->db->where('nomor_transaksi', $nomor_transaksi);
         $data = $this->db->get()->row_array();
         $sisa_utang = $data['sisa_utang'];
 
         $output =  $sisa_utang - $nominal_pembayaran;
         if ($output == 0) {
-            $this->_ganti_status($nomor_faktur);
+            $this->_ganti_status($nomor_transaksi);
         }
         return $output;
     }
 
-    private function _ganti_status($nomor_faktur)
+    private function _ganti_status($nomor_transaksi)
     {
         $data = [
             'status_bayar' => 1,
         ];
-        $this->db->where('no_faktur', $nomor_faktur);
-        $this->db->update('master_penjualan', $data);
+        $this->db->where('nomor_transaksi', $nomor_transaksi);
+        $this->db->update('master_pembelian', $data);
     }
 
-    private function _total_pembayaran($nomor_faktur)
+    private function _total_pembayaran($nomor_transaksi)
     {
         $this->db->select_sum('nominal_pembayaran');
         $this->db->from('detail_utang');
-        $this->db->where('nomor_faktur', $nomor_faktur);
+        $this->db->where('nomor_transaksi', $nomor_transaksi);
         $output = $this->db->get()->row_array();
 
         return $output['nominal_pembayaran'];
@@ -122,8 +132,11 @@ class Model_Utang extends CI_Model
         // $config['max_height']           = 768;
         $this->load->library('upload', $config);
         if ($this->upload->do_upload('bukti')) {
+            echo  $this->upload->display_errors();
             return $this->upload->data('file_name');
         } else {
+            echo  $this->upload->display_errors();
+
             return "";
         }
     }
@@ -136,21 +149,86 @@ class Model_Utang extends CI_Model
         return $output['sisa_utang'];
     }
 
-    function saldo_utang_detail($nomor_faktur)
+    function saldo_utang_detail($nomor_transaksi)
     {
         $this->db->select('sisa_utang');
         $this->db->from('master_utang');
-        $this->db->where('no_faktur', $nomor_faktur);
+        $this->db->where('nomor_transaksi', $nomor_transaksi);
         $output = $this->db->get()->row_array();
         return $output['sisa_utang'];
     }
 
-    function status_bayar($nomor_faktur)
+    function status_bayar($nomor_transaksi)
     {
         $this->db->select('status_bayar');
-        $this->db->from('master_penjualan');
-        $this->db->where('no_faktur', $nomor_faktur);
+        $this->db->from('master_pembelian');
+        $this->db->where('nomor_transaksi', $nomor_transaksi);
         $output = $this->db->get()->row_array();
         return $output['status_bayar'];
+    }
+
+
+    function set_lampiran($id)
+    {
+        $data = array(
+            'bukti' => $this->_uploadBukti(),
+        );
+        $this->db->where('id', $id);
+        $this->db->update('detail_utang', $data);
+    }
+
+    function delete_data($id)
+    {
+        $this->db->select('nominal_pembayaran, nomor_transaksi');
+        $this->db->from('detail_utang');
+        $this->db->where('id', $id);
+        $data = $this->db->get()->row_array();
+
+        $nominal_pembayaran = $data['nominal_pembayaran'];
+        $data_utang = $this->_carisisautang($data['nomor_transaksi']);
+
+        $data = array(
+            'total_pembayaran' => $data_utang['total_pembayaran'] - $nominal_pembayaran,
+            'sisa_utang' => $data_utang['sisa_utang'] + $nominal_pembayaran,
+        );
+        $this->db->where('nomor_transaksi', $data_utang['nomor_transaksi']);
+        $this->db->update('master_utang', $data);
+
+        $this->_delete_lampiran($id);
+        $this->db->where('id', $id);
+        $this->db->delete('detail_utang');
+    }
+
+    private function _carisisautang($nomor_transaksi)
+    {
+        $this->db->select('*');
+        $this->db->from('master_utang');
+        $this->db->where('nomor_transaksi', $nomor_transaksi);
+        $output = $this->db->get()->row_array();
+
+        if ($output['sisa_utang'] == 0) {
+            $data = [
+                'status_bayar' => 0,
+            ];
+            $this->db->where('nomor_transaksi', $nomor_transaksi);
+            $this->db->update('master_pembelian', $data);
+        }
+
+        return $output;
+    }
+
+    private function _delete_lampiran($id)
+    {
+        // delete image
+
+        $this->db->select('*');
+        $this->db->from('detail_utang');
+        $this->db->where('id', $id);
+        $data = $this->db->get()->row_array();
+        $data = $data['bukti'];
+        if ($data !== "") {
+            unlink('./assets/upload/bukti/utang/' . $data);
+        } else {
+        }
     }
 }

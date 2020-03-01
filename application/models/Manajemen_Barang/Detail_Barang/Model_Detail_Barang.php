@@ -90,6 +90,8 @@ class Model_Detail_Barang extends CI_Model
         $data = [
             'harga_pokok' => $post["edit_harga_pokok"],
             'harga_satuan' => $post["edit_harga_satuan"],
+            'harga_kedua' => $post["edit_harga_kedua"],
+            'harga_ketiga' => $post["edit_harga_ketiga"],
             'persediaan_minimum' => $post["edit_persediaan_minimum"],
             'kode_satuan' => $post['edit_satuan'],
             'status_jual' => $post["edit_status_jual"],

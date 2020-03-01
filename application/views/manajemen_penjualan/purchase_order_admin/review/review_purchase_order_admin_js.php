@@ -424,7 +424,6 @@
                 alamat: alamat,
                 nomor_telepon: nomor_telepon,
                 status: status, // lunas
-                // untuk kredit
                 down_payment: dp,
                 tanggal_jatuh_tempo: tanggal_jatuh_tempo
               },
@@ -592,7 +591,7 @@
             $.ajax({
               url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderAdmin/reject/'); ?>",
               data: {
-                no_order: no_order,
+                no_order_penjualan: no_order,
                 pesan: text
               },
               type: "post",
@@ -655,7 +654,7 @@
             $.ajax({
               url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderAdmin/return/'); ?>",
               data: {
-                no_order: no_order,
+                no_order_penjualan: no_order,
                 pesan: text
               },
               type: "post",
@@ -669,7 +668,7 @@
               success: function(data) {
                 setTimeout(function() {
                   location.reload(true);
-                }, 3000);
+                }, 2000);
                 Swal.fire({
                   icon: 'success',
                   title: 'Pesanan di Kembalikan ke Sales!!',

@@ -54,10 +54,9 @@ class Model_Master_Pegawai extends CI_Model
         $this->db->from('master_pegawai');
         $this->db->where('nip', $post['nip']);
         $cek = $this->db->get()->num_rows();
-        if ($cek > 0)
-        {
+        if ($cek > 0) {
             return 'duplikat';
-        }else{
+        } else {
             $data = [
                 'nip' => strtoupper($post['nip']),
                 'ktp' => strtoupper($post['ktp']),
@@ -76,11 +75,9 @@ class Model_Master_Pegawai extends CI_Model
                 'npwp' => strtoupper($post["npwp"]),
                 'gambar' => $this->_uploadImage(),
                 'user' => $this->session->userdata['username'],
-
             ];
             $this->db->insert('master_pegawai', $data);
         }
-       
     }
 
     private function _uploadImage()
@@ -97,7 +94,7 @@ class Model_Master_Pegawai extends CI_Model
         if ($this->upload->do_upload('gambar')) {
             return $this->upload->data("file_name");
         } else {
-            return "default.png";
+            return "default.jpg";
         }
     }
 
@@ -117,7 +114,7 @@ class Model_Master_Pegawai extends CI_Model
         $post = $this->input->post();
         $this->_delete_gambar_sebelumnya($post['nip']);
         $config['upload_path']          = './assets/images/pegawai/';
-        $config['allowed_types']        = 'gif|jpg|png';
+        $config['allowed_types']        = 'jpeg|jpg|png';
         $config['file_name']            = random_string('alnum', 16);
         $config['overwrite']            = true;
         $config['max_size']             = 4096; // 4MB
@@ -125,8 +122,10 @@ class Model_Master_Pegawai extends CI_Model
         // $config['max_height']           = 768;
         $this->load->library('upload', $config);
         if ($this->upload->do_upload('gambar')) {
+            echo  $this->upload->display_errors();
             return $this->upload->data("file_name");
         } else {
+            echo  $this->upload->display_errors();
             return "default.jpg";
         }
     }
@@ -140,8 +139,8 @@ class Model_Master_Pegawai extends CI_Model
         $this->db->where('nip', $nip);
         $data = $this->db->get()->row_array();
         $data_gambar = $data['gambar'];
-        if ($data_gambar !== "") {
-            unlink('./assets/images/pegawai/' . $data_gambar);
+        if ($data_gambar != "default.jpg") {
+            unlink('./assets/images/barang/' . $data);
         }
     }
 

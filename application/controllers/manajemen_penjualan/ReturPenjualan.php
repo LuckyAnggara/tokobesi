@@ -17,6 +17,7 @@ class Returpenjualan extends CI_Controller
 
     public function index()
     {
+
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
 

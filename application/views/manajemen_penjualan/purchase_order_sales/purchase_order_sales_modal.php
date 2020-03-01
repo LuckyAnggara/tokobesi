@@ -27,7 +27,8 @@
         <div class="modal-content">
             <form data-parsley-validate novalidate autocomplete="off" id="password_form" method="post" class="form-horizontal">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="label_kode_barang"></h5>
+                    <h5 class="modal-title" hidden id="label_kode_barang"></h5>
+                    <h4 class="modal-title" id="label_nama_barang"></h4>
                 </div>
                 <div class="modal-body">
                     <h5 class="text-uppercase">Sisa Persediaan <span class="text-danger" id="sisa_persediaan"></span> <span id="sisa_satuan"></span></h4>

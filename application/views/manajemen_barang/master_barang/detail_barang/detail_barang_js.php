@@ -611,6 +611,10 @@
         var edit_harga_pokok = $('#edit_harga_pokok');
         var edit_harga_satuan_dummy = $('#edit_harga_satuan_dummy');
         var edit_harga_satuan = $('#edit_harga_satuan');
+        var edit_harga_kedua_dummy = $('#edit_harga_kedua_dummy');
+        var edit_harga_kedua = $('#edit_harga_kedua');
+        var edit_harga_ketiga_dummy = $('#edit_harga_ketiga_dummy');
+        var edit_harga_ketiga = $('#edit_harga_ketiga');
         var edit_komisi_sales_dummy = $('#edit_komisi_sales_dummy');
         var edit_komisi_sales = $('#edit_komisi_sales');
         var edit_metode_hpp = $('#metode_hpp');
@@ -625,11 +629,13 @@
             async: false,
             success: function(data) {
                 rupiahJual = formatRupiah(data.harga_satuan, 'Rp.');
+                rupiahKedua = formatRupiah(data.harga_kedua, 'Rp.');
+                rupiahKetiga = formatRupiah(data.harga_ketiga, 'Rp.');
                 rupiahPokok = formatRupiah(data.harga_pokok, 'Rp.');
                 rupiahKomisi = formatRupiah(data.komisi_sales, 'Rp.');
                 edit_tipe_barang.val(data.tipe_barang).trigger('change');
-                edit_jenis_barang.val(data.tipe_barang).trigger('change');
-                edit_merek_barang.val(data.tipe_barang).trigger('change');
+                edit_jenis_barang.val(data.jenis_barang).trigger('change');
+                edit_merek_barang.val(data.merek_barang).trigger('change');
                 edit_kode_barang.val(data.kode_barang);
                 edit_nama_barang.val(data.nama_barang);
                 edit_kode_supplier.val(data.kode_supplier).trigger('change');
@@ -642,6 +648,10 @@
                 edit_harga_pokok.val(data.harga_pokok);
                 edit_harga_satuan_dummy.val(rupiahJual);
                 edit_harga_satuan.val(data.harga_satuan);
+                edit_harga_kedua_dummy.val(rupiahKedua);
+                edit_harga_kedua.val(data.harga_kedua);
+                edit_harga_ketiga_dummy.val(rupiahKetiga);
+                edit_harga_ketiga.val(data.harga_ketiga);
                 edit_komisi_sales_dummy.val(rupiahKomisi);
                 edit_komisi_sales.val(data.komisi_sales);
                 edit_metode_hpp.val(data.metode_hpp).trigger('change');

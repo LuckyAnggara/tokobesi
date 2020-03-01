@@ -37,7 +37,7 @@
                                 <div class="col-md-2 col-lg-2">
                                     <button name="filter" id="filter" class="btn btn-primary waves-effect waves-light">
                                         <i class="fa fa-filter"></i>
-                                        <span> Filter</span>
+                                        <span>Filter</span>
                                     </button>
                                 </div>
 
@@ -55,14 +55,13 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th>#</th>
-                                <th>Tanggal Transaksi</th>
-                                <th>Nomor Faktur</th>
-                                <th>Nama Pelanggan</th>
+                                <th>Tanggal</th>
+                                <th>Nomor Transaksi</th>
+                                <th>Supplier</th>
                                 <th>Tanggal Jatuh Tempo</th>
                                 <th>Total Tagihan</th>
                                 <th>Total Pembayaran</th>
                                 <th>Sisa Pembayaran</th>
-                                <th>Sales</th>
                                 <th>Admin / Cashier</th>
                                 <th>Action</th>
                             </tr>

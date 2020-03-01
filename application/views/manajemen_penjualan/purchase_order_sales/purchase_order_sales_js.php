@@ -432,12 +432,12 @@
               $("#result_page").empty();
               for (var i in data.data) {
                 var harga_jual = formatRupiah(data.data[i].harga_satuan, 'Rp.');
-                var display = '<div id="wawa" class="col-xl-3 col-md-3 col-xs-3" onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].nama_satuan + '\',\'' + data.data[i].harga_satuan + '\')">' +
+                var display = '<div id="wawa" class="col-xl-3 col-md-3 col-xs-3" onclick="choose_barang(\'' + data.data[i].kode_barang + '\',\'' + data.data[i].jumlah_persediaan + '\',\'' + data.data[i].nama_satuan + '\',\'' + data.data[i].harga_satuan + '\',\'' + data.data[i].nama_barang + '\')">' +
                   '<div class="card-box widget-user">' +
                   '<div>' +
                   '<img src="<?= base_url('assets/images/barang/'); ?>' + data.data[i].gambar + '" class="img-responsive rounded-circle" alt="user">' +
                   '<div class="wid-u-info">' +
-                  '<h4 class="mt-0">' + data.data[i].nama_barang + '</h4>' +
+                  '<h6 class="mt-0">' + data.data[i].nama_barang + '</h6>' +
                   '<h6><span class="text-primary"><b>' + harga_jual + ' </b></span><br>stok : <b>' + formatSatuan(data.data[i].jumlah_persediaan.toString()) + ' ' + data.data[i].nama_satuan + '</b></h6>' +
                   '</div>' +
                   '</div>' +
@@ -475,9 +475,10 @@
       $('#diskon').val(normalrupiah(diskon.val()));
     });
 
-    function choose_barang(kode_barang, persediaan, satuan, harga_jual) {
+    function choose_barang(kode_barang, persediaan, satuan, harga_jual, nama_barang) {
       var input_harga_jual = $('#dummy_harga_jual');
       var label_kode_barang = $('#label_kode_barang');
+      var label_nama_barang = $('#label_nama_barang');
       var sisa_persediaan = $('#sisa_persediaan');
       var sisa_satuan = $('#sisa_satuan');
 
@@ -495,9 +496,9 @@
         $("#qty").trigger("touchspin.updatesettings", {
           max: persediaan
         });
-
         input_harga_jual.val(formatRupiah(harga_jual.toString(), 'Rp.'));
         label_kode_barang.text(kode_barang);
+        label_nama_barang.text(nama_barang);
         sisa_persediaan.text(persediaan);
         sisa_satuan.text(satuan);
         $('#harga_jual').val(harga_jual);
@@ -533,7 +534,7 @@
           'error'
         )
       } else {
-        if (jumlah <= persediaan) {
+        if (jumlah <= parseInt(persediaan)) {
           push_keranjang_belanja(kode_barang, jumlah, harga_jual, diskon);
           push_total_perhitungan(no_order, 0, 0);
           notifTotalKeranjang();

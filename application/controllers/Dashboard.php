@@ -101,7 +101,7 @@ class Dashboard extends CI_Controller
 		$option = $this->input->post('option');
 		$data = $this->modelDashboard->topProduk($option);
 		if ($data == null) {
-			$dataset['nama_barang'][] = "belum ada data";
+			$dataset['nama_barang'][] = "Belum ada data";
 			$dataset['jumlah_penjualan'][] = 0;
 		} else {
 			foreach ($data as $key => $value) {

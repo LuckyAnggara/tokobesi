@@ -190,6 +190,16 @@
                 datasets: []
                 // These labels appear in the legend and in the tooltips when hovering different arcs
             },
+            options: {
+                legend: {
+                    display: true,
+                    labels: {
+                        fontColor: 'black',
+                        fontSize: 10,
+                    },
+                    position: 'left'
+                }
+            }
         });
         $('#top_produk').change(function() {
             var data = $(this).val();

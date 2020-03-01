@@ -41,11 +41,22 @@ class Model_Piutang extends CI_Model
         return $output['nama_pelanggan'];
     }
 
+    function get_data_detail_piutang($nomor_faktur)
+    {
+        $this->db->select('*');
+        $this->db->from('master_piutang');
+        $this->db->where('no_faktur', $nomor_faktur);
+        $output = $this->db->get()->row_array();
+        return $output;
+    }
+
+
     function get_detail_pembayaran($nomor_faktur)
     {
         $this->db->select('*, DATE_FORMAT(tanggal, "%d %b %Y") as tanggal');
         $this->db->from('detail_piutang');
         $this->db->where('nomor_faktur', $nomor_faktur);
+        $this->db->order_by('detail_piutang.tanggal', 'ASC');
         return $this->db->get();
     }
 
@@ -122,8 +133,12 @@ class Model_Piutang extends CI_Model
         // $config['max_height']           = 768;
         $this->load->library('upload', $config);
         if ($this->upload->do_upload('bukti')) {
+            echo  $this->upload->display_errors();
+
             return $this->upload->data('file_name');
         } else {
+            echo  $this->upload->display_errors();
+
             return "";
         }
     }
@@ -152,5 +167,68 @@ class Model_Piutang extends CI_Model
         $this->db->where('no_faktur', $nomor_faktur);
         $output = $this->db->get()->row_array();
         return $output['status_bayar'];
+    }
+
+    function set_lampiran($id)
+    {
+        $data = array(
+            'bukti' => $this->_uploadBukti(),
+        );
+        $this->db->where('id', $id);
+        $this->db->update('detail_piutang', $data);
+    }
+
+    function delete_data($id)
+    {
+        $this->db->select('nominal_pembayaran, nomor_faktur');
+        $this->db->from('detail_piutang');
+        $this->db->where('id', $id);
+        $data = $this->db->get()->row_array();
+
+        $nominal_pembayaran = $data['nominal_pembayaran'];
+        $data_utang = $this->_carisisapiutang($data['nomor_faktur']);
+
+        $data = array(
+            'total_pembayaran' => $data_utang['total_pembayaran'] - $nominal_pembayaran,
+            'sisa_piutang' => $data_utang['sisa_piutang'] + $nominal_pembayaran,
+        );
+        $this->db->where('no_faktur', $data_utang['no_faktur']);
+        $this->db->update('master_piutang', $data);
+
+        $this->_delete_lampiran($id);
+        $this->db->where('id', $id);
+        $this->db->delete('detail_piutang');
+    }
+
+    private function _carisisapiutang($nomor_faktur)
+    {
+        $this->db->select('*');
+        $this->db->from('master_piutang');
+        $this->db->where('no_faktur', $nomor_faktur);
+        $output = $this->db->get()->row_array();
+
+        if ($output['sisa_piutang'] == 0) {
+            $data = [
+                'status_bayar' => 0,
+            ];
+            $this->db->where('no_faktur', $nomor_faktur);
+            $this->db->update('master_penjualan', $data);
+        }
+        return $output;
+    }
+
+    private function _delete_lampiran($id)
+    {
+        // delete image
+
+        $this->db->select('*');
+        $this->db->from('detail_piutang');
+        $this->db->where('id', $id);
+        $data = $this->db->get()->row_array();
+        $data = $data['bukti'];
+        if ($data !== "") {
+            unlink('./assets/upload/bukti/piutang/' . $data);
+        } else {
+        }
     }
 }

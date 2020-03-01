@@ -108,11 +108,11 @@
             type: 'select',
             mode: 'inline',
             source: [{
-                    value: 1,
+                    value: 5,
                     text: 'Manager'
                 },
                 {
-                    value: 2,
+                    value: 4,
                     text: 'Supervisor'
                 }
             ]

@@ -158,7 +158,7 @@ class Model_Purchase_Order_Admin extends CI_Model
                 'no_faktur' => $no_faktur,
                 'tanggal_jatuh_tempo' => date('Y-m-d H:i:s', strtotime($post['tanggal_jatuh_tempo'])),
                 'down_payment' => $post['down_payment'],
-                'total_tagihan' => $post['grand_total'],
+                'total_tagihan' => $grand_total['grand_total'],
                 'total_pembayaran' => $post['down_payment'],
                 'sisa_piutang' => $sisa_piutang,
                 'tanggal_input' =>  date("Y-m-d H:i:s"),
@@ -169,10 +169,10 @@ class Model_Purchase_Order_Admin extends CI_Model
             $data = array(
                 'nomor_faktur' => $no_faktur,
                 'nominal_pembayaran' => $post['down_payment'],
-                'saldo_piutang' => $sisa_piutang,
+                'sisa_piutang' => $sisa_piutang,
                 'tanggal' => date("Y-m-d H:i:s"),
                 'user' => $this->session->userdata['username'],
-                'bukti' => '<?= base_url("manajemen_penjualan/penjualanbarang/invoice/' . $post['no_order_penjualan'] . '");?>',
+                'bukti' => '1',
                 'keterangan' => 'Down Payment',
             );
             $this->db->insert('detail_piutang', $data);
@@ -206,35 +206,52 @@ class Model_Purchase_Order_Admin extends CI_Model
         $this->db->update('temp_purchase_order');
     }
 
-    function proses_debet_persediaan($post)
+    // paket proses debet persediaan untuk hpp dll nya complicated
+
+    function saldo_awal($kode_barang)
     {
-        $kode_barang = $post['kode_barang'];
-        $qty_penjualan = $post['jumlah_penjualan'];
-        // total kan persediaan
-
-        $this->db->select('*');
-        $this->db->from('master_barang');
-        $this->db->where('kode_barang', $kode_barang);
-        $detail_barang = $this->db->get()->row_array();
-
         $this->db->select('*');
         $this->db->from('master_saldo_awal');
         $this->db->where('kode_barang', $kode_barang);
-        $saldo_awal = $this->db->get()->row_array();
-
-        if ($saldo_awal == null) {
-            $saldo_awal['saldo_awal'] = 0;
-            $saldo_awal['harga_awal'] = 0;
+        $data = $this->db->get()->row_array();
+        if ($data == null) {
+            $ouput = [
+                'saldo_awal' => 0
+            ];
+            return $ouput;
+        } else {
+            return $data;
         }
+    }
 
-
+    function saldo_berjalan($kode_barang)
+    {
         $this->db->select_sum('saldo');
+        $this->db->from('detail_pembelian');
         $this->db->where('kode_barang', $kode_barang);
         $this->db->where('saldo !=', 0);
-        $saldo_berjalan = $this->db->get('detail_pembelian')->row_array();
+        $data = $this->db->get()->row_array();
+        if ($data['saldo'] == null) {
+            $ouput = [
+                'saldo' => 0
+            ];
+            return $ouput;
+        } else {
+            return $data;
+        }
+    }
 
-        // cek total persediaan dari saldo awal + berjalan
-        $total_persediaan = $saldo_awal['saldo_awal'] + $saldo_berjalan['saldo'];
+    function detail_barang($kode_barang)
+    {
+        $this->db->select('*');
+        $this->db->from('master_barang');
+        $this->db->where('kode_barang', $kode_barang);
+        return $this->db->get()->row_array();
+    }
+
+    function fifo_lifo($kode_barang, $detail_barang)
+    {
+
         $this->db->select('*');
         $this->db->from('detail_pembelian');
         $this->db->where('saldo !=', 0);
@@ -244,8 +261,26 @@ class Model_Purchase_Order_Admin extends CI_Model
             $this->db->order_by('tanggal_transaksi', 'DESC'); // ASC untuk LIFO
         } else {
             $this->db->order_by('tanggal_transaksi', 'ASC'); // DESC untuk FIFO
+            echo "fifo";
         }
-        $data_barang = $this->db->get()->result_array();
+        return $this->db->get()->result_array();
+    }
+
+    function proses_debet_persediaan($post)
+    {
+        $kode_barang = $post['kode_barang'];
+        $qty_penjualan = $post['jumlah_penjualan'];
+        // total kan persediaan
+        $detail_barang = $this->detail_barang($kode_barang);
+
+        $saldo_awal = $this->saldo_awal($kode_barang);
+        $saldo_berjalan = $this->saldo_berjalan($kode_barang);
+
+        // cek total persediaan dari saldo awal + berjalan
+        $total_persediaan = $saldo_awal['saldo_awal'] + $saldo_berjalan['saldo'];
+        // penentuan fifo lifo
+        $data_barang = $this->fifo_lifo($kode_barang, $detail_barang);
+
         // untuk harga beli average
         $this->db->select_sum('harga_beli');
         $this->db->where('kode_barang', $kode_barang);
@@ -282,8 +317,9 @@ class Model_Purchase_Order_Admin extends CI_Model
                 $this->db->insert('master_harga_pokok_penjualan', $data);
                 $this->db->query("UPDATE master_saldo_awal SET saldo_awal = $stok_update WHERE kode_barang = '$kode_barang'");
             } else {
+
                 if ($saldo_awal['saldo_awal'] !== 0) {
-                    $stok_update = 0;
+
                     $data = [
                         'nomor_faktur' => $post['nomor_faktur'],
                         'tanggal_transaksi' => date("Y-m-d H:i:s"),
@@ -293,12 +329,12 @@ class Model_Purchase_Order_Admin extends CI_Model
                         'harga_jual' => $post['harga_jual'],
                         'keterangan' => $detail_barang['metode_hpp']
                     ];
-
-
                     $this->db->insert('master_harga_pokok_penjualan', $data);
-                    $this->db->query("UPDATE master_saldo_awal SET saldo_awal = $stok_update WHERE kode_barang = '$kode_barang'");
-                    $qty_penjualan = $qty_penjualan - $saldo_awal['saldo_awal']; // update qty penjualan setelah di kurangi saldo awal yang diambil
                 }
+
+                $stok_update = 0;
+                $this->db->query("UPDATE master_saldo_awal SET saldo_awal = $stok_update WHERE kode_barang = '$kode_barang'");
+                $qty_penjualan = $qty_penjualan - $saldo_awal['saldo_awal']; // update qty penjualan setelah di kurangi saldo awal yang diambil
 
 
                 foreach ($data_barang as $key => $value) {
@@ -306,6 +342,7 @@ class Model_Purchase_Order_Admin extends CI_Model
                     $tgl = $value['tanggal_transaksi'];
                     $stok = $value['saldo'];
 
+                    echo $stok;
                     // nentuain harga baragng jiga AVERAGE
                     if ($detail_barang['metode_hpp'] == "AVERAGE") {
                         $harga_beli = $pembilang / $penyebut;
@@ -368,7 +405,7 @@ class Model_Purchase_Order_Admin extends CI_Model
 
     function reject($post)
     {
-        $no_order = $post['no_order'];
+        $no_order = $post['no_order_penjualan'];
         $data = [
             'tanggal_input' => date("Y-m-d H:i:s"),
             'admin' => $this->session->userdata['username'],
@@ -383,7 +420,7 @@ class Model_Purchase_Order_Admin extends CI_Model
 
     function return($post)
     {
-        $no_order = $post['no_order'];
+        $no_order = $post['no_order_penjualan'];
         $data = [
             'tanggal_input' => date("Y-m-d H:i:s"),
             'admin' => $this->session->userdata['username'],
@@ -462,9 +499,13 @@ class Model_Purchase_Order_Admin extends CI_Model
 
     private function _update_master_insentif($no_faktur)
     {
-        $this->db->select('komisi_sales');
-        $data = $this->db->get('setting_perusahaan')->row_array();
-        $insentif = $data['komisi_sales'];
+        $this->db->select('value');
+        $this->db->from('master_setting');
+        $this->db->where('nama_setting', 'komisi_sales');
+        $data = $this->db->get()->row_array();
+        $insentif = $data['value'];
+
+        echo $insentif . "<br>";
 
         $this->db->select('*');
         $this->db->from('master_penjualan');
@@ -480,6 +521,8 @@ class Model_Purchase_Order_Admin extends CI_Model
             'status' => 0,
             'tanggal' => $data_penjualan['tanggal_transaksi']
         );
+
         $this->db->insert('master_insentif', $data);
+        echo ($insentif / 100) *  $data_penjualan['total_penjualan'];
     }
 }

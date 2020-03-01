@@ -23,7 +23,6 @@ class Model_Daftar_Transaksi_Penjualan extends CI_Model
         if ($this->session->userdata('role') < 4) {
             $this->db->where('master_penjualan.user', $this->session->userdata['username']);
         }
-
         $this->db->where('tanggal_transaksi >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
         $this->db->where('tanggal_transaksi <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
         $this->db->order_by('tanggal_transaksi', 'DESC');

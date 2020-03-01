@@ -155,7 +155,22 @@
                             <label class="control-label">Quantity</label>
                             <input id="qty" type="text" value="1" name="qty" data-bts-booster="true" data-bts-boostat="10" data-bts-max-boosted-step="false" data-bts-mousewheel="true" data-bts-button-down-class="btn btn-default" data-bts-button-up-class="btn btn-default" />
                         </div>
+                        <div class="form-group" id="selector">
+                            <div class="custom-control custom-radio form-check-inline">
+                                <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="customRadio1">Konsumen</label>
+                            </div>
+                            <div class="custom-control custom-radio form-check-inline">
+                                <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="customRadio2">Material</label>
+                            </div>
+                            <div class="custom-control custom-radio form-check-inline">
+                                <input type="radio" id="customRadio3" name="customRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="customRadio3">Toko Besar</label>
+                            </div>
+                        </div>
                         <div class="form-group">
+
                             <label class="control-label">Harga Jual</label>
                             <div class="input-group">
                                 <input readonly id="dummy_harga_jual" autocomplete="off" name="dummy_harga_jual" type="text" class="form-control" placeholder="">
@@ -164,7 +179,9 @@
                                     <button id="btn_harga_jual" name="btn_harga_jual" onClick="overide_harga();" class=" btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-edit"></i></button>
                                 </div>
                             </div>
+
                         </div>
+
                         <div class="form-group">
                             <label class="control-label">Diskon</label>
                             <input id="dummy_diskon" autocomplete="off" name="diskon" type="text" class="form-control" val="0">
@@ -185,7 +202,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Password Overide</label>
+                    <label for="exampleInputEmail1">Password Override</label>
                     <input type="password" id="password_input" class="form-control" aria-describedby="emailHelp" placeholder="Password">
                 </div>
             </div>

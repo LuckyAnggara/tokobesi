@@ -5,6 +5,14 @@
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jszip.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 
 <!-- shake effect -->
 <script src="<?= base_url('assets/'); ?>plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -82,19 +90,19 @@
                 type: "post",
                 dataType: 'json',
                 delay: 250,
-                // data: function(params) {
-                //   return {
-                //     search_term: params.term
-                //   };
-                // },
+                data: function(params) {
+                    return {
+                        query: params.term, // search term
+                    };
+                },
                 processResults: function(data) {
                     var results = [];
-                    for (var i in data.data) {
+                    $.each(data.data, function(index, item) {
                         results.push({
-                            "id": data.data[i].kode_barang,
-                            "text": data.data[i].kode_barang + ' - ' + data.data[i].nama_barang
+                            id: item.kode_barang,
+                            text: item.kode_barang + ' - ' + item.nama_barang,
                         });
-                    };
+                    });
                     return {
                         results: results
                     };
@@ -154,9 +162,13 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
+            "fixedColumns": true,
+            "lengthChange": true,
             "searching": true,
-            "order": [],
+            "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
+            "dom": 'Bfrtip',
             "processing": true,
+            "serverSide": false,
             "ajax": {
                 "url": '<?= Base_url("manajemen_persediaan/saldoawalpersediaan/getAllData"); ?>',
                 "type": "POST",

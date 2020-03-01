@@ -50,10 +50,13 @@ class Reviewpurchaseorder extends CI_Controller
     public function review($string = null)
     {
 
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-        $data['css'] = 'manajemen_penjualan/purchase_order_sales/review/review_purchase_order_css';
         $data['timeline'] = $this->modelPO->timeline($string);
+
+
         $data['no_order'] = $string;
+        $data['css'] = 'manajemen_penjualan/purchase_order_sales/review/review_purchase_order_css';
         $cek = $this->modelPO->cekData($string);
 
         if ($cek == false) {

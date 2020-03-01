@@ -33,9 +33,9 @@ class Saldoawalpersediaan extends CI_Controller
         $this->load->view('template/template_app_js');
     }
 
-    public function getData($string = null)
+    public function getData()
     {
-        $string = str_replace("%20", " ", $string);
+        $string = $this->input->post('query');
         $database = $this->modelSaldoAwal->getData($string);
         $data = $database->result_array();
         $output = array(

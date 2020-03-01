@@ -9,6 +9,7 @@ class Masterpiutang extends CI_Controller
         parent::__construct();
         $this->load->model('Manajemen_Penjualan/Model_Detail_Transaksi_Penjualan', 'modelDetailTransaksiPenjualan');
         $this->load->model('Manajemen_Keuangan/Model_Piutang', 'modelPiutang');
+        $this->load->model('Setting/Model_Pusher', 'modelPusher');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
 
         if ($this->session->userdata('status') != "login") {
@@ -67,6 +68,7 @@ class Masterpiutang extends CI_Controller
 
         $data['data_order'] = $this->modelDetailTransaksiPenjualan->get_data($no_faktur);
         $data['detail_order'] = $this->modelDetailTransaksiPenjualan->get_detail($no_faktur);
+        $data['data_piutang'] = $this->modelPiutang->get_data_detail_piutang($no_faktur);
 
         $data['css'] =  'manajemen_keuangan/master_piutang/detail_piutang/detail_piutang_css';
 
@@ -97,14 +99,27 @@ class Masterpiutang extends CI_Controller
     {
 
         $nomor_faktur = $this->input->post('nomor_faktur');
+        $total_tagihan = $this->modelPiutang->get_data_detail_piutang($nomor_faktur);
+        $total_tagihan = $total_tagihan['total_tagihan'];
+
         $database = $this->modelPiutang->get_detail_pembayaran($nomor_faktur);
         $data = $database->result_array();
         $output = array(
             // "draw" => $_POST['draw'],
             "recordsTotal" => $this->db->count_all_results('master_user'),
             "recordsFiltered"  => $database->num_rows(),
-            "data" => $data
+            "data" => array()
+
         );
+
+        foreach ($data as $key => $value) {
+            $nilai = $total_tagihan - $value['nominal_pembayaran'];
+            $value['saldo'] = $nilai;
+            $output['data'][] = $value;
+            $total_tagihan = $nilai;
+        }
+
+
         $output = json_encode($output);
         echo $output;
     }
@@ -114,6 +129,7 @@ class Masterpiutang extends CI_Controller
         $post = $this->input->post();
         $this->modelPiutang->tambah_pembayaran($post);
         $this->modelPiutang->update_master($post);
+        $this->modelPusher->pusher_utangpiutang($post['nomor_faktur']);
     }
 
     public function saldopiutang()
@@ -137,5 +153,24 @@ class Masterpiutang extends CI_Controller
         $data =  $this->modelPiutang->status_bayar($nomor_faktur);
         $output = json_encode($data);
         echo $output;
+    }
+
+    public function setlampiran()
+    {
+        $id = $this->input->post('id');
+        $nomor_faktur = $this->input->post('nomor_faktur');
+        $this->modelPiutang->set_lampiran($id);
+        $this->modelPusher->pusher_utangpiutang($nomor_faktur);
+    }
+
+    public function delete_data()
+    {
+        $id = $this->input->post('id');
+        $nomor_faktur = $this->input->post('nomor_faktur');
+        if (empty($id)) {
+        } else {
+            $this->modelPiutang->delete_data($id); // tambah data siswa
+        }
+        $this->modelPusher->pusher_utangpiutang($nomor_faktur);
     }
 }

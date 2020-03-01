@@ -15,7 +15,7 @@
 <script>
     $(document).ready(function() {
 
-        init_table()
+        init_table_po()
     })
 
 
@@ -87,7 +87,7 @@
 <!-- SCRIPT LATEST ORDER PENJUALAN -->
 
 <script>
-    function init_table(status = 1, tanggal_awal = "01-01-" + new Date().getFullYear(), tanggal_akhir = "31-12-" + new Date().getFullYear()) {
+    function init_table_po(status = 1, tanggal_awal = "01-01-" + new Date().getFullYear(), tanggal_akhir = "31-12-" + new Date().getFullYear()) {
         var input = {
             status: status,
             tanggal_awal: tanggal_awal,
@@ -118,10 +118,11 @@
             },
             scrollY: '50vh',
             scrollCollapse: true,
-            "searching": true,
+            "searching": false,
             "processing": true,
             "bInfo": false,
             "paging": false,
+            "fixedcolumn": true,
             "serverSide": false,
             "ordering": false,
             "ajax": {
@@ -167,7 +168,7 @@
                         if (data == "0") {
                             var display = '<span class="badge badge-dark" >Input</span>'
                         } else if (data == "1") {
-                            var display = '<span class="badge badge-primary" >Waiting Approve</span>'
+                            var display = '<span class="badge badge-primary" >Waiting</span>'
                         } else if (data == "2") {
                             var display = '<span class="badge badge-success" >Approve</span>'
                         } else if (data == "3") {
@@ -355,6 +356,16 @@
                 datasets: []
                 // These labels appear in the legend and in the tooltips when hovering different arcs
             },
+            options: {
+                legend: {
+                    display: true,
+                    labels: {
+                        fontColor: 'black',
+                        fontSize: 10,
+                    },
+                    position: 'left'
+                }
+            }
         });
         $('#top_produk').change(function() {
             var data = $(this).val();

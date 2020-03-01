@@ -14,11 +14,11 @@ class Model_Master_User extends CI_Model
 
     function get_data()
     {
-            $this->db->select('*');
-            $this->db->from('master_user');
-            $this->db->where('username !=' , $this->session->userdata('username'));
-            $output = $this->db->get();
-            return $output;
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('username !=', $this->session->userdata('username'));
+        $output = $this->db->get();
+        return $output;
     }
 
     function get_data_pegawai($query)
@@ -55,8 +55,17 @@ class Model_Master_User extends CI_Model
             'password' => $ecnrypt_pw,
             'isActive' => 1,
         ];
-        $this->db->insert('master_user',$data);
-        
+        $this->db->insert('master_user', $data);
+        $this->update_data_has_user($post['nip']);
+    }
+
+    function update_data_has_user($nip)
+    {
+        $data = [
+            'has_user' => '1'
+        ];
+        $this->db->where('nip', $nip);
+        $this->db->update('master_pegawai', $data);
     }
 
     function set_user_active($post)
@@ -88,12 +97,12 @@ class Model_Master_User extends CI_Model
         $this->db->update('master_user', $data);
     }
 
-    function force_logout($username){
+    function force_logout($username)
+    {
         $data = [
             'status' => 0, // 0 k=logout 1 login
         ];
         $this->db->where('username', $username);
         $this->db->update('master_user', $data);
     }
-
 }

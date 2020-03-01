@@ -1,6 +1,14 @@
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jszip.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 
 <!-- file uploads js -->
 <script src="<?= base_url('assets/'); ?>plugins/fileuploads/js/dropify.min.js"></script>
@@ -47,7 +55,10 @@
                     sProcessing: "Sabar yah...",
                     sZeroRecords: "Tidak ada Data..."
                 },
+                "buttons": ['copy', 'excel', 'pdf', 'print'],
+                dom: 'Bfrtip',
                 "searching": true,
+                "fixedColumns": true,
                 "processing": true,
                 "serverSide": false,
                 "ajax": {
@@ -113,9 +124,9 @@
                         targets: 7,
                         render: function(data, type, full, meta) {
                             if (data.status == 1) {
-                                var display = '<a  href="javascript:void(0)" class="badge badge-primary" onClick="force(\'' + data.nip + '\')"><span>Aktif</span></a>';
+                                var display = '<a  href="javascript:void(0)" class="badge badge-primary"><span>Aktif</span></a>';
                             } else {
-                                var display = '<a  href="javascript:void(0)" class="badge badge-danger" onClick="force(\'' + data.nip + '\')"><span>Tidak Aktif</span></a>';
+                                var display = '<a  href="javascript:void(0)" class="badge badge-danger"><span>Tidak Aktif</span></a>';
                             }
                             return display;
 
@@ -189,7 +200,8 @@
         // Toolbar extra buttons
         var btnFinish = $('<button></button>').text('Submit')
             .addClass('btn btn-success')
-            .on('click', function() {
+            .on('click', function(e) {
+                e.preventDefault();
                 if (!$(this).hasClass('disabled')) {
                     var elmForm = $("#submitForm");
                     if (elmForm) {
@@ -204,7 +216,7 @@
                             return false;
                         } else {
                             tambah_data();
-                            elmForm.submit();
+                            // elmForm.submit();
                             return false;
                         }
                     }
@@ -311,7 +323,7 @@
                         'error'
                     )
                 } else {
-                    $('#datatable-master-barang').DataTable().ajax.reload();
+                    $('#datatable-master-pegawai').DataTable().ajax.reload();
                     $('#add_modal').modal('hide');
                     Swal.fire(
                         'Success!',

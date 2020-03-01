@@ -22,9 +22,6 @@
 <!-- Chart JS -->
 <script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
 
-<!-- Sweet Alert Js  -->
-<script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
-
 <!-- Select2 js -->
 <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
 <!-- Input Mask Js dan Max Length-->
@@ -231,8 +228,8 @@
 <script type="text/javascript">
     function warning_delete(id_satuan) {
         swal.fire({
-            title: 'Apa anda yakin akan hapus data ini?',
-            text: "Semua Data Persediaan dengan kode " + id_satuan + " juga akan terhapus",
+            title: 'Apa anda yakin?',
+            text: "",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

@@ -6,8 +6,9 @@
                 <h4 class="modal-title" id="myModalLabel">Tambah Data User</h4>
                 <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> -->
             </div>
-            <div class="modal-body">
-                <form data-parsley-validate novalidate autocomplete="off" id="submitForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+            <form data-parsley-validate novalidate autocomplete="off" id="submitForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <div class="modal-body">
+
                     <div class="form-group row">
                         <label class="col-3 col-form-label">Nomor Induk Pegawai</label>
                         <div class="col-9">
@@ -25,11 +26,11 @@
                         <label class="col-3 col-form-label">Role</label>
                         <div class="col-9">
                             <select name="role" id="role" type="text" class="form-control" required>
-                                <option value="1">Manajer</option>
-                                <option value="2">Supervisor</option>
+                                <option value="1">Cashier</option>
+                                <option value="2">Admin</option>
                                 <option value="3">Sales</option>
-                                <option value="4">Admin</option>
-                                <option value="5">Cashier</option>
+                                <option value="4">Supervisor</option>
+                                <option value="5">Manajer</option>
                             </select>
                         </div>
                     </div>
@@ -45,11 +46,11 @@
                             <input name="password" id="password" type="text" class="form-control" placeholder="Default : 123456" readonly>
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button id="md-close" name="button-close" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
-                <button type="submit" name="button-add" class="btn btn-primary waves-effect waves-light">Submit</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="md-close" name="button-close" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                    <button type="submit" name="button-add" class="btn btn-primary waves-effect waves-light">Submit</button>
+                </div>
             </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

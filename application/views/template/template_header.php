@@ -92,16 +92,6 @@
                                 </a>
 
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="ti-settings m-r-5"></i> Settings
-                                </a>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="ti-lock m-r-5"></i> Lock screen
-                                </a>
-
-                                <!-- item-->
                                 <a href=" <?= base_url('login/logout'); ?> " class="dropdown-item notify-item">
                                     <i class="ti-power-off m-r-5"></i> Logout
                                 </a>

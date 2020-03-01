@@ -44,21 +44,25 @@ class Penjualanbarang extends CI_Controller
 
     public function index()
     {
-        $this->init_no_order();
-        $data['menu'] = $this->modelSetting->data_menu();
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-        $data['no_order'] = $this->session->userdata('no_order_dummy');
-        $data['css'] = 'manajemen_penjualan/penjualan_barang/penjualan_barang_css';
-        $data['title'] = "Penjualan Barang";
-        $this->load->view('template/template_header', $data);
-        $this->load->view('template/template_menu');
-        $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang', $data);
-        $this->load->view('template/template_right');
-        $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_modal');
-        $this->load->view('template/template_footer');
-        $this->load->view('template/template_js');
-        $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang_js');
-        $this->load->view('template/template_app_js');
+        if ($this->session->userdata('role') !== "1") {
+            redirect(base_url("dashboard"));
+        } else {
+            $this->init_no_order();
+            $data['menu'] = $this->modelSetting->data_menu();
+            $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+            $data['no_order'] = $this->session->userdata('no_order_dummy');
+            $data['css'] = 'manajemen_penjualan/penjualan_barang/penjualan_barang_css';
+            $data['title'] = "Penjualan Barang";
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang', $data);
+            $this->load->view('template/template_right');
+            $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_modal');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang_js');
+            $this->load->view('template/template_app_js');
+        }
     }
 
     public function get_data_pelanggan($id_pelanggan)
@@ -96,7 +100,7 @@ class Penjualanbarang extends CI_Controller
     public function get_data_barang_versi_select2()
 
     {
-        $string = $this->input->post('search_term');
+        $string = $this->input->get('query');
         $database = $this->modelPenjualan->get_data_barang($string);
         $data = $database->result_array();
         $output = array(
@@ -260,10 +264,15 @@ class Penjualanbarang extends CI_Controller
     }
 
 
-    function cekPasswordDirektur()
+    function cekPasswordOverride()
     {
+        $this->db->select('*');
+        $this->db->from('master_setting');
+        $this->db->where('nama_setting', 'password_harga');
+        $query = $this->db->get()->row_array();
+        $role_override = $query['value'];
         $post = $this->input->post();
-        $output = $this->modelPenjualan->cekPasswordDirektur($post);
+        $output = $this->modelPenjualan->cekPasswordOverride($post, $role_override);
         echo $output;
     }
 
@@ -307,5 +316,11 @@ class Penjualanbarang extends CI_Controller
         $this->db->query('DELETE from master_penjualan order by id desc limit 1');
         $this->db->query('DELETE from master_pelanggan order by id desc limit 1');
         $this->db->query('DELETE from temp_tabel_keranjang_penjualan order by id desc limit 1');
+    }
+
+    function set_harga()
+    {
+        $post = $this->input->post();
+        echo  $this->modelPenjualan->set_harga($post);
     }
 }

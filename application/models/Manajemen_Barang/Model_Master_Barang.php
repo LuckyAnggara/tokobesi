@@ -16,6 +16,7 @@ class Model_Master_Barang extends CI_Model
         $this->db->from('master_barang');
         $this->db->join('master_jenis_barang', 'master_jenis_barang.id_jenis_barang = master_barang.jenis_barang');
         $this->db->join('master_merek_barang', 'master_merek_barang.id_merek_barang = master_barang.merek_barang');
+        $this->db->where('is_delete', '0');
         $output = $this->db->get();
         return $output;
     }
@@ -32,7 +33,6 @@ class Model_Master_Barang extends CI_Model
 
     function cekData()
     {
-
         $query = $this->db->query("SELECT MAX(kode_barang) as kodebarang from master_barang");
         $hasil = $query->row();
         if ($hasil->kodebarang !== null) {
@@ -90,6 +90,7 @@ class Model_Master_Barang extends CI_Model
             'kode_satuan' => $post['satuan'],
             'metode_hpp' => $post['metode_hpp'],
             'komisi_sales' => $post['komisi_sales'],
+            'user' => $this->session->userdata['username'],
             'gambar' => $this->_uploadImage(),
             'status_jual' => $post["status_jual"],
             'tanggal_input' => date("Y-m-d H:i:s"),
@@ -113,7 +114,9 @@ class Model_Master_Barang extends CI_Model
         if ($this->upload->do_upload('edit_gambar')) {
             return $this->upload->data("file_name");
         } else {
-            return $post['edit_kode_barang'];
+            return "default.jpg";
+
+            // return $post['edit_kode_barang'];
         }
     }
 
@@ -131,7 +134,7 @@ class Model_Master_Barang extends CI_Model
         if ($this->upload->do_upload('gambar')) {
             return $this->upload->data("file_name");
         } else {
-            return "default.png";
+            return "default.jpg";
         }
     }
 
@@ -139,16 +142,22 @@ class Model_Master_Barang extends CI_Model
     {
         // delete image
 
-        $this->db->select('*');
-        $this->db->from('master_barang');
-        $this->db->where('kode_barang', $kode_barang);
-        $data = $this->db->get()->row_array();
-        $data = $data['gambar'];
-        unlink('./assets/images/barang/' . $data);
+        // $this->db->select('*');
+        // $this->db->from('master_barang');
+        // $this->db->where('kode_barang', $kode_barang);
+        // $data = $this->db->get()->row_array();
+        // $data = $data['gambar'];
+        // unlink('./assets/images/barang/' . $data);
 
-        // delete database
+        // // delete database
+        // $this->db->where('kode_barang', $kode_barang);
+        // $this->db->delete('master_barang');
+
+        $data = [
+            'is_delete' => 1,
+        ];
         $this->db->where('kode_barang', $kode_barang);
-        $this->db->delete('master_barang');
+        $this->db->update('master_barang', $data);
     }
 
     // push data ke master persediaan
@@ -175,6 +184,8 @@ class Model_Master_Barang extends CI_Model
         return $this->db->get()->result_array();
     }
 
+
+
     // untuk chart per barang
 
     function get_statistik_penjualan($post)
@@ -195,5 +206,45 @@ class Model_Master_Barang extends CI_Model
         );
         $this->db->where('kode_barang', $post['kode_barang']);
         $this->db->update('master_barang', $data);
+    }
+
+    function get_data_jenis($query)
+    {
+        $this->db->select('*');
+        $this->db->from('master_jenis_barang');
+        $this->db->like('kode_jenis_barang', $query);
+        $this->db->or_like('nama_jenis_barang', $query);
+        $output = $this->db->get();
+        return $output;
+    }
+
+    function get_data_merek($query)
+    {
+        $this->db->select('*');
+        $this->db->from('master_merek_barang');
+        $this->db->like('kode_merek_barang', $query);
+        $this->db->or_like('nama_merek_barang', $query);
+        $output = $this->db->get();
+        return $output;
+    }
+
+    function get_data_satuan($query)
+    {
+        $this->db->select('*');
+        $this->db->from('master_satuan_barang');
+        $this->db->like('kode_satuan', $query);
+        $this->db->or_like('nama_satuan', $query);
+        $output = $this->db->get();
+        return $output;
+    }
+
+    function get_data_supplier($query)
+    {
+        $this->db->select('*');
+        $this->db->from('master_supplier');
+        $this->db->like('kode_supplier', $query);
+        $this->db->or_like('nama_supplier', $query);
+        $output = $this->db->get();
+        return $output;
     }
 }

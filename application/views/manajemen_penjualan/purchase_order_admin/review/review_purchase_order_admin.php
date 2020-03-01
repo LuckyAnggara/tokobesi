@@ -171,13 +171,13 @@ function status_approve($x)
                 <div class="form-group row">
                     <label class="col-sm-4 col-sm-form-label">Tanggal Order</label>
                     <div class="col-sm-8">
-                        <input id="id_sales" autocomplete="off" name="id_sales" type="text" class="form-control" readonly value="<?= $tanggal_transaksi; ?>">
+                        <input id="tanggal_order" autocomplete="off" name="tanggal_order" type="text" class="form-control" readonly value="<?= $tanggal_transaksi; ?>">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-4 col-sm-form-label">ID Sales</label>
                     <div class="col-sm-8">
-                        <input id="id_sales" autocomplete="off" name="id_sales" type="text" class="form-control" readonly value="<?= $data_po['user']; ?>">
+                        <input id="id_sales" autocomplete="off" name="id_sales" type="text" class="form-control" readonly value="<?= $data_po['username']; ?>">
                     </div>
                 </div>
                 <div class="form-group row">

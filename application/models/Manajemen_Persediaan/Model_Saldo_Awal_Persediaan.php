@@ -10,7 +10,7 @@ class Model_Saldo_Awal_Persediaan extends CI_Model
         $this->load->helper('string');
     }
 
-    function getData()
+    function getData($string)
     {
 
         $this->db->select('kode_barang');
@@ -23,6 +23,8 @@ class Model_Saldo_Awal_Persediaan extends CI_Model
 
         $this->db->select('*');
         $this->db->from('master_barang');
+        $this->db->like('kode_barang', $string);
+        $this->db->or_like('nama_barang', $string);
         if (!empty($output)) {
             $this->db->where_not_in('kode_barang', $data['kode_barang']);
         }

@@ -67,7 +67,7 @@ class Kartupersediaan extends CI_Controller
 
     public function get_data_barang_versi_select2()
     {
-        $string = $this->input->post('search_term');
+        $string = $this->input->post('query');
         $database = $this->modelPersediaan->get_data_barang($string);
         $data = $database->result_array();
         $output = array(

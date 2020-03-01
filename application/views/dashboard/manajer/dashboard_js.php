@@ -26,8 +26,25 @@
         var d = dt.getMonth() + 1; // kenapa di tambah 1, karena default nya januari itu 0 biar ga binggung di tambah 1 aja
         $('#top_sales_bulan').val(d).trigger('change'); // init sales dari auto pilih bulan berjalan
         counterJalan();
+        pusher_updateutangpiutang();
 
     })
+
+    function pusher_updateutangpiutang() {
+        var pusher = new Pusher('a198692078b54078587e', {
+            cluster: 'ap1',
+            forceTLS: true
+        });
+
+        var channel = pusher.subscribe('my-channel');
+        channel.bind('my-event', function(data) {
+            if (data.dashboard === 'update') {
+                $('#table-piutang').DataTable().ajax.reload();
+                $('#table-utang').DataTable().ajax.reload();
+            }
+        });
+
+    }
 
     function setData() {
         $.ajax({
@@ -380,11 +397,11 @@
                     callbacks: {
                         label: function(t, d) {
                             if (t.datasetIndex === 0) {
-                                return formatRupiah(t.yLabel.toString(), 'Rp.') + ' Juta';
+                                return formatRupiah(t.yLabel.toString(), 'Rp.');
                             } else if (t.datasetIndex === 1) {
                                 if (t.yLabel.toString().length === 9) {
-                                    return formatRupiah(t.yLabel.toString(), 'Rp.') + ' Juta';
-                                } else return formatRupiah(t.yLabel.toString(), 'Rp.') + ' Juta';
+                                    return formatRupiah(t.yLabel.toString(), 'Rp.');
+                                } else return formatRupiah(t.yLabel.toString(), 'Rp.');
                             }
                         },
                         title: function(t, d) {
@@ -462,6 +479,16 @@
                 datasets: []
                 // These labels appear in the legend and in the tooltips when hovering different arcs
             },
+            options: {
+                legend: {
+                    display: true,
+                    labels: {
+                        fontColor: 'black',
+                        fontSize: 10,
+                    },
+                    position: 'left'
+                }
+            }
         });
         $('#top_produk').change(function() {
             var data = $(this).val();
@@ -531,6 +558,14 @@
                 }]
             },
             options: {
+                legend: {
+                    display: true,
+                    labels: {
+                        fontColor: 'black',
+                        fontSize: 10,
+                    },
+                    position: 'left'
+                },
                 scales: {
                     yAxes: [{
                         id: "y-axis-2",
@@ -652,10 +687,17 @@
                     render: function(data, type, full, meta) {
                         return data;
                     }
+                }, {
+                    data: "total_tagihan",
+                    targets: 3,
+                    render: function(data, type, full, meta) {
+                        var display = '<span class="text-danger"><b>' + formatRupiah(data.toString(), 'Rp.') + '</b></span>'
+                        return display;
+                    }
                 },
                 {
                     data: "sisa_piutang",
-                    targets: 3,
+                    targets: 4,
                     render: function(data, type, full, meta) {
                         var display = '<span class="text-danger"><b>' + formatRupiah(data.toString(), 'Rp.') + '</b></span>'
                         return display;
@@ -714,7 +756,7 @@
                     }
                 },
                 {
-                    data: "no_faktur",
+                    data: "nomor_transaksi",
                     targets: 1,
                     render: function(data, type, full, meta) {
                         return data;
@@ -726,10 +768,17 @@
                     render: function(data, type, full, meta) {
                         return data;
                     }
+                }, {
+                    data: "total_tagihan",
+                    targets: 3,
+                    render: function(data, type, full, meta) {
+                        var display = '<span class="text-danger"><b>' + formatRupiah(data.toString(), 'Rp.') + '</b></span>'
+                        return display;
+                    }
                 },
                 {
                     data: "sisa_utang",
-                    targets: 3,
+                    targets: 4,
                     render: function(data, type, full, meta) {
                         var display = '<span class="text-danger"><b>' + formatRupiah(data.toString(), 'Rp.') + '</b></span>'
                         return display;

@@ -136,35 +136,61 @@
       $("#select_nama_barang").select2({
         ajax: {
           url: '<?= base_url("manajemen_penjualan/penjualanbarang/get_data_barang_versi_select2"); ?>',
-          type: "post",
           dataType: 'json',
           delay: 250,
-          // data: function(params) {
-          //   return {
-          //     search_term: params.term
-          //   };
-          // },
+          data: function(params) {
+            return {
+              query: params.term, // search term
+            };
+          },
           processResults: function(data) {
             var results = [];
-            for (var i in data.data) {
+            $.each(data.data, function(index, item) {
               results.push({
-                "id": data.data[i].kode_barang + '-' + data.data[i].harga_satuan + '-' + data.data[i].jumlah_persediaan + '-' + data.data[i].nama_satuan,
-                "text": data.data[i].kode_barang + ' - ' + data.data[i].nama_barang
+                id: item.kode_barang,
+                text: item.kode_barang + ' - ' + item.nama_barang,
+                harga_satuan: item.harga_satuan,
+                nama_satuan: item.nama_satuan,
+                jumlah_persediaan: item.jumlah_persediaan
               });
-            };
+            });
             return {
               results: results
             };
+            // for (var i in data.data) {
+            //   results.push({
+            //     "id": data.data[i].kode_barang + '-' + data.data[i].harga_satuan + '-' + data.data[i].jumlah_persediaan + '-' + data.data[i].nama_satuan,
+            //     "text": data.data[i].kode_barang + ' - ' + data.data[i].nama_barang
+            //   });
+            // };
+            // return {
+            //   results: results
+            // };
           },
+        },
+        templateSelection: function(data, container) {
+          // Add custom attributes to the <option> tag for the selected option
+          $(data.element).attr('data-kode_barang', data.id);
+          $(data.element).attr('data-harga_satuan', data.harga_satuan);
+          $(data.element).attr('data-nama_satuan', data.nama_satuan);
+          $(data.element).attr('data-jumlah_persediaan', data.jumlah_persediaan);
+          return data.text;
         },
         placeholder: "Pencarian Barang, menggunakan Nama Barang atau Kode Barang .."
       }).on('select2:select', function(evt) {
-        var data = $("#select_nama_barang option:selected").val();
-        str = data.split("-");
-        var kode_barang = str[0]
-        var harga_jual = str[1];
-        var sisa_persediaan = str[2];
-        var satuan = str[3];
+
+        // var data = $("#select_nama_barang option:selected").val();
+        // str = data.split("-");
+        // var kode_barang = str[0]
+        // var harga_jual = str[1];
+        // var sisa_persediaan = str[2];
+        // var satuan = str[3];
+
+        var kode_barang = $("#select_nama_barang option:selected").data('kode_barang');
+        var harga_jual = $("#select_nama_barang option:selected").data('harga_satuan');
+        var sisa_persediaan = $("#select_nama_barang option:selected").data('jumlah_persediaan');
+        var satuan = $("#select_nama_barang option:selected").data('nama_satuan');
+
         choose_barang(kode_barang, sisa_persediaan, satuan, harga_jual);
       })
     }
@@ -455,7 +481,7 @@
       var sisa_persediaan = $('#sisa_persediaan');
       var sisa_satuan = $('#sisa_satuan');
 
-      if (persediaan !== "0") {
+      if (persediaan.toString() !== "0") {
         $("#qty").TouchSpin({
           min: 1,
           step: 1,
@@ -477,6 +503,7 @@
         $('#harga_jual').val(harga_jual);
         $('#dummy_diskon').val(formatRupiah('0', 'Rp.'));
         $('#modal_detail_penjualan').modal('show');
+        $('#customRadio1').prop('checked', true).trigger('click');
         set_data_session_no_order_sebelumnya($('#no_order').text());
       } else {
         Swal.fire(
@@ -543,7 +570,7 @@
     $('#button-password-add').on('click', function() {
       var password = $('#password_input').val();
       $.ajax({
-        url: "<?= Base_url('manajemen_penjualan/penjualanbarang/cekPasswordDirektur'); ?>",
+        url: "<?= Base_url('manajemen_penjualan/penjualanbarang/cekPasswordOverride'); ?>",
         type: "post",
         data: {
           password: password
@@ -739,7 +766,7 @@
             data: "id",
             targets: 7,
             render: function(data, type, full, meta) {
-              var display = '<a type="button" onClick="warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash"></i> </a>';
+              var display = '<a type="button" onClick="warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm"><i class="fa fa-trash"></i> </a>';
               return display;
             }
           }
@@ -1160,6 +1187,11 @@
 
 
       function proses() {
+        if ($('#id_pelanggan').is(':disabled') == false) {
+          var id_pelanggan = "";
+        } else {
+          var id_pelanggan = $('#id_pelanggan').val();
+        }
         Swal.fire({
           title: 'Proses ??',
           icon: 'warning',
@@ -1215,6 +1247,12 @@
 
               },
               complete: function(data) {
+                $('#checkout').attr('disabled', 'true');
+                $('#select_nama_barang').attr('disabled', 'true');
+                $('#cari_barang').attr('disabled', 'true');
+                $('.btn').attr('disabled', 'true');
+                $('#datatable-keranjang-penjualan').empty()
+                $('#datatable-keranjang-penjualan').empty()
                 // Hide image container
                 $.LoadingOverlay("hide");
               }
@@ -1312,5 +1350,39 @@
         dataType: "text",
         async: false
       }).responseText;
+    }
+  </script>
+
+  <script>
+    $('#customRadio1').on('click', function() {
+      var kode_barang = $('#label_kode_barang').text();
+      setharga(kode_barang, 1)
+    });
+    $('#customRadio2').on('click', function() {
+      var kode_barang = $('#label_kode_barang').text();
+      setharga(kode_barang, 2)
+    });
+    $('#customRadio3').on('click', function() {
+      var kode_barang = $('#label_kode_barang').text();
+      setharga(kode_barang, 3)
+    });
+
+    function setharga(kode_barang, jenis_harga) {
+      $.ajax({
+        url: "<?= Base_url('manajemen_penjualan/penjualanbarang/set_harga/'); ?>",
+        type: "post",
+        data: {
+          kode_barang: kode_barang,
+          jenis_harga: jenis_harga
+        },
+        cache: false,
+        async: false,
+        success: function(data) {
+          $('#harga_jual').val(data);
+          $('#dummy_harga_jual').val(formatRupiah(data, 'Rp.'));
+        },
+        complete: function(data) {}
+      });
+      return data;
     }
   </script>

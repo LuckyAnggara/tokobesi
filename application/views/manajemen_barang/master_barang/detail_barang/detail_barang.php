@@ -59,7 +59,7 @@
                     <div role="tabpanel" class="tab-pane fade show active" id="data_umum">
                         <form data-parsley-validate novalidate autocomplete="off" id="form_umum" method="post" enctype="multipart/form-data" class="form-horizontal">
                             <div>
-                                <div class="form-group row">
+                                <div class="form-group row" hidden>
                                     <label class="col-3 col-form-label">Tipe Barang</label>
                                     <div class="col-9">
                                         <select name="edit_tipe_barang" id="edit_tipe_barang" class="form-control select2" required disabled>
@@ -80,7 +80,7 @@
                                     <label class="col-3 col-form-label">Jenis Barang</label>
                                     <div class="col-3">
                                         <select name="edit_jenis_barang" id="edit_jenis_barang" class="form-control select2" disabled>
-                                            <option value="0" selected disabled hidden>-Jenis-</option>
+                                            <option value="0" disabled hidden>-Jenis-</option>
                                             <?php foreach ($jenis as $value) : ?>
                                                 <option value=<?= $value['id_jenis_barang']; ?>><?= $value['nama_jenis_barang']; ?></option>
                                             <?php endforeach; ?>
@@ -168,6 +168,20 @@
                                     <div class="col-9">
                                         <input readonly type="text" id="edit_harga_satuan_dummy" name="edit_harga_satuan_dummy" placeholder="Hanya Angka" class="form-control" required>
                                         <input type="text" name="edit_harga_satuan" id="edit_harga_satuan" placeholder="Hanya Angka" class="form-control" hidden>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Harga Material</label>
+                                    <div class="col-9">
+                                        <input readonly type="text" id="edit_harga_kedua_dummy" name="edit_harga_kedua_dummy" placeholder="Hanya Angka" class="form-control" required>
+                                        <input type="text" name="edit_harga_kedua" id="edit_harga_kedua" placeholder="Hanya Angka" class="form-control" hidden>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Harga Toko Besar</label>
+                                    <div class="col-9">
+                                        <input readonly type="text" id="edit_harga_ketiga_dummy" name="edit_harga_ketiga_dummy" placeholder="Hanya Angka" class="form-control" required>
+                                        <input type="text" name="edit_harga_ketiga" id="edit_harga_ketiga" placeholder="Hanya Angka" class="form-control" hidden>
                                     </div>
                                 </div>
                                 <div class="form-group row">

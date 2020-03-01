@@ -141,11 +141,11 @@
         if (no_ref.val() !== "" && tanggal.val() !== "") {
             $('#button_data_div').attr('hidden', false);
             $('#confirm').attr('hidden', false);
-            tambah_master(no_ref.val(), tanggal.val(), ket)
-            init_table(no_ref.val());
             no_ref.attr('readonly', true);
             tanggal.attr('readonly', true);
-            $('#proses_stokopname').attr('hidden', true);
+            $('#proses_stokopname').attr('hidden', true)
+            tambah_master(no_ref.val(), tanggal.val(), ket)
+            init_table(no_ref.val());;
         } else {
             Swal.fire(
                 'Data Stok Opname belum di isi !',

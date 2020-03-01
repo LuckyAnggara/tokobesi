@@ -18,6 +18,9 @@ class Purchaseorderadmin extends CI_Controller
 
     public function index()
     {
+        if ($this->session->userdata('role') !== "2") {
+            redirect(base_url("dashboard"));
+        }
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
 
