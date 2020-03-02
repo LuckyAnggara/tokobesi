@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 02, 2020 at 10:19 AM
--- Server version: 10.1.29-MariaDB
--- PHP Version: 7.1.12
+-- Generation Time: Mar 02, 2020 at 03:43 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -61,11 +61,21 @@ CREATE TABLE `detail_gaji` (
 --
 
 INSERT INTO `detail_gaji` (`id`, `nomor_referensi`, `nip`, `tanggal_pembayaran`, `gaji_pokok`, `uang_makan`, `bonus`, `total`, `status`, `user`) VALUES
-(1, 'REF7830542', '1', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 0),
-(2, 'REF7830542', '123123123', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 0),
-(3, 'REF7830542', '124124', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 0),
-(4, 'REF7830542', '21124124', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 0),
-(5, 'REF7830542', '123123', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 0);
+(277, 'REF8052739', '1', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 0),
+(278, 'REF8052739', '123123123', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 1, 0),
+(279, 'REF8052739', '124124', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 0),
+(280, 'REF8052739', '21124124', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 0),
+(281, 'REF8052739', '123123', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 0),
+(282, 'REF6748915', '1', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 0),
+(283, 'REF6748915', '123123123', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 1, 0),
+(284, 'REF6748915', '124124', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 0),
+(285, 'REF6748915', '21124124', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 1, 0),
+(286, 'REF6748915', '123123', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 1, 0),
+(287, 'REF6794138', '1', '2020-03-02 15:41:40', 50000, 10000, 0, 60000, 2, 0),
+(288, 'REF6794138', '123123123', '2020-03-02 15:41:40', 50000, 10000, 0, 60000, 2, 0),
+(289, 'REF6794138', '124124', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 0),
+(290, 'REF6794138', '21124124', '2020-03-02 15:41:40', 50000, 10000, 0, 60000, 2, 0),
+(291, 'REF6794138', '123123', '2020-03-02 15:41:40', 50000, 10000, 0, 60000, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -137,7 +147,7 @@ CREATE TABLE `detail_piutang` (
   `user` varchar(255) NOT NULL,
   `bukti` varchar(255) NOT NULL,
   `keterangan` varchar(255) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -157,7 +167,7 @@ CREATE TABLE `detail_retur_pembelian` (
   `diskon` double NOT NULL,
   `total_retur` double NOT NULL,
   `user` varchar(255) NOT NULL,
-  `tanggal` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `tanggal` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -177,7 +187,7 @@ CREATE TABLE `detail_retur_penjualan` (
   `diskon` double NOT NULL,
   `total_retur` double NOT NULL,
   `user` varchar(255) NOT NULL,
-  `tanggal` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `tanggal` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -214,7 +224,7 @@ CREATE TABLE `detail_utang` (
   `user` varchar(255) NOT NULL,
   `bukti` varchar(255) NOT NULL,
   `keterangan` varchar(255) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -241,25 +251,25 @@ CREATE TABLE `harga_detail_pembelian` (
 
 CREATE TABLE `master_barang` (
   `kode_barang` varchar(255) NOT NULL,
-  `tipe_barang` int(11) DEFAULT '0',
-  `jenis_barang` int(11) DEFAULT '0',
-  `merek_barang` int(11) DEFAULT '0',
+  `tipe_barang` int(11) DEFAULT 0,
+  `jenis_barang` int(11) DEFAULT 0,
+  `merek_barang` int(11) DEFAULT 0,
   `kode_supplier` varchar(128) DEFAULT NULL,
   `nama_barang` varchar(255) NOT NULL,
   `harga_pokok` double NOT NULL,
   `harga_satuan` double NOT NULL,
   `harga_kedua` double NOT NULL,
   `harga_ketiga` double NOT NULL,
-  `kode_satuan` int(11) DEFAULT '0',
-  `persediaan_minimum` int(11) NOT NULL DEFAULT '0',
+  `kode_satuan` int(11) DEFAULT 0,
+  `persediaan_minimum` int(11) NOT NULL DEFAULT 0,
   `metode_hpp` varchar(255) NOT NULL,
-  `komisi_sales` double NOT NULL DEFAULT '0',
+  `komisi_sales` double NOT NULL DEFAULT 0,
   `gambar` varchar(255) NOT NULL DEFAULT 'default.jpg',
   `keterangan` text NOT NULL,
   `status_jual` tinyint(4) NOT NULL,
   `user` varchar(255) NOT NULL,
   `tanggal_input` datetime NOT NULL,
-  `is_delete` int(1) NOT NULL DEFAULT '0'
+  `is_delete` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -353,8 +363,9 @@ CREATE TABLE `master_gaji` (
 --
 
 INSERT INTO `master_gaji` (`id`, `tanggal`, `nomor_referensi`, `total_pembayaran`, `keterangan`, `status`, `user`) VALUES
-(1, '2020-03-02 00:00:00', 'REF8602795', 0, '', 0, 'edwin'),
-(2, '2020-03-02 00:00:00', 'REF7830542', 0, 'sad', 0, 'edwin');
+(59, '2020-03-12 00:00:00', 'REF8052739', 240000, '', 1, 'edwin'),
+(60, '2020-03-17 00:00:00', 'REF6748915', 180000, '', 1, 'edwin'),
+(61, '2020-03-03 00:00:00', 'REF6794138', 240000, '', 2, 'edwin');
 
 -- --------------------------------------------------------
 
@@ -507,9 +518,9 @@ CREATE TABLE `master_pegawai` (
   `gaji_pokok` double NOT NULL,
   `uang_makan` double NOT NULL,
   `gambar` varchar(255) NOT NULL,
-  `has_user` int(1) NOT NULL DEFAULT '0',
+  `has_user` int(1) NOT NULL DEFAULT 0,
   `user` varchar(255) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -520,7 +531,7 @@ INSERT INTO `master_pegawai` (`id`, `nip`, `ktp`, `nama_lengkap`, `jenis_kelamin
 (1, '1', '0', 'Neng Yuliantin', 1, 'Jl Raya Limbangan', '', '', 'Garut', '2020-02-29', '2020-02-29', '', 'Direktur', '0', '0-0', '0', 1, 50000, 10000, 'SpDT0P752ut6lZHE.jpeg', 1, '', '2020-03-02 06:07:02'),
 (10, '123123123', '123123123123', 'LUCKY ANGGARA', 0, 'BANDUNG', 'BANDUNG', 'BANDUNG', 'BANDUNG', '1992-07-15', '2020-03-01', 'SARJANA', 'KASIR', '082116562811', 'BNI - 0468995561', '12312312312', 1, 50000, 10000, '123123123.jpg', 1, 'manajer', '2020-03-02 06:07:05'),
 (11, '124124', '1241241', 'DINI', 1, 'GARUT', 'GARUT', 'GARUT', 'GARUT', '2020-03-18', '2020-03-01', 'SMA', 'ADMIN', '08800', 'BNI - 080808', '123123', 1, 50000, 10000, 'default.jpg', 0, 'manajer', '2020-03-02 06:07:07'),
-(12, '21124124', '124124124', 'HADI', 0, 'GARUT', 'GARUT', 'GARUT', 'GARUT', '2020-03-09', '2020-03-01', 'SARJANA', 'SALES', '0808080', 'ASAS - 54654654', '21313', 1, 50000, 10000, '21124124.jpg', 1, 'manajer', '2020-03-02 06:07:09'),
+(12, '21124124', '124124124', 'HADI', 0, 'GARUT', 'GARUT', 'GARUT', 'GARUT', '2020-03-09', '2020-03-01', 'SARJANA', 'SALES', '0808080', 'ASAS - 54654654', '21313', 1, 50000, 10000, '21124124.jpg', 1, 'manajer', '2020-03-02 12:53:43'),
 (13, '123123', '1231231', 'EDWIN', 0, 'JAKARTA', 'JAKARTA', 'JAKARTA', 'JAKARTA', '2020-03-26', '2020-03-01', 'MAGISTER', 'SUPERVISOR', '9128491248', 'BA - 31231', '213123', 1, 50000, 10000, '123123.jpg', 1, 'manajer', '2020-03-02 06:07:10');
 
 -- --------------------------------------------------------
@@ -578,11 +589,11 @@ CREATE TABLE `master_penjualan` (
   `tanggal_transaksi` datetime NOT NULL,
   `no_faktur` varchar(255) NOT NULL,
   `id_pelanggan` varchar(255) NOT NULL,
-  `total_penjualan` double NOT NULL DEFAULT '0',
-  `diskon` double DEFAULT '0',
-  `pajak_masukan` double NOT NULL DEFAULT '0',
-  `ongkir` double NOT NULL DEFAULT '0',
-  `grand_total` double NOT NULL DEFAULT '0',
+  `total_penjualan` double NOT NULL DEFAULT 0,
+  `diskon` double DEFAULT 0,
+  `pajak_masukan` double NOT NULL DEFAULT 0,
+  `ongkir` double NOT NULL DEFAULT 0,
+  `grand_total` double NOT NULL DEFAULT 0,
   `status_bayar` int(1) NOT NULL,
   `tanggal_jatuh_tempo` date DEFAULT NULL,
   `tanggal_input` date NOT NULL,
@@ -618,8 +629,8 @@ CREATE TABLE `master_piutang` (
   `tanggal_jatuh_tempo` date NOT NULL,
   `total_tagihan` double NOT NULL,
   `total_pembayaran` double NOT NULL,
-  `down_payment` double NOT NULL DEFAULT '0',
-  `sisa_piutang` double NOT NULL DEFAULT '0',
+  `down_payment` double NOT NULL DEFAULT 0,
+  `sisa_piutang` double NOT NULL DEFAULT 0,
   `tanggal_input` date NOT NULL,
   `user` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -644,7 +655,7 @@ CREATE TABLE `master_purchase_order` (
   `tanggal_input` datetime NOT NULL,
   `user` varchar(255) NOT NULL,
   `admin` varchar(255) NOT NULL,
-  `status_po` int(11) NOT NULL DEFAULT '1'
+  `status_po` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -663,7 +674,7 @@ CREATE TABLE `master_retur_pembelian` (
   `retur_pajak` double NOT NULL,
   `retur_grand_total` double NOT NULL,
   `user` varchar(255) NOT NULL,
-  `tanggal` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `tanggal` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -682,7 +693,7 @@ CREATE TABLE `master_retur_penjualan` (
   `retur_pajak` double NOT NULL,
   `retur_grand_total` double NOT NULL,
   `user` varchar(255) NOT NULL,
-  `tanggal` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `tanggal` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -714,7 +725,7 @@ CREATE TABLE `master_sales` (
   `kode_pegawai` varchar(255) NOT NULL,
   `nama_sales` varchar(255) NOT NULL,
   `status` varchar(255) NOT NULL,
-  `insentif` double NOT NULL DEFAULT '0'
+  `insentif` double NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -742,7 +753,7 @@ CREATE TABLE `master_setting` (
   `id` int(11) NOT NULL,
   `nama_setting` varchar(255) NOT NULL,
   `value` varchar(1024) NOT NULL,
-  `tanggal` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `tanggal` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -778,7 +789,7 @@ CREATE TABLE `master_stok_opname` (
   `nomor_referensi` varchar(255) NOT NULL,
   `tanggal` datetime NOT NULL,
   `keterangan` text NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '0',
+  `status` int(11) NOT NULL DEFAULT 0,
   `user` varchar(255) NOT NULL,
   `spv` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -835,7 +846,7 @@ CREATE TABLE `master_tipe_barang` (
   `nama_tipe` varchar(255) NOT NULL,
   `keterangan` text NOT NULL,
   `user` varchar(255) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -864,8 +875,8 @@ CREATE TABLE `master_user` (
   `status` int(1) NOT NULL,
   `last_activity` datetime NOT NULL,
   `tanggal_create` datetime NOT NULL,
-  `isactive` int(1) NOT NULL DEFAULT '1',
-  `is_del` int(1) NOT NULL DEFAULT '0'
+  `isactive` int(1) NOT NULL DEFAULT 1,
+  `is_del` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -874,7 +885,7 @@ CREATE TABLE `master_user` (
 
 INSERT INTO `master_user` (`username`, `nip`, `password`, `role`, `nama`, `avatar`, `status`, `last_activity`, `tanggal_create`, `isactive`, `is_del`) VALUES
 ('dini', '124124', '$2y$10$RrwCvrb/WuSCU/JAHKr.2.A7f7WpsPc5qBKhH7.PZx.kua5bxKr8a', '2', 'DINI', 'default.jpg', 0, '2020-03-01 14:14:41', '0000-00-00 00:00:00', 1, 0),
-('edwin', '123123', '$2y$10$oi6qEP4bxeYkrUK5YCvhFe8a4PBCVriLudVjVxMvqQPPYCy.xKF9u', '4', 'EDWIN', 'default.jpg', 0, '2020-03-01 14:07:58', '0000-00-00 00:00:00', 1, 0),
+('edwin', '123123', '$2y$10$oi6qEP4bxeYkrUK5YCvhFe8a4PBCVriLudVjVxMvqQPPYCy.xKF9u', '4', 'EDWIN', 'default.jpg', 0, '2020-03-02 14:51:24', '0000-00-00 00:00:00', 1, 0),
 ('hadi', '21124124', '$2y$10$.Zz5dNGxi92mm.vF2/W59OWdBQEkYEIAjgnf01FkeUNal0jg2Lzf.', '3', 'HADI', 'default.jpg', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0),
 ('lucky15', '123123123', '$2y$10$3HBFxWoWL9yHhbW1zegPteGL2ZtN4bPiBTTGEwkFifMu7djwD2Q0S', '1', 'LUCKY ANGGARA', 'default.jpg', 0, '2020-03-02 06:02:42', '0000-00-00 00:00:00', 1, 0),
 ('manajer', '1', '$2y$10$KaPuBy66KgtWC/gbOFLS/O/XcRisL.DJ3iG249CgA8Qswz5VMbuJW', '5', 'Neng', 'default.jpg', 0, '2020-03-01 14:01:42', '2020-03-01 00:00:00', 1, 0);
@@ -891,8 +902,8 @@ CREATE TABLE `master_utang` (
   `tanggal_jatuh_tempo` date NOT NULL,
   `total_tagihan` double NOT NULL,
   `total_pembayaran` double NOT NULL,
-  `down_payment` double NOT NULL DEFAULT '0',
-  `sisa_utang` double NOT NULL DEFAULT '0',
+  `down_payment` double NOT NULL DEFAULT 0,
+  `sisa_utang` double NOT NULL DEFAULT 0,
   `tanggal_input` date NOT NULL,
   `user` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -948,7 +959,7 @@ CREATE TABLE `tabel_keranjang_belanja` (
   `harga_total` double NOT NULL,
   `status` int(11) NOT NULL,
   `user` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -992,7 +1003,8 @@ INSERT INTO `tabel_menu` (`id`, `nama_menu`, `link`, `icon`, `keterangan`) VALUE
 (20, 'Settings', 'setting/setting', 'fa fa-gear', 'Manajer'),
 (21, 'Transaksi', '#', 'fa fa-money', 'Supervisor'),
 (22, 'Data', '#', 'fa fa-database', 'Supervisor'),
-(23, 'Transaksi', '#', 'fa fa-cart-arrow-down', 'Manajer');
+(23, 'Transaksi', '#', 'fa fa-cart-arrow-down', 'Manajer'),
+(24, 'Keuangan', '#', 'fa fa-money', 'Supervisor');
 
 -- --------------------------------------------------------
 
@@ -1007,7 +1019,7 @@ CREATE TABLE `tabel_perhitungan_order` (
   `pajak` double NOT NULL,
   `ongkir` double NOT NULL,
   `grand_total` double NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1030,7 +1042,7 @@ INSERT INTO `tabel_role` (`id`, `nama_role`, `menu`) VALUES
 (1, 'Kasir', '4,1,14'),
 (2, 'Admin', '5,16,2,17,15'),
 (3, 'Sales', '3,8'),
-(4, 'Supervisor', '6,21,9,10'),
+(4, 'Supervisor', '6,21,9,10,24'),
 (5, 'Manager', '7,23,9,12,11,20'),
 (6, 'Superuser', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20');
 
@@ -1087,7 +1099,8 @@ INSERT INTO `tabel_submenu` (`id`, `main_menu`, `nama_submenu`, `link`, `ket`) V
 (34, '23', 'Daftar Penjualan', 'manajemen_penjualan/daftartransaksipenjualan', 'Manajer Daftar Transaksi Penjualan'),
 (35, '23', 'Daftar Pembelian', 'manajemen_pembelian/daftartransaksipembelian', 'Manajer Daftar Transaksi Pembelian'),
 (36, '12', 'Master Utang', '	\r\nmanajemen_keuangan/masterutang/daftar_utang', 'Manajer Master Utang'),
-(37, '12', 'Master Piutang', '	\r\nmanajemen_keuangan/masterpiutang/daftar_piutang', 'Manajer Master Piutang');
+(37, '12', 'Master Piutang', '	\r\nmanajemen_keuangan/masterpiutang/daftar_piutang', 'Manajer Master Piutang'),
+(39, '24', 'Master Gaji', 'manajemen_keuangan/mastergaji/', 'Supervisor Master Gaji');
 
 -- --------------------------------------------------------
 
@@ -1105,7 +1118,7 @@ CREATE TABLE `temp_purchase_order` (
   `total_harga` double NOT NULL,
   `tanggal_input` datetime NOT NULL,
   `user` varchar(255) NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '0'
+  `status` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1141,10 +1154,10 @@ CREATE TABLE `temp_tabel_keranjang_penjualan` (
   `harga_jual` double NOT NULL,
   `diskon` double NOT NULL,
   `total_harga` double NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '0',
+  `status` int(11) NOT NULL DEFAULT 0,
   `user` varchar(255) NOT NULL,
-  `is_po` int(1) NOT NULL DEFAULT '0',
-  `tanggal_input` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `is_po` int(1) NOT NULL DEFAULT 0,
+  `tanggal_input` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1176,7 +1189,8 @@ ALTER TABLE `detail_detail_stok_opname`
 -- Indexes for table `detail_gaji`
 --
 ALTER TABLE `detail_gaji`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `master_gaji` (`nomor_referensi`);
 
 --
 -- Indexes for table `detail_pembelian`
@@ -1255,7 +1269,9 @@ ALTER TABLE `master_barang`
 -- Indexes for table `master_gaji`
 --
 ALTER TABLE `master_gaji`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nomor_referensi` (`nomor_referensi`),
+  ADD KEY `nomor_referensi_2` (`nomor_referensi`);
 
 --
 -- Indexes for table `master_harga_pokok_penjualan`
@@ -1502,7 +1518,7 @@ ALTER TABLE `detail_detail_stok_opname`
 -- AUTO_INCREMENT for table `detail_gaji`
 --
 ALTER TABLE `detail_gaji`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=292;
 
 --
 -- AUTO_INCREMENT for table `detail_pembelian`
@@ -1556,7 +1572,7 @@ ALTER TABLE `detail_utang`
 -- AUTO_INCREMENT for table `master_gaji`
 --
 ALTER TABLE `master_gaji`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `master_harga_pokok_penjualan`
@@ -1664,7 +1680,7 @@ ALTER TABLE `tabel_akses`
 -- AUTO_INCREMENT for table `tabel_menu`
 --
 ALTER TABLE `tabel_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `tabel_role`
@@ -1676,7 +1692,7 @@ ALTER TABLE `tabel_role`
 -- AUTO_INCREMENT for table `tabel_submenu`
 --
 ALTER TABLE `tabel_submenu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `temp_purchase_order`
@@ -1705,6 +1721,12 @@ ALTER TABLE `timeline_po`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `detail_gaji`
+--
+ALTER TABLE `detail_gaji`
+  ADD CONSTRAINT `master_gaji` FOREIGN KEY (`nomor_referensi`) REFERENCES `master_gaji` (`nomor_referensi`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `detail_pembelian`

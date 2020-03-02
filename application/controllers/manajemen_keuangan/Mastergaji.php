@@ -32,7 +32,7 @@ class Mastergaji extends CI_Controller
         $this->load->view('template/template_app_js');
     }
 
-    public function tambah_gaji()
+    public function tambah_data()
     {
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
@@ -101,14 +101,13 @@ class Mastergaji extends CI_Controller
     public function random_ref()
     {
         $number = $this->modelGaji->random_ref();
-        if($number == false){
+        if ($number == false) {
             echo $number;
-        }else{
+        } else {
             $output =  "REF" . $number;
             $output = json_encode($output);
             echo $output;
         }
-       
     }
 
     public function tambah_master_gaji()
@@ -116,5 +115,14 @@ class Mastergaji extends CI_Controller
         $post = $this->input->post();
         $this->modelGaji->tambah_data($post);
         $this->modelGaji->tambah_detail_data($post);
+    }
+
+    public function proses_bayar()
+    {
+        $post = $this->input->post();
+        $this->modelGaji->bayar_master($post);
+        $this->modelGaji->bayar_detail($post['output']);
+
+        print_r($post['output']);
     }
 }

@@ -4,12 +4,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Model_Gaji extends CI_Model
 {
 
-   function get_data_pegawai()
-   {
-       $this->db->select('nip, nama_lengkap,jabatan,gaji_pokok,uang_makan');
-       $this->db->from('master_pegawai');
-       return $this->db->get();
-   }
+    function get_data_pegawai()
+    {
+        $this->db->select('nip, nama_lengkap,jabatan,gaji_pokok,uang_makan');
+        $this->db->from('master_pegawai');
+        $this->db->where('status', '1');
+        return $this->db->get();
+    }
 
     function get_master_gaji()
     {
@@ -29,10 +30,9 @@ class Model_Gaji extends CI_Model
 
         $cek = $this->db->get()->num_rows();
 
-        if($cek > 0)
-        {
+        if ($cek > 0) {
             return false;
-        }else{
+        } else {
             return $data;
         }
     }
@@ -86,11 +86,34 @@ class Model_Gaji extends CI_Model
 
     function get_detail_master_gaji($no_ref)
     {
-        $this->db->select('*');
+        $this->db->select('*, detail_gaji.id as idid');
         $this->db->from('detail_gaji');
         $this->db->join('master_pegawai', 'master_pegawai.nip = detail_gaji.nip');
         $this->db->where('nomor_referensi', $no_ref);
         $this->db->order_by('master_pegawai.nama_lengkap', 'ASC');
         return $this->db->get();
+    }
+
+    function bayar_master($post)
+    {
+        $data = [
+            'status' => 2,
+            'total_pembayaran' => $post['total_pembayaran'],
+        ];
+        $this->db->where('nomor_referensi', $post['no_ref']);
+        $this->db->update('master_gaji', $data);
+    }
+
+    function bayar_detail($post)
+    {
+        foreach ($post as $key => $value) {
+            $data = [
+                'status' => 2,
+                'tanggal_pembayaran' =>  date("Y-m-d H:i:s"),
+                'user' => $this->session->userdata['username']
+            ];
+            $this->db->where('id', $value);
+            $this->db->update('detail_gaji', $data);
+        }
     }
 }

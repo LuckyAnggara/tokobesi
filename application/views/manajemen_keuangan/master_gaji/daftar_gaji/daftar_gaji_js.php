@@ -6,7 +6,7 @@
 
 <script>
     $('#tambah_data').on('click', function() {
-        window.location.href = "<?= base_url('manajemen_persediaan/stokopname/tambah_data'); ?>"
+        window.location.href = "<?= base_url('manajemen_keuangan/mastergaji/tambah_data'); ?>"
     })
     init_table();
 
@@ -100,12 +100,11 @@
                         } else if (data == "1") {
                             var display = '<span class="badge badge-primary">Waiting Approve</span>'
                         } else if (data == "2") {
-                            var display = '<span class="badge badge-success">Approve</span>'
+                            var display = '<span class="badge badge-success">Dibayarkan</span>'
                         } else if (data == "3") {
                             var display = '<span class="badge badge-warning">Input Ulang</span>'
                         } else if (data == "99") {
                             var display = '<span class="badge badge-danger">Rejected</span>'
-
                         }
                         return display;
                     }
@@ -123,7 +122,6 @@
                         var display3 = '<a type="button" onClick = "print_report(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Delete Data"><i class="fa fa-print" ></i> </a>';
                         if (data.status == 0) {
                             return display1 + ' ' + display2;
-
                         } else if (data.status == 2) {
                             return display1 + ' ' + display3;
                         } else {

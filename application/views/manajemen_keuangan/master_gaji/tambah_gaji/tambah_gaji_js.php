@@ -1,6 +1,15 @@
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.select.min.js"></script>
+<!-- Buttons examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jszip.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 <!-- DatePicker Js -->
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
@@ -13,7 +22,26 @@
             todayHighlight: true,
             orientation: "bottom left",
         });
+
+
     })
+
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+    }
 
     function init_table(no_ref) {
         $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
@@ -30,6 +58,8 @@
 
         //Init Datatabel Master Stok Persediaan 
         var table = $('#datatable-daftar-gaji').DataTable({
+            "scrollY": '50vh',
+            "scrollCollapse": true,
             "destroy": true,
             "bInfo": false,
             "paging": false,
@@ -53,7 +83,7 @@
             "ajax": {
                 "url": '<?= base_url("manajemen_keuangan/mastergaji/get_detail_master_gaji/"); ?>',
                 "data": {
-                    no_ref : no_ref
+                    no_ref: no_ref
                 },
                 "type": "POST",
             },
@@ -112,7 +142,37 @@
 
         });
     }
-    
+
+
+    $('#confirm').on('click', function() {
+        var table = $('#datatable-daftar-gaji').DataTable();
+        var data = table.rows('.selected').data();
+        var no_ref = $('#nomor_referensi').val();
+        var total_pembayaran = 0;
+        var id = {};
+        var output = [];
+        $.each(data, function(index, item) {
+            total_pembayaran += parseInt(item.total)
+            output.push(item.idid);
+            console.log(item.idid);
+        });
+        $('#select_row').text(data.length);
+        $('#jumlah_pembayaran').val(formatRupiah(total_pembayaran.toString(), 'Rp.'))
+        console.log(output);
+        Swal.fire({
+            title: formatRupiah(total_pembayaran.toString(), 'Rp.'),
+            text: 'Bayarkan ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Bayar!'
+        }).then((result) => {
+            if (result.value) {
+                proses_bayar(output, no_ref, total_pembayaran)
+            }
+        })
+    })
 </script>
 
 
@@ -138,10 +198,29 @@
             }
         });
     }
+
+    function proses_bayar(output, no_ref, total_pembayaran) {
+        $.ajax({
+            url: '<?= base_url("manajemen_keuangan/mastergaji/proses_bayar"); ?>',
+            type: "POST",
+            data: {
+                output: output,
+                no_ref: no_ref,
+                total_pembayaran: total_pembayaran
+            },
+            async: false,
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            }
+        });
+    }
 </script>
 <!-- Script Button Type -->
 <script>
-    $('#proses_stokopname').on('click', function() {
+    $('#proses_init_data').on('click', function() {
         var no_ref = $('#nomor_referensi');
         var tanggal = $('#tanggal');
         var ket = $('#keterangan').val();
@@ -150,7 +229,7 @@
             $('#confirm').attr('hidden', false);
             no_ref.attr('readonly', true);
             tanggal.attr('readonly', true);
-            $('#proses_stokopname').attr('hidden', true)
+            $('#proses_init_data').attr('hidden', true)
             tambah_master(no_ref.val(), tanggal.val(), ket)
             init_table(no_ref.val());;
         } else {
@@ -242,232 +321,5 @@
                 $.LoadingOverlay("hide");
             }
         });
-    }
-</script>
-
-<!-- operator -->
-<script>
-    $('#add_data').on('click', function(e) {
-        e.preventDefault();
-        var id = $('#id').text();
-        $.ajax({
-            url: '<?= base_url("manajemen_persediaan/stokopname/tambah_detail_selisih"); ?>',
-            type: "POST",
-            data: {
-                id: id
-            },
-            dataType: "JSON",
-            async: false,
-            beforeSend: function() {
-                $("#data_selisih").LoadingOverlay("show");
-            },
-            success: function(data) {
-                tambah_li(data);
-            },
-            complete: function() {
-                $("#data_selisih").LoadingOverlay("hide");
-            }
-        });
-
-    })
-
-    function display_li(id, qty, ket) {
-
-        if ($('#confirm').text() == "Reject" || $('#confirm').text() == "Waiting Approve") {
-            var display = '<li id=' + id + ' data-delete="yes"><div class="form-group row">' +
-                '<div class="col-sm-3">' +
-                '<input type="number" id="qty' + id + '"  class="form-control" placeholder="Qty" readonly value="' + qty + '">' +
-                '</div>' +
-                '<div class="col-sm-7">' +
-                '<input type="text" class="form-control"  id="ket' + id + '" placeholder="-" readonly value="' + ket + '">' +
-                '</div>' +
-                '<div class="col-1">' +
-                '<button  disabled type="button" onClick="remove_data(\'' + id + '\')" class="btn btn-danger waves-effect waves-light"><i class="fa  fa-times"></i></button>' +
-                '</div>' +
-                '</div></li>';
-        } else {
-            var display = '<li id=' + id + ' data-delete="yes"><div class="form-group row">' +
-                '<div class="col-sm-3">' +
-                '<input type="number" id="qty' + id + '"  class="form-control" placeholder="Qty" readonly value="' + qty + '">' +
-                '</div>' +
-                '<div class="col-sm-7">' +
-                '<input type="text" class="form-control"  id="ket' + id + '" placeholder="-" readonly value="' + ket + '">' +
-                '</div>' +
-                '<div class="col-1">' +
-                '<button type="button" onClick="remove_data(\'' + id + '\')" class="btn btn-danger waves-effect waves-light"><i class="fa  fa-times"></i></button>' +
-                '</div>' +
-                '</div></li>';
-        }
-
-
-        $('#data_selisih').append(display)
-    }
-
-    function tambah_li(data) {
-
-        var display = '<li id=' + data + ' data-delete="no"><div class="form-group row">' +
-            '<div class="col-sm-3">' +
-            '<input type="number" id="qty' + data + '"  class="form-control" placeholder="Qty">' +
-            '</div>' +
-            '<div class="col-sm-7">' +
-            '<input type="text" class="form-control"  id="ket' + data + '" placeholder="-" >' +
-            '</div>' +
-            '<div class="col-1">' +
-            '<button type="button" onClick="apply_data(\'' + data + '\')" id="btn' + data + '" class="btn btn-primary waves-effect waves-light"><i class="fa fa-check"></i></button>' +
-            '</div></li>';
-        $('#data_selisih').append(display)
-    }
-
-    function remove_data(id) {
-        var id_ref = $('#id').text();
-        $.ajax({
-            url: '<?= base_url("manajemen_persediaan/stokopname/delete_detail_selisih"); ?>',
-            type: "POST",
-            data: {
-                id_ref: id_ref,
-                id: id
-            },
-            dataType: "JSON",
-            async: false,
-            beforeSend: function() {
-                $("#data_selisih").LoadingOverlay("show");
-            },
-            success: function(data) {
-                $('#' + id).remove()
-                $('#detail_sisa_selisih').val($('#detail_qty_selisih').val() - data);
-            },
-            complete: function() {
-                $("#data_selisih").LoadingOverlay("hide");
-            }
-        })
-    }
-
-    function apply_data(id) {
-        var qty = $('#qty' + id);
-        var ket = $('#ket' + id);
-        var id_ref = $('#id').text();
-        var selisih = $('#detail_sisa_selisih').val();
-
-        if ($('#' + id).data('delete') == 'no') {
-            if (qty.val() == "" && ket.val() == "") {
-                Swal.fire(
-                    'Data belum di isi !',
-                    'Silahkan Cek Kembali',
-                    'error'
-                )
-            } else {
-                if (qty.val() <= parseInt(selisih)) {
-
-                    $.ajax({
-                        url: '<?= base_url("manajemen_persediaan/stokopname/edit_detail_selisih"); ?>',
-                        type: "POST",
-                        data: {
-                            id_ref: id_ref,
-                            id: id,
-                            qty: qty.val(),
-                            ket: ket.val(),
-                        },
-                        dataType: "JSON",
-                        async: false,
-                        beforeSend: function() {
-                            $("#data_selisih").LoadingOverlay("show");
-                        },
-                        success: function(data) {
-                            $('#btn' + id).toggleClass(function() {
-                                $(this).empty()
-                                $(this).append('<i class="fa fa-times"></i>')
-                                $('#' + id).data('delete', 'yes')
-                                qty.attr('readonly', true)
-                                ket.attr('readonly', true)
-                                return $(this).is('.btn-primary, .btn-danger') ? 'btn-primary btn-danger' : 'btn-primary';
-                            })
-
-                            $('#detail_sisa_selisih').val($('#detail_qty_selisih').val() - data);
-                        },
-                        complete: function() {
-                            $("#data_selisih").LoadingOverlay("hide");
-                        }
-                    })
-                } else {
-                    Swal.fire(
-                        'Jumlah input lebih besar dari sisa selisih !',
-                        'Silahkan Cek Kembali',
-                        'error'
-                    )
-                }
-
-            }
-        } else {
-            remove_data(id);
-        }
-    }
-
-    $(document).ready(function() {
-        $('#saldoFisikForm').submit(function(e) {
-            e.preventDefault();
-            id = $('#fisik_id').text();
-            var data = new FormData(document.getElementById("saldoFisikForm"));
-            data.append('id', id);
-            $.ajax({
-                url: "<?= base_url("manajemen_persediaan/stokopname/tambah_saldo_fisik"); ?>",
-                type: "post",
-                data: data,
-                async: false,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-                    $('#fisik_modal').modal('hide');
-                    $('#datatable-stok-opname').DataTable().ajax.reload();
-                }
-            })
-        })
-    })
-
-    $('#confirm').on('click', function() {
-        Swal.fire({
-            title: 'Kirim ke Supervisor?',
-            text: "Data Stok Opname akan di kirim ke SPV untuk persetujuan!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Kirim!'
-        }).then((result) => {
-            if (result.value) {
-                proses_spv()
-            }
-        })
-    })
-
-    function proses_spv() {
-        var no_ref = $('#nomor_referensi').val();
-        var tanggal = $('#keterangan').val();
-        if (no_ref == "" && tanggal == "") {
-            Swal.fire(
-                'Data masih Kosong !',
-                'Silahkan Cek Kembali',
-                'error'
-            )
-        } else {
-            $.ajax({
-                url: "<?= base_url("manajemen_persediaan/stokopname/proses_spv"); ?>",
-                type: 'post',
-                data: {
-                    no_ref: no_ref,
-                    keterangan: $('#keterangan').val(),
-                    tanggal: tanggal,
-                },
-                async: false,
-                success: function(data) {
-                    $('#confirm').toggleClass(function() {
-                        $('#confirm').text('Waiting Approve');
-                        $('#confirm').attr('disabled', true);
-                        $('.btn').attr('disabled', true);
-                        return $(this).is('.btn-success, .btn-primary') ? 'btn-success btn-primary' : 'btn-success';
-                    })
-                }
-            })
-        }
-
     }
 </script>
