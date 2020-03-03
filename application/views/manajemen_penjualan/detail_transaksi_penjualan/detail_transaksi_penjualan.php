@@ -218,7 +218,7 @@ if ($data_order['status_bayar'] == 1) {
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="text-right m-t-30">
-                            <a id="cetak_faktur" type="button" href="<?= base_url('Manajemen_Penjualan/PenjualanBarang/Invoice/') . $data_order['no_order_penjualan']; ?>" class="btn  btn-lg btn-primary waves-effect waves-light"><i class="fa fa-print"></i> Cetak Faktur</a>
+                            <a id="cetak_faktur" type="button" href="<?= base_url('manajemen_penjualan/penjualanbarang/invoice/') . $data_order['no_order_penjualan']; ?>" class="btn  btn-lg btn-primary waves-effect waves-light"><i class="fa fa-print"></i> Cetak Faktur</a>
                         </div>
                     </div>
                 </div>

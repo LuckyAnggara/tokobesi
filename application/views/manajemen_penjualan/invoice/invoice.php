@@ -270,8 +270,8 @@
                                      <hr>
                                      <div class="d-print-none">
                                          <div class="pull-right">
-                                             <!-- <a href="javascript:window.print()" class="btn btn-inverse waves-effect waves-light"><i class="fa fa-print"></i></a> -->
-                                             <a href="#" class="btn btn-primary waves-effect waves-light"><i class="fa fa-print"></i> Print</a>
+                                             <a href="javascript:window.print()" class="btn btn-inverse waves-effect waves-light"><i class="fa fa-print"></i></a>
+                                             <a href="javascript:window.print()" class="btn btn-primary waves-effect waves-light"><i class="fa fa-print"></i> Print</a>
                                          </div>
                                          <div class="clearfix"></div>
                                      </div>
