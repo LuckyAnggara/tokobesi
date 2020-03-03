@@ -64,10 +64,13 @@ class Model_Gaji extends CI_Model
         $output = array();
 
         foreach ($data as $value) {
-            $value['bonus'] = "0";
+            $bonus = $this->bonus($post['nip']);
+            $value['bonus'] = $bonus;
             $value['total'] = $value['gaji_pokok'] + $value['uang_makan'] + $value['bonus'];
             $output[] = $value;
         }
+
+
 
         foreach ($output as $key => $value) {
             $data = [
@@ -86,7 +89,7 @@ class Model_Gaji extends CI_Model
 
     function get_detail_master_gaji($no_ref)
     {
-        $this->db->select('*, detail_gaji.id as idid');
+        $this->db->select('master_pegawai.nama_lengkap,master_pegawai.jabatan, detail_gaji.id as idid, detail_gaji.*');
         $this->db->from('detail_gaji');
         $this->db->join('master_pegawai', 'master_pegawai.nip = detail_gaji.nip');
         $this->db->where('nomor_referensi', $no_ref);
@@ -115,5 +118,158 @@ class Model_Gaji extends CI_Model
             $this->db->where('id', $value);
             $this->db->update('detail_gaji', $data);
         }
+    }
+
+    function bonus($nip)
+    {
+
+        // hitung umur bekerja
+        $this->db->select('*');
+        $this->db->from('master_pegawai');
+        $this->db->where('nip', $nip);
+
+        $datapegawai = $this->db->get()->row_array();
+
+        list($year, $month, $day) = explode("-", $datapegawai['tanggal_masuk']);
+        $year_diff  = date("Y") - $year;
+        $month_diff = date("m") - $month;
+        $day_diff   = date("d") - $day;
+        if ($month_diff < 0) $year_diff--;
+        elseif (($month_diff == 0) && ($day_diff < 0)) $year_diff--;
+
+        //echo $year_diff;
+
+        // cek threshold bonus
+        $this->db->select_sum('total_penjualan');
+        $this->db->from('master_penjualan');
+        $this->db->where('tanggal_transaksi', date('Y-m-d'));
+        $output = $this->db->get()->row_array();
+        $omzet = $output['total_penjualan'];
+
+
+        $this->db->select('value');
+        $this->db->from('master_setting');
+        $this->db->where('nama_setting', 'threshold_bonus');
+        $data = $this->db->get()->row_array();
+        $threshold_bonus = $data['value'];
+
+        $this->db->select('value');
+        $this->db->from('master_setting');
+        $this->db->where('nama_setting', 'bonus_senior');
+        $data = $this->db->get()->row_array();
+        $bonus_senior = $data['value'];
+
+        $this->db->select('value');
+        $this->db->from('master_setting');
+        $this->db->where('nama_setting', 'bonus_junior');
+        $data = $this->db->get()->row_array();
+        $bonus_junior = $data['value'];
+
+
+        if ($omzet > $threshold_bonus) {
+            if ($year_diff >= 4) {
+                return $bonus_senior;
+            } else {
+                return $bonus_junior;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    function delete_master_gaji($no_ref)
+    {
+        $this->db->where('nomor_referensi', $no_ref);
+        $this->db->delete('master_gaji');
+    }
+
+    function ubah_gaji_pokok($post)
+    {
+
+        $total = $this->ubah_total($post, 'gaji');
+        $data = [
+            'total' => $total,
+            'gaji_pokok' => $this->normal($post['gaji_pokok']),
+            'user' => $this->session->userdata['username']
+        ];
+        $this->db->where('id', $post['id']);
+        $this->db->update('detail_gaji', $data);
+    }
+
+    function ubah_uang_makan($post)
+    {
+        $total = $this->ubah_total($post, 'makan');
+        $data = [
+            'total' => $total,
+            'uang_makan' => $this->normal($post['uang_makan']),
+            'user' => $this->session->userdata['username']
+        ];
+        $this->db->where('id', $post['id']);
+        $this->db->update('detail_gaji', $data);
+    }
+
+    function ubah_bonus($post)
+    {
+        $total = $this->ubah_total($post, 'bonus');
+        $data = [
+            'total' => $total,
+            'bonus' => $this->normal($post['bonus']),
+            'user' => $this->session->userdata['username']
+        ];
+        $this->db->where('id', $post['id']);
+        $this->db->update('detail_gaji', $data);
+    }
+
+    function normal($value)
+    {
+        $value = str_replace("Rp.", "", $value);
+        $value = str_replace(".", "", $value);
+        return str_replace(",", "", $value);
+    }
+
+    function ubah_total($post, $type)
+    {
+        $this->db->select('gaji_pokok, uang_makan, bonus');
+        $this->db->from('detail_gaji');
+        $this->db->where('id', $post['id']);
+        $data = $this->db->get()->row_array();
+        $gaji_pokok = $data['gaji_pokok'];
+        $uang_makan = $data['uang_makan'];
+        $bonus = $data['bonus'];
+        switch ($type) {
+            case 'gaji':
+                return $this->normal($post['gaji_pokok']) + $uang_makan + $bonus;
+                break;
+
+            case 'makan':
+                return $this->normal($post['uang_makan']) + $gaji_pokok + $bonus;
+                break;
+
+            case 'bonus':
+                return $this->normal($post['bonus']) + $gaji_pokok + $uang_makan;
+                break;
+        }
+        return $data;
+    }
+
+    // view detail gaji
+
+    function get_view_master_gaji($no_ref)
+    {
+        $this->db->select('master_gaji.id,master_gaji.nomor_referensi, master_gaji.total_pembayaran,master_gaji.status, master_gaji.keterangan, DATE_FORMAT(master_gaji.tanggal, "%d-%b-%y") as tanggal, master_user.nama as nama_admin,');
+        $this->db->from('master_gaji');
+        $this->db->join('master_user', 'master_user.username = master_gaji.user');
+        $this->db->where('nomor_referensi', $no_ref);
+        return $this->db->get()->row_array();
+    }
+    function get_view_detail_gaji($no_ref)
+    {
+        $this->db->select('master_pegawai.nama_lengkap,master_pegawai.jabatan, detail_gaji.id as idid, detail_gaji.*');
+        $this->db->from('detail_gaji');
+        $this->db->join('master_pegawai', 'master_pegawai.nip = detail_gaji.nip');
+        $this->db->where('nomor_referensi', $no_ref);
+        $this->db->where('detail_gaji.status', 2);
+        $this->db->order_by('master_pegawai.nama_lengkap', 'ASC');
+        return $this->db->get();
     }
 }

@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
-            <h4 class="page-title">Penggajian</h4>
+            <h4 class="page-title">Master Biaya</h4>
         </div>
     </div>
     <div class="row">
@@ -28,7 +28,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-sm-form-label m-t-10">Tanggal</label>
+                            <label class="col-5 col-sm-form-label m-t-10">Tanggal Stock Opname</label>
                             <div class="col-7">
                                 <div class="input-group">
                                     <input type="text" autocomplete="off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal">
@@ -46,9 +46,28 @@
                         </div>
                         <div class="form-group row text-right">
                             <div class="col-12">
-                                <button name="proses_init_data" id="proses_init_data" class="btn btn-success waves-effect waves-light">
+                                <button name="proses_biaya" id="proses_biaya" class="btn btn-success waves-effect waves-light">
                                     <i class="fa  fa-send"></i>
                                     <span>Proses</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row" id="total_biaya_div" hidden>
+                    <div class="col-12">
+                        <div class="form-group row">
+                            <label class="col-5 col-sm-form-label  m-t-10 ">Total Biaya</label>
+                            <div class="col-7">
+                                <input readonly id="sum_total_biaya" name="sum_total_biaya" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row text-right">
+                            <div class="col-12">
+                                <button name="close" id="close" class="btn btn-inverse waves-effect waves-light">
+                                    <i class="fa  fa-send"></i>
+                                    <span> Close</span>
                                 </button>
                             </div>
                         </div>
@@ -61,46 +80,29 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="pull-right">
-                            <button type="button" id="confirm" class="btn btn-primary waves-effect waves-light" hidden> Bayar</button>
+                            <button type="button" id="tambah_data" class="btn btn-primary waves-effect waves-light">Tambah Data</button>
                         </div>
-                        <h4 class="m-t-0 header-title">Data Pegawai</h4>
+                        <h4 class="m-t-0 header-title">Daftar Rincian Biaya</h4>
                     </div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="table-responsive">
-                            <table id="datatable-daftar-gaji" class="table table-bordered  dt-responsive nowrap" cellspacing="0" width="100%">
+                            <table id="datatable-daftar-biaya" class="table table-bordered  dt-responsive nowrap" cellspacing="0" width="100%">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th></th>
-                                        <th>Nama Pegawai</th>
-                                        <th>Jabatan</th>
-                                        <th>Gaji Pokok</th>
-                                        <th>Uang Makan</th>
-                                        <th>Bonus</th>
-                                        <th>Total Gaji</th>
+                                        <th>#</th>
+                                        <th>Kategori</th>
+                                        <th>Keterangan</th>
+                                        <th>Total Biaya</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>
                         </div>
-                        <hr>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="pull-right">
-                            <div class="form-group row">
-                                <label class="col-5 col-sm-form-label m-t-10">Jumlah Pembayaran</label>
-                                <div class="col-7">
-                                    <input name="jumlah_pembayaran" id="jumlah_pembayaran" type="text" class="form-control" placeholder="" readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <hr>
 
             </div>
         </div>

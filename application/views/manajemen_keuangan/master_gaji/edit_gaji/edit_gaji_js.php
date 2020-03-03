@@ -22,7 +22,7 @@
             todayHighlight: true,
             orientation: "bottom left",
         });
-
+        init_edit_data();
 
     })
 
@@ -263,29 +263,22 @@
         });
     }
 </script>
-<!-- Script Button Type -->
+<!-- Script Init Edit Type -->
 <script>
-    $('#proses_init_data').on('click', function() {
+    function init_edit_data() {
         var no_ref = $('#nomor_referensi');
         var tanggal = $('#tanggal');
         var ket = $('#keterangan');
-        if (no_ref.val() !== "" && tanggal.val() !== "") {
-            $('#button_data_div').attr('hidden', false);
-            $('#confirm').attr('hidden', false);
-            no_ref.attr('readonly', true);
-            tanggal.attr('readonly', true);
-            ket.attr('readonly', true);
-            $('#proses_init_data').attr('hidden', true)
-            tambah_master(no_ref.val(), tanggal.val(), ket.text())
-            init_table(no_ref.val());;
-        } else {
-            Swal.fire(
-                'Data Stok Opname belum di isi !',
-                'Silahkan Cek Kembali',
-                'error'
-            )
-        }
-    });
+        $('#button_data_div').attr('hidden', false);
+        $('#confirm').attr('hidden', false);
+        no_ref.attr('readonly', true);
+        tanggal.attr('readonly', true);
+        ket.attr('readonly', true);
+        $('#proses_init_data').attr('hidden', true)
+        tambah_master(no_ref.val(), tanggal.val(), ket.text())
+        init_table(no_ref.val());;
+    }
+
     $('#apply_random').on('click', function() {
         $.ajax({
             url: '<?= base_url("manajemen_keuangan/mastergaji/random_ref/"); ?>',

@@ -6,7 +6,7 @@
 
 <script>
     $('#tambah_data').on('click', function() {
-        window.location.href = "<?= base_url('manajemen_keuangan/mastergaji/tambah_data'); ?>"
+        window.location.href = "<?= base_url('manajemen_keuangan/masterbiaya/tambah_data'); ?>"
     })
     init_table();
 
@@ -41,7 +41,7 @@
         };
 
         //Init Datatabel Master Stok Persediaan 
-        var table = $('#datatable-master-gaji').removeAttr('width').DataTable({
+        var table = $('#datatable-master-biaya').removeAttr('width').DataTable({
             "destroy": true,
             "oLanguage": {
                 sProcessing: "Sabar yah...",
@@ -52,7 +52,7 @@
             "serverSide": false,
             "fixedColumns": true,
             "ajax": {
-                "url": '<?= base_url("manajemen_keuangan/mastergaji/get_master_gaji/"); ?>',
+                "url": '<?= base_url("manajemen_keuangan/masterbiaya/get_master_biaya/"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
@@ -100,11 +100,12 @@
                         } else if (data == "1") {
                             var display = '<span class="badge badge-primary">Waiting Approve</span>'
                         } else if (data == "2") {
-                            var display = '<span class="badge badge-success">Dibayarkan</span>'
+                            var display = '<span class="badge badge-success">Approve</span>'
                         } else if (data == "3") {
                             var display = '<span class="badge badge-warning">Input Ulang</span>'
                         } else if (data == "99") {
                             var display = '<span class="badge badge-danger">Rejected</span>'
+
                         }
                         return display;
                     }
@@ -117,16 +118,16 @@
                     targets: 6,
                     width: 70,
                     render: function(data, type, full, meta) {
-                        var detail = '<a type="button" onClick = "detail_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-search" ></i> </a>';
-                        var edit = '<a type="button" onClick = "edit_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" ><i class="fa fa-search" ></i> </a>';
-                        var del = '<a type="button" onClick = "warning_delete(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-trash" ></i> </a>';
-                        var print = '<a type="button" onClick = "print_report(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-print" ></i> </a>';
+                        var display1 = '<a type="button" onClick = "detail_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
+                        var display2 = '<a type="button" onClick = "warning_delete(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Delete Data"><i class="fa fa-trash" ></i> </a>';
+                        var display3 = '<a type="button" onClick = "print_report(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Delete Data"><i class="fa fa-print" ></i> </a>';
                         if (data.status == 0) {
-                            return edit + ' ' + del;
+                            return display1 + ' ' + display2;
+
                         } else if (data.status == 2) {
-                            return detail + ' ' + print;
+                            return display1 + ' ' + display3;
                         } else {
-                            return detail
+                            return display1
                         }
                     }
                 }
@@ -144,11 +145,7 @@
     }
 
     function detail_data(no_ref) {
-        window.location.href = "<?= base_url('manajemen_keuangan/mastergaji/detail_data/'); ?>" + no_ref
-    }
-
-    function edit_data(no_ref) {
-        window.location.href = "<?= base_url('manajemen_keuangan/mastergaji/edit_data/'); ?>" + no_ref
+        window.location.href = "<?= base_url('manajemen_keuangan/stokopname/detail_stokopname/'); ?>" + no_ref
     }
 
     function print_report(no_ref) {
@@ -157,8 +154,8 @@
 
     function warning_delete(no_ref) {
         swal.fire({
-            title: 'Apa anda yakin?',
-            text: no_ref + " akan dihapus",
+            title: 'Apa anda yakin akan hapus data ini?',
+            text: "Data Stok Opname dengan Referensi " + no_ref + " akan terhapus",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -178,14 +175,14 @@
 
     function deleteData(no_ref) {
         $.ajax({
-            url: "<?= base_url('manajemen_keuangan/mastergaji/delete_master_gaji'); ?>",
+            url: "<?= base_url('manajemen_persediaan/stokopname/delete_master_stok_opname'); ?>",
             type: "post",
             data: {
                 no_ref: no_ref
             },
             async: false,
             success: function(data) {
-                $('#datatable-master-gaji').DataTable().ajax.reload();
+                $('#datatable-master-opname').DataTable().ajax.reload();
             }
         });
     }

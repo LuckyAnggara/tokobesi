@@ -213,6 +213,7 @@
 
                 $('#password_harga').editable('setValue', data.password_harga)
                 $('#komisi_sales').editable('setValue', data.komisi_sales)
+                $('#threshold_bonus').editable('setValue', data.threshold_bonus)
 
                 $('#frekuensi_notifikasi').editable('setValue', data.frekuensi_notifikasi)
 

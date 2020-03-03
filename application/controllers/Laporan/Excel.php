@@ -158,4 +158,9 @@ class Excel extends CI_Controller
 
         $writer->save('php://output');
     }
+
+    function detail_gaji($no_ref)
+    {
+
+    }
 }

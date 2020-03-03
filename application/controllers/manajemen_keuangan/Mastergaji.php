@@ -50,6 +50,60 @@ class Mastergaji extends CI_Controller
         $this->load->view('template/template_app_js');
     }
 
+    public function edit_data($no_ref)
+    {
+        $data['menu'] = $this->modelSetting->data_menu();
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        $data['master_gaji'] = $this->modelGaji->get_view_master_gaji($no_ref);
+        $data['css'] = 'manajemen_keuangan/master_gaji/edit_gaji/edit_gaji_css';
+        if ($data['master_gaji']['status'] == 2) {
+            redirect(base_url("manajemen_keuangan/mastergaji/detail_data/" . $no_ref));
+        }
+
+        $this->load->view('template/template_header', $data);
+        $this->load->view('template/template_menu');
+        $this->load->view('manajemen_keuangan/master_gaji/edit_gaji/edit_gaji', $data);
+        $this->load->view('template/template_right');
+        $this->load->view('manajemen_keuangan/master_gaji/edit_gaji/edit_gaji_modal');
+        $this->load->view('template/template_footer');
+        $this->load->view('template/template_js');
+        $this->load->view('manajemen_keuangan/master_gaji/edit_gaji/edit_gaji_js');
+        $this->load->view('template/template_app_js');
+    }
+
+    public function detail_data($no_ref)
+    {
+        $data['menu'] = $this->modelSetting->data_menu();
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        $data['master_gaji'] = $this->modelGaji->get_view_master_gaji($no_ref);
+        $data['css'] = 'manajemen_keuangan/master_gaji/detail_gaji/detail_gaji_css';
+
+        $this->load->view('template/template_header', $data);
+        $this->load->view('template/template_menu');
+        $this->load->view('manajemen_keuangan/master_gaji/detail_gaji/detail_gaji', $data);
+        $this->load->view('template/template_right');
+        $this->load->view('template/template_footer');
+        $this->load->view('template/template_js');
+        $this->load->view('manajemen_keuangan/master_gaji/detail_gaji/detail_gaji_js');
+        $this->load->view('template/template_app_js');
+    }
+
+    public function get_view_detail_gaji()
+    {
+        $no_ref = $this->input->post('no_ref');
+        $database = $this->modelGaji->get_view_detail_gaji($no_ref);
+        $dataBarang = $database->result_array();
+        $output = array(
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $dataBarang
+        );
+        $output = json_encode($output);
+        echo $output;
+    }
+
     public function get_detail_master_gaji()
     {
         $no_ref = $this->input->post('no_ref');
@@ -124,5 +178,29 @@ class Mastergaji extends CI_Controller
         $this->modelGaji->bayar_detail($post['output']);
 
         print_r($post['output']);
+    }
+
+    public function delete_master_gaji()
+    {
+        $no_ref = $this->input->post('no_ref');
+        $this->modelGaji->delete_master_gaji($no_ref);
+    }
+
+    public function ubah_gaji_pokok()
+    {
+        $post = $this->input->post();
+        $this->modelGaji->ubah_gaji_pokok($post);
+    }
+
+    public function ubah_uang_makan()
+    {
+        $post = $this->input->post();
+        $this->modelGaji->ubah_uang_makan($post);
+    }
+
+    public function ubah_bonus()
+    {
+        $post = $this->input->post();
+        $this->modelGaji->ubah_bonus($post);
     }
 }

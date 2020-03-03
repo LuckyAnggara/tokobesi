@@ -171,7 +171,6 @@
     })
 
     $('#upload').on('click', function() {
-
         var nomor_referensi = $('#nomor_referensi').val();
         var data = new FormData(document.getElementById("upload_form"));
         data.append('nomor_referensi', nomor_referensi);

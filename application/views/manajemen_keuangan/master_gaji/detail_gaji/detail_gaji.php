@@ -1,3 +1,10 @@
+<?php
+function rupiah($angka)
+{
+    $hasil_rupiah = "Rp. " . number_format($angka, 0, ',', '.');
+    return $hasil_rupiah;
+}
+?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
@@ -18,20 +25,14 @@
                         <div class="form-group row">
                             <label class="col-5 col-sm-form-label  m-t-10 ">Nomor Referensi</label>
                             <div class="col-7">
-                                <div class="input-group">
-                                    <input id="nomor_referensi" autocomplete="off" name="nomor_referensi" type="text" class="form-control">
-                                    <div class="input-group-append">
-                                        <button id="apply_random" name="apply_random" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-random"></i></button>
-                                    </div>
-                                </div>
-                                <small id="id_pelanggan_help" class="form-text text-muted">Klik, untuk membuat nomor referensi secara otomatis</small>
+                                <input id="nomor_referensi" autocomplete="off" name="nomor_referensi" type="text" class="form-control" value="<?= $master_gaji['nomor_referensi']; ?>" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-5 col-sm-form-label m-t-10">Tanggal</label>
                             <div class="col-7">
                                 <div class="input-group">
-                                    <input type="text" autocomplete="off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal">
+                                    <input type="text" autocomplete="off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal" value="<?= $master_gaji['tanggal']; ?>" disabled>
                                     <div class="input-group-append">
                                         <span class="input-group-text btn-inverse"><i class="ti-calendar"></i></span>
                                     </div>
@@ -41,15 +42,19 @@
                         <div class="form-group row">
                             <label class="col-5 col-sm-form-label m-t-10">Keterangan</label>
                             <div class="col-7">
-                                <textarea type="text" rows="2" class="form-control" placeholder="(optional)" name="keterangan" id="keterangan"></textarea>
+                                <textarea type="text" rows="2" class="form-control" placeholder="(optional)" name="keterangan" id="keterangan" readonly><?= $master_gaji['keterangan']; ?></textarea>
                             </div>
                         </div>
-                        <div class="form-group row text-right">
-                            <div class="col-12">
-                                <button name="proses_init_data" id="proses_init_data" class="btn btn-success waves-effect waves-light">
-                                    <i class="fa  fa-send"></i>
-                                    <span>Proses</span>
-                                </button>
+                        <div class="form-group row">
+                            <label class="col-5 col-sm-form-label m-t-10">Maker</label>
+                            <div class="col-7">
+                                <input name="maker" id="maker" type="text" class="form-control" placeholder="" value="<?= $master_gaji['nama_admin']; ?>" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-sm-form-label m-t-10">Jumlah Pembayaran</label>
+                            <div class="col-7">
+                                <input name="jumlah_pembayaran" id="jumlah_pembayaran" type="text" class="form-control" placeholder="" value="<?= rupiah($master_gaji['total_pembayaran']); ?>" readonly>
                             </div>
                         </div>
                     </div>
@@ -58,15 +63,6 @@
         </div>
         <div class="col-md-8 col-xs-12">
             <div class="card-box">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="pull-right">
-                            <button type="button" id="confirm" class="btn btn-primary waves-effect waves-light" hidden> Bayar</button>
-                        </div>
-                        <h4 class="m-t-0 header-title">Data Pegawai</h4>
-                    </div>
-                </div>
-                <hr>
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="table-responsive">
@@ -87,21 +83,6 @@
                         <hr>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="pull-right">
-                            <div class="form-group row">
-                                <label class="col-5 col-sm-form-label m-t-10">Jumlah Pembayaran</label>
-                                <div class="col-7">
-                                    <input name="jumlah_pembayaran" id="jumlah_pembayaran" type="text" class="form-control" placeholder="" readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <hr>
-
             </div>
         </div>
     </div>

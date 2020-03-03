@@ -18,20 +18,14 @@
                         <div class="form-group row">
                             <label class="col-5 col-sm-form-label  m-t-10 ">Nomor Referensi</label>
                             <div class="col-7">
-                                <div class="input-group">
-                                    <input id="nomor_referensi" autocomplete="off" name="nomor_referensi" type="text" class="form-control">
-                                    <div class="input-group-append">
-                                        <button id="apply_random" name="apply_random" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-random"></i></button>
-                                    </div>
-                                </div>
-                                <small id="id_pelanggan_help" class="form-text text-muted">Klik, untuk membuat nomor referensi secara otomatis</small>
+                                <input id="nomor_referensi" autocomplete="off" name="nomor_referensi" type="text" class="form-control" value="<?= $master_gaji['nomor_referensi']; ?>" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-5 col-sm-form-label m-t-10">Tanggal</label>
                             <div class="col-7">
                                 <div class="input-group">
-                                    <input type="text" autocomplete="off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal">
+                                    <input type="text" autocomplete="off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal" value="<?= $master_gaji['tanggal']; ?>" disabled>
                                     <div class="input-group-append">
                                         <span class="input-group-text btn-inverse"><i class="ti-calendar"></i></span>
                                     </div>
@@ -41,7 +35,7 @@
                         <div class="form-group row">
                             <label class="col-5 col-sm-form-label m-t-10">Keterangan</label>
                             <div class="col-7">
-                                <textarea type="text" rows="2" class="form-control" placeholder="(optional)" name="keterangan" id="keterangan"></textarea>
+                                <textarea type="text" rows="2" class="form-control" placeholder="(optional)" name="keterangan" id="keterangan" readonly><?= $master_gaji['keterangan']; ?></textarea>
                             </div>
                         </div>
                         <div class="form-group row text-right">

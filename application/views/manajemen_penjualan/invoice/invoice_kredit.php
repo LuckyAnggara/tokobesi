@@ -217,9 +217,9 @@
                                                  </p>
                                                  <p>
                                                      Tanggal Jatuh Tempo : <b><u><?= $tanggal_jatuh_tempo; ?></u></b><br><br>
-                                                     Pembayaran dapat dilakukan secara 3 (tiga) kali.<br>
+                                                     <!-- Pembayaran dapat dilakukan secara 3 (tiga) kali.<br>
 
-                                                     Pembayaran di Transfer ke .........xxxx
+                                                     Pembayaran di Transfer ke .........xxxx -->
                                                  </p>
                                              </div>
                                          </div>

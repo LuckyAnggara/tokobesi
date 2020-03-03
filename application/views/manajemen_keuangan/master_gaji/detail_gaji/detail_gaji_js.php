@@ -1,7 +1,3 @@
-<script src="<?= base_url('assets/'); ?>plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
-<!-- Validation js (Parsleyjs) -->
-<script type="text/javascript" src="<?= base_url('assets/'); ?>plugins/parsleyjs/dist/parsley.min.js"></script>
-
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
@@ -17,49 +13,15 @@
 <!-- DatePicker Js -->
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
-<!-- Select2 js -->
-<script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
-<!-- Input Mask Js dan Max Length-->
-<script src="<?= base_url('assets/'); ?>plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
-<script src="<?= base_url('assets/'); ?>plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
+<!-- script sendiri -->
 
-
-
-
-<!-- script init -->
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
-
-        $('#tanggal_awal').datepicker({
-            autoclose: true,
-            todayHighlight: true,
-            constrainInput: false,
-
-        });
-        $('#tanggal_awal').datepicker("setDate", "01-01-" + new Date().getFullYear());
-        $('#tanggal_akhir').datepicker({
-            autoclose: true,
-            todayHighlight: true
-        });
-        $('#tanggal_akhir').datepicker("setDate", "12-31-" + new Date().getFullYear());
-    });
-</script>
+        var no_ref = $('#nomor_referensi').val()
+        init_table(no_ref)
 
 
-<!-- Isi Data Tabel -->
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        init_table();
-
-
-
-        $('#filter').on('click', function() {
-            var tanggal_awal = $('#tanggal_awal').val();
-            var tanggal_akhir = $('#tanggal_akhir').val();
-            init_table(tanggal_awal, tanggal_akhir);
-        });
-    });
+    })
 
     function formatRupiah(angka, prefix) {
         var number_string = angka.replace(/[^,\d]/g, '').toString(),
@@ -78,11 +40,7 @@
         return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
     }
 
-    function init_table(tanggal_awal = "01-01-" + new Date().getFullYear(), tanggal_akhir = "31-12-" + new Date().getFullYear()) {
-        var input = {
-            tanggal_awal: tanggal_awal,
-            tanggal_akhir: tanggal_akhir
-        }
+    function init_table(no_ref) {
         $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
             return {
                 "iStart": oSettings._iDisplayStart,
@@ -94,13 +52,11 @@
                 "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
             };
         };
-        var role = "<?php echo $this->session->userdata('role'); ?>";
-        if (role == "4" || role == "5") {
-            var visible = true
-        } else {
-            var visible = false
-        }
+
+        //Init Datatabel Master Stok Persediaan 
         var table = $('#datatable-daftar-gaji').DataTable({
+            "scrollY": '50vh',
+            "scrollCollapse": true,
             "destroy": true,
             "bInfo": false,
             "paging": false,
@@ -109,33 +65,30 @@
                 "sProcessing": "Sabar yah...",
                 "sZeroRecords": "Tidak ada Data..."
             },
-            // "buttons": ['copy', 'excel', 'pdf', 'print'],
-            // "dom": 'Bfrtip',
+            "buttons": ['copy', 'excel', 'pdf', 'print'],
+            "dom": 'Bfrtip',
             "searching": false,
             "fixedColumns": true,
             "processing": true,
             "serverSide": false,
             "ordering": true,
-            select: {
-                style: 'multi+shift',
-                selector: 'td:not(:last-child)',
-                blurable: true
-            },
             "ajax": {
-                "url": '<?= base_url("manajemen_keuangan/mastergaji/get_data_pegawai/"); ?>',
-                "data": input,
+                "url": '<?= base_url("manajemen_keuangan/mastergaji/get_view_detail_gaji/"); ?>',
+                "data": {
+                    no_ref: no_ref
+                },
                 "type": "POST",
             },
             "columnDefs": [{
                 data: "nip",
                 orderable: false,
-                className: 'select-checkbox checkbox-danger',
-                width: 5,
+                width: "5%",
                 targets: 0,
                 render: function(data, type, full, meta) {
                     return "";
                 }
             }, {
+                title: 'Nama Pegawai',
                 data: "nama_lengkap",
                 targets: 1,
                 width: 200,
@@ -143,6 +96,7 @@
                     return data;
                 }
             }, {
+                title: 'Jabatan',
                 data: "jabatan",
                 targets: 2,
                 width: 50,
@@ -150,61 +104,64 @@
                     return data;
                 }
             }, {
-                data: "gaji_pokok",
+                title: 'Gaji Pokok',
+                data: {
+                    "id": "id",
+                    "gaji_pokok": "gaji_pokok"
+                },
                 targets: 3,
                 width: 50,
                 render: function(data, type, full, meta) {
-                    return formatRupiah(data.toString(), 'Rp.');
+                    var angka = formatRupiah(data.gaji_pokok.toString(), 'Rp.');
+                    return angka;
                 }
             }, {
-                data: "uang_makan",
+                title: 'Uang Makan',
+                data: {
+                    "id": "id",
+                    "uang_makan": "uang_makan"
+                },
                 targets: 4,
                 width: 50,
                 render: function(data, type, full, meta) {
-                    return formatRupiah(data.toString(), 'Rp.');
+                    var angka = formatRupiah(data.gaji_pokok.toString(), 'Rp.');
+                    return angka;
                 }
             }, {
-                data: "bonus",
+                title: 'Bonus',
+                data: {
+                    "id": "id",
+                    "bonus": "bonus"
+                },
                 targets: 5,
                 width: 50,
                 render: function(data, type, full, meta) {
-                    return formatRupiah(data.toString(), 'Rp.');
+                    var angka = formatRupiah(data.gaji_pokok.toString(), 'Rp.');
+                    return angka;
                 }
             }, {
+                title: 'Total',
                 data: "total",
                 targets: 6,
                 width: 50,
                 render: function(data, type, full, meta) {
-                    return formatRupiah(data.toString(), 'Rp.');
+                    var angka = formatRupiah(data.toString(), 'Rp.');
+                    var display = '<b>' + angka + '</b>';
+                    return display;
                 }
             }, ],
-
-        });
-    }
-
-    $('#tambah_btn').click(function() {
-        var table = $('#datatable-daftar-gaji').DataTable();
-        var data = table.rows('.selected').data();
-        console.log(data);
-    });
-
-    function setSaldoPiutang() {
-        $.ajax({
-            url: '<?= base_url("manajemen_keuangan/masterpiutang/saldopiutang/"); ?>',
-            type: "POST",
-            dataType: "JSON",
-            success: function(data) {
-                $('#saldo_piutang').val(formatRupiah(data, 'Rp. '));
+            "rowCallback": function(row, data, iDisplayIndex) {
+                var info = this.fnPagingInfo();
+                var page = info.iPage;
+                var length = info.iLength;
+                var index = page * length + (iDisplayIndex + 1);
+                $('td:eq(0)', row).html(index);
+                // $(row).find('td:eq(2)').css('color', 'blue');
             }
+
         });
     }
 </script>
 
 
-<!-- Script Filter -->
-
-<script>
-    function detail_piutang(nomor_faktur) {
-        window.location.href = "<?= base_url('manajemen_keuangan/masterpiutang/detail_piutang/'); ?>" + nomor_faktur;
-    }
-</script>
+<!-- Script Membuat Master dan Detail nya -->
