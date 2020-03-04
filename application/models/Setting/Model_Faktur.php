@@ -81,16 +81,22 @@ class Model_Faktur extends CI_Model
         $this->db->where('nama_setting', 'nomor_faktur');
         $data = $this->db->get()->row_array();
         $id = $data['value'];
-        
+
+        $this->db->select('value');
+        $this->db->from('master_setting');
+        $this->db->where('nama_setting', 'prefix_faktur');
+        $output = $this->db->get()->row_array();
+        $prefix_faktur = $output['value'];
+
         switch ($id) {
             case '1':
-                return $this->modelFaktur->nomor_acak();
+                return $prefix_faktur. $this->modelFaktur->nomor_acak();
                 break;
             case '2':
-                return $this->modelFaktur->nomor_urut();
+                return $prefix_faktur . $this->modelFaktur->nomor_urut();
                 break;
             case '3':
-                return $this->modelFaktur->tanggal_nomor_urut();
+                return $prefix_faktur . $this->modelFaktur->tanggal_nomor_urut();
                 break;
         }
     }

@@ -1,7 +1,6 @@
 <style type="text/css" media="print">
     @page {
         size: landscape;
-        transform: rotate(270deg);
         /* auto is the initial value */
         margin: 0mm;
         /* this affects the margin in the printer settings */

@@ -152,7 +152,7 @@
     }
 
     function print_report(no_ref) {
-        window.location.href = "<?= base_url('laporan/excel/reportstokopname/'); ?>" + no_ref
+        window.location.href = "<?= base_url('laporan/excel/detail_gaji/'); ?>" + no_ref
     }
 
     function warning_delete(no_ref) {

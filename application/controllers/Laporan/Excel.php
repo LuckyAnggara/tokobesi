@@ -10,6 +10,7 @@ class Excel extends CI_Controller
     function __construct()
     {
         parent::__construct();
+        $this->load->model('Manajemen_Keuangan/Model_Gaji', 'modelGaji');
         $this->load->model('manajemen_persediaan/Model_Master_Persediaan', 'modelMasterPersediaan');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
 
@@ -161,6 +162,104 @@ class Excel extends CI_Controller
 
     function detail_gaji($no_ref)
     {
+        $master_gaji = $this->modelGaji->get_view_master_gaji($no_ref);
 
+        $database = $this->modelGaji->get_view_detail_gaji($no_ref);
+        $data = $database->result_array();
+         
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // SET HEADER
+
+        $spreadsheet->getActiveSheet()->getStyle('D:G')->getNumberFormat()
+            ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+
+        // SET JUDUL
+        $sheet->mergeCells('A1:D1'); // merge
+        $sheet->mergeCells('A2:B2'); // merge
+        $sheet->mergeCells('A3:B3'); // merge
+        $sheet->setCellValue('A1', 'LAPORAN PEMBAYARAN GAJI');
+        $sheet->setCellValue('A2', 'NOMOR REFERENSI ');
+        $sheet->setCellValue('A3', 'TANGGAL ');
+        $sheet->setCellValue('C2', ': '. $master_gaji['nomor_referensi']);
+        $sheet->setCellValue('C3', ': '. $master_gaji['tanggal']);
+        
+        // HEADER ISI
+        $sheet->setCellValue('A6', 'NO');
+        $sheet->setCellValue('B6', 'NAMA PEGAWAI');
+        $sheet->setCellValue('C6', 'JABATAN');
+        $sheet->setCellValue('D6', 'GAJI POKOK');
+        $sheet->setCellValue('E6', 'UANG MAKAN');
+        $sheet->setCellValue('F6', 'BONUS');
+        $sheet->setCellValue('G6', 'TOTAL TERIMA');
+        $sheet->setCellValue('H6', 'TANDA TANGAN');
+
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+        $sheet->getColumnDimension('E')->setAutoSize(true);
+        $sheet->getColumnDimension('F')->setAutoSize(true);
+        $sheet->getColumnDimension('G')->setAutoSize(true);
+        $sheet->getColumnDimension('H')->setAutoSize(true);
+
+        $kolom = 7;
+        $nomor = 1;
+
+        $styleArray = [
+            'borders' => [
+                'top' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'bottom' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'right' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'left' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ]
+        ];
+
+        foreach ($data as $key => $value) {
+
+            $sheet->setCellValue('A' . $kolom, $nomor);
+            $sheet->setCellValue('B' . $kolom, $value['nama_lengkap']);
+            $sheet->setCellValue('C' . $kolom, $value['jabatan']);
+            $sheet->setCellValue('D' . $kolom, $value['gaji_pokok']);
+            $sheet->setCellValue('E' . $kolom, $value['uang_makan']);
+            $sheet->setCellValue('F' . $kolom, $value['bonus']);
+            $sheet->setCellValue('G' . $kolom, $value['total']);
+
+            $spreadsheet->getActiveSheet()->getStyle('A6' . ':H6')->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('A6' . ':H' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('B6' . ':B' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('B6' . ':B' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('D6' . ':D' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('F6' . ':F' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('H6' . ':H' . $kolom)->applyFromArray($styleArray);
+
+            $kolom++;
+            $nomor++;
+        }
+
+        // set jumlah pembayaran sumnya
+        $kolom++;
+        $sheet->mergeCells('E' . $kolom .':F' . $kolom); // merge
+        $sheet->setCellValue('E' . $kolom, 'TOTAL PEMBAYARAN');
+        $sheet->setCellValue('G' . $kolom, $master_gaji['total_pembayaran']);
+
+        $writer = new Xlsx($spreadsheet);
+
+        $filename = 'tanda terima gaji '.$master_gaji['tanggal']  ;
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
     }
 }

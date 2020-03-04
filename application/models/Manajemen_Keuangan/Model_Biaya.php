@@ -110,6 +110,26 @@ class Model_Biaya extends CI_Model
         return $output->row()->total;
     }
 
+    function get_view_master_biaya($no_ref)
+    {
+        $this->db->select('master_biaya.id,master_biaya.nomor_referensi, master_biaya.total_biaya,master_biaya.status, master_biaya.keterangan, DATE_FORMAT(master_biaya.tanggal, "%d-%b-%y") as tanggal, master_user.nama as nama_admin,');
+        $this->db->from('master_biaya');
+        $this->db->join('master_user', 'master_user.username = master_biaya.user');
+        $this->db->where('nomor_referensi', $no_ref);
+        $data = $this->db->get()->row_array();
+
+        if(isset($data)){
+            return $data;
+        }else{
+            $data = [
+                "nomor_referensi" => "",
+                "tanggal" => "",
+                "keterangan" => "",
+            ];
+            return $data;
+        }
+    }
+
     // view detail
 
 }

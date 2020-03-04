@@ -32,22 +32,30 @@ class Masterbiaya extends CI_Controller
         $this->load->view('template/template_app_js');
     }
 
-    public function tambah_data()
+
+    public function tambah_data($no_ref = null)
     {
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
 
+        $data['master_gaji'] = $this->modelBiaya->get_view_master_biaya($no_ref);
         $data['css'] = 'manajemen_keuangan/master_biaya/tambah_biaya/tambah_biaya_css';
 
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
-        $this->load->view('manajemen_keuangan/master_biaya/tambah_biaya/tambah_biaya');
+        $this->load->view('manajemen_keuangan/master_biaya/tambah_biaya/tambah_biaya',$data);
         $this->load->view('template/template_right');
         $this->load->view('manajemen_keuangan/master_biaya/tambah_biaya/tambah_biaya_modal');
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
         $this->load->view('manajemen_keuangan/master_biaya/tambah_biaya/tambah_biaya_js');
         $this->load->view('template/template_app_js');
+    }
+
+     public function tambah($no_ref = null)
+    {
+        $data = $this->modelBiaya->get_view_master_biaya($no_ref);
+        print_r($data);
     }
 
     public function get_detail_master_biaya()

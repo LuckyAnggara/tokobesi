@@ -1,7 +1,9 @@
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
-
+<!-- Responsive examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.responsive.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/responsive.bootstrap4.min.js"></script>
 <!-- script sendiri -->
 
 <script>
@@ -77,7 +79,7 @@
                         return data;
                     }
                 }, {
-                    data: "total_pembayaran",
+                    data: "total_biaya",
                     targets: 3,
                     width: 150,
                     render: function(data, type, full, meta) {

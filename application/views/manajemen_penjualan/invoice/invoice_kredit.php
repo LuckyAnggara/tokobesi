@@ -87,6 +87,7 @@
                 }
                 $tanggal_transaksi = tgl_indo(date("Y-m-d-D", strtotime($tanggal_transaksi)));
                 $tanggal_jatuh_tempo = tgl_indo(date("Y-m-d-D", strtotime($tanggal_jatuh_tempo)));
+                $no = 1;
                 ?>
 
              <!-- ============================================================== -->
@@ -192,8 +193,8 @@
                                                      <tbody>
                                                          <?php foreach ($detail_order as $key => $value) : ?>
                                                              <tr>
-                                                                 <td><?php $no = 1;
-                                                                        echo $no; ?></td>
+                                                                 <td><?php
+                                                                        echo $no++; ?></td>
                                                                  <td><?= $value['kode_barang']; ?></td>
                                                                  <td><?= $value['nama_barang']; ?></td>
                                                                  <td><?= $value['kode_satuan']; ?></td>

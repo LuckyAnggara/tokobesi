@@ -13,7 +13,7 @@
                     <span>Tambah Data</span>
                 </button>
                 <div class="table-responsive">
-                    <table id="datatable-master-biaya" class="table table-striped table-bordered dt wrap" cellspacing="0" width="100%">
+                    <table id="datatable-master-biaya" class="table table-bordered table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                         <thead class="thead-dark">
                             <tr>
                                 <th>#</th>
@@ -24,7 +24,7 @@
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
-                        </thead>a
+                        </thead>
                     </table>
                 </div>
             </div>
