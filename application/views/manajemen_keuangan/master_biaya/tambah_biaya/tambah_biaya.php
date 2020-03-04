@@ -19,7 +19,7 @@
                             <label class="col-5 col-sm-form-label  m-t-10 ">Nomor Referensi</label>
                             <div class="col-7">
                                 <div class="input-group">
-                                    <input id="nomor_referensi" autocomplete="off" name="nomor_referensi" type="text" class="form-control">
+                                    <input id="nomor_referensi" autocomplete="off" name="nomor_referensi" type="text" class="form-control" value="<?= $master_biaya['nomor_referensi'];?>">
                                     <div class="input-group-append">
                                         <button id="apply_random" name="apply_random" class="btn btn-dark waves-effect waves-light" type="button"><i class="fa fa-random"></i></button>
                                     </div>
@@ -31,7 +31,7 @@
                             <label class="col-5 col-sm-form-label m-t-10">Tanggal Stock Opname</label>
                             <div class="col-7">
                                 <div class="input-group">
-                                    <input type="text" autocomplete="off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal">
+                                    <input type="text" autocomplete="off" class="form-control" placeholder="mm/dd/yyyy" id="tanggal"  value="<?= $master_biaya['tanggal'];?>">
                                     <div class="input-group-append">
                                         <span class="input-group-text btn-inverse"><i class="ti-calendar"></i></span>
                                     </div>
@@ -41,7 +41,7 @@
                         <div class="form-group row">
                             <label class="col-5 col-sm-form-label m-t-10">Keterangan</label>
                             <div class="col-7">
-                                <textarea type="text" rows="2" class="form-control" placeholder="(optional)" name="keterangan" id="keterangan"></textarea>
+                                <textarea type="text" rows="2" class="form-control" placeholder="(optional)" name="keterangan" id="keterangan"><?= $master_biaya['keterangan'];?></textarea>
                             </div>
                         </div>
                         <div class="form-group row text-right">
@@ -65,9 +65,9 @@
                         </div>
                         <div class="form-group row text-right">
                             <div class="col-12">
-                                <button name="close" id="close" class="btn btn-inverse waves-effect waves-light">
-                                    <i class="fa  fa-send"></i>
-                                    <span> Close</span>
+                                <button name="close" id="tutup" class="btn btn-inverse waves-effect waves-light">
+                                    <i class="fa fa-window-close-o"></i>
+                                    <span> Tutup</span>
                                 </button>
                             </div>
                         </div>
@@ -80,7 +80,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="pull-right">
-                            <button type="button" id="tambah_data" class="btn btn-primary waves-effect waves-light">Tambah Data</button>
+                            <button hidden type="button" id="tambah_data" class="btn btn-primary waves-effect waves-light">Tambah Data</button>
                         </div>
                         <h4 class="m-t-0 header-title">Daftar Rincian Biaya</h4>
                     </div>

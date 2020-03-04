@@ -13,7 +13,7 @@
                     <span>Tambah Data</span>
                 </button>
                 <div class="table-responsive">
-                    <table id="datatable-master-gaji" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <table id="datatable-master-gaji" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                         <thead class="thead-dark">
                             <tr>
                                 <th>#</th>

@@ -129,7 +129,6 @@
                                 var display = '<a  href="javascript:void(0)" class="badge badge-danger"><span>Tidak Aktif</span></a>';
                             }
                             return display;
-
                         }
                     },
                     {

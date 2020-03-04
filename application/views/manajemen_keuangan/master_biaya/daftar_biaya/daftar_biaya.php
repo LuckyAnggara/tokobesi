@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card-box">
-                <button name="tambah_data" id="tambah_data" class="btn btn-success btn-rounded w-md waves-effect waves-light m-b-20">
+                <button  name="tambah_data" id="tambah_data" class="btn btn-success btn-rounded w-md waves-effect waves-light m-b-20">
                     <i class="fa fa-plus"></i>
                     <span>Tambah Data</span>
                 </button>

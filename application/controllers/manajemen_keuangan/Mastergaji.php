@@ -177,7 +177,6 @@ class Mastergaji extends CI_Controller
         $this->modelGaji->bayar_master($post);
         $this->modelGaji->bayar_detail($post['output']);
 
-        print_r($post['output']);
     }
 
     public function delete_master_gaji()

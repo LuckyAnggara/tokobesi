@@ -94,7 +94,7 @@
              <!-- Start right Content here -->
              <!-- ============================================================== -->
              <!-- Start content -->
-             <div class="container-fluid">
+             <div class="container-fluid customFont">
                  <!-- Page-Title -->
                  <div class="row">
                      <div class="col-sm-12">
@@ -174,14 +174,14 @@
                                      <div class="row">
                                          <div class="col-md-12">
                                              <div class="table-responsive">
-                                                 <table class="table table-sm m-t-10 table-striped table-bordered">
-                                                     <thead class="thead-dark">
+                                                 <table class="table table-bordered">
+                                                     <thead class="">
                                                          <tr>
                                                              <th style="width: 5%">#</th>
                                                              <th style="width: 10%">Kode Barang</th>
-                                                             <th style="width: 35%">Nama Barang / Jasa</th>
-                                                             <th style="width: 10%">Satuan</th>
-                                                             <th style="width: 10%">Harga</th>
+                                                             <th style="width: 30%">Nama Barang / Jasa</th>
+                                                             <th style="width: 5%">Satuan</th>
+                                                             <th style="width: 15%">Harga</th>
                                                              <th style="width: 5%">Qty</th>
                                                              <th style="width: 10%">Diskon</th>
                                                              <th style="width: 25%">Total Harga</th>

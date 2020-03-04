@@ -84,6 +84,7 @@ class Model_Biaya extends CI_Model
         $this->db->select('*');
         $this->db->from('master_kategori_biaya');
         $this->db->like('nama_biaya', $query);
+        $this->db->where('status',0);
         $output = $this->db->get();
         return $output;
     }
@@ -129,6 +130,28 @@ class Model_Biaya extends CI_Model
             return $data;
         }
     }
+    function get_view_detail_biaya($no_ref)
+    {
+        $this->db->select('detail_biaya.id,detail_biaya.nomor_referensi,detail_biaya.keterangan as ket,detail_biaya.total,DATE_FORMAT(detail_biaya.tanggal, "%d %M %Y") as jam,master_kategori_biaya.nama_biaya');
+        $this->db->from('detail_biaya');
+        $this->db->join('master_kategori_biaya', 'master_kategori_biaya.id = detail_biaya.kategori_biaya');
+        $this->db->where('nomor_referensi', $no_ref);
+        $this->db->order_by('detail_biaya.id', 'ASC');
+        return $this->db->get();
+    }
+
+    function tutup_master($post)
+    {
+        $data = [
+            'status' => 2,
+            'total_biaya' => $this->normal($post['total_biaya']),
+        ];
+        $this->db->where('nomor_referensi', $post['no_ref']);
+        $this->db->update('master_biaya', $data);
+    }
+
+    
+
 
     // view detail
 

@@ -1,6 +1,14 @@
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jszip.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 <!-- DatePicker Js -->
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <!-- Select2 js -->
@@ -9,17 +17,19 @@
 
 <script>
     $(document).ready(function() {
-        $('#tanggal').datepicker({
-            autoclose: true,
-            todayHighlight: true,
-            orientation: "bottom left",
-        });
+       
 
         var no_ref = $('#nomor_referensi').val()
 
         if (no_ref !== "") {
+            
             init_edit_data(no_ref)
-
+        }else{
+             $('#tanggal').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "bottom left",
+            });
         }
     })
 
@@ -44,8 +54,8 @@
                 "sProcessing": "Sabar yah...",
                 "sZeroRecords": "Tidak ada Data..."
             },
-            // "buttons": ['copy', 'excel', 'pdf', 'print'],
-            // "dom": 'Bfrtip',
+            "buttons": ['copy', 'excel', 'pdf', 'print'],
+            "dom": 'Bfrtip',
             "searching": false,
             "fixedColumns": true,
             "processing": true,
@@ -144,7 +154,7 @@
             $('#tambah_data').attr('hidden', false);
             $('#total_biaya_div').attr('hidden', false);
             no_ref.attr('readonly', true);
-            tanggal.attr('readonly', true);
+            tanggal.attr('disabled', true);
             ket.attr('readonly', true);
             $('#apply_random').attr('disabled', true)
             $('#proses_biaya').attr('hidden', true)
@@ -193,6 +203,8 @@
     }
 
     function deleteData(id) {
+        var no_ref = $('#nomor_referensi').val();
+
         $.ajax({
             url: "<?= base_url('manajemen_keuangan/masterbiaya/delete_detail_biaya'); ?>",
             type: "post",
@@ -260,7 +272,8 @@
             dataType: "JSON",
             async: false,
             success: function(data) {
-                $('#sum_total_biaya').val(data);
+                var display = formatRupiah(data.toString(),'Rp.');
+                $('#sum_total_biaya').val(display);
             }
         });
     }
@@ -321,6 +334,60 @@
             })
         });
     });
+</script>
+
+<!-- Script Tutup Master -->
+
+<script>
+
+$('#tutup').on('click',function(){
+     var total_biaya = $('#total_biaya').val()
+     var no_ref = $('#nomor_referensi').val()
+     swal.fire({
+            title: 'Apa anda yakin?',
+            text: "Master Biaya " + no_ref + " akan di Buku ke Pengeluaran ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya!'
+        }).then((result) => {
+            if (result.value) {
+                proses_tutup(no_ref, total_biaya);
+            }
+        });
+})
+
+function proses_tutup(no_ref, total_biaya) {
+        $.ajax({
+            url: '<?= base_url("manajemen_keuangan/masterbiaya/proses_tutup"); ?>',
+            type: "POST",
+            data: {
+                no_ref: no_ref,
+                total_biaya: total_biaya
+            },
+            async: false,
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            success: function(data) {
+                $('.btn').attr('hidden', true);
+                setTimeout(function() {
+                    window.location.href = "<?= base_url('manajemen_keuangan/masterbiaya/detail_data/'); ?>" + no_ref
+                }, 3000);
+                Swal.fire(
+                    'Terbuku !',
+                    '',
+                    'success'
+                ).then((result) => {
+                    window.location.href = "<?= base_url('manajemen_keuangan/masterbiaya/detail_data/'); ?>" + no_ref
+                });
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            }
+        });
+    }
 </script>
 
 <!-- Init Edit Data kalo edit -->

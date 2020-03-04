@@ -463,6 +463,17 @@
       }
     }
 
+    $('#dummy_nominal_bayar').on('keyup', function() {
+      var dummy_nominal_bayar = $('#dummy_nominal_bayar');
+      dummy_nominal_bayar.val(formatRupiah(dummy_nominal_bayar.val().toString(), 'Rp.'));
+
+      $('#nominal_bayar').val(normalrupiah(dummy_nominal_bayar.val()));
+      
+      var grand_total = normalrupiah($('#checkout_grand_total').text());
+      var kembali = $('#nominal_bayar').val() - grand_total;
+      $('#dummy_nominal_kembali').val(formatRupiah(kembali.toString(),'Rp.'));
+    });
+
     $('#dummy_harga_jual').on('keyup', function() {
       var input_harga_jual = $('#dummy_harga_jual');
       input_harga_jual.val(formatRupiah(input_harga_jual.val().toString(), 'Rp.'));

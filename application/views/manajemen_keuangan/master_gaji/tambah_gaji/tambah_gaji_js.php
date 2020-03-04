@@ -10,6 +10,10 @@
 <script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
+
+<!-- Responsive examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.responsive.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/responsive.bootstrap4.min.js"></script>
 <!-- DatePicker Js -->
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
@@ -273,7 +277,7 @@
             $('#button_data_div').attr('hidden', false);
             $('#confirm').attr('hidden', false);
             no_ref.attr('readonly', true);
-            tanggal.attr('readonly', true);
+            tanggal.attr('disabled', true);
             ket.attr('readonly', true);
             $('#proses_init_data').attr('hidden', true)
             tambah_master(no_ref.val(), tanggal.val(), ket.text())

@@ -50,6 +50,7 @@
                 sZeroRecords: "Tidak ada Data..."
             },
             "searching": true,
+            "responsive":true,
             "processing": true,
             "serverSide": false,
             "fixedColumns": true,
@@ -102,7 +103,7 @@
                         } else if (data == "1") {
                             var display = '<span class="badge badge-primary">Waiting Approve</span>'
                         } else if (data == "2") {
-                            var display = '<span class="badge badge-success">Approve</span>'
+                            var display = '<span class="badge badge-success">Terbuku</span>'
                         } else if (data == "3") {
                             var display = '<span class="badge badge-warning">Input Ulang</span>'
                         } else if (data == "99") {
@@ -113,23 +114,23 @@
                     }
                 },
                 {
-                    data: {
+                     data: {
                         "nomor_referensi": "nomor_referensi",
                         "status": "status"
                     },
                     targets: 6,
                     width: 70,
                     render: function(data, type, full, meta) {
-                        var display1 = '<a type="button" onClick = "detail_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melihat Detail"><i class="fa fa-search" ></i> </a>';
-                        var display2 = '<a type="button" onClick = "warning_delete(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Delete Data"><i class="fa fa-trash" ></i> </a>';
-                        var display3 = '<a type="button" onClick = "print_report(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Delete Data"><i class="fa fa-print" ></i> </a>';
+                        var detail = '<a type="button" onClick = "detail_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-search" ></i> </a>';
+                        var edit = '<a type="button" onClick = "edit_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" ><i class="fa fa-search" ></i> </a>';
+                        var del = '<a type="button" onClick = "warning_delete(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-trash" ></i> </a>';
+                        var print = '<a type="button" onClick = "print_report(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-inverse btn-sm" ><i class="fa fa-print" ></i> </a>';
                         if (data.status == 0) {
-                            return display1 + ' ' + display2;
-
+                            return edit + ' ' + del;
                         } else if (data.status == 2) {
-                            return display1 + ' ' + display3;
+                            return detail + ' ' + print;
                         } else {
-                            return display1
+                            return detail
                         }
                     }
                 }
@@ -146,18 +147,22 @@
         });
     }
 
-    function detail_data(no_ref) {
-        window.location.href = "<?= base_url('manajemen_keuangan/stokopname/detail_stokopname/'); ?>" + no_ref
+    function edit_data(no_ref) {
+        window.location.href = "<?= base_url('manajemen_keuangan/masterbiaya/tambah_data/'); ?>" + no_ref
+    }
+
+     function detail_data(no_ref) {
+        window.location.href = "<?= base_url('manajemen_keuangan/masterbiaya/detail_data/'); ?>" + no_ref
     }
 
     function print_report(no_ref) {
-        window.location.href = "<?= base_url('laporan/excel/reportstokopname/'); ?>" + no_ref
+        window.location.href = "<?= base_url('laporan/excel/detail_biaya/'); ?>" + no_ref
     }
 
     function warning_delete(no_ref) {
         swal.fire({
-            title: 'Apa anda yakin akan hapus data ini?',
-            text: "Data Stok Opname dengan Referensi " + no_ref + " akan terhapus",
+            title: 'Apa anda yakin?',
+            text: "Data Baiaya Referensi " + no_ref + " akan terhapus",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

@@ -38,7 +38,7 @@ class Masterbiaya extends CI_Controller
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
 
-        $data['master_gaji'] = $this->modelBiaya->get_view_master_biaya($no_ref);
+        $data['master_biaya'] = $this->modelBiaya->get_view_master_biaya($no_ref);
         $data['css'] = 'manajemen_keuangan/master_biaya/tambah_biaya/tambah_biaya_css';
 
         $this->load->view('template/template_header', $data);
@@ -49,6 +49,24 @@ class Masterbiaya extends CI_Controller
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
         $this->load->view('manajemen_keuangan/master_biaya/tambah_biaya/tambah_biaya_js');
+        $this->load->view('template/template_app_js');
+    }
+
+    public function detail_data($no_ref)
+    {
+        $data['menu'] = $this->modelSetting->data_menu();
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        $data['master_biaya'] = $this->modelBiaya->get_view_master_biaya($no_ref);
+        $data['css'] = 'manajemen_keuangan/master_biaya/detail_biaya/detail_biaya_css';
+
+        $this->load->view('template/template_header', $data);
+        $this->load->view('template/template_menu');
+        $this->load->view('manajemen_keuangan/master_biaya/detail_biaya/detail_biaya',$data);
+        $this->load->view('template/template_right');
+        $this->load->view('template/template_footer');
+        $this->load->view('template/template_js');
+        $this->load->view('manajemen_keuangan/master_biaya/detail_biaya/detail_biaya_js');
         $this->load->view('template/template_app_js');
     }
 
@@ -150,5 +168,11 @@ class Masterbiaya extends CI_Controller
         $no_ref = $this->input->post('no_ref');
         $output = $this->modelBiaya->get_master_total($no_ref);
         echo $output;
+    }
+
+    public function proses_tutup()
+    {
+        $post = $this->input->post();
+        $this->modelBiaya->tutup_master($post);
     }
 }

@@ -10,6 +10,7 @@ class Excel extends CI_Controller
     function __construct()
     {
         parent::__construct();
+        $this->load->model('Manajemen_Keuangan/Model_Biaya', 'modelBiaya');
         $this->load->model('Manajemen_Keuangan/Model_Gaji', 'modelGaji');
         $this->load->model('manajemen_persediaan/Model_Master_Persediaan', 'modelMasterPersediaan');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
@@ -255,6 +256,96 @@ class Excel extends CI_Controller
         $writer = new Xlsx($spreadsheet);
 
         $filename = 'tanda terima gaji '.$master_gaji['tanggal']  ;
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+    }
+
+    function detail_biaya($no_ref)
+    {
+        $master_biaya = $this->modelBiaya->get_view_master_biaya($no_ref);
+
+        $database = $this->modelBiaya->get_view_detail_biaya($no_ref);
+        $data = $database->result_array();
+        
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // SET HEADER
+
+        $spreadsheet->getActiveSheet()->getStyle('D:G')->getNumberFormat()
+            ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+
+        // SET JUDUL
+        $sheet->mergeCells('A1:D1'); // merge
+        $sheet->mergeCells('A2:B2'); // merge
+        $sheet->mergeCells('A3:B3'); // merge
+        $sheet->setCellValue('A1', 'LAPORAN BIAYA');
+        $sheet->setCellValue('A2', 'NOMOR REFERENSI ');
+        $sheet->setCellValue('A3', 'TANGGAL ');
+        $sheet->setCellValue('C2', ': '. $master_biaya['nomor_referensi']);
+        $sheet->setCellValue('C3', ': '. $master_biaya['tanggal']);
+        
+        // HEADER ISI
+        $sheet->setCellValue('A6', 'NO');
+        $sheet->setCellValue('B6', 'KATEGORI BIAYA');
+        $sheet->setCellValue('C6', 'KETERANGAN');
+        $sheet->setCellValue('D6', 'TOTAL BIAYA');
+
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+
+        $kolom = 7;
+        $nomor = 1;
+
+        $styleArray = [
+            'borders' => [
+                'top' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'bottom' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'right' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'left' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ]
+        ];
+
+        foreach ($data as $key => $value) {
+
+            $sheet->setCellValue('A' . $kolom, $nomor);
+            $sheet->setCellValue('B' . $kolom, strtoupper($value['nama_biaya']));
+            $sheet->setCellValue('C' . $kolom, strtoupper($value['ket']));
+            $sheet->setCellValue('D' . $kolom, $value['total']);
+
+            $spreadsheet->getActiveSheet()->getStyle('A6' . ':D6')->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('A6' . ':D' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('B6' . ':B' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('B6' . ':B' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('D6' . ':D' . $kolom)->applyFromArray($styleArray);
+
+            $kolom++;
+            $nomor++;
+        }
+
+        // set jumlah pembayaran sumnya
+        $kolom++;
+        $sheet->mergeCells('B' . $kolom .':C' . $kolom); // merge
+        $sheet->setCellValue('B' . $kolom, 'TOTAL BIAYA');
+        $sheet->setCellValue('D' . $kolom, $master_biaya['total_biaya']);
+
+        $writer = new Xlsx($spreadsheet);
+
+        $filename = 'laporan biaya '.$master_biaya['tanggal']  ;
 
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');

@@ -68,6 +68,26 @@
                     </div>
                 </div>
                 <hr>
+                 <div class="form-group row">
+                    <label class="col-5 col-form-label m-t-5">Pembayaran</label>
+                    <div class="col-7">
+                        <div class="input-group">
+                        <input id="dummy_nominal_bayar" autocomplete="off" name="dummy_nominal_bayar" type="text" class="form-control" val="Rp. 0">
+                        <div class="input-group-append">
+                                <span class="btn btn-dark waves-effect waves-light" ><i class="fa fa-money"></i></span>
+                        </div>
+                    </div>
+                        <input hidden id="nominal_bayar" autocomplete="off" name="nominal_bayar" type="text" class="form-control" val="Rp. 0">
+                     </div>
+                   
+                </div>
+                 <div class="form-group row">
+                    <label class="col-5 col-form-label m-t-5">Kembali</label>
+                    <div class="col-7">
+                    <input id="dummy_nominal_kembali" autocomplete="off" name="dummy_nominal_kembali" type="text" class="form-control" val="Rp. 0">
+                    </div>
+                </div>
+                <hr>
                 <div hidden id="kredit_div">
                     <div class="form-group row">
                         <label class="col-5 colform-label m-t-5">Down Payment (DP)</label>
