@@ -40,7 +40,7 @@
                                         <th>#</th>
                                         <th>Tanggal Transaksi</th>
                                         <th>Nomor Transaksi</th>
-                                        <th>Qty Pembelian</th>
+                                        <th>Qty</th>
                                         <th>Harga Pembelian</th>
                                     </tr>
                                 </thead>
@@ -56,7 +56,7 @@
                                         <th>#</th>
                                         <th>Tanggal Transaksi</th>
                                         <th>Nomor Faktur</th>
-                                        <th>Qty Penjualan</th>
+                                        <th>Qty</th>
                                         <th>Harga Penjualan</th>
                                     </tr>
                                 </thead>

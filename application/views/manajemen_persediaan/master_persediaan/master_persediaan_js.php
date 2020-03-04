@@ -183,9 +183,17 @@
                     targets: 4,
                     render: function(data, type, full, meta) {
                         if (data.jumlah_pembelian == null) {
-                            data.jumlah_pembelian = "0";
+                            var jumlah_pembelian = "0";
+                        } else {
+                            var jumlah_pembelian = data.jumlah_pembelian;
                         }
-                        return formatSatuan(data.jumlah_pembelian);
+                        if (data.saldo_retur == null) {
+                            var saldo_retur = "0";
+                        } else {
+                            var saldo_retur = data.saldo_retur;
+                        }
+                        jumlah = parseInt(jumlah_pembelian) + parseInt(saldo_retur);
+                        return formatSatuan(jumlah.toString());
                     }
                 },
                 {
@@ -193,9 +201,17 @@
                     targets: 5,
                     render: function(data, type, full, meta) {
                         if (data.jumlah_penjualan == null) {
-                            data.jumlah_penjualan = "0";
+                            var jumlah_penjualan = "0";
+                        } else {
+                            var jumlah_penjualan = data.jumlah_penjualan;
                         }
-                        var display = '<span class="text-danger">(' + formatSatuan(data.jumlah_penjualan) + ')</span>'
+                        if (data.saldo_retur == null) {
+                            var saldo_retur = "0";
+                        } else {
+                            var saldo_retur = data.saldo_retur;
+                        }
+                        jumlah = parseInt(jumlah_penjualan) + parseInt(saldo_retur);
+                        var display = '<span class="text-danger">(' + formatSatuan(jumlah.toString()) + ')</span>'
                         return display
                     }
                 },
@@ -492,7 +508,7 @@
                     }
                 },
                 {
-                    data: "user",
+                    data: "nama",
                     targets: 4,
                     render: function(data, type, full, meta) {
                         return formatSatuan(data.toString());

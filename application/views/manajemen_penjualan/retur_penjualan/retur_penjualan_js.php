@@ -207,14 +207,14 @@
         }
 
         setTimeout(function() {
-            window.location.href = "<?php echo base_url('manajemen_penjualan/returpenjualan/faktur/'); ?>" + nomor_faktur;
+            window.location.href = "<?php echo base_url('manajemen_penjualan/returpenjualan/faktur/'); ?>RTR-" + nomor_faktur;
         }, 5000);
         Swal.fire(
             'Proses retur selesai !',
             '',
             'success'
         ).then((result) => {
-            window.location.href = "<?php echo base_url('manajemen_penjualan/returpenjualan/faktur/'); ?>" + nomor_faktur;
+            window.location.href = "<?php echo base_url('manajemen_penjualan/returpenjualan/faktur/'); ?>RTR-" + nomor_faktur;
         });
 
     }

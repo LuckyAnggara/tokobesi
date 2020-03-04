@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 04, 2020 at 10:56 AM
--- Server version: 10.3.16-MariaDB
--- PHP Version: 7.3.6
+-- Generation Time: Mar 04, 2020 at 02:58 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -186,6 +186,49 @@ CREATE TABLE `detail_piutang` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `detail_retur_barang_pembelian`
+--
+
+CREATE TABLE `detail_retur_barang_pembelian` (
+  `id` int(11) NOT NULL,
+  `kode_barang` varchar(255) NOT NULL,
+  `harga_pokok` double NOT NULL,
+  `saldo_tersedia` double NOT NULL,
+  `saldo_retur` double NOT NULL,
+  `keterangan` varchar(255) NOT NULL,
+  `user` varchar(255) NOT NULL,
+  `tanggal_input` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `detail_retur_barang_penjualan`
+--
+
+CREATE TABLE `detail_retur_barang_penjualan` (
+  `id` int(11) NOT NULL,
+  `nomor_faktur` varchar(255) NOT NULL,
+  `kode_barang` varchar(255) NOT NULL,
+  `harga_pokok` double NOT NULL,
+  `saldo_tersedia` double NOT NULL,
+  `saldo_retur` double NOT NULL,
+  `keterangan` varchar(255) NOT NULL,
+  `user` varchar(255) NOT NULL,
+  `tanggal_input` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `detail_retur_barang_penjualan`
+--
+
+INSERT INTO `detail_retur_barang_penjualan` (`id`, `nomor_faktur`, `kode_barang`, `harga_pokok`, `saldo_tersedia`, `saldo_retur`, `keterangan`, `user`, `tanggal_input`) VALUES
+(3, 'RTR-030320001', 'BES0001', 15000, 1, 2, 'RTR-030320001 - Rusak', 'edwin', '2020-03-04 14:42:57'),
+(4, 'RTR-030320001', 'BES0001', 2000, 1, 1, 'RTR-030320001 - Rusak', 'edwin', '2020-03-04 14:43:53');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `detail_retur_pembelian`
 --
 
@@ -216,12 +259,20 @@ CREATE TABLE `detail_retur_penjualan` (
   `kode_barang` varchar(255) NOT NULL,
   `keterangan` varchar(512) NOT NULL,
   `jumlah_retur` double NOT NULL,
+  `saldo` double NOT NULL,
   `harga_retur` double NOT NULL,
   `diskon` double NOT NULL,
   `total_retur` double NOT NULL,
   `user` varchar(255) NOT NULL,
   `tanggal` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `detail_retur_penjualan`
+--
+
+INSERT INTO `detail_retur_penjualan` (`id`, `id_detail_penjualan`, `nomor_faktur`, `kode_barang`, `keterangan`, `jumlah_retur`, `saldo`, `harga_retur`, `diskon`, `total_retur`, `user`, `tanggal`) VALUES
+(3, 1, 'RTR-030320001', 'BES0001', 'Rusak', 3, 0, 24000, 0, 72000, 'dini', '2020-03-04 13:43:53');
 
 -- --------------------------------------------------------
 
@@ -799,6 +850,13 @@ CREATE TABLE `master_retur_penjualan` (
   `tanggal` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `master_retur_penjualan`
+--
+
+INSERT INTO `master_retur_penjualan` (`id`, `nomor_faktur_asli`, `nomor_faktur`, `id_pelanggan`, `retur_total`, `retur_diskon`, `retur_pajak`, `retur_grand_total`, `user`, `tanggal`) VALUES
+(3, '030320001', 'RTR-030320001', 'E9DrUzjt8lAcsNu0', 72000, 0, 7200, 79200, 'dini', '2020-03-04 12:44:36');
+
 -- --------------------------------------------------------
 
 --
@@ -1010,10 +1068,10 @@ CREATE TABLE `master_user` (
 --
 
 INSERT INTO `master_user` (`username`, `nip`, `password`, `role`, `nama`, `avatar`, `status`, `last_activity`, `tanggal_create`, `isactive`, `is_del`) VALUES
-('dini', '124124', '$2y$10$RrwCvrb/WuSCU/JAHKr.2.A7f7WpsPc5qBKhH7.PZx.kua5bxKr8a', '2', 'DINI', 'default.jpg', 0, '2020-03-04 09:13:26', '0000-00-00 00:00:00', 1, 0),
-('edwin', '123123', '$2y$10$oi6qEP4bxeYkrUK5YCvhFe8a4PBCVriLudVjVxMvqQPPYCy.xKF9u', '4', 'EDWIN', 'default.jpg', 0, '2020-03-04 10:36:59', '0000-00-00 00:00:00', 1, 0),
+('dini', '124124', '$2y$10$RrwCvrb/WuSCU/JAHKr.2.A7f7WpsPc5qBKhH7.PZx.kua5bxKr8a', '2', 'DINI', 'default.jpg', 0, '2020-03-04 13:45:15', '0000-00-00 00:00:00', 1, 0),
+('edwin', '123123', '$2y$10$oi6qEP4bxeYkrUK5YCvhFe8a4PBCVriLudVjVxMvqQPPYCy.xKF9u', '4', 'EDWIN', 'default.jpg', 0, '2020-03-04 14:57:44', '0000-00-00 00:00:00', 1, 0),
 ('hadi', '21124124', '$2y$10$.Zz5dNGxi92mm.vF2/W59OWdBQEkYEIAjgnf01FkeUNal0jg2Lzf.', '3', 'HADI', 'default.jpg', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0),
-('lucky15', '123123123', '$2y$10$3HBFxWoWL9yHhbW1zegPteGL2ZtN4bPiBTTGEwkFifMu7djwD2Q0S', '1', 'LUCKY ANGGARA', 'default.jpg', 0, '2020-03-04 10:18:07', '0000-00-00 00:00:00', 1, 0),
+('lucky15', '123123123', '$2y$10$3HBFxWoWL9yHhbW1zegPteGL2ZtN4bPiBTTGEwkFifMu7djwD2Q0S', '1', 'LUCKY ANGGARA', 'default.jpg', 0, '2020-03-04 14:45:46', '0000-00-00 00:00:00', 1, 0),
 ('manajer', '1', '$2y$10$KaPuBy66KgtWC/gbOFLS/O/XcRisL.DJ3iG249CgA8Qswz5VMbuJW', '5', 'Neng', 'default.jpg', 0, '2020-03-03 13:20:19', '2020-03-01 00:00:00', 1, 0);
 
 -- --------------------------------------------------------
@@ -1240,7 +1298,8 @@ INSERT INTO `tabel_submenu` (`id`, `main_menu`, `nama_submenu`, `link`, `ket`) V
 (37, '12', 'Master Piutang', '	\r\nmanajemen_keuangan/masterpiutang/daftar_piutang', 'Manajer Master Piutang'),
 (39, '24', 'Master Gaji', 'manajemen_keuangan/mastergaji/', 'Supervisor Master Gaji'),
 (40, '24', 'Master Biaya', 'manajemen_keuangan/masterbiaya/', 'Supervisor Master Biaya'),
-(41, '10', 'Master Kategori Biaya', 'manajemen_data/masterkategoribiaya', 'Supervisor Kategori Biaya');
+(41, '10', 'Master Kategori Biaya', 'manajemen_data/masterkategoribiaya', 'Supervisor Kategori Biaya'),
+(42, '9', 'Transfer Retur Barang', 'manajemen_persediaan/returpersediaan', 'Supervisor Transfer Retur Barang');
 
 -- --------------------------------------------------------
 
@@ -1373,6 +1432,18 @@ ALTER TABLE `detail_persediaan`
 ALTER TABLE `detail_piutang`
   ADD PRIMARY KEY (`id`),
   ADD KEY `master_piutang` (`nomor_faktur`);
+
+--
+-- Indexes for table `detail_retur_barang_pembelian`
+--
+ALTER TABLE `detail_retur_barang_pembelian`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `detail_retur_barang_penjualan`
+--
+ALTER TABLE `detail_retur_barang_penjualan`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `detail_retur_pembelian`
@@ -1718,6 +1789,18 @@ ALTER TABLE `detail_piutang`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `detail_retur_barang_pembelian`
+--
+ALTER TABLE `detail_retur_barang_pembelian`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `detail_retur_barang_penjualan`
+--
+ALTER TABLE `detail_retur_barang_penjualan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `detail_retur_pembelian`
 --
 ALTER TABLE `detail_retur_pembelian`
@@ -1727,7 +1810,7 @@ ALTER TABLE `detail_retur_pembelian`
 -- AUTO_INCREMENT for table `detail_retur_penjualan`
 --
 ALTER TABLE `detail_retur_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `detail_stok_opname`
@@ -1823,7 +1906,7 @@ ALTER TABLE `master_retur_pembelian`
 -- AUTO_INCREMENT for table `master_retur_penjualan`
 --
 ALTER TABLE `master_retur_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `master_saldo_awal`
@@ -1877,7 +1960,7 @@ ALTER TABLE `tabel_role`
 -- AUTO_INCREMENT for table `tabel_submenu`
 --
 ALTER TABLE `tabel_submenu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `temp_purchase_order`

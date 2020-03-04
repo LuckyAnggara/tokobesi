@@ -55,7 +55,8 @@ class Model_Retur_Penjualan extends CI_Model
             "kode_barang" => $post['kode_barang'],
             "keterangan" => $post['keterangan'],
             "jumlah_retur" => $post['qty'],
-            "harga_retur" => $post['harga'],
+            "saldo" => $post['qty'],
+            "harga_retur" => $this->normal($post['harga']),
             "diskon" => $post['diskon'],
             "total_retur" => $post['retur_total'],
             'user' => $this->session->userdata['username'],
@@ -121,5 +122,12 @@ class Model_Retur_Penjualan extends CI_Model
         $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
         $this->db->where('nomor_faktur', $nomor_faktur);
         return $this->db->get()->result_array();
+    }
+
+    function normal($value)
+    {
+        $value = str_replace("Rp.", "", $value);
+        $value = str_replace(".", "", $value);
+        return str_replace(",", "", $value);
     }
 }

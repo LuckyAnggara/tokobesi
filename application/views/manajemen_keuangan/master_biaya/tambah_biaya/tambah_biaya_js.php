@@ -17,18 +17,18 @@
 
 <script>
     $(document).ready(function() {
-       
+
 
         var no_ref = $('#nomor_referensi').val()
 
         if (no_ref !== "") {
-            
+
             init_edit_data(no_ref)
-        }else{
-             $('#tanggal').datepicker({
-            autoclose: true,
-            todayHighlight: true,
-            orientation: "bottom left",
+        } else {
+            $('#tanggal').datepicker({
+                autoclose: true,
+                todayHighlight: true,
+                orientation: "bottom left",
             });
         }
     })
@@ -272,7 +272,7 @@
             dataType: "JSON",
             async: false,
             success: function(data) {
-                var display = formatRupiah(data.toString(),'Rp.');
+                var display = formatRupiah(data.toString(), 'Rp.');
                 $('#sum_total_biaya').val(display);
             }
         });
@@ -339,11 +339,10 @@
 <!-- Script Tutup Master -->
 
 <script>
-
-$('#tutup').on('click',function(){
-     var total_biaya = $('#total_biaya').val()
-     var no_ref = $('#nomor_referensi').val()
-     swal.fire({
+    $('#tutup').on('click', function() {
+        var total_biaya = $('#total_biaya').val()
+        var no_ref = $('#nomor_referensi').val()
+        swal.fire({
             title: 'Apa anda yakin?',
             text: "Master Biaya " + no_ref + " akan di Buku ke Pengeluaran ?",
             icon: 'warning',
@@ -356,9 +355,9 @@ $('#tutup').on('click',function(){
                 proses_tutup(no_ref, total_biaya);
             }
         });
-})
+    })
 
-function proses_tutup(no_ref, total_biaya) {
+    function proses_tutup(no_ref, total_biaya) {
         $.ajax({
             url: '<?= base_url("manajemen_keuangan/masterbiaya/proses_tutup"); ?>',
             type: "POST",

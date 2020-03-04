@@ -55,6 +55,7 @@ class Masterpersediaan extends CI_Controller
 
 
             $saldoMasuk =  $this->modelMasterPersediaan->saldoMasuk($value['kode_barang'], $post);
+
             $saldoKeluar =  $this->modelMasterPersediaan->saldoKeluar($value['kode_barang'], $post);
 
             $saldoCart =  $this->modelMasterPersediaan->saldoCart($value['kode_barang'], $post);
@@ -63,7 +64,9 @@ class Masterpersediaan extends CI_Controller
             $saldoAkhir =  $this->modelMasterPersediaan->saldoAkhir($saldoAwal, $saldoMasuk, $saldoKeluar, $saldoCart, $saldoCartPo);
 
             $value['saldo_awal'] = $saldoAwal;
+
             $value['saldo_masuk'] = $saldoMasuk;
+
             $value['saldo_keluar'] = $saldoKeluar;
             $value['saldo_cart'] = $saldoCart;
             $value['saldo_cart_po'] = $saldoCartPo;
@@ -80,11 +83,16 @@ class Masterpersediaan extends CI_Controller
     {
         $post = $this->input->post();
         $database = $this->modelMasterPersediaan->getDataMasuk($post);
-        $dataBarang = $database->result_array();
+        $datamasuk = $database->result_array();
+
+        $database = $this->modelMasterPersediaan->getDataMasukRetur($post);
+        $dataretur = $database->result_array();
+
+        $data = array_merge($datamasuk, $dataretur);
         $output = array(
             "recordsTotal" => $this->db->count_all_results(),
             "recordsFiltered"  => $database->num_rows(),
-            "data" => $dataBarang
+            "data" => $data
         );
 
         $output = json_encode($output);

@@ -22,6 +22,7 @@ class Model_Master_Persediaan extends CI_Model
         $this->db->where('kode_barang', $kode_barang);
         $this->db->where('tanggal_saldo >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
         $this->db->where('tanggal_saldo <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
+
         return $this->db->get()->row_array();
     }
 
@@ -32,8 +33,23 @@ class Model_Master_Persediaan extends CI_Model
         $this->db->where('kode_barang', $kode_barang);
         $this->db->where('tanggal_transaksi >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
         $this->db->where('tanggal_transaksi <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
-        return $this->db->get()->row_array();
+
+        $jumlah_pembelian = $this->db->get()->row_array();
+
+        $this->db->select_sum('saldo_retur');
+        $this->db->from('detail_retur_barang_penjualan');
+        $this->db->where('kode_barang', $kode_barang);
+        $this->db->where('tanggal_input >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
+        $this->db->where('tanggal_input <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
+        $saldo_retur = $this->db->get()->row_array();
+
+        $output = [
+            'jumlah_pembelian' => $jumlah_pembelian['jumlah_pembelian'],
+            'saldo_retur' => $saldo_retur['saldo_retur']
+        ];
+        return $output;
     }
+
 
     function saldoKeluar($kode_barang, $post)
     {
@@ -42,7 +58,20 @@ class Model_Master_Persediaan extends CI_Model
         $this->db->where('kode_barang', $kode_barang);
         $this->db->where('tanggal_transaksi >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
         $this->db->where('tanggal_transaksi <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
-        return $this->db->get()->row_array();
+        $jumlah_penjualan = $this->db->get()->row_array();
+
+        $this->db->select_sum('saldo_retur');
+        $this->db->from('detail_retur_barang_pembelian');
+        $this->db->where('kode_barang', $kode_barang);
+        $this->db->where('tanggal_input >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
+        $this->db->where('tanggal_input <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
+        $saldo_retur = $this->db->get()->row_array();
+
+        $output = [
+            'jumlah_penjualan' => $jumlah_penjualan['jumlah_penjualan'],
+            'saldo_retur' => $saldo_retur['saldo_retur']
+        ];
+        return $output;
     }
 
     function saldoCart($kode_barang, $post)
@@ -73,13 +102,15 @@ class Model_Master_Persediaan extends CI_Model
     {
         if ($saldoAwal == null) $saldoAwal['qty_awal']  = 0;
         if ($masuk['jumlah_pembelian'] == null) $masuk['jumlah_pembelian'] = 0;
+        if ($masuk['saldo_retur'] == null) $masuk['saldo_retur'] = 0;
         if ($keluar['jumlah_penjualan'] == null) $keluar['jumlah_penjualan'] = 0;
+        if ($keluar['saldo_retur'] == null) $keluar['saldo_retur'] = 0;
         if ($cart['jumlah_penjualan'] == null) $cart['jumlah_penjualan'] = 0;
         if ($cartPo['jumlah_penjualan'] == null) $cartPo['jumlah_penjualan'] = 0;
 
-        $awalan = $saldoAwal['qty_awal'] + $masuk['jumlah_pembelian'] - $cart['jumlah_penjualan'] - $cartPo['jumlah_penjualan'];
+        $awalan = $saldoAwal['qty_awal'] + ($masuk['jumlah_pembelian'] + $masuk['saldo_retur']) - $cart['jumlah_penjualan'] - $cartPo['jumlah_penjualan'];
 
-        return ($awalan - $keluar['jumlah_penjualan']);
+        return ($awalan - ($keluar['jumlah_penjualan'] + $keluar['saldo_retur']));
     }
 
 
@@ -92,6 +123,16 @@ class Model_Master_Persediaan extends CI_Model
         $this->db->where('kode_barang', $post['kode_barang']);
         $this->db->where('tanggal_transaksi >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
         $this->db->where('tanggal_transaksi <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
+        return $this->db->get();
+    }
+
+    function getDataMasukRetur($post)
+    {
+        $this->db->select("id, nomor_faktur as nomor_transaksi, harga_pokok as harga_beli,saldo_retur as jumlah_pembelian, DATE_FORMAT(tanggal_input, '%d-%b-%Y') as tanggal_transaksi");
+        $this->db->from('detail_retur_barang_penjualan');
+        $this->db->where('kode_barang', $post['kode_barang']);
+        $this->db->where('tanggal_input >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
+        $this->db->where('tanggal_input <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
         return $this->db->get();
     }
 
@@ -109,6 +150,7 @@ class Model_Master_Persediaan extends CI_Model
     {
         $this->db->select("*, DATE_FORMAT(tanggal_transaksi, '%d-%b-%Y') as tanggal_transaksi");
         $this->db->from('temp_tabel_keranjang_penjualan');
+        $this->db->join('master_user', 'temp_tabel_keranjang_penjualan.user = master_user.username');
         $this->db->where('kode_barang', $post['kode_barang']);
         $this->db->where('tanggal_transaksi >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
         $this->db->where('tanggal_transaksi <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));

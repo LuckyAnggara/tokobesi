@@ -38,7 +38,6 @@ class Penjualanbarang extends CI_Controller
     public function clear_keranjang_belanja($no_order_lama)
     {
         $this->modelPenjualan->get_data_keranjang_clear($no_order_lama);
-        echo "aww";
         $this->modelPusher->pusher_update_persediaan();
     }
 
