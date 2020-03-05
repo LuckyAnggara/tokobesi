@@ -147,11 +147,11 @@
             var results = [];
             $.each(data.data, function(index, item) {
               results.push({
-                id: item.kode_barang,
+                id: item.kode_barang + ' - ' + item.harga_satuan + ' - ' + item.jumlah_persediaan + ' - ' + item.nama_satuan,
                 text: item.kode_barang + ' - ' + item.nama_barang,
-                harga_satuan: item.harga_satuan,
-                nama_satuan: item.nama_satuan,
-                jumlah_persediaan: item.jumlah_persediaan
+                // harga_satuan: item.harga_satuan,
+                // nama_satuan: item.nama_satuan,
+                // jumlah_persediaan: item.jumlah_persediaan
               });
             });
             return {
@@ -168,29 +168,29 @@
             // };
           },
         },
-        templateSelection: function(data, container) {
-          // Add custom attributes to the <option> tag for the selected option
-          $(data.element).attr('data-kode_barang', data.id);
-          $(data.element).attr('data-harga_satuan', data.harga_satuan);
-          $(data.element).attr('data-nama_satuan', data.nama_satuan);
-          $(data.element).attr('data-jumlah_persediaan', data.jumlah_persediaan);
-          return data.text;
-        },
+        // templateSelection: function(data, container) {
+        //   // Add custom attributes to the <option> tag for the selected option
+        //   $(data.element).attr('data-kode_barang', data.id);
+        //   $(data.element).attr('data-harga_satuan', data.harga_satuan);
+        //   $(data.element).attr('data-nama_satuan', data.nama_satuan);
+        //   $(data.element).attr('data-jumlah_persediaan', data.jumlah_persediaan);
+        //   return data.text;
+        // },
         placeholder: "Pencarian Barang, menggunakan Nama Barang atau Kode Barang .."
       }).on('select2:select', function(evt) {
 
-        // var data = $("#select_nama_barang option:selected").val();
-        // str = data.split("-");
-        // var kode_barang = str[0]
-        // var harga_jual = str[1];
-        // var sisa_persediaan = str[2];
-        // var satuan = str[3];
+        var data = $("#select_nama_barang option:selected").val();
+        str = data.split("-");
+        var kode_barang = str[0]
+        var harga_jual = str[1];
+        var sisa_persediaan = str[2];
+        var satuan = str[3];
 
-        var kode_barang = $("#select_nama_barang option:selected").data('kode_barang');
-        var harga_jual = $("#select_nama_barang option:selected").data('harga_satuan');
-        var sisa_persediaan = $("#select_nama_barang option:selected").data('jumlah_persediaan');
-        var satuan = $("#select_nama_barang option:selected").data('nama_satuan');
-
+        // var kode_barang = $("#select_nama_barang option:selected").data('kode_barang');
+        // var harga_jual = $("#select_nama_barang option:selected").data('harga_satuan');
+        // var sisa_persediaan = $("#select_nama_barang option:selected").data('jumlah_persediaan');
+        // var satuan = $("#select_nama_barang option:selected").data('nama_satuan');
+        console.log(sisa_persediaan);
         choose_barang(kode_barang, sisa_persediaan, satuan, harga_jual);
       })
     }
@@ -468,10 +468,10 @@
       dummy_nominal_bayar.val(formatRupiah(dummy_nominal_bayar.val().toString(), 'Rp.'));
 
       $('#nominal_bayar').val(normalrupiah(dummy_nominal_bayar.val()));
-      
+
       var grand_total = normalrupiah($('#checkout_grand_total').text());
       var kembali = $('#nominal_bayar').val() - grand_total;
-      $('#dummy_nominal_kembali').val(formatRupiah(kembali.toString(),'Rp.'));
+      $('#dummy_nominal_kembali').val(formatRupiah(kembali.toString(), 'Rp.'));
     });
 
     $('#dummy_harga_jual').on('keyup', function() {
@@ -518,15 +518,15 @@
         set_data_session_no_order_sebelumnya($('#no_order').text());
       } else {
         Swal.fire(
-          'Persediaan Habis',
+          'Persediaan Kosong',
           '',
           'error'
         );
         $('#select_nama_barang').val(null).trigger('change');
         $('#cari_barang').val('');
-        $("#result_page").empty();
-        display_none = '<div class="col-12 text-center"><p>Cari Data Barang di Kolom Pencarian</p></div>';
-        $("#result_page").append(display_none);
+        // $("#result_page").empty();
+        // display_none = '<div class="col-12 text-center"><p>Cari Data Barang di Kolom Pencarian</p></div>';
+        // $("#result_page").append(display_none);
       }
     }
 
