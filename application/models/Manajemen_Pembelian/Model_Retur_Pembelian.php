@@ -56,12 +56,30 @@ class Model_Retur_Pembelian extends CI_Model
             "kode_barang" => $post['kode_barang'],
             "keterangan" => $post['keterangan'],
             "jumlah_retur" => $post['qty'],
-            "harga_retur" => $post['harga'],
+            "harga_retur" => $this->normal($post['harga']),
             "diskon" => $post['diskon'],
             "total_retur" => $post['retur_total'],
             'user' => $this->session->userdata['username'],
         ];
         $this->db->insert('detail_retur_pembelian', $data);
+
+        $this->_debet_persediaan($post);
+    }
+
+    private function _debet_persediaan($post){
+        $this->db->select('*');
+        $this->db->from('detail_pembelian');
+        $this->db->where('id', $post['id_detail_pembelian']);
+        $data = $this->db->get()->row_array();
+        $saldo = $data['saldo'];
+
+        $data = [
+            'saldo' => $saldo - $post['qty']
+        ];
+
+        $this->db->where('id', $post['id_detail_pembelian']);
+        $this->db->update('detail_pembelian', $data);
+
     }
 
     private function cek_double($nomor_transaksi)
@@ -122,5 +140,12 @@ class Model_Retur_Pembelian extends CI_Model
         $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
         $this->db->where('nomor_transaksi', $nomor_transaksi);
         return $this->db->get()->result_array();
+    }
+
+    function normal($value)
+    {
+        $value = str_replace("Rp.", "", $value);
+        $value = str_replace(".", "", $value);
+        return str_replace(",", "", $value);
     }
 }

@@ -103,11 +103,16 @@ class Masterpersediaan extends CI_Controller
     {
         $post = $this->input->post();
         $database = $this->modelMasterPersediaan->getDataKeluar($post);
-        $dataBarang = $database->result_array();
+        $datakeluar = $database->result_array();
+
+        $database = $this->modelMasterPersediaan->getDataKeluarRetur($post);
+        $dataretur = $database->result_array();
+
+        $data = array_merge($datakeluar, $dataretur);
         $output = array(
             "recordsTotal" => $this->db->count_all_results(),
             "recordsFiltered"  => $database->num_rows(),
-            "data" => $dataBarang
+            "data" => $data
         );
 
         $output = json_encode($output);

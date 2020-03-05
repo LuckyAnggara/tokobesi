@@ -18,7 +18,7 @@
                                     <a href="javascript:void(0);" class="dropdown-item">Action</a>
                                 </div>
                             </div>
-                            <h4 class="header-title mt-0">Total Laba</h4>
+                            <h4 class="header-title mt-0">Laba Penjualan</h4>
                             <div class="form-group row m-b-10 col-xl-6 col-sm-12 col-lg-6 col-md-6">
                                 <label class="col-2 col-form-label">Bulan</label>
                                 <div class="col-9">

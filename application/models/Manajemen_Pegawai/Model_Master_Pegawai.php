@@ -140,7 +140,7 @@ class Model_Master_Pegawai extends CI_Model
         $data = $this->db->get()->row_array();
         $data_gambar = $data['gambar'];
         if ($data_gambar != "default.jpg") {
-            unlink('./assets/images/barang/' . $data);
+            unlink('./assets/images/pegawai/' . $data);
         }
     }
 

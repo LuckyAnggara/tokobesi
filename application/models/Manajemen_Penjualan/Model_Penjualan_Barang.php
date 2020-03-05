@@ -444,15 +444,26 @@ class Model_Penjualan_Barang extends CI_Model
         $this->db->from('detail_pembelian');
         $this->db->where('kode_barang', $kode_barang);
         $this->db->where('saldo !=', 0);
-        $data = $this->db->get()->row_array();
-        if ($data['saldo'] == null) {
-            $ouput = [
-                'saldo' => 0
-            ];
-            return $ouput;
-        } else {
-            return $data;
+        $saldo_beli = $this->db->get()->row_array();
+
+        $this->db->select_sum('saldo_tersedia');
+        $this->db->from('detail_retur_barang_penjualan');
+        $this->db->where('kode_barang', $kode_barang);
+        $this->db->where('saldo_tersedia !=', 0);
+        $saldo_retur = $this->db->get()->row_array();
+
+        if(!isset($saldo_retur)){
+            $saldo_retur['saldo_tersedia'] = 0;
         }
+
+        if(!isset($saldo_beli)){
+            $saldo_beli['saldo'] = 0;
+        }
+
+        $ouput = [
+            'saldo' => $saldo_retur['saldo_tersedia'] + $saldo_beli['saldo']
+        ];
+            return $ouput;
     }
 
     function detail_barang($kode_barang)
@@ -466,7 +477,7 @@ class Model_Penjualan_Barang extends CI_Model
     function fifo_lifo($kode_barang, $detail_barang)
     {
 
-        $this->db->select('*');
+        $this->db->select('*, "beli" jenis_saldo');
         $this->db->from('detail_pembelian');
         $this->db->where('saldo !=', 0);
         $this->db->where('kode_barang', $kode_barang);
@@ -475,8 +486,25 @@ class Model_Penjualan_Barang extends CI_Model
             $this->db->order_by('tanggal_transaksi', 'DESC'); // ASC untuk LIFO
         } else {
             $this->db->order_by('tanggal_transaksi', 'ASC'); // DESC untuk FIFO
-            echo "fifo";
         }
+
+        return $this->db->get()->result_array();
+    }
+
+      function fifo_lifo_retur($kode_barang, $detail_barang)
+    {
+
+        $this->db->select('id, harga_pokok as harga_beli, kode_barang, saldo_tersedia as saldo, tanggal_input as tanggal_transaksi, "retur" jenis_saldo');
+        $this->db->from('detail_retur_barang_penjualan');
+        $this->db->where('saldo_tersedia !=', 0);
+        $this->db->where('kode_barang', $kode_barang);
+
+        if ($detail_barang['metode_hpp'] == "LIFO") {
+            $this->db->order_by('tanggal_input', 'DESC'); // ASC untuk LIFO
+        } else {
+            $this->db->order_by('tanggal_input', 'ASC'); // DESC untuk FIFO
+        }
+
         return $this->db->get()->result_array();
     }
 
@@ -493,8 +521,9 @@ class Model_Penjualan_Barang extends CI_Model
         // cek total persediaan dari saldo awal + berjalan
         $total_persediaan = $saldo_awal['saldo_awal'] + $saldo_berjalan['saldo'];
         // penentuan fifo lifo
-        $data_barang = $this->fifo_lifo($kode_barang, $detail_barang);
-
+        $data_barang_beli = $this->fifo_lifo($kode_barang, $detail_barang);
+        $data_barang_retur = $this->fifo_lifo_retur($kode_barang, $detail_barang);
+        $data_barang = array_merge($data_barang_beli, $data_barang_retur);
         // untuk harga beli average
         $this->db->select_sum('harga_beli');
         $this->db->where('kode_barang', $kode_barang);
@@ -556,7 +585,6 @@ class Model_Penjualan_Barang extends CI_Model
                     $tgl = $value['tanggal_transaksi'];
                     $stok = $value['saldo'];
 
-                    echo $stok;
                     // nentuain harga baragng jiga AVERAGE
                     if ($detail_barang['metode_hpp'] == "AVERAGE") {
                         $harga_beli = $pembilang / $penyebut;
@@ -569,6 +597,7 @@ class Model_Penjualan_Barang extends CI_Model
                             $qty_penjualan = $qty_penjualan - $stok; // qty_penjualan = 7 - 5 = 2
                             $stok_update = 0; // stok jadi 0
                             $jual = $stok; // untuk update jual posisi ga bisa asal
+
                         } else {
                             $stok_update = $stok - $qty_penjualan;
                             $jual = $qty_penjualan; // untuk update jual posisi ga bisa asal
@@ -584,12 +613,19 @@ class Model_Penjualan_Barang extends CI_Model
                             'keterangan' => $detail_barang['metode_hpp']
                         ];
                         $this->db->insert('master_harga_pokok_penjualan', $data);
-                        $this->db->query("UPDATE detail_pembelian SET saldo = $stok_update WHERE id = '$id' AND kode_barang = '$kode_barang' AND tanggal_transaksi = '$tgl'");
+                        if($value['jenis_saldo'] == 'retur'){
+$this->db->query("UPDATE detail_retur_barang_penjualan SET saldo_tersedia = $stok_update WHERE id = '$id' AND kode_barang = '$kode_barang' AND tanggal_input = '$tgl'");
+                        }else{
+$this->db->query("UPDATE detail_pembelian SET saldo = $stok_update WHERE id = '$id' AND kode_barang = '$kode_barang' AND tanggal_transaksi = '$tgl'");
+                        }
+                        
+                        
                     } else {
 
                         break;
                     }
                 }
+
             }
         } else {
             echo "error";

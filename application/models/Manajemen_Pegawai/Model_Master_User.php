@@ -25,7 +25,7 @@ class Model_Master_User extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('master_pegawai');
-        $this->db->like('nip', $query);
+        $this->db->like('username', $query);
         $this->db->or_like('nama_lengkap', $query);
         $this->db->having('has_user', 0);
         $output = $this->db->get();
@@ -140,4 +140,90 @@ class Model_Master_User extends CI_Model
         $this->db->where('username', $username);
         $this->db->update('master_user', $data);
     }
+
+    function detail_user($post)
+    {
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('username', $post['username']);
+        return $this->db->get()->row_array();
+    }
+
+    function _uploadNewGambar()
+    {
+        $post = $this->input->post();
+        $this->_delete_gambar_sebelumnya($post['username']);
+        $config['upload_path']          = './assets/images/users/';
+        $config['allowed_types']        = 'jpeg|jpg|png';
+        $config['file_name']            = random_string('alnum', 16);
+        $config['overwrite']            = true;
+        $config['max_size']             = 4096; // 4MB
+        // $config['max_width']            = 1024;
+        // $config['max_height']           = 768;
+        $this->load->library('upload', $config);
+        if ($this->upload->do_upload('gambar')) {
+            echo  $this->upload->display_errors();
+            return $this->upload->data("file_name");
+        } else {
+            echo  $this->upload->display_errors();
+            return "default.jpg";
+        }
+    }
+
+    private function _delete_gambar_sebelumnya($username)
+    {
+        // delete image
+
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('username', $username);
+        $data = $this->db->get()->row_array();
+        $data_gambar = $data['gambar'];
+        if ($data_gambar != "default.jpg") {
+            unlink('./assets/images/users/' . $data);
+        }
+    }
+
+    function edit_gambar($username)
+    {
+        $data = array(
+            'avatar' => $this->_uploadNewGambar(),
+        );
+        $this->db->where('username', $username);
+        $this->db->update('master_user', $data);
+    }
+
+    function get_gambar_baru($username)
+    {
+        $this->db->select('avatar');
+        $this->db->from('master_user');
+        $this->db->where('username', $username);
+        return $this->db->get()->row_array();
+    }
+
+    function change_password($post)
+    {
+		//$user = $this->db->get('master_user')->row();
+		$user = $this->detail_user($post);
+
+		$username = $this->input->post('username');
+        $password = $this->input->post('password_lama');
+        $password_baru = $this->input->post('password_baru');
+        
+        if ($user) {
+			$isPasswordTrue = password_verify( $password , $user['password']);
+				if ($isPasswordTrue) {
+                    $password = htmlspecialchars(trim($password_baru));
+                    $ecnrypt_pw = password_hash($password, PASSWORD_BCRYPT);
+                    $data = array(
+                        'password' => $ecnrypt_pw,
+                    );
+                    $this->db->where('username', $username);
+                    $this->db->update('master_user', $data);
+				} else {
+					echo "salah";
+				}
+			}
+    }
+
 }

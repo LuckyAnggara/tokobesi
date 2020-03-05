@@ -32,29 +32,29 @@
 
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane fade show active" id="home1">
-                        <h6>Saldo awal barang, berdasarkan dari pembelian barang</h6>
                         <div class="table-responsive">
                             <table id="datatable-saldo-awal" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>#</th>
-                                        <th>Tanggal Transaksi</th>
+                                        <th>Tanggal</th>
                                         <th>Nomor Transaksi</th>
-                                        <th>Qty</th>
-                                        <th>Harga Pembelian</th>
+                                        <th>Qty Beli</th>
+                                        <th>Harga Beli</th>
+                                        <th>Qty Tersedia</th>
                                     </tr>
                                 </thead>
                             </table>
                         </div>
+                        <h6>Saldo awal barang, berdasarkan dari pembelian barang dan barang retur yang kembali ke persediaan</h6>
                     </div>
                     <div role="tabpanel" class="tab-pane fade" id="profile1">
-                        <h6>Saldo akhir barang, berdasarkan dari penjualan barang</h6>
                         <div class="table-responsive">
                             <table id="datatable-saldo-akhir" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>#</th>
-                                        <th>Tanggal Transaksi</th>
+                                        <th>Tanggal</th>
                                         <th>Nomor Faktur</th>
                                         <th>Qty</th>
                                         <th>Harga Penjualan</th>
@@ -62,9 +62,9 @@
                                 </thead>
                             </table>
                         </div>
+                        <h6>Saldo akhir barang, berdasarkan dari penjualan barang</h6>
                     </div>
                     <div role="tabpanel" class="tab-pane fade" id="messages1">
-                        <h6>Saldo keranjang barang, berdasarkan dari barang yang masih berada di keranjang</h6>
                         <div class="table-responsive">
                             <table id="datatable-saldo-cart" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="thead-dark">
@@ -78,9 +78,9 @@
                                 </thead>
                             </table>
                         </div>
+                        <h6>Saldo keranjang barang, berdasarkan dari barang yang masih berada di keranjang</h6>
                     </div>
                     <div role="tabpanel" class="tab-pane fade" id="settings1">
-                        <h6>Saldo keranjang <i>purchase order</i> barang, berdasarkan dari barang yang masih berada di keranjang</h6>
                         <div class="table-responsive">
                             <table id="datatable-saldo-cartPo" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="thead-dark">
@@ -94,6 +94,7 @@
                                 </thead>
                             </table>
                         </div>
+                        <h6>Saldo keranjang <i>purchase order</i> barang, berdasarkan dari barang yang masih berada di keranjang</h6>
                     </div>
                 </div>
                 <div class="modal-footer">

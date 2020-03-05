@@ -3,6 +3,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Model_Pusher extends CI_Model
 {
+    // function __construct()
+    // {
+    //     parent::__construct();
+    //     require_once(APPPATH . 'libraries/vendor/autoload.php');
+        
+    // }
+
     function pusher_notif_sales()
     {
         require_once(APPPATH . 'libraries/vendor/autoload.php');

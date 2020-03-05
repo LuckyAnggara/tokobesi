@@ -130,7 +130,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: 'User tidak Ada!!',
+                                text: 'User tidak terdaftar!!',
                             });
                         } else {
                             if (data == "notactive") {

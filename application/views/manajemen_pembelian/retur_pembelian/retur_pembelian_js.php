@@ -198,6 +198,17 @@
                 do_retur_detail(id, nomor_transaksi, kode_barang, keterangan, qty, harga, diskon, retur_total)
             }
         }
+        setTimeout(function() {
+            window.location.href = "<?php echo base_url('manajemen_pembelian/returpembelian/faktur/'); ?>RTR-" + nomor_transaksi;
+        }, 3000);
+        Swal.fire(
+            'Proses retur selesai !',
+            '',
+            'success'
+        ).then((result) => {
+            window.location.href = "<?php echo base_url('manajemen_pembelian/returpembelian/faktur/'); ?>RTR-" + nomor_transaksi;
+        });
+
     }
 
     function do_retur_master(nomor_transaksi, kode_supplier, retur_total, retur_diskon, retur_pajak, retur_grand_total) {

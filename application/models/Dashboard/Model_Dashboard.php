@@ -338,7 +338,7 @@ class Model_Dashboard extends CI_Model
         $totalJual = $data['totaljual'];
         $hasil = $totalJual - $totalPokok;
 
-        return $hasil / 1000000;
+        return $hasil;
 
         // cari hpp nya
     }
@@ -360,7 +360,7 @@ class Model_Dashboard extends CI_Model
         $totalJual = $data['totaljual'];
         $hasil = $totalJual - $totalPokok;
 
-        return $hasil / 1000000;
+        return $hasil ;
 
         // cari hpp nya
     }

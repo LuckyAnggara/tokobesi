@@ -56,6 +56,13 @@ class Model_Persediaan_Barang extends CI_Model
         $result = $this->db->get('detail_pembelian')->row();
         $qty_saldo =  $result->saldo;
 
+        // cek saldo retur
+
+        $this->db->select_sum('saldo_tersedia');
+        $this->db->where('kode_barang', $kode_barang);
+        $result = $this->db->get('detail_retur_barang_penjualan')->row();
+        $qty_saldo_retur_penjualan =  $result->saldo_tersedia;
+
         // $this->db->select_sum('jumlah_penjualan');
         // $this->db->where('kode_barang', $kode_barang);
         // $result = $this->db->get('detail_penjualan')->row();
@@ -76,6 +83,6 @@ class Model_Persediaan_Barang extends CI_Model
         $result = $this->db->get('temp_purchase_order')->row();
         $qty_po =  $result->jumlah_penjualan;
 
-        return  $qty_awal + $qty_saldo - $qty_temp - $qty_po;
+        return  $qty_awal + ($qty_saldo + $qty_saldo_retur_penjualan) - $qty_temp - $qty_po;
     }
 }

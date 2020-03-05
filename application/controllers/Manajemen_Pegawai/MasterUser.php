@@ -38,6 +38,34 @@ class Masteruser extends CI_Controller
         $this->load->view('template/template_app_js');
     }
 
+     public function Detail_User()
+    {
+        $data['menu'] = $this->modelSetting->data_menu();
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+
+        // data pegawai
+
+        $data['css'] = 'manajemen_pegawai/master_user/master_user_css';
+
+        $this->load->view('template/template_header', $data);
+        $this->load->view('template/template_menu');
+        $this->load->view('manajemen_pegawai/master_user/detail_user/detail_user');
+        $this->load->view('template/template_right');
+        $this->load->view('manajemen_pegawai/master_user/detail_user/detail_user_modal');
+        $this->load->view('template/template_footer');
+        $this->load->view('template/template_js');
+        $this->load->view('manajemen_pegawai/master_user/detail_user/detail_user_js');
+        $this->load->view('template/template_app_js');
+    }
+
+    public function getdetailuser()
+    {
+        $post = $this->input->post();
+        $data = $this->modelUser->detail_user($post);
+        $output = json_encode($data);
+        echo $output;
+    }
+
     public function getData()
     {
         $database = $this->modelUser->get_data();
@@ -109,5 +137,24 @@ class Masteruser extends CI_Controller
         } else {
             $this->modelUser->delete_data($username); // tambah data siswa
         }
+    }
+
+    public function SetGambarBaru($username)
+    {
+        $this->modelUser->edit_gambar($username);
+    }
+
+
+    public function GetGambarBaru($username)
+    {
+        $data = $this->modelUser->get_gambar_baru($username);
+        $output = json_encode($data);
+        echo $output;
+    }
+
+    public function changepassword()
+    {
+        $post = $this->input->post();
+        $data = $this->modelUser->change_password($post);
     }
 }

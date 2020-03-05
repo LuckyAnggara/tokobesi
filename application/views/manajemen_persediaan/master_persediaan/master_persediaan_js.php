@@ -138,7 +138,7 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
-            "fixedColumns": true,
+
             "lengthChange": true,
             "searching": true,
             "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
@@ -310,8 +310,11 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
+
+            "lengthChange": true,
             "searching": true,
-            "order": [],
+            "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
+            "dom": 'Bfrtip',
             "processing": true,
             "serverSide": false,
             "ajax": {
@@ -353,6 +356,13 @@
                     render: function(data, type, full, meta) {
                         return formatRupiah(data.toString(), 'Rp.');
                     }
+                },
+                {
+                    data: "saldo",
+                    targets: 5,
+                    render: function(data, type, full, meta) {
+                        return formatSatuan(data.toString());
+                    }
                 }
             ],
             "rowCallback": function(row, data, iDisplayIndex) {
@@ -390,8 +400,11 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
+           "fixedColumns": true,
+            "lengthChange": true,
             "searching": true,
-            "order": [],
+            "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
+            "dom": 'Bfrtip',
             "processing": true,
             "serverSide": false,
             "ajax": {
@@ -470,8 +483,11 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
+           "fixedColumns": true,
+            "lengthChange": true,
             "searching": true,
-            "order": [],
+            "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
+            "dom": 'Bfrtip',
             "processing": true,
             "serverSide": false,
             "ajax": {
@@ -550,8 +566,11 @@
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
+
+            "lengthChange": true,
             "searching": true,
-            "order": [],
+            "buttons": ['copy', 'excel', 'pdfHtml5', 'print'],
+            "dom": 'Bfrtip',
             "processing": true,
             "serverSide": false,
             "ajax": {
