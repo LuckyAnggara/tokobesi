@@ -63,14 +63,14 @@ class Invoice extends CI_Controller
         $pdf->Cell(10,5,'',0,1);
         $pdf->SetFont('Arial','B',7);
         
-        $pdf->Cell(7,6,'#',1,0);
-        $pdf->Cell(25,6,'Kode Barang',1,0);
-        $pdf->Cell(60,6,'Nama Barang',1,0);
-        $pdf->Cell(15,6,'Satuan',1,0);
-        $pdf->Cell(20,6,'Harga',1,0);
-        $pdf->Cell(15,6,'Qty',1,0);
-        $pdf->Cell(20,6,'Diskon',1,0);
-        $pdf->Cell(35,6,'Total',1,1);
+        $pdf->Cell(7,6,'#',1,0,'C');
+        $pdf->Cell(25,6,'Kode Barang',1,0,'C');
+        $pdf->Cell(60,6,'Nama Barang',1,0,'C');
+        $pdf->Cell(15,6,'Satuan',1,0,'C');
+        $pdf->Cell(20,6,'Harga',1,0,'C');
+        $pdf->Cell(15,6,'Qty',1,0,'C');
+        $pdf->Cell(20,6,'Diskon',1,0,'C');
+        $pdf->Cell(35,6,'Total',1,1,'C');
         $pdf->SetFont('Arial','',7);
         
         // foreach ($detail_order as $row){
@@ -86,31 +86,45 @@ class Invoice extends CI_Controller
             $pdf->Cell(7,6,$no,1,0);
             $pdf->Cell(25,6,$value['kode_barang'],1,0);
             $pdf->Cell(60,6,$value['nama_barang'],1,0);
-            $pdf->Cell(15,6,$value['kode_satuan'],1,0); 
-            $pdf->Cell(20,6,$this->rupiah($value['harga_jual']),1,0); 
-            $pdf->Cell(15,6,$value['jumlah_penjualan'],1,0); 
-            $pdf->Cell(20,6,$this->rupiah($value['diskon']),1,0); 
-            $pdf->Cell(35,6,$this->rupiah($value['total_harga']),1,1); 
+            $pdf->Cell(15,6,$value['kode_satuan'],1,0,'C'); 
+            $pdf->Cell(20,6,$this->rupiah($value['harga_jual']),1,0,'R'); 
+            $pdf->Cell(15,6,$value['jumlah_penjualan'],1,0,'R'); 
+            $pdf->Cell(20,6,$this->rupiah($value['diskon']),1,0,'R'); 
+            $pdf->Cell(35,6,$this->rupiah($value['total_harga']),1,1,'R'); 
         }
 
-        $pdf->Cell(10,7,'',0,1);
+        $pdf->Cell(10,3,'',0,1);
         
-        $pdf->SetFont('Arial','U',8);
-        $pdf->Cell(30,6,'Note',1,0);
+        $pdf->Cell(30,6,'',0,0);
         $pdf->SetFont('Arial','',7);
-        $pdf->Cell(100);
+        $pdf->Cell(110);
         $pdf->Cell(30,6,'Sub Total',1,0);
         $pdf->Cell(5,6,':',1,0);
-        $pdf->Cell(20,6,$data_order['total_penjualan'],1,1);
-        
-        $pdf->Cell(90,6,nl2br($setting_perusahaan['catatan_faktur_cash']),1,0);
-        $pdf->Cell(145);
-        $pdf->Cell(30,6,'Alamat',0,0);
+        $pdf->Cell(22,6,$this->rupiah($data_order['total_penjualan']),1,1,'R');
+        $pdf->Cell(30,6,'',0,0);
+        $pdf->SetFont('Arial','',7);
+        $pdf->Cell(110);
+        $pdf->Cell(30,6,'Pajak (PPN 10%)',1,0);
+        $pdf->Cell(5,6,':',1,0);
+        $pdf->Cell(22,6,$this->rupiah($data_order['diskon']),1,1,'R');
+        $pdf->Cell(30,6,'',0,0);
+        $pdf->SetFont('Arial','','B');
+        $pdf->Cell(110);
+        $pdf->Cell(30,6,'Ongkos Kirim','B',0);
+        $pdf->Cell(5,6,':','B',0);
+        $pdf->Cell(22,6,$this->rupiah($data_order['pajak_masukan']),'B',1,'R');
+        $pdf->Cell(30,6,'',0,0);
+        $pdf->SetFont('Arial','',7);
+        $pdf->Cell(110);
+        $pdf->Cell(30,6,'Grand Total',0,0);
         $pdf->Cell(5,6,':',0,0);
-        $pdf->Cell(50,6,$data_order['alamat'],0,1);
+        $pdf->Cell(22,6,$this->rupiah($data_order['grand_total']),0,1,'R');
 
 
 
+        $pdf->Cell(30,6,'Note',1,0);
+        $pdf->MultiCell(90,6,"This is a multi-line text string\nNew line\nNew line",1);
+        // $pdf->Cell(90,6,nl2br($setting_perusahaan['catatan_faktur_cash']),1,0);
         $pdf->Output();
 
     }
