@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 05, 2020 at 03:11 PM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.1
+-- Generation Time: Mar 06, 2020 at 09:58 AM
+-- Server version: 10.3.16-MariaDB
+-- PHP Version: 7.3.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -40,15 +40,6 @@ CREATE TABLE `detail_biaya` (
   `user` varchar(255) NOT NULL,
   `tanggal` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `detail_biaya`
---
-
-INSERT INTO `detail_biaya` (`id`, `nomor_referensi`, `kategori_biaya`, `keterangan`, `total`, `status`, `user`, `tanggal`) VALUES
-(15, 'REF3408657', 2, 'sdasdad', 124124, 0, 'edwin', '2020-03-04 06:26:36'),
-(16, 'REF8025937', 1, 'adasd', 11111, 0, 'edwin', '2020-03-04 07:30:13'),
-(17, 'REF9217483', 1, 'asdfasd', 123123123, 0, 'edwin', '2020-03-04 08:02:24');
 
 -- --------------------------------------------------------
 
@@ -87,26 +78,12 @@ CREATE TABLE `detail_gaji` (
 --
 
 INSERT INTO `detail_gaji` (`id`, `nomor_referensi`, `nip`, `tanggal_pembayaran`, `gaji_pokok`, `uang_makan`, `bonus`, `total`, `status`, `user`) VALUES
-(417, 'REF7830645', '1', '2020-03-04 07:19:35', 50000, 10000, 0, 60000, 2, 'edwin'),
-(418, 'REF7830645', '123123123', '2020-03-04 07:19:35', 50000, 10000, 0, 60000, 2, 'edwin'),
-(419, 'REF7830645', '124124', '2020-03-04 07:19:35', 50000, 10000, 0, 60000, 2, 'edwin'),
-(420, 'REF7830645', '21124124', '2020-03-04 07:19:35', 50000, 10000, 0, 60000, 2, 'edwin'),
-(421, 'REF7830645', '123123', '2020-03-04 07:19:35', 50000, 10000, 0, 60000, 2, 'edwin'),
-(422, 'REF5436287', '1', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 'edwin'),
-(423, 'REF5436287', '123123123', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 'edwin'),
-(424, 'REF5436287', '124124', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 'edwin'),
-(425, 'REF5436287', '21124124', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 'edwin'),
-(426, 'REF5436287', '123123', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 'edwin'),
-(427, 'REF5267498', '1', '2020-03-04 10:27:39', 50000, 10000, 0, 60000, 2, 'edwin'),
-(428, 'REF5267498', '123123123', '2020-03-04 10:27:39', 500000, 30000, 0, 530000, 2, 'edwin'),
-(429, 'REF5267498', '124124', '2020-03-04 10:27:38', 50000, 10000, 0, 60000, 2, 'edwin'),
-(430, 'REF5267498', '21124124', '2020-03-04 10:27:39', 50000, 10000, 0, 60000, 2, 'edwin'),
-(431, 'REF5267498', '123123', '2020-03-04 10:27:39', 50000, 10000, 0, 60000, 2, 'edwin'),
-(432, 'REF1053986', '1', '2020-03-05 07:29:52', 50000, 10000, 0, 60000, 2, 'edwin'),
-(433, 'REF1053986', '123123123', '2020-03-05 07:29:52', 50000, 10000, 0, 60000, 2, 'edwin'),
-(434, 'REF1053986', '124124', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 'edwin'),
-(435, 'REF1053986', '21124124', '2020-03-05 07:29:52', 50000, 10000, 0, 60000, 2, 'edwin'),
-(436, 'REF1053986', '123123', '2020-03-05 07:29:52', 50000, 10000, 0, 60000, 2, 'edwin');
+(437, 'REF7965843', '1', '2020-03-06 09:13:36', 50000, 10000, 0, 60000, 2, 'edwin'),
+(438, 'REF7965843', '123123123', '2020-03-06 09:13:36', 100000, 10000, 0, 110000, 2, 'edwin'),
+(439, 'REF7965843', '124124', '2020-03-06 09:13:36', 50000, 10000, 0, 60000, 2, 'edwin'),
+(440, 'REF7965843', '21124124', '2020-03-06 09:13:36', 50000, 10000, 0, 60000, 2, 'edwin'),
+(441, 'REF7965843', '123123', '2020-03-06 09:13:36', 50000, 10000, 0, 60000, 2, 'edwin'),
+(442, 'REF7965843', '647476', '2020-03-06 09:13:36', 23424, 24324324, 0, 24347748, 2, 'edwin');
 
 -- --------------------------------------------------------
 
@@ -133,8 +110,11 @@ CREATE TABLE `detail_pembelian` (
 --
 
 INSERT INTO `detail_pembelian` (`id`, `no_order_pembelian`, `tanggal_transaksi`, `nomor_transaksi`, `kode_barang`, `jumlah_pembelian`, `harga_beli`, `diskon`, `total_harga`, `tanggal_input`, `saldo`) VALUES
-(1, '39gtUec7uoHCMPI8', '2020-03-05 06:21:15', '123', 'BES0002', 5, 25000, 0, 125000, '2020-03-05', 5),
-(2, '7EnBUwIJmx1cTsfp', '2020-03-05 06:45:10', '1', 'BES0001', 20, 15000, 0, 300000, '2020-03-05', 0);
+(101, 'b6UL8VOkAumN72J9', '2020-03-06 03:31:11', '1', 'BES0001', 10, 16000, 0, 160000, '2020-03-06', 5),
+(102, 'b6UL8VOkAumN72J9', '2020-03-06 03:31:20', '1', 'BES0002', 20, 20000, 0, 400000, '2020-03-06', 5),
+(104, 'wNPBVDyLUaXHJIux', '2020-03-06 04:51:25', '2', 'CNP0020', 20, 20000, 0, 400000, '2020-03-06', 20),
+(105, 'wNPBVDyLUaXHJIux', '2020-03-06 04:51:33', '2', 'BES0004', 30, 10000, 0, 300000, '2020-03-06', 30),
+(106, 'wNPBVDyLUaXHJIux', '2020-03-06 04:51:47', '2', 'BES0006', 20, 30000, 0, 550000, '2020-03-06', 20);
 
 -- --------------------------------------------------------
 
@@ -160,7 +140,8 @@ CREATE TABLE `detail_penjualan` (
 --
 
 INSERT INTO `detail_penjualan` (`id`, `no_order_penjualan`, `tanggal_transaksi`, `nomor_faktur`, `kode_barang`, `jumlah_penjualan`, `harga_jual`, `diskon`, `total_harga`, `tanggal_input`) VALUES
-(21, 'OUT6015874', '2020-03-05 14:23:30', 'bbmkdr050320001', 'BES0001 ', 32, 24000, 0, 768000, '2020-03-05');
+(22, 'OUT3426109', '2020-03-06 03:32:25', 'bbmkdr060320001', 'BES0001 ', 15, 24000, 100000, 260000, '2020-03-06'),
+(23, 'OUT3426109', '2020-03-06 03:32:34', 'bbmkdr060320001', 'BES0002 ', 15, 33000, 5000, 490000, '2020-03-06');
 
 -- --------------------------------------------------------
 
@@ -184,7 +165,12 @@ CREATE TABLE `detail_persediaan` (
 
 INSERT INTO `detail_persediaan` (`id`, `tanggal_transaksi`, `nomor_transaksi`, `kode_barang`, `jumlah`, `harga_beli`, `saldo`) VALUES
 (1, '2020-03-05', '123', 'BES0002', 5, 25000, 5),
-(2, '2020-03-05', '1', 'BES0001', 20, 15000, 20);
+(2, '2020-03-05', '1', 'BES0001', 20, 15000, 20),
+(3, '2020-03-06', '1', 'BES0001', 10, 16000, 10),
+(4, '2020-03-06', '1', 'BES0002', 20, 20000, 20),
+(6, '2020-03-06', '2', 'CNP0020', 20, 20000, 20),
+(7, '2020-03-06', '2', 'BES0004', 30, 10000, 30),
+(8, '2020-03-06', '2', 'BES0006', 20, 30000, 20);
 
 -- --------------------------------------------------------
 
@@ -239,6 +225,13 @@ CREATE TABLE `detail_retur_barang_penjualan` (
   `tanggal_input` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `detail_retur_barang_penjualan`
+--
+
+INSERT INTO `detail_retur_barang_penjualan` (`id`, `nomor_faktur`, `kode_barang`, `harga_pokok`, `saldo_tersedia`, `saldo_retur`, `keterangan`, `user`, `tanggal_input`) VALUES
+(7, 'RTR-bbmkdr060320001', 'BES0001', 20000, 5, 5, 'RTR-bbmkdr060320001 - Cacat', 'edwin', '2020-03-06 08:34:42');
+
 -- --------------------------------------------------------
 
 --
@@ -285,7 +278,7 @@ CREATE TABLE `detail_retur_penjualan` (
 --
 
 INSERT INTO `detail_retur_penjualan` (`id`, `id_detail_penjualan`, `nomor_faktur`, `kode_barang`, `keterangan`, `jumlah_retur`, `saldo`, `harga_retur`, `diskon`, `total_retur`, `user`, `tanggal`) VALUES
-(6, 21, 'RTR-bbmkdr050320001', 'BES0001', '', 32, 32, 24000, 0, 768000, 'dini', '2020-03-05 13:35:43');
+(7, 22, 'RTR-bbmkdr060320001', 'BES0001', 'Cacat', 5, 0, 76000, 100000, 380000, 'dini', '2020-03-06 07:34:42');
 
 -- --------------------------------------------------------
 
@@ -525,15 +518,6 @@ CREATE TABLE `master_biaya` (
   `user` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `master_biaya`
---
-
-INSERT INTO `master_biaya` (`id`, `nomor_referensi`, `tanggal`, `total_biaya`, `keterangan`, `status`, `user`) VALUES
-(9, 'REF3408657', '2020-03-10 00:00:00', 0, '', 2, 'edwin'),
-(10, 'REF8025937', '2020-03-04 00:00:00', 11111, '', 2, 'edwin'),
-(11, 'REF9217483', '2020-03-25 00:00:00', 0, '', 0, 'edwin');
-
 -- --------------------------------------------------------
 
 --
@@ -555,10 +539,7 @@ CREATE TABLE `master_gaji` (
 --
 
 INSERT INTO `master_gaji` (`id`, `tanggal`, `nomor_referensi`, `total_pembayaran`, `keterangan`, `status`, `user`) VALUES
-(91, '2020-03-23 00:00:00', 'REF7830645', 300000, '', 2, 'edwin'),
-(92, '2020-03-25 00:00:00', 'REF5436287', 0, '', 0, 'edwin'),
-(94, '2020-03-10 00:00:00', 'REF5267498', 770000, '', 2, 'edwin'),
-(95, '2020-03-05 00:00:00', 'REF1053986', 240000, '', 2, 'edwin');
+(96, '2020-03-06 00:00:00', 'REF7965843', 24697748, '', 2, 'edwin');
 
 -- --------------------------------------------------------
 
@@ -582,9 +563,9 @@ CREATE TABLE `master_harga_pokok_penjualan` (
 --
 
 INSERT INTO `master_harga_pokok_penjualan` (`id`, `tanggal_transaksi`, `nomor_faktur`, `kode_barang`, `qty`, `harga_pokok`, `harga_jual`, `keterangan`) VALUES
-(28, '2020-03-05 14:23:41', 'bbmkdr050320001', 'BES0001 ', 10, 15000, 24000, 'FIFO'),
-(29, '2020-03-05 14:23:41', 'bbmkdr050320001', 'BES0001 ', 20, 15000, 24000, 'FIFO'),
-(30, '2020-03-05 14:23:41', 'bbmkdr050320001', 'BES0001 ', 2, 10000, 24000, 'FIFO');
+(31, '2020-03-06 03:32:47', 'bbmkdr060320001', 'BES0001 ', 10, 15000, 24000, 'FIFO'),
+(32, '2020-03-06 03:32:47', 'bbmkdr060320001', 'BES0001 ', 5, 16000, 24000, 'FIFO'),
+(33, '2020-03-06 03:32:47', 'bbmkdr060320001', 'BES0002 ', 15, 20000, 33000, 'FIFO');
 
 -- --------------------------------------------------------
 
@@ -755,10 +736,11 @@ CREATE TABLE `master_pegawai` (
 
 INSERT INTO `master_pegawai` (`id`, `nip`, `ktp`, `nama_lengkap`, `jenis_kelamin`, `alamat`, `kelurahan`, `kecamatan`, `kota`, `tanggal_lahir`, `tanggal_masuk`, `pendidikan_terakhir`, `jabatan`, `nomor_telepon`, `nomor_rekening`, `npwp`, `status`, `gaji_pokok`, `uang_makan`, `gambar`, `has_user`, `user`, `timestamp`) VALUES
 (1, '1', '0', 'Neng Yuliantin', 1, 'Jl Raya Limbangan', '', '', 'Garut', '2018-12-01', '2020-02-01', '', 'Direktur', '0', '0-0', '0', 1, 50000, 10000, 'SpDT0P752ut6lZHE.jpeg', 1, '', '2020-03-03 12:42:02'),
-(10, '123123123', '123123123123', 'LUCKY ANGGARA', 0, 'BANDUNG', 'BANDUNG', 'BANDUNG', 'BANDUNG', '1992-07-15', '2020-03-01', 'SARJANA', 'KASIR', '082116562811', 'BNI - 0468995561', '12312312312', 1, 50000, 10000, '123123123.jpg', 1, 'manajer', '2020-03-02 06:07:05'),
+(10, '123123123', '123123123123', 'LUCKY ANGGARA', 0, 'BANDUNG', 'BANDUNG', 'BANDUNG', 'BANDUNG', '1992-07-15', '2020-03-01', 'SARJANA', 'KASIR', '082116562811', 'BNI - 0468995561', '12312312312', 1, 100000, 10000, '123123123.jpg', 1, 'manajer', '2020-03-06 08:05:49'),
 (11, '124124', '1241241', 'DINI', 1, 'GARUT', 'GARUT', 'GARUT', 'GARUT', '2020-03-18', '2020-03-01', 'SMA', 'ADMIN', '08800', 'BNI - 080808', '123123', 1, 50000, 10000, 'default.jpg', 0, 'manajer', '2020-03-02 06:07:07'),
 (12, '21124124', '124124124', 'HADI', 0, 'GARUT', 'GARUT', 'GARUT', 'GARUT', '2020-03-09', '2020-03-01', 'SARJANA', 'SALES', '0808080', 'ASAS - 54654654', '21313', 1, 50000, 10000, '21124124.jpg', 1, 'manajer', '2020-03-02 12:53:43'),
-(13, '123123', '1231231', 'EDWIN', 0, 'JAKARTA', 'JAKARTA', 'JAKARTA', 'JAKARTA', '2020-03-26', '2020-03-01', 'MAGISTER', 'SUPERVISOR', '9128491248', 'BA - 31231', '213123', 1, 50000, 10000, '123123.jpg', 1, 'manajer', '2020-03-02 06:07:10');
+(13, '123123', '1231231', 'EDWIN', 0, 'JAKARTA', 'JAKARTA', 'JAKARTA', 'JAKARTA', '2020-03-26', '2020-03-01', 'MAGISTER', 'SUPERVISOR', '9128491248', 'BA - 31231', '213123', 1, 50000, 10000, '123123.jpg', 1, 'manajer', '2020-03-02 06:07:10'),
+(14, '647476', '54345354354', 'GJHGJHG', 0, 'HGDGHDHGD', 'GDGFDGFQ', 'HGDGHDH', 'DGFDGFD', '2020-03-20', '2020-03-06', 'GFHGFG', 'GDGHDHG', '67456456', 'GFHGF - 345354', '564564654564', 1, 23424, 24324324, '647476.png', 0, 'manajer', '2020-03-06 08:08:10');
 
 -- --------------------------------------------------------
 
@@ -827,8 +809,8 @@ CREATE TABLE `master_pembelian` (
 --
 
 INSERT INTO `master_pembelian` (`no_order_pembelian`, `nomor_transaksi`, `tanggal_transaksi`, `kode_supplier`, `total_pembelian`, `diskon`, `pajak_keluaran`, `ongkir`, `grand_total`, `lampiran`, `status_bayar`, `tanggal_input`, `user`) VALUES
-('39gtUec7uoHCMPI8', '123', '2020-03-05 06:21:22', 'BIR674', 125000, 0, 12500, 0, 137500, '', 1, '2020-03-05', 'dini'),
-('7EnBUwIJmx1cTsfp', '1', '2020-03-05 06:45:17', 'BIR674', 300000, 0, 0, 10000, 310000, '', 1, '2020-03-05', 'dini');
+('b6UL8VOkAumN72J9', '1', '2020-03-06 03:31:32', 'BIR674', 560000, 0, 56000, 0, 616000, '', 1, '2020-03-06', 'dini'),
+('wNPBVDyLUaXHJIux', '2', '2020-03-06 04:51:57', 'ESF053', 1300000, 50000, 125000, 0, 1375000, '', 1, '2020-03-06', 'dini');
 
 -- --------------------------------------------------------
 
@@ -859,7 +841,7 @@ CREATE TABLE `master_penjualan` (
 --
 
 INSERT INTO `master_penjualan` (`id`, `no_order_penjualan`, `tanggal_transaksi`, `no_faktur`, `id_pelanggan`, `total_penjualan`, `diskon`, `pajak_masukan`, `ongkir`, `grand_total`, `status_bayar`, `tanggal_jatuh_tempo`, `tanggal_input`, `sales`, `user`) VALUES
-(15, 'OUT6015874', '2020-03-05 14:23:41', 'bbmkdr050320001', 'HWW1875', 768000, 0, 0, 0, 768000, 1, NULL, '2020-03-05', 'nosales', 'lucky15');
+(16, 'OUT3426109', '2020-03-06 03:32:46', 'bbmkdr060320001', 'HWW1875', 855000, 0, 75000, 0, 930000, 1, NULL, '2020-03-06', 'nosales', 'lucky15');
 
 -- --------------------------------------------------------
 
@@ -961,7 +943,7 @@ CREATE TABLE `master_retur_penjualan` (
 --
 
 INSERT INTO `master_retur_penjualan` (`id`, `nomor_faktur_asli`, `nomor_faktur`, `id_pelanggan`, `retur_total`, `retur_diskon`, `retur_pajak`, `retur_grand_total`, `user`, `tanggal`) VALUES
-(6, 'bbmkdr050320001', 'RTR-bbmkdr050320001', 'HWW1875', 768000, 0, 76800, 844800, 'dini', '2020-03-05 13:35:43');
+(7, 'bbmkdr060320001', 'RTR-bbmkdr060320001', 'HWW1875', 380000, 105000, 27500, 302500, 'dini', '2020-03-06 07:33:43');
 
 -- --------------------------------------------------------
 
@@ -986,7 +968,7 @@ CREATE TABLE `master_saldo_awal` (
 --
 
 INSERT INTO `master_saldo_awal` (`id`, `kode_barang`, `nomor_faktur`, `qty_awal`, `saldo_awal`, `harga_awal`, `tanggal_input`, `tanggal_saldo`, `user`) VALUES
-(1, 'BES0001', 'SALDO AWAL', 10, 0, 15000, '2020-03-03 13:27:28', '2020-01-01 00:00:01', 'dini');
+(2, 'BES0001', 'SALDO AWAL', 10, 5, 15000, '2020-03-06 03:31:00', '2020-01-01 00:00:01', 'dini');
 
 -- --------------------------------------------------------
 
@@ -1175,11 +1157,11 @@ CREATE TABLE `master_user` (
 --
 
 INSERT INTO `master_user` (`username`, `nip`, `password`, `role`, `nama`, `avatar`, `status`, `last_activity`, `tanggal_create`, `isactive`, `is_del`) VALUES
-('dini', '124124', '$2y$10$RrwCvrb/WuSCU/JAHKr.2.A7f7WpsPc5qBKhH7.PZx.kua5bxKr8a', '2', 'DINI', 'default.jpg', 0, '2020-03-05 14:35:46', '0000-00-00 00:00:00', 1, 0),
-('edwin', '123123', '$2y$10$oi6qEP4bxeYkrUK5YCvhFe8a4PBCVriLudVjVxMvqQPPYCy.xKF9u', '4', 'EDWIN', 'default.jpg', 0, '2020-03-05 10:12:07', '0000-00-00 00:00:00', 1, 0),
+('dini', '124124', '$2y$10$RrwCvrb/WuSCU/JAHKr.2.A7f7WpsPc5qBKhH7.PZx.kua5bxKr8a', '2', 'DINI', 'default.jpg', 0, '2020-03-06 08:33:51', '0000-00-00 00:00:00', 1, 0),
+('edwin', '123123', '$2y$10$oi6qEP4bxeYkrUK5YCvhFe8a4PBCVriLudVjVxMvqQPPYCy.xKF9u', '4', 'EDWIN', 'default.jpg', 0, '2020-03-06 09:13:41', '0000-00-00 00:00:00', 1, 0),
 ('hadi', '21124124', '$2y$10$.Zz5dNGxi92mm.vF2/W59OWdBQEkYEIAjgnf01FkeUNal0jg2Lzf.', '3', 'HADI', 'default.jpg', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0),
-('lucky15', '123123123', '$2y$10$3HBFxWoWL9yHhbW1zegPteGL2ZtN4bPiBTTGEwkFifMu7djwD2Q0S', '1', 'LUCKY ANGGARA', 'default.jpg', 0, '2020-03-05 14:35:25', '0000-00-00 00:00:00', 1, 0),
-('manajer', '1', '$2y$10$Z.wVyoe9feypSG31/yGrhulh1abnvFshzx6nUSQBq5yZlmlVUeiLO', '5', 'Neng', 'PjNKCoktVUdi3BZp.jpeg', 0, '2020-03-05 14:35:12', '2020-03-01 00:00:00', 1, 0);
+('lucky15', '123123123', '$2y$10$3HBFxWoWL9yHhbW1zegPteGL2ZtN4bPiBTTGEwkFifMu7djwD2Q0S', '1', 'LUCKY ANGGARA', 'default.jpg', 0, '2020-03-06 09:12:58', '0000-00-00 00:00:00', 1, 0),
+('manajer', '1', '$2y$10$Z.wVyoe9feypSG31/yGrhulh1abnvFshzx6nUSQBq5yZlmlVUeiLO', '5', 'Neng', 'PjNKCoktVUdi3BZp.jpeg', 0, '2020-03-06 09:08:23', '2020-03-01 00:00:00', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1284,7 +1266,7 @@ INSERT INTO `tabel_menu` (`id`, `nama_menu`, `link`, `icon`, `keterangan`) VALUE
 (10, 'Data', '#', 'fa fa-database', 'Admin'),
 (11, 'Pegawai', '#', 'fa fa-users', 'Manajer'),
 (12, 'Keuangan', '#', 'fa fa-money', 'Manajer'),
-(13, 'Laporan', '#', 'fa fa-file-text', ''),
+(13, 'Laporan', '#', 'fa fa-file-text', 'Manajer'),
 (14, 'Data', '#', 'fa fa-database', 'Kasir'),
 (15, 'Keuangan', '#', 'fa fa-money', 'Admin'),
 (16, 'Penjualan', '#', 'fa fa-cart-arrow-down', 'Admin'),
@@ -1320,13 +1302,15 @@ CREATE TABLE `tabel_perhitungan_order` (
 INSERT INTO `tabel_perhitungan_order` (`no_order`, `total_keranjang`, `diskon`, `pajak`, `ongkir`, `grand_total`, `timestamp`) VALUES
 ('39gtUec7uoHCMPI8', 125000, 0, 12500, 0, 137500, '2020-03-05 05:21:19'),
 ('7EnBUwIJmx1cTsfp', 300000, 0, 0, 10000, 310000, '2020-03-05 05:45:14'),
+('b6UL8VOkAumN72J9', 560000, 0, 56000, 0, 616000, '2020-03-06 02:31:25'),
 ('OUT0219576', 24000, 0, 0, 0, 24000, '2020-03-04 08:01:20'),
 ('OUT0624851', 720000, 0, 0, 0, 720000, '2020-03-04 08:16:07'),
 ('OUT1243956', 48000, 0, 0, 0, 48000, '2020-03-05 12:03:28'),
 ('OUT3280967', 720000, 0, 0, 0, 720000, '2020-03-04 08:00:06'),
 ('OUT3605217', 720000, 0, 0, 0, 720000, '2020-03-04 08:00:53'),
 ('OUT4309761', 24000, 0, 0, 0, 24000, '2020-03-04 08:03:15'),
-('OUT7129068', 720000, 0, 0, 0, 720000, '2020-03-04 07:53:49');
+('OUT7129068', 720000, 0, 0, 0, 720000, '2020-03-04 07:53:49'),
+('wNPBVDyLUaXHJIux', 1300000, 50000, 125000, 0, 1375000, '2020-03-06 03:51:54');
 
 -- --------------------------------------------------------
 
@@ -1349,7 +1333,7 @@ INSERT INTO `tabel_role` (`id`, `nama_role`, `menu`) VALUES
 (2, 'Admin', '5,16,2,17,15'),
 (3, 'Sales', '3,8'),
 (4, 'Supervisor', '6,21,9,10,24'),
-(5, 'Manager', '7,23,9,12,11,20'),
+(5, 'Manager', '7,23,9,12,11,13,20'),
 (6, 'Superuser', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20');
 
 -- --------------------------------------------------------
@@ -1409,7 +1393,8 @@ INSERT INTO `tabel_submenu` (`id`, `main_menu`, `nama_submenu`, `link`, `ket`) V
 (39, '24', 'Master Gaji', 'manajemen_keuangan/mastergaji/', 'Supervisor Master Gaji'),
 (40, '24', 'Master Biaya', 'manajemen_keuangan/masterbiaya/', 'Supervisor Master Biaya'),
 (41, '10', 'Master Kategori Biaya', 'manajemen_data/masterkategoribiaya', 'Supervisor Kategori Biaya'),
-(42, '9', 'Transfer Retur Barang', 'manajemen_persediaan/returpersediaan', 'Supervisor Transfer Retur Barang');
+(42, '9', 'Transfer Retur Barang', 'manajemen_persediaan/returpersediaan', 'Supervisor Transfer Retur Barang'),
+(43, '13', 'Laporan Laba / Rugi Usaha', 'laporan/laba', 'Manajer Laporan Laba / Rugi');
 
 -- --------------------------------------------------------
 
@@ -1865,25 +1850,25 @@ ALTER TABLE `detail_detail_stok_opname`
 -- AUTO_INCREMENT for table `detail_gaji`
 --
 ALTER TABLE `detail_gaji`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=437;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=443;
 
 --
 -- AUTO_INCREMENT for table `detail_pembelian`
 --
 ALTER TABLE `detail_pembelian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- AUTO_INCREMENT for table `detail_penjualan`
 --
 ALTER TABLE `detail_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `detail_persediaan`
 --
 ALTER TABLE `detail_persediaan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `detail_piutang`
@@ -1901,7 +1886,7 @@ ALTER TABLE `detail_retur_barang_pembelian`
 -- AUTO_INCREMENT for table `detail_retur_barang_penjualan`
 --
 ALTER TABLE `detail_retur_barang_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `detail_retur_pembelian`
@@ -1913,7 +1898,7 @@ ALTER TABLE `detail_retur_pembelian`
 -- AUTO_INCREMENT for table `detail_retur_penjualan`
 --
 ALTER TABLE `detail_retur_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `detail_stok_opname`
@@ -1937,13 +1922,13 @@ ALTER TABLE `master_biaya`
 -- AUTO_INCREMENT for table `master_gaji`
 --
 ALTER TABLE `master_gaji`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
 
 --
 -- AUTO_INCREMENT for table `master_harga_pokok_penjualan`
 --
 ALTER TABLE `master_harga_pokok_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `master_insentif`
@@ -1973,7 +1958,7 @@ ALTER TABLE `master_merek_barang`
 -- AUTO_INCREMENT for table `master_pegawai`
 --
 ALTER TABLE `master_pegawai`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `master_pelanggan`
@@ -1985,7 +1970,7 @@ ALTER TABLE `master_pelanggan`
 -- AUTO_INCREMENT for table `master_penjualan`
 --
 ALTER TABLE `master_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `master_piutang`
@@ -2009,13 +1994,13 @@ ALTER TABLE `master_retur_pembelian`
 -- AUTO_INCREMENT for table `master_retur_penjualan`
 --
 ALTER TABLE `master_retur_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `master_saldo_awal`
 --
 ALTER TABLE `master_saldo_awal`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `master_satuan_barang`
@@ -2063,7 +2048,7 @@ ALTER TABLE `tabel_role`
 -- AUTO_INCREMENT for table `tabel_submenu`
 --
 ALTER TABLE `tabel_submenu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `temp_purchase_order`
@@ -2075,13 +2060,13 @@ ALTER TABLE `temp_purchase_order`
 -- AUTO_INCREMENT for table `temp_tabel_keranjang_pembelian`
 --
 ALTER TABLE `temp_tabel_keranjang_pembelian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `temp_tabel_keranjang_penjualan`
 --
 ALTER TABLE `temp_tabel_keranjang_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=293;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=295;
 
 --
 -- AUTO_INCREMENT for table `timeline_po`

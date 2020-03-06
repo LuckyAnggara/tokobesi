@@ -72,12 +72,21 @@ class Model_Master_Pegawai extends CI_Model
                 'jabatan' =>  strtoupper($post['jabatan']),
                 'nomor_telepon' => strtoupper($post["nomor_telepon"]),
                 'nomor_rekening' => strtoupper($post["nama_bank"]) . ' - ' . strtoupper($post["nomor_rekening"]),
+                'gaji_pokok' => $this->normal($post["gaji_pokok"]),
+                'uang_makan' => $this->normal($post["uang_makan"]),
                 'npwp' => strtoupper($post["npwp"]),
                 'gambar' => $this->_uploadImage(),
                 'user' => $this->session->userdata['username'],
             ];
             $this->db->insert('master_pegawai', $data);
         }
+    }
+
+    function normal($value)
+    {
+        $value = str_replace("Rp.", "", $value);
+        $value = str_replace(".", "", $value);
+        return str_replace(",", "", $value);
     }
 
     private function _uploadImage()
@@ -198,6 +207,8 @@ class Model_Master_Pegawai extends CI_Model
 
         $data = [
             'jabatan' => strtoupper($post['jabatan']),
+            'gaji_pokok' => $this->normal($post["gaji_pokok"]),
+            'uang_makan' => $this->normal($post["uang_makan"]),
             'tanggal_masuk' => date('Y-m-d H:i:s', strtotime($post['tanggal_masuk'])),
             'user' => $this->session->userdata['username'],
         ];

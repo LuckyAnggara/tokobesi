@@ -34,6 +34,19 @@
   $(document).ready(function() {
     cari_versi_select2()
   })
+
+   $('#add_data').on('hidden.bs.modal', function(e) {
+        $(this)
+            .find("input,textarea,select")
+            .val('')
+            .end()
+            .find("input[type=checkbox], input[type=radio]")
+            .prop("checked", "")
+            .end();
+        $('#rootwizard').bootstrapWizard({
+            firstSelector: 'wizard li.first'
+        })
+    });
 </script>
 <!-- Kode Barang -->
 <script>

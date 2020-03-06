@@ -134,13 +134,25 @@ $str = explode("-", $pegawai['nomor_rekening']);
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Jabatan</label>
                                     <div class="col-9">
-                                        <input name="jabatan" id="jabatan" type="text" class="form-control" value="<?= $pegawai['jabatan']; ?>" readonly>
+                                        <input name="jabatan" id="jabatan" type="text" class="form-control" value="<?= $pegawai['jabatan']; ?>" readonly required>
                                     </div>
+                                </div>
+                                <div class="form-group row">
+                                        <label class="col-3 col-form-label">Gaji Pokok</label>
+                                        <div class="col-9">
+                                            <input name="gaji_pokok" id="gaji_pokok" type="text" class="form-control" value="<?= $pegawai['gaji_pokok']; ?>" readonly required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-3 col-form-label">Uang Makan</label>
+                                        <div class="col-9">
+                                            <input name="uang_makan" id="uang_makan" type="text" class="form-control" value="<?= $pegawai['uang_makan']; ?>" readonly required>
+                                        </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Tanggal Mulai Bekerja</label>
                                     <div class="col-9">
-                                        <input name="tanggal_masuk" id="tanggal_masuk" type="text" class="form-control" value="<?= $pegawai['tanggal_masuk']; ?>" readonly>
+                                        <input name="tanggal_masuk" id="tanggal_masuk" type="text" class="form-control" value="<?= $pegawai['tanggal_masuk']; ?>" readonly required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">

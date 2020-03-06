@@ -95,6 +95,18 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
+                                        <label class="col-3 col-form-label">Gaji Pokok</label>
+                                        <div class="col-9">
+                                            <input name="gaji_pokok" id="gaji_pokok" type="text" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-3 col-form-label">Uang Makan</label>
+                                        <div class="col-9">
+                                            <input name="uang_makan" id="uang_makan" type="text" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <label class="col-3 col-form-label">Tanggal Mulai Bekerja</label>
                                         <div class="col-9">
                                             <input name="tanggal_masuk" id="tanggal_masuk" type="text" class="form-control" required>

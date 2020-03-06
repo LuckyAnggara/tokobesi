@@ -14,6 +14,13 @@ class Invoice extends CI_Controller
         }
     }
 
+    function makefont()
+    {
+        require_once(APPPATH . 'libraries/vendor/fpdf/makefont/makefont.php');
+
+        MakeFont('C:\\Windows\\Fonts\\tahoma.ttf','cp1252');
+    }
+
     function tunai($no_order)
     {
         $setting_perusahaan = $this->modelSetting->get_data_perusahaan();
@@ -27,21 +34,22 @@ class Invoice extends CI_Controller
         $pdf = new FPDF('p', 'mm', 'letter');
         // membuat halaman baru
         $pdf->AddPage();
+        $pdf->AddFont('Tahoma','B','tahomabd.php');
+        $pdf->AddFont('Tahoma','','tahoma.php');
         // setting jenis font yang akan digunakan
-        $pdf->SetFont('Arial', 'B', 11);
+        $pdf->SetFont('Tahoma', 'B', 11);
         // mencetak string
-
         $pdf->Cell(100, 6, $setting_perusahaan['nama_perusahaan'], 0, 0, 'L');
-        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFont('Tahoma', '', 8);
         $pdf->Cell(96, 6, 'Faktur Penjualan', 0, 1, 'R');
         $pdf->MultiCell(60, 5, nl2br($setting_perusahaan['alamat_perusahaan']), 0, 'J');
 
         $pdf->Cell(100, 5, 'Telp : ' . $setting_perusahaan['nomor_telepon'] . ' / Fax : ' . $setting_perusahaan['nomor_fax'], 0, 1, 'L');
 
-        $pdf->Cell(100, 5, 'Email : ' . $setting_perusahaan['alamat_email'], 0, 1, 'L');
+        $pdf->Cell(196, 5, 'Email : ' . $setting_perusahaan['alamat_email'], 0, 1, 'L');
+        $pdf->Cell(196, 2,'', 'B', 1, 'L');
         // Memberikan space kebawah agar tidak terlalu rapat
-        $pdf->Cell(10, 5, '', 0, 1);
-        $pdf->Line(206, 35, 11, 35);
+        $pdf->Cell(10, 3, '', 0, 1);
 
         $pdf->Cell(30, 5, 'Nama Pelanggan', 0, 0);
         $pdf->Cell(5, 5, ':', 0, 0);
@@ -60,9 +68,9 @@ class Invoice extends CI_Controller
         $pdf->Cell(50, 5, $tanggal_transaksi, 0, 1);
 
         // header
-        $pdf->Line(206, 47, 11, 47);
+        $pdf->Cell(196, 2,'', 'B', 1, 'L');
         $pdf->Cell(10, 5, '', 0, 1);
-        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->SetFont('Tahoma', 'B', 7);
 
         $pdf->Cell(7, 6, '#', 1, 0, 'C');
         $pdf->Cell(25, 6, 'Kode Barang', 1, 0, 'C');
@@ -72,7 +80,7 @@ class Invoice extends CI_Controller
         $pdf->Cell(15, 6, 'Qty', 1, 0, 'C');
         $pdf->Cell(20, 6, 'Diskon', 1, 0, 'C');
         $pdf->Cell(35, 6, 'Total', 1, 1, 'C');
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Tahoma', '', 7);
 
         // foreach ($detail_order as $row){
         //     $pdf->Cell(20,6,$row->nim,1,0);
@@ -96,40 +104,40 @@ class Invoice extends CI_Controller
 
         $pdf->Cell(10, 6, '', 0, 1);
 
-        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFont('Tahoma', '', 8);
         $pdf->Cell(90, 5, 'Hormat Kami', 0, 0, 'C');
         $pdf->Cell(50, 5, '', 0, 0);
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Tahoma', '', 7);
         $pdf->Cell(30, 5, 'Sub Total', 0, 0);
         $pdf->Cell(5, 5, ':', 0, 0);
         $pdf->Cell(22, 5, $this->rupiah($data_order['total_penjualan']), 0, 1, 'R');
         $pdf->Cell(30, 5, '', 0, 0);
-        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFont('Tahoma', '', 8);
         $pdf->Cell(110);
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Tahoma', '', 7);
         $pdf->Cell(30, 5, 'Diskon', 0, 0);
         $pdf->Cell(5, 5, ':', 0, 0);
         $pdf->Cell(22, 5, '(' . $this->rupiah($data_order['diskon']) . ')', 0, 1, 'R');
         $pdf->Cell(30, 5, '', 0, 0);
         $pdf->Cell(110);
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Tahoma', '', 7);
         $pdf->Cell(30, 5, 'Pajak (PPN 10%)', 0, 0);
         $pdf->Cell(5, 5, ':', 0, 0);
         $pdf->Cell(22, 5, $this->rupiah($data_order['pajak_masukan']), 0, 1, 'R');
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Tahoma', '', 7);
         $pdf->Cell(90, 5, $data_order['nama_pegawai'], 0, 0, 'C');
         $pdf->Cell(50, 5, '', 0, 0);
         $pdf->Cell(30, 5, 'Ongkos Kirim', 'B', 0);
         $pdf->Cell(5, 5, ':', 'B', 0);
         $pdf->Cell(22, 5, $this->rupiah($data_order['pajak_masukan']), 'B', 1, 'R');
         $pdf->Cell(30, 5, '', 0, 0);
-        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->SetFont('Tahoma', 'B', 9);
         $pdf->Cell(110);
         $pdf->Cell(30, 5, 'Grand Total', 0, 0);
         $pdf->Cell(5, 5, ':', 0, 0);
         $pdf->Cell(22, 5, $this->rupiah($data_order['grand_total']), 0, 1, 'R');
 
-        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->SetFont('Tahoma', 'B', 7);
         $pdf->Cell(196, 3, '', 'B', 1);
         $pdf->Cell(10, 2, '', 0, 1);
 
@@ -153,20 +161,20 @@ class Invoice extends CI_Controller
         // membuat halaman baru
         $pdf->AddPage();
         // setting jenis font yang akan digunakan
-        $pdf->SetFont('Arial', 'B', 11);
+        $pdf->SetFont('Tahoma', 'B', 11);
         // mencetak string
 
         $pdf->Cell(100, 6, $setting_perusahaan['nama_perusahaan'], 0, 0, 'L');
-        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFont('Tahoma', '', 8);
         $pdf->Cell(96, 6, 'Faktur Penjualan', 0, 1, 'R');
         $pdf->MultiCell(60, 5, nl2br($setting_perusahaan['alamat_perusahaan']), 0, 'J');
 
         $pdf->Cell(100, 5, 'Telp : ' . $setting_perusahaan['nomor_telepon'] . ' / Fax : ' . $setting_perusahaan['nomor_fax'], 0, 1, 'L');
 
-        $pdf->Cell(100, 5, 'Email : ' . $setting_perusahaan['alamat_email'], 0, 1, 'L');
+        $pdf->Cell(196, 5, 'Email : ' . $setting_perusahaan['alamat_email'], 0, 1, 'L');
+        $pdf->Cell(196, 2,'', 'B', 1, 'L');
         // Memberikan space kebawah agar tidak terlalu rapat
-        $pdf->Cell(10, 5, '', 0, 1);
-        $pdf->Line(206, 35, 11, 35);
+        $pdf->Cell(10, 3, '', 0, 1);
 
         $pdf->Cell(30, 5, 'Nama Pelanggan', 0, 0);
         $pdf->Cell(5, 5, ':', 0, 0);
@@ -185,9 +193,9 @@ class Invoice extends CI_Controller
         $pdf->Cell(50, 5, $tanggal_transaksi, 0, 1);
 
         // header
-        $pdf->Line(206, 47, 11, 47);
+        $pdf->Cell(196, 2,'', 'B', 1, 'L'); 
         $pdf->Cell(10, 5, '', 0, 1);
-        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->SetFont('Tahoma', 'B', 7);
 
         $pdf->Cell(7, 6, '#', 1, 0, 'C');
         $pdf->Cell(25, 6, 'Kode Barang', 1, 0, 'C');
@@ -197,7 +205,7 @@ class Invoice extends CI_Controller
         $pdf->Cell(15, 6, 'Qty', 1, 0, 'C');
         $pdf->Cell(20, 6, 'Diskon', 1, 0, 'C');
         $pdf->Cell(35, 6, 'Total', 1, 1, 'C');
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Tahoma', '', 7);
 
         // foreach ($detail_order as $row){
         //     $pdf->Cell(20,6,$row->nim,1,0);
@@ -221,10 +229,10 @@ class Invoice extends CI_Controller
 
         $pdf->Cell(10, 6, '', 0, 1);
 
-        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFont('Tahoma', '', 8);
         $pdf->Cell(85, 5, 'Hormat Kami', 0, 0, 'C');
         // $pdf->Cell(50, 5, '', 1, 0);
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Tahoma', '', 7);
         $pdf->Cell(25, 5, 'Sub Total', 0, 0);
         $pdf->Cell(5, 5, ':', 0, 0);
         $pdf->Cell(22, 5, $this->rupiah($data_order['total_penjualan']), 0, 0, 'R');
@@ -232,10 +240,10 @@ class Invoice extends CI_Controller
         $pdf->Cell(25, 5, 'Down Payment (DP)', 0, 0);
         $pdf->Cell(5, 5, ':', 0, 0);
         $pdf->Cell(22, 5, $this->rupiah($data_order['down_payment']), 0, 1, 'R');
-        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFont('Tahoma', '', 8);
         $pdf->Cell(85, 5, '', 0, 0, 'C');
         // $pdf->Cell(110);
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Tahoma', '', 7);
         $pdf->Cell(25, 5, 'Diskon', 0, 0);
         $pdf->Cell(5, 5, ':', 0, 0);
         $pdf->Cell(22, 5, '(' . $this->rupiah($data_order['diskon']) . ')', 0, 0, 'R');
@@ -245,11 +253,11 @@ class Invoice extends CI_Controller
         $pdf->Cell(22, 5, $this->rupiah($data_order['sisa_piutang']), 0, 1, 'R');
         $pdf->Cell(85, 5, '', 0, 0, 'C');
         // $pdf->Cell(110);
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Tahoma', '', 7);
         $pdf->Cell(25, 5, 'Pajak (PPN 10%)', 0, 0);
         $pdf->Cell(5, 5, ':', 0, 0);
         $pdf->Cell(22, 5, $this->rupiah($data_order['pajak_masukan']), 0, 1, 'R');
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Tahoma', '', 7);
         $pdf->Cell(85, 5, $data_order['nama_pegawai'], 0, 0, 'C');
         // $pdf->Cell(50, 5, '', 0, 0);
         $pdf->Cell(25, 5, 'Ongkos Kirim', 'B', 0);
@@ -260,14 +268,14 @@ class Invoice extends CI_Controller
         $pdf->Cell(5, 5, ':', 0, 0);
         $pdf->Cell(22, 5, $tanggal_jatuh_tempo, 0, 1, 'R');
         // $pdf->Cell(30, 5, '', 0, 0);
-        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->SetFont('Tahoma', 'B', 9);
         $pdf->Cell(85, 5, '', 0, 0, 'C');
         // $pdf->Cell(110);
         $pdf->Cell(25, 5, 'Grand Total', 0, 0);
         $pdf->Cell(5, 5, ':', 0, 0);
         $pdf->Cell(22, 5, $this->rupiah($data_order['grand_total']), 0, 1, 'R');
 
-        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->SetFont('Tahoma', 'B', 7);
         $pdf->Cell(196, 3, '', 'B', 1);
         $pdf->Cell(10, 2, '', 0, 1);
 

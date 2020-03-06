@@ -233,9 +233,13 @@
         } else if (div == "pekerjaan") {
             if (bol == false) {
                 $('#jabatan').attr("readonly", bol);
+                $('#gaji_pokok').attr("readonly", bol);
+                $('#uang_makan').attr("readonly", bol);
                 $('#tanggal_masuk').attr("disabled", bol);
             } else {
                 $('#jabatan').attr("readonly", bol);
+                $('#gaji_pokok').attr("readonly", bol);
+                $('#uang_makan').attr("readonly", bol);
                 $('#tanggal_masuk').attr("disabled", bol);
             }
         } else if (div == "lainnya") {

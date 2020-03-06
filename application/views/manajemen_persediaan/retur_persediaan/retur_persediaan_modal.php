@@ -4,8 +4,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">Retur Barang</h4>
-                <span id="id_retur_barang"></span>
-                <span id="saldo_retur_barang"></span>
+                <span hidden id="id_retur_barang"></span>
+                <span hidden id="saldo_retur_barang"></span>
                 <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> -->
             </div>
             <form data-parsley-validate novalidate autocomplete="off" id="submitForm" method="post" enctype="multipart/form-data" class="form-horizontal">
