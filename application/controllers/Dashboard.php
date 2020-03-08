@@ -381,7 +381,7 @@ class Dashboard extends CI_Controller
 			redirect(base_url("dashboard"));
 		} else {
 			$this->load->view('template/template_header', $data);
-			$this->load->view('template/template_menu', $data);
+			$this->load->view('template/template_sales/template_menu_sales');
 			$this->load->view('dashboard/sales/dashboard', $data);
 			$this->load->view('template/template_right');
 			$this->load->view('template/template_footer');

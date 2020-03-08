@@ -167,7 +167,7 @@
     })
 
     $('#download_format').on('click', function() {
-        window.location.href = '<?= base_url("Laporan/excel/stokopname/"); ?>' + $('#nomor_referensi').val();
+        window.location.href = '<?= base_url("laporan/excel/stokopname/"); ?>' + $('#nomor_referensi').val();
     })
 
     $('#upload').on('click', function() {

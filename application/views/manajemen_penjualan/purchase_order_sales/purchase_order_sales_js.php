@@ -121,7 +121,7 @@
               $.LoadingOverlay("show");
             },
             success: function(data) {
-              window.location.href = "<?= base_url('manajemen_penjualan/ReviewPurchaseOrder/review/'); ?>" + no_order
+              window.location.href = "<?= base_url('manajemen_penjualan/reviewpurchaseorder/review/'); ?>" + no_order
             },
             complete: function() {
               $.LoadingOverlay("hide");

@@ -302,7 +302,7 @@
             "order": true,
             "searching": true,
             "ajax": {
-                "url": '<?= base_url("Manajemen_Data/MasterPelanggan/getData/"); ?>',
+                "url": '<?= base_url("manajemen_data/masterpelanggan/getData/"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{

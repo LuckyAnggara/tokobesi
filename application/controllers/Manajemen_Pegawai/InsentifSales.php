@@ -11,9 +11,9 @@ class Insentifsales extends CI_Controller
         $this->load->model('Setting/Model_Setting', 'modelSetting');
         $this->load->model('Setting/Model_Pusher', 'modelPusher');
 
-        if ($this->session->userdata('status') != "login" ) {
+        if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
-        } 
+        }
     }
 
     public function index()
@@ -27,7 +27,7 @@ class Insentifsales extends CI_Controller
 
             $data['css'] = 'manajemen_pegawai/insentif_sales/insentif_sales_css';
             $this->load->view('template/template_header', $data);
-            $this->load->view('template/template_menu');
+            $this->load->view('template/template_sales/template_menu_sales');
             $this->load->view('manajemen_pegawai/insentif_sales/insentif_sales');
             $this->load->view('template/template_right');
             $this->load->view('template/template_footer');
@@ -35,7 +35,6 @@ class Insentifsales extends CI_Controller
             $this->load->view('manajemen_pegawai/insentif_sales/insentif_sales_js');
             $this->load->view('template/template_app_js');
         }
-      
     }
 
     public function getData()

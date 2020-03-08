@@ -67,14 +67,14 @@ class Purchaseordersales extends CI_Controller
     public function index()
     {
         $this->init_no_order();
-		$data['menu'] = $this->modelSetting->data_menu();
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
 
         $data['no_order'] = $this->session->userdata('no_order_dummy');
         $data['css'] = 'manajemen_penjualan/purchase_order_sales/purchase_order_sales_css';
         $data['title'] = "Penjualan Barang";
         $this->load->view('template/template_sales/template_header_sales', $data);
-        $this->load->view('template/template_menu');
+        $this->load->view('template/template_sales/template_menu_sales');
         $this->load->view('manajemen_penjualan/purchase_order_sales/purchase_order_sales', $data);
         $this->load->view('template/template_sales/template_right_sales');
         $this->load->view('manajemen_penjualan/purchase_order_sales/purchase_order_sales_modal');
@@ -86,12 +86,12 @@ class Purchaseordersales extends CI_Controller
 
     public function daftar()
     {
-		$data['menu'] = $this->modelSetting->data_menu();
+        $data['menu'] = $this->modelSetting->data_menu();
         $data['css'] = 'manajemen_penjualan/purchase_order_sales/daftar/daftar_purchase_order_css';
 
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $this->load->view('template/template_header', $data);
-        $this->load->view('template/template_menu');
+        $this->load->view('template/template_sales/template_menu_sales');
         $this->load->view('manajemen_penjualan/purchase_order_sales/daftar/daftar_purchase_order');
         $this->load->view('template/template_right');
         $this->load->view('template/template_footer');

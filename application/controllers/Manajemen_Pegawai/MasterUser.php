@@ -13,16 +13,16 @@ class Masteruser extends CI_Controller
 
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
-        } else {
-            $role = $this->session->userdata('role');
-            if ($role  < 4) {
-                redirect(base_url("index.html"));
-            }
         }
     }
 
     public function index()
     {
+        $role = $this->session->userdata('role');
+        if ($role  < 4) {
+            redirect(base_url("index.html"));
+        }
+
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
 
@@ -38,7 +38,7 @@ class Masteruser extends CI_Controller
         $this->load->view('template/template_app_js');
     }
 
-     public function Detail_User()
+    public function detail_user()
     {
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();

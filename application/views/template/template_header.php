@@ -89,7 +89,7 @@
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <i class="ti-user m-r-5"></i> <?= $this->session->userdata['nama']; ?>
                                 </a>
-                                <a  href=" <?= base_url('manajemen_pegawai/masteruser/detail_user'); ?> " class="dropdown-item notify-item">
+                                <a href=" <?= base_url('manajemen_pegawai/masteruser/detail_user'); ?> " class="dropdown-item notify-item">
                                     <i class="ti-key m-r-5"></i> Setting
                                 </a>
                                 <!-- item-->

@@ -186,7 +186,7 @@
       var dp = $('#dp');
 
       $.ajax({
-        url: '<?= base_url("Manajemen_Penjualan/PurchaseOrderAdmin/get_total_perhitungan/"); ?>' + no_order,
+        url: '<?= base_url("manajemen_penjualan/purchaseorderadmin/get_total_perhitungan/"); ?>' + no_order,
         type: "POST",
         dataType: "JSON",
         async: false,
@@ -284,7 +284,7 @@
 
     function push_total_perhitungan(no_order, pajak, ongkir) {
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderAdmin/push_total_perhitungan'); ?>",
+        url: "<?= Base_url('manajemen_penjualan/purchaseorderadmin/push_total_perhitungan'); ?>",
         type: "post",
         data: {
           no_order: no_order,
@@ -414,7 +414,7 @@
         }).then((result) => {
           if (result.value) {
             $.ajax({
-              url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderAdmin/bayar_checkout/'); ?>",
+              url: "<?= Base_url('manajemen_penjualan/purchaseorderadmin/bayar_checkout/'); ?>",
               type: "post",
               data: {
                 tanggal_faktur: tanggal_faktur,
@@ -453,7 +453,7 @@
                     confirmButtonText: 'Cetak Faktur ?'
                   }).then((result) => {
                     if (result.value) {
-                      window.location.replace("<?= base_url('Manajemen_Penjualan/PenjualanBarang/Invoice/'); ?>" + no_order_penjualan)
+                      window.location.replace("<?= base_url('manajemen_penjualan/penjualanbarang/invoice/'); ?>" + no_order_penjualan)
                     }
                   });
                   $('#checkout_modal').modal('hide');
@@ -474,7 +474,7 @@
 
     function revertProsesError() {
       $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/revert_error/'); ?>",
+        url: "<?= Base_url('manajemen_penjualan/penjualanbarang/revert_error/'); ?>",
         cache: false,
         async: false,
         success: function(data) {
@@ -501,7 +501,7 @@
         "order": true,
         "searching": true,
         "ajax": {
-          "url": '<?= base_url("Manajemen_Data/MasterPelanggan/getData/"); ?>',
+          "url": '<?= base_url("manajemen_data/masterpelanggan/getData/"); ?>',
           "type": "POST",
         },
         "columnDefs": [{
@@ -553,7 +553,7 @@
 
     function cek_pelanggan(id_pelanggan = "") {
       return $.ajax({
-        url: "<?= Base_url('Manajemen_Penjualan/PenjualanBarang/cek_pelanggan/'); ?>" + id_pelanggan,
+        url: "<?= Base_url('manajemen_penjualan/penjualanbarang/cek_pelanggan/'); ?>" + id_pelanggan,
         type: "post",
         dataType: "text",
         async: false
@@ -589,7 +589,7 @@
         }).then((result) => {
           if (result.value) {
             $.ajax({
-              url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderAdmin/reject/'); ?>",
+              url: "<?= Base_url('manajemen_penjualan/purchaseorderadmin/reject/'); ?>",
               data: {
                 no_order_penjualan: no_order,
                 pesan: text
@@ -652,7 +652,7 @@
         }).then((result) => {
           if (result.value) {
             $.ajax({
-              url: "<?= Base_url('Manajemen_Penjualan/PurchaseOrderAdmin/return/'); ?>",
+              url: "<?= Base_url('manajemen_penjualan/purchaseorderadmin/return/'); ?>",
               data: {
                 no_order_penjualan: no_order,
                 pesan: text

@@ -29,7 +29,7 @@ class Reviewpurchaseorder extends CI_Controller
         $cek = $this->modelPO->cekData($string);
         if ($cek == false) {
             $this->load->view('template/template_header', $data);
-            $this->load->view('template/template_menu');
+            $this->load->view('template/template_sales/template_menu_sales');
             $this->load->view('template/template_page_not_found');
             $this->load->view('template/template_right');
             $this->load->view('template/template_footer');
@@ -37,7 +37,7 @@ class Reviewpurchaseorder extends CI_Controller
             $this->load->view('template/template_app_js');
         } else {
             $this->load->view('template/template_sales/template_header_sales', $data);
-            $this->load->view('template/template_menu');
+            $this->load->view('template/template_sales/template_menu_sales');
             $this->load->view('manajemen_penjualan/purchase_order_sales/review/timeline_purchase_order', $data);
             $this->load->view('template/template_sales/template_right_sales');
             $this->load->view('manajemen_penjualan/purchase_order_sales/review/review_purchase_order_modal');
@@ -61,7 +61,7 @@ class Reviewpurchaseorder extends CI_Controller
 
         if ($cek == false) {
             $this->load->view('template/template_header', $data);
-            $this->load->view('template/template_menu');
+            $this->load->view('template/template_sales/template_menu_sales');
             $this->load->view('template/template_page_not_found');
             $this->load->view('template/template_right');
             $this->load->view('template/template_footer');
@@ -70,7 +70,7 @@ class Reviewpurchaseorder extends CI_Controller
         } else {
 
             $this->load->view('template/template_sales/template_header_sales', $data);
-            $this->load->view('template/template_menu');
+            $this->load->view('template/template_sales/template_menu_sales');
             $this->load->view('manajemen_penjualan/purchase_order_sales/review/review_purchase_order', $data);
             $this->load->view('template/template_sales/template_right_sales');
             $this->load->view('manajemen_penjualan/purchase_order_sales/review/review_purchase_order_modal');
