@@ -8,9 +8,6 @@
   <!-- bootstrap touchspin -->
   <script src="<?= base_url('assets/'); ?>plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
 
-  <!-- Sweet Alert Js  -->
-  <script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
-
   <!-- Select2 js -->
   <script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
   <!-- Select2 js -->
@@ -18,8 +15,6 @@
 
   <!-- DatePicker Js -->
   <script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-
-
   <!-- switchery -->
   <script src="<?= base_url('assets/'); ?>plugins/switchery/switchery.min.js"></script>
 
@@ -731,7 +726,7 @@
             $('#operatorbtn').attr('hidden', false);
             $("#jumlah_keranjang").text(data.jumlah);
             for (var i in data.data) {
-              var display = '<li class="list-group-item"><div class="card-box"><a onClick="warning_delete(\'' + data.data[i].id + '\')"  class="text-danger"><div class="user-list-item"><div class="icon bg-info"><i class="mdi mdi-cube"></i></div><div class="user-desc"><span class="name"><b>' + data.data[i].nama_barang + '</b></span><span class="time">' + data.data[i].jumlah_penjualan + ' ' + data.data[i].nama_satuan + '</span></div></div></a></div></li>';
+              var display = '<li class="list-group-item" onClick="warning_delete(\'' + data.data[i].id + '\')"><div class="card-box"><a   class="text-danger"><div class="user-list-item"><div class="icon bg-info"><i class="mdi mdi-cube"></i></div><div class="user-desc"><span class="name"><b>' + data.data[i].nama_barang + '</b></span><span class="time">' + data.data[i].jumlah_penjualan + ' ' + data.data[i].nama_satuan + '</span></div></div></a></div></li>';
               $('#keranjang').append(display).fadeIn('slow');
             }
           } else {
@@ -775,8 +770,8 @@
 
     function warning_delete(id) {
       swal.fire({
-        title: 'Apa anda yakin akan hapus data ini dari Keranjang Belanja?',
-        text: "Data akan di hapus dari Keranjang Belanja..",
+        title: 'Apa anda yakin ?',
+        text: "Data akan di hapus..",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

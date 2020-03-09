@@ -5,12 +5,31 @@ class Model_Persediaan_Barang extends CI_Model
 {
     function get_kartu_persediaan_ajax($kode_barang)
     {
-        $query =  $this->db->query("SELECT *, @saldo := @saldo+qty as saldo FROM ( SELECT 'masuk' trans_type, nomor_transaksi as nomor_transaksi, tanggal_transaksi, kode_barang, jumlah_pembelian as qty, harga_beli FROM detail_pembelian WHERE kode_barang = '" . $kode_barang . "' UNION ALL SELECT 'keluar' trans_type, nomor_faktur, tanggal_transaksi, kode_barang, -jumlah_penjualan as qty, harga_jual FROM detail_penjualan WHERE kode_barang = '" . $kode_barang . "' UNION ALL SELECT 'saldo awal' trans_type, nomor_faktur, DATE_FORMAT(tanggal_saldo,'%d-%b-%Y') as tanggal_transaksi, kode_barang, qty_awal, harga_awal FROM master_saldo_awal WHERE kode_barang = '" . $kode_barang . "') tx JOIN ( select @saldo:= 0 ) sx on 1=1 ORDER BY tanggal_transaksi ASC");
+        $query =  $this->db->query("SELECT *, @saldo := @saldo+qty as saldo FROM ( SELECT 'masuk' trans_type, nomor_transaksi as nomor_transaksi, tanggal_transaksi, kode_barang, jumlah_pembelian as qty, harga_beli FROM detail_pembelian WHERE kode_barang = '" . $kode_barang . "' UNION ALL SELECT 'keluar' trans_type, nomor_faktur, tanggal_transaksi, kode_barang, -jumlah_penjualan as qty, harga_jual FROM detail_penjualan WHERE kode_barang = '" . $kode_barang . "' UNION ALL SELECT 'saldo awal' trans_type, nomor_faktur, DATE_FORMAT(tanggal_saldo,'%d-%b-%Y') as tanggal_transaksi, kode_barang, qty_awal, harga_awal FROM master_saldo_awal WHERE kode_barang = '" . $kode_barang . "' UNION ALL SELECT 'masuk' trans_type, nomor_faktur, tanggal_input as tanggal_transaksi, kode_barang, saldo_retur as qty, harga_pokok as harga_beli FROM detail_retur_barang_penjualan WHERE kode_barang = '" . $kode_barang . "' UNION ALL SELECT 'keluar' trans_type, nomor_transaksi, tanggal as tanggal_transaksi, kode_barang, jumlah_retur as qty, harga_retur as harga_beli FROM detail_retur_pembelian WHERE kode_barang = '" . $kode_barang . "') tx JOIN ( select @saldo:= 0 ) sx on 1=1 ORDER BY tanggal_transaksi ASC");
 
         // $query =  $this->db->query("SELECT *, @saldo := @saldo+qty as saldo FROM ( SELECT 'Masuk' trans_type, nomor_transaksi as nomor_transaksi, tanggal_transaksi, kode_barang, jumlah_pembelian as qty, harga_beli FROM detail_pembelian WHERE kode_barang = '" . $kode_barang . "' UNION ALL SELECT 'Keluar' trans_type, nomor_faktur, tanggal_transaksi, kode_barang, -jumlah_penjualan as qty, harga_jual FROM detail_penjualan WHERE kode_barang = '" . $kode_barang . "') tx JOIN ( select @saldo:= 0 ) sx on 1=1 ORDER BY tanggal_transaksi");
 
         return $query;
     }
+
+    function detail_masuk($kode_barang)
+    {
+        $this->db->select('*');
+        $this->db->from('detail_pembelian');
+        $this->db->where('kode_barang',$kode_barang);
+        $data = $this->db->get()->row_array();
+        $output = [
+            'trans_type' => "masuk",
+            'nomor_transaksi' => $data['nomor_transaksi'],
+            'tanggal_transaksi' => $data['tanggal_transaksi'],
+            'nomor_transaksi' => $data['nomor_transaksi'],
+            'kode_barang' => $data['kode_barang'],
+            'qty' => $data['jumlah_pembelian'],
+            'saldo' => $data['jumlah_pembelian'],
+        ];
+    }
+
+
     function get_kartu_persediaan()
     {
         $query =  $this->db->query("SELECT *, @saldo := @saldo+qty as saldo FROM ( SELECT 'Masuk' trans_type, nomor_transaksi as nomor_transaksi, tanggal_transaksi, kode_barang, jumlah_pembelian as qty, harga_beli FROM detail_pembelian WHERE kode_barang = 'K001' UNION ALL SELECT 'Keluar' trans_type, nomor_faktur, tanggal_transaksi, kode_barang, -jumlah_penjualan as qty, harga_jual FROM detail_penjualan WHERE kode_barang = 'K001') tx JOIN ( select @saldo:= 0 ) sx on 1=1 ORDER BY tanggal_transaksi");

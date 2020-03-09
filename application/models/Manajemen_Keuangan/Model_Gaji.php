@@ -122,7 +122,6 @@ class Model_Gaji extends CI_Model
 
     function bonus($nip)
     {
-
         // hitung umur bekerja
         $this->db->select('*');
         $this->db->from('master_pegawai');

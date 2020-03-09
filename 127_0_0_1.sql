@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 4.7.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 06, 2020 at 09:58 AM
--- Server version: 10.3.16-MariaDB
--- PHP Version: 7.3.6
+-- Generation Time: Mar 09, 2020 at 09:20 AM
+-- Server version: 10.1.29-MariaDB
+-- PHP Version: 7.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -44,6 +44,22 @@ CREATE TABLE `detail_biaya` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `detail_coh`
+--
+
+CREATE TABLE `detail_coh` (
+  `id` int(11) NOT NULL,
+  `master_id` varchar(255) NOT NULL,
+  `saldo` double NOT NULL,
+  `nominal` double NOT NULL,
+  `jenis` int(1) NOT NULL,
+  `keterangan` text NOT NULL,
+  `tanggal_input` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `detail_detail_stok_opname`
 --
 
@@ -53,6 +69,14 @@ CREATE TABLE `detail_detail_stok_opname` (
   `qty` double NOT NULL,
   `keterangan` varchar(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `detail_detail_stok_opname`
+--
+
+INSERT INTO `detail_detail_stok_opname` (`id`, `id_detail_stok_opname`, `qty`, `keterangan`) VALUES
+(1, 386, 0, ''),
+(2, 388, 3, 'Rusak');
 
 -- --------------------------------------------------------
 
@@ -83,7 +107,13 @@ INSERT INTO `detail_gaji` (`id`, `nomor_referensi`, `nip`, `tanggal_pembayaran`,
 (439, 'REF7965843', '124124', '2020-03-06 09:13:36', 50000, 10000, 0, 60000, 2, 'edwin'),
 (440, 'REF7965843', '21124124', '2020-03-06 09:13:36', 50000, 10000, 0, 60000, 2, 'edwin'),
 (441, 'REF7965843', '123123', '2020-03-06 09:13:36', 50000, 10000, 0, 60000, 2, 'edwin'),
-(442, 'REF7965843', '647476', '2020-03-06 09:13:36', 23424, 24324324, 0, 24347748, 2, 'edwin');
+(442, 'REF7965843', '647476', '2020-03-06 09:13:36', 23424, 24324324, 0, 24347748, 2, 'edwin'),
+(443, 'REF6098237', '1', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 'edwin'),
+(444, 'REF6098237', '123123123', '0000-00-00 00:00:00', 100000, 10000, 0, 110000, 0, 'edwin'),
+(445, 'REF6098237', '124124', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 'edwin'),
+(446, 'REF6098237', '21124124', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 'edwin'),
+(447, 'REF6098237', '123123', '0000-00-00 00:00:00', 50000, 10000, 0, 60000, 0, 'edwin'),
+(448, 'REF6098237', '647476', '0000-00-00 00:00:00', 23424, 24324324, 0, 24347748, 0, 'edwin');
 
 -- --------------------------------------------------------
 
@@ -187,7 +217,7 @@ CREATE TABLE `detail_piutang` (
   `user` varchar(255) NOT NULL,
   `bukti` varchar(255) NOT NULL,
   `keterangan` varchar(255) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -249,7 +279,7 @@ CREATE TABLE `detail_retur_pembelian` (
   `diskon` double NOT NULL,
   `total_retur` double NOT NULL,
   `user` varchar(255) NOT NULL,
-  `tanggal` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `tanggal` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -270,7 +300,7 @@ CREATE TABLE `detail_retur_penjualan` (
   `diskon` double NOT NULL,
   `total_retur` double NOT NULL,
   `user` varchar(255) NOT NULL,
-  `tanggal` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `tanggal` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -304,70 +334,70 @@ CREATE TABLE `detail_stok_opname` (
 --
 
 INSERT INTO `detail_stok_opname` (`id`, `nomor_referensi`, `tanggal`, `kode_barang`, `saldo_buku`, `saldo_fisik`, `selisih`, `koreksi`, `nomor_referensi_detail`, `user`) VALUES
-(65, 'REF3405298', '2020-03-05 00:00:00', 'BES0001', 67, 0, 67, 0, '', 'dini'),
-(66, 'REF3405298', '2020-03-05 00:00:00', 'BES0002', 0, 0, 0, 0, '', 'dini'),
-(67, 'REF3405298', '2020-03-05 00:00:00', 'BES0003', 0, 0, 0, 0, '', 'dini'),
-(68, 'REF3405298', '2020-03-05 00:00:00', 'BES0004', 0, 0, 0, 0, '', 'dini'),
-(69, 'REF3405298', '2020-03-05 00:00:00', 'BES0005', 0, 0, 0, 0, '', 'dini'),
-(70, 'REF3405298', '2020-03-05 00:00:00', 'BES0006', 0, 0, 0, 0, '', 'dini'),
-(71, 'REF3405298', '2020-03-05 00:00:00', 'BES0007', 0, 0, 0, 0, '', 'dini'),
-(72, 'REF3405298', '2020-03-05 00:00:00', 'BES0008', 0, 0, 0, 0, '', 'dini'),
-(73, 'REF3405298', '2020-03-05 00:00:00', 'BES0064', 0, 0, 0, 0, '', 'dini'),
-(74, 'REF3405298', '2020-03-05 00:00:00', 'BON0009', 0, 0, 0, 0, '', 'dini'),
-(75, 'REF3405298', '2020-03-05 00:00:00', 'BON0010', 0, 0, 0, 0, '', 'dini'),
-(76, 'REF3405298', '2020-03-05 00:00:00', 'BON0011', 0, 0, 0, 0, '', 'dini'),
-(77, 'REF3405298', '2020-03-05 00:00:00', 'BON0012', 0, 0, 0, 0, '', 'dini'),
-(78, 'REF3405298', '2020-03-05 00:00:00', 'BON0013', 0, 0, 0, 0, '', 'dini'),
-(79, 'REF3405298', '2020-03-05 00:00:00', 'BON0014', 0, 0, 0, 0, '', 'dini'),
-(80, 'REF3405298', '2020-03-05 00:00:00', 'BON0015', 0, 0, 0, 0, '', 'dini'),
-(81, 'REF3405298', '2020-03-05 00:00:00', 'BON0016', 0, 0, 0, 0, '', 'dini'),
-(82, 'REF3405298', '2020-03-05 00:00:00', 'CNP0017', 0, 0, 0, 0, '', 'dini'),
-(83, 'REF3405298', '2020-03-05 00:00:00', 'CNP0018', 0, 0, 0, 0, '', 'dini'),
-(84, 'REF3405298', '2020-03-05 00:00:00', 'CNP0019', 0, 0, 0, 0, '', 'dini'),
-(85, 'REF3405298', '2020-03-05 00:00:00', 'CNP0020', 0, 0, 0, 0, '', 'dini'),
-(86, 'REF3405298', '2020-03-05 00:00:00', 'CNP0021', 0, 0, 0, 0, '', 'dini'),
-(87, 'REF3405298', '2020-03-05 00:00:00', 'CNP0022', 0, 0, 0, 0, '', 'dini'),
-(88, 'REF3405298', '2020-03-05 00:00:00', 'DEM0023', 0, 0, 0, 0, '', 'dini'),
-(89, 'REF3405298', '2020-03-05 00:00:00', 'DEM0024', 0, 0, 0, 0, '', 'dini'),
-(90, 'REF3405298', '2020-03-05 00:00:00', 'DEM0025', 0, 0, 0, 0, '', 'dini'),
-(91, 'REF3405298', '2020-03-05 00:00:00', 'DEM0026', 0, 0, 0, 0, '', 'dini'),
-(92, 'REF3405298', '2020-03-05 00:00:00', 'DEM0027', 0, 0, 0, 0, '', 'dini'),
-(93, 'REF3405298', '2020-03-05 00:00:00', 'DIN0028', 0, 0, 0, 0, '', 'dini'),
-(94, 'REF3405298', '2020-03-05 00:00:00', 'DIN0029', 0, 0, 0, 0, '', 'dini'),
-(95, 'REF3405298', '2020-03-05 00:00:00', 'DIN0030', 0, 0, 0, 0, '', 'dini'),
-(96, 'REF3405298', '2020-03-05 00:00:00', 'DIN0031', 0, 0, 0, 0, '', 'dini'),
-(97, 'REF3405298', '2020-03-05 00:00:00', 'DIN0032', 0, 0, 0, 0, '', 'dini'),
-(98, 'REF3405298', '2020-03-05 00:00:00', 'GEN0033', 0, 0, 0, 0, '', 'dini'),
-(99, 'REF3405298', '2020-03-05 00:00:00', 'GEN0034', 0, 0, 0, 0, '', 'dini'),
-(100, 'REF3405298', '2020-03-05 00:00:00', 'GEN0035', 0, 0, 0, 0, '', 'dini'),
-(101, 'REF3405298', '2020-03-05 00:00:00', 'GEN0036', 0, 0, 0, 0, '', 'dini'),
-(102, 'REF3405298', '2020-03-05 00:00:00', 'GEN0063', 0, 0, 0, 0, '', 'dini'),
-(103, 'REF3405298', '2020-03-05 00:00:00', 'HOL0037', 0, 0, 0, 0, '', 'dini'),
-(104, 'REF3405298', '2020-03-05 00:00:00', 'HOL0038', 0, 0, 0, 0, '', 'dini'),
-(105, 'REF3405298', '2020-03-05 00:00:00', 'KAW0040', 0, 0, 0, 0, '', 'dini'),
-(106, 'REF3405298', '2020-03-05 00:00:00', 'KAW0041', 0, 0, 0, 0, '', 'dini'),
-(107, 'REF3405298', '2020-03-05 00:00:00', 'KAW0042', 0, 0, 0, 0, '', 'dini'),
-(108, 'REF3405298', '2020-03-05 00:00:00', 'KIN0043', 0, 0, 0, 0, '', 'dini'),
-(109, 'REF3405298', '2020-03-05 00:00:00', 'KIN0044', 0, 0, 0, 0, '', 'dini'),
-(110, 'REF3405298', '2020-03-05 00:00:00', 'PAP0039', 0, 0, 0, 0, '', 'dini'),
-(111, 'REF3405298', '2020-03-05 00:00:00', 'SKR0045', 0, 0, 0, 0, '', 'dini'),
-(112, 'REF3405298', '2020-03-05 00:00:00', 'SKR0046', 0, 0, 0, 0, '', 'dini'),
-(113, 'REF3405298', '2020-03-05 00:00:00', 'SKR0047', 0, 0, 0, 0, '', 'dini'),
-(114, 'REF3405298', '2020-03-05 00:00:00', 'SKR0048', 0, 0, 0, 0, '', 'dini'),
-(115, 'REF3405298', '2020-03-05 00:00:00', 'SPA0049', 0, 0, 0, 0, '', 'dini'),
-(116, 'REF3405298', '2020-03-05 00:00:00', 'SPA0050', 0, 0, 0, 0, '', 'dini'),
-(117, 'REF3405298', '2020-03-05 00:00:00', 'SPA0051', 0, 0, 0, 0, '', 'dini'),
-(118, 'REF3405298', '2020-03-05 00:00:00', 'SPA0052', 0, 0, 0, 0, '', 'dini'),
-(119, 'REF3405298', '2020-03-05 00:00:00', 'SPA0053', 0, 0, 0, 0, '', 'dini'),
-(120, 'REF3405298', '2020-03-05 00:00:00', 'SPA0054', 0, 0, 0, 0, '', 'dini'),
-(121, 'REF3405298', '2020-03-05 00:00:00', 'SPA0055', 0, 0, 0, 0, '', 'dini'),
-(122, 'REF3405298', '2020-03-05 00:00:00', 'SPA0056', 0, 0, 0, 0, '', 'dini'),
-(123, 'REF3405298', '2020-03-05 00:00:00', 'WD0057', 0, 0, 0, 0, '', 'dini'),
-(124, 'REF3405298', '2020-03-05 00:00:00', 'WD0058', 0, 0, 0, 0, '', 'dini'),
-(125, 'REF3405298', '2020-03-05 00:00:00', 'WIR0059', 0, 0, 0, 0, '', 'dini'),
-(126, 'REF3405298', '2020-03-05 00:00:00', 'WIR0060', 0, 0, 0, 0, '', 'dini'),
-(127, 'REF3405298', '2020-03-05 00:00:00', 'WIR0061', 0, 0, 0, 0, '', 'dini'),
-(128, 'REF3405298', '2020-03-05 00:00:00', 'WIR0062', 0, 0, 0, 0, '', 'dini');
+(385, 'REF5732941', '2020-03-09 00:00:00', 'BES0001', 10, 10, 0, 0, '', 'dini'),
+(386, 'REF5732941', '2020-03-09 00:00:00', 'BES0002', 5, 10, -5, 0, '', 'dini'),
+(387, 'REF5732941', '2020-03-09 00:00:00', 'BES0003', 0, 0, 0, 0, '', 'dini'),
+(388, 'REF5732941', '2020-03-09 00:00:00', 'BES0004', 30, 27, 3, 0, '', 'dini'),
+(389, 'REF5732941', '2020-03-09 00:00:00', 'BES0005', 0, 0, 0, 0, '', 'dini'),
+(390, 'REF5732941', '2020-03-09 00:00:00', 'BES0006', 20, 20, 0, 0, '', 'dini'),
+(391, 'REF5732941', '2020-03-09 00:00:00', 'BES0007', 0, 0, 0, 0, '', 'dini'),
+(392, 'REF5732941', '2020-03-09 00:00:00', 'BES0008', 0, 0, 0, 0, '', 'dini'),
+(393, 'REF5732941', '2020-03-09 00:00:00', 'BES0064', 0, 0, 0, 0, '', 'dini'),
+(394, 'REF5732941', '2020-03-09 00:00:00', 'BON0009', 0, 0, 0, 0, '', 'dini'),
+(395, 'REF5732941', '2020-03-09 00:00:00', 'BON0010', 0, 0, 0, 0, '', 'dini'),
+(396, 'REF5732941', '2020-03-09 00:00:00', 'BON0011', 0, 0, 0, 0, '', 'dini'),
+(397, 'REF5732941', '2020-03-09 00:00:00', 'BON0012', 0, 0, 0, 0, '', 'dini'),
+(398, 'REF5732941', '2020-03-09 00:00:00', 'BON0013', 0, 0, 0, 0, '', 'dini'),
+(399, 'REF5732941', '2020-03-09 00:00:00', 'BON0014', 0, 0, 0, 0, '', 'dini'),
+(400, 'REF5732941', '2020-03-09 00:00:00', 'BON0015', 0, 0, 0, 0, '', 'dini'),
+(401, 'REF5732941', '2020-03-09 00:00:00', 'BON0016', 0, 0, 0, 0, '', 'dini'),
+(402, 'REF5732941', '2020-03-09 00:00:00', 'CNP0017', 0, 0, 0, 0, '', 'dini'),
+(403, 'REF5732941', '2020-03-09 00:00:00', 'CNP0018', 0, 0, 0, 0, '', 'dini'),
+(404, 'REF5732941', '2020-03-09 00:00:00', 'CNP0019', 0, 0, 0, 0, '', 'dini'),
+(405, 'REF5732941', '2020-03-09 00:00:00', 'CNP0020', 20, 20, 0, 0, '', 'dini'),
+(406, 'REF5732941', '2020-03-09 00:00:00', 'CNP0021', 0, 0, 0, 0, '', 'dini'),
+(407, 'REF5732941', '2020-03-09 00:00:00', 'CNP0022', 0, 0, 0, 0, '', 'dini'),
+(408, 'REF5732941', '2020-03-09 00:00:00', 'DEM0023', 0, 0, 0, 0, '', 'dini'),
+(409, 'REF5732941', '2020-03-09 00:00:00', 'DEM0024', 0, 0, 0, 0, '', 'dini'),
+(410, 'REF5732941', '2020-03-09 00:00:00', 'DEM0025', 0, 0, 0, 0, '', 'dini'),
+(411, 'REF5732941', '2020-03-09 00:00:00', 'DEM0026', 0, 0, 0, 0, '', 'dini'),
+(412, 'REF5732941', '2020-03-09 00:00:00', 'DEM0027', 0, 0, 0, 0, '', 'dini'),
+(413, 'REF5732941', '2020-03-09 00:00:00', 'DIN0028', 0, 0, 0, 0, '', 'dini'),
+(414, 'REF5732941', '2020-03-09 00:00:00', 'DIN0029', 0, 0, 0, 0, '', 'dini'),
+(415, 'REF5732941', '2020-03-09 00:00:00', 'DIN0030', 0, 0, 0, 0, '', 'dini'),
+(416, 'REF5732941', '2020-03-09 00:00:00', 'DIN0031', 0, 0, 0, 0, '', 'dini'),
+(417, 'REF5732941', '2020-03-09 00:00:00', 'DIN0032', 0, 0, 0, 0, '', 'dini'),
+(418, 'REF5732941', '2020-03-09 00:00:00', 'GEN0033', 0, 0, 0, 0, '', 'dini'),
+(419, 'REF5732941', '2020-03-09 00:00:00', 'GEN0034', 0, 0, 0, 0, '', 'dini'),
+(420, 'REF5732941', '2020-03-09 00:00:00', 'GEN0035', 0, 0, 0, 0, '', 'dini'),
+(421, 'REF5732941', '2020-03-09 00:00:00', 'GEN0036', 0, 0, 0, 0, '', 'dini'),
+(422, 'REF5732941', '2020-03-09 00:00:00', 'GEN0063', 0, 0, 0, 0, '', 'dini'),
+(423, 'REF5732941', '2020-03-09 00:00:00', 'HOL0037', 0, 0, 0, 0, '', 'dini'),
+(424, 'REF5732941', '2020-03-09 00:00:00', 'HOL0038', 0, 0, 0, 0, '', 'dini'),
+(425, 'REF5732941', '2020-03-09 00:00:00', 'KAW0040', 0, 0, 0, 0, '', 'dini'),
+(426, 'REF5732941', '2020-03-09 00:00:00', 'KAW0041', 0, 0, 0, 0, '', 'dini'),
+(427, 'REF5732941', '2020-03-09 00:00:00', 'KAW0042', 0, 0, 0, 0, '', 'dini'),
+(428, 'REF5732941', '2020-03-09 00:00:00', 'KIN0043', 0, 0, 0, 0, '', 'dini'),
+(429, 'REF5732941', '2020-03-09 00:00:00', 'KIN0044', 0, 0, 0, 0, '', 'dini'),
+(430, 'REF5732941', '2020-03-09 00:00:00', 'PAP0039', 0, 0, 0, 0, '', 'dini'),
+(431, 'REF5732941', '2020-03-09 00:00:00', 'SKR0045', 0, 0, 0, 0, '', 'dini'),
+(432, 'REF5732941', '2020-03-09 00:00:00', 'SKR0046', 0, 0, 0, 0, '', 'dini'),
+(433, 'REF5732941', '2020-03-09 00:00:00', 'SKR0047', 0, 0, 0, 0, '', 'dini'),
+(434, 'REF5732941', '2020-03-09 00:00:00', 'SKR0048', 0, 0, 0, 0, '', 'dini'),
+(435, 'REF5732941', '2020-03-09 00:00:00', 'SPA0049', 0, 0, 0, 0, '', 'dini'),
+(436, 'REF5732941', '2020-03-09 00:00:00', 'SPA0050', 0, 0, 0, 0, '', 'dini'),
+(437, 'REF5732941', '2020-03-09 00:00:00', 'SPA0051', 0, 0, 0, 0, '', 'dini'),
+(438, 'REF5732941', '2020-03-09 00:00:00', 'SPA0052', 0, 0, 0, 0, '', 'dini'),
+(439, 'REF5732941', '2020-03-09 00:00:00', 'SPA0053', 0, 0, 0, 0, '', 'dini'),
+(440, 'REF5732941', '2020-03-09 00:00:00', 'SPA0054', 0, 0, 0, 0, '', 'dini'),
+(441, 'REF5732941', '2020-03-09 00:00:00', 'SPA0055', 0, 0, 0, 0, '', 'dini'),
+(442, 'REF5732941', '2020-03-09 00:00:00', 'SPA0056', 0, 0, 0, 0, '', 'dini'),
+(443, 'REF5732941', '2020-03-09 00:00:00', 'WD0057', 0, 0, 0, 0, '', 'dini'),
+(444, 'REF5732941', '2020-03-09 00:00:00', 'WD0058', 0, 0, 0, 0, '', 'dini'),
+(445, 'REF5732941', '2020-03-09 00:00:00', 'WIR0059', 0, 0, 0, 0, '', 'dini'),
+(446, 'REF5732941', '2020-03-09 00:00:00', 'WIR0060', 0, 0, 0, 0, '', 'dini'),
+(447, 'REF5732941', '2020-03-09 00:00:00', 'WIR0061', 0, 0, 0, 0, '', 'dini'),
+(448, 'REF5732941', '2020-03-09 00:00:00', 'WIR0062', 0, 0, 0, 0, '', 'dini');
 
 -- --------------------------------------------------------
 
@@ -384,7 +414,7 @@ CREATE TABLE `detail_utang` (
   `user` varchar(255) NOT NULL,
   `bukti` varchar(255) NOT NULL,
   `keterangan` varchar(255) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -411,25 +441,25 @@ CREATE TABLE `harga_detail_pembelian` (
 
 CREATE TABLE `master_barang` (
   `kode_barang` varchar(255) NOT NULL,
-  `tipe_barang` int(11) DEFAULT 0,
-  `jenis_barang` int(11) DEFAULT 0,
-  `merek_barang` int(11) DEFAULT 0,
+  `tipe_barang` int(11) DEFAULT '0',
+  `jenis_barang` int(11) DEFAULT '0',
+  `merek_barang` int(11) DEFAULT '0',
   `kode_supplier` varchar(128) DEFAULT NULL,
   `nama_barang` varchar(255) NOT NULL,
   `harga_pokok` double NOT NULL,
   `harga_satuan` double NOT NULL,
   `harga_kedua` double NOT NULL,
   `harga_ketiga` double NOT NULL,
-  `kode_satuan` int(11) DEFAULT 0,
-  `persediaan_minimum` int(11) NOT NULL DEFAULT 0,
+  `kode_satuan` int(11) DEFAULT '0',
+  `persediaan_minimum` int(11) NOT NULL DEFAULT '0',
   `metode_hpp` varchar(255) NOT NULL,
-  `komisi_sales` double NOT NULL DEFAULT 0,
+  `komisi_sales` double NOT NULL DEFAULT '0',
   `gambar` varchar(255) NOT NULL DEFAULT 'default.jpg',
   `keterangan` text NOT NULL,
   `status_jual` tinyint(4) NOT NULL,
   `user` varchar(255) NOT NULL,
   `tanggal_input` datetime NOT NULL,
-  `is_delete` int(1) NOT NULL DEFAULT 0
+  `is_delete` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -521,6 +551,29 @@ CREATE TABLE `master_biaya` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `master_coh`
+--
+
+CREATE TABLE `master_coh` (
+  `id` int(11) NOT NULL,
+  `user` varchar(255) NOT NULL,
+  `cash_awal` double NOT NULL,
+  `cash_proses` double NOT NULL,
+  `cash_akhir` double NOT NULL,
+  `keterangan` text NOT NULL,
+  `tanggal_input` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `master_coh`
+--
+
+INSERT INTO `master_coh` (`id`, `user`, `cash_awal`, `cash_proses`, `cash_akhir`, `keterangan`, `tanggal_input`) VALUES
+(1, 'edwin', 2000000, 0, 2000000, 'dsfsfdf', '2020-03-09 09:13:39');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `master_gaji`
 --
 
@@ -539,7 +592,8 @@ CREATE TABLE `master_gaji` (
 --
 
 INSERT INTO `master_gaji` (`id`, `tanggal`, `nomor_referensi`, `total_pembayaran`, `keterangan`, `status`, `user`) VALUES
-(96, '2020-03-06 00:00:00', 'REF7965843', 24697748, '', 2, 'edwin');
+(96, '2020-03-06 00:00:00', 'REF7965843', 24697748, '', 2, 'edwin'),
+(97, '2020-03-03 00:00:00', 'REF6098237', 0, '', 0, 'edwin');
 
 -- --------------------------------------------------------
 
@@ -648,7 +702,7 @@ CREATE TABLE `master_kategori_biaya` (
   `keterangan` varchar(512) NOT NULL,
   `user` varchar(255) NOT NULL,
   `tanggal_input` datetime NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 0
+  `status` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -725,9 +779,9 @@ CREATE TABLE `master_pegawai` (
   `gaji_pokok` double NOT NULL,
   `uang_makan` double NOT NULL,
   `gambar` varchar(255) NOT NULL,
-  `has_user` int(1) NOT NULL DEFAULT 0,
+  `has_user` int(1) NOT NULL DEFAULT '0',
   `user` varchar(255) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -824,11 +878,11 @@ CREATE TABLE `master_penjualan` (
   `tanggal_transaksi` datetime NOT NULL,
   `no_faktur` varchar(255) NOT NULL,
   `id_pelanggan` varchar(255) NOT NULL,
-  `total_penjualan` double NOT NULL DEFAULT 0,
-  `diskon` double DEFAULT 0,
-  `pajak_masukan` double NOT NULL DEFAULT 0,
-  `ongkir` double NOT NULL DEFAULT 0,
-  `grand_total` double NOT NULL DEFAULT 0,
+  `total_penjualan` double NOT NULL DEFAULT '0',
+  `diskon` double DEFAULT '0',
+  `pajak_masukan` double NOT NULL DEFAULT '0',
+  `ongkir` double NOT NULL DEFAULT '0',
+  `grand_total` double NOT NULL DEFAULT '0',
   `status_bayar` int(1) NOT NULL,
   `tanggal_jatuh_tempo` date DEFAULT NULL,
   `tanggal_input` date NOT NULL,
@@ -871,8 +925,8 @@ CREATE TABLE `master_piutang` (
   `tanggal_jatuh_tempo` date NOT NULL,
   `total_tagihan` double NOT NULL,
   `total_pembayaran` double NOT NULL,
-  `down_payment` double NOT NULL DEFAULT 0,
-  `sisa_piutang` double NOT NULL DEFAULT 0,
+  `down_payment` double NOT NULL DEFAULT '0',
+  `sisa_piutang` double NOT NULL DEFAULT '0',
   `tanggal_input` date NOT NULL,
   `user` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -897,8 +951,15 @@ CREATE TABLE `master_purchase_order` (
   `tanggal_input` datetime NOT NULL,
   `user` varchar(255) NOT NULL,
   `admin` varchar(255) NOT NULL,
-  `status_po` int(11) NOT NULL DEFAULT 1
+  `status_po` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `master_purchase_order`
+--
+
+INSERT INTO `master_purchase_order` (`id`, `tanggal_transaksi`, `no_order`, `sales`, `id_pelanggan`, `total_penjualan`, `diskon`, `pajak_masukan`, `ongkir`, `grand_total`, `tanggal_input`, `user`, `admin`, `status_po`) VALUES
+(1, '0000-00-00 00:00:00', 'PO.090320001', 'hadi', 'HWW1875', 525000, 0, 52500, 0, 577500, '2020-03-09 05:13:57', 'hadi', '', 1);
 
 -- --------------------------------------------------------
 
@@ -916,7 +977,7 @@ CREATE TABLE `master_retur_pembelian` (
   `retur_pajak` double NOT NULL,
   `retur_grand_total` double NOT NULL,
   `user` varchar(255) NOT NULL,
-  `tanggal` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `tanggal` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -935,7 +996,7 @@ CREATE TABLE `master_retur_penjualan` (
   `retur_pajak` double NOT NULL,
   `retur_grand_total` double NOT NULL,
   `user` varchar(255) NOT NULL,
-  `tanggal` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `tanggal` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -981,7 +1042,7 @@ CREATE TABLE `master_sales` (
   `kode_pegawai` varchar(255) NOT NULL,
   `nama_sales` varchar(255) NOT NULL,
   `status` varchar(255) NOT NULL,
-  `insentif` double NOT NULL DEFAULT 0
+  `insentif` double NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1022,7 +1083,7 @@ CREATE TABLE `master_setting` (
   `id` int(11) NOT NULL,
   `nama_setting` varchar(255) NOT NULL,
   `value` varchar(1024) NOT NULL,
-  `tanggal` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `tanggal` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -1061,7 +1122,7 @@ CREATE TABLE `master_stok_opname` (
   `nomor_referensi` varchar(255) NOT NULL,
   `tanggal` datetime NOT NULL,
   `keterangan` text NOT NULL,
-  `status` int(11) NOT NULL DEFAULT 0,
+  `status` int(11) NOT NULL DEFAULT '0',
   `user` varchar(255) NOT NULL,
   `spv` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -1072,7 +1133,7 @@ CREATE TABLE `master_stok_opname` (
 
 INSERT INTO `master_stok_opname` (`id`, `nomor_referensi`, `tanggal`, `keterangan`, `status`, `user`, `spv`) VALUES
 (5, 'REF7542908', '2020-03-02 00:00:00', '23123', 0, 'edwin', ''),
-(7, 'REF3405298', '2020-03-05 00:00:00', '', 0, 'dini', '');
+(12, 'REF5732941', '2020-03-09 06:35:28', '', 2, 'dini', 'edwin');
 
 -- --------------------------------------------------------
 
@@ -1119,7 +1180,7 @@ CREATE TABLE `master_tipe_barang` (
   `nama_tipe` varchar(255) NOT NULL,
   `keterangan` text NOT NULL,
   `user` varchar(255) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -1148,8 +1209,8 @@ CREATE TABLE `master_user` (
   `status` int(1) NOT NULL,
   `last_activity` datetime NOT NULL,
   `tanggal_create` datetime NOT NULL,
-  `isactive` int(1) NOT NULL DEFAULT 1,
-  `is_del` int(1) NOT NULL DEFAULT 0
+  `isactive` int(1) NOT NULL DEFAULT '1',
+  `is_del` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -1157,11 +1218,11 @@ CREATE TABLE `master_user` (
 --
 
 INSERT INTO `master_user` (`username`, `nip`, `password`, `role`, `nama`, `avatar`, `status`, `last_activity`, `tanggal_create`, `isactive`, `is_del`) VALUES
-('dini', '124124', '$2y$10$RrwCvrb/WuSCU/JAHKr.2.A7f7WpsPc5qBKhH7.PZx.kua5bxKr8a', '2', 'DINI', 'default.jpg', 0, '2020-03-06 08:33:51', '0000-00-00 00:00:00', 1, 0),
-('edwin', '123123', '$2y$10$oi6qEP4bxeYkrUK5YCvhFe8a4PBCVriLudVjVxMvqQPPYCy.xKF9u', '4', 'EDWIN', 'default.jpg', 0, '2020-03-06 09:13:41', '0000-00-00 00:00:00', 1, 0),
-('hadi', '21124124', '$2y$10$.Zz5dNGxi92mm.vF2/W59OWdBQEkYEIAjgnf01FkeUNal0jg2Lzf.', '3', 'HADI', 'default.jpg', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0),
+('dini', '124124', '$2y$10$RrwCvrb/WuSCU/JAHKr.2.A7f7WpsPc5qBKhH7.PZx.kua5bxKr8a', '2', 'DINI', 'default.jpg', 0, '2020-03-09 06:37:55', '0000-00-00 00:00:00', 1, 0),
+('edwin', '123123', '$2y$10$oi6qEP4bxeYkrUK5YCvhFe8a4PBCVriLudVjVxMvqQPPYCy.xKF9u', '4', 'EDWIN', 'default.jpg', 0, '2020-03-09 06:35:34', '0000-00-00 00:00:00', 1, 0),
+('hadi', '21124124', '$2y$10$.Zz5dNGxi92mm.vF2/W59OWdBQEkYEIAjgnf01FkeUNal0jg2Lzf.', '3', 'HADI', 'default.jpg', 0, '2020-03-09 05:19:50', '0000-00-00 00:00:00', 1, 0),
 ('lucky15', '123123123', '$2y$10$3HBFxWoWL9yHhbW1zegPteGL2ZtN4bPiBTTGEwkFifMu7djwD2Q0S', '1', 'LUCKY ANGGARA', 'default.jpg', 0, '2020-03-06 09:12:58', '0000-00-00 00:00:00', 1, 0),
-('manajer', '1', '$2y$10$Z.wVyoe9feypSG31/yGrhulh1abnvFshzx6nUSQBq5yZlmlVUeiLO', '5', 'Neng', 'PjNKCoktVUdi3BZp.jpeg', 0, '2020-03-06 09:08:23', '2020-03-01 00:00:00', 1, 0);
+('manajer', '1', '$2y$10$Z.wVyoe9feypSG31/yGrhulh1abnvFshzx6nUSQBq5yZlmlVUeiLO', '5', 'Neng', 'PjNKCoktVUdi3BZp.jpeg', 0, '2020-03-09 06:05:24', '2020-03-01 00:00:00', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1175,8 +1236,8 @@ CREATE TABLE `master_utang` (
   `tanggal_jatuh_tempo` date NOT NULL,
   `total_tagihan` double NOT NULL,
   `total_pembayaran` double NOT NULL,
-  `down_payment` double NOT NULL DEFAULT 0,
-  `sisa_utang` double NOT NULL DEFAULT 0,
+  `down_payment` double NOT NULL DEFAULT '0',
+  `sisa_utang` double NOT NULL DEFAULT '0',
   `tanggal_input` date NOT NULL,
   `user` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -1232,7 +1293,7 @@ CREATE TABLE `tabel_keranjang_belanja` (
   `harga_total` double NOT NULL,
   `status` int(11) NOT NULL,
   `user` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1292,7 +1353,7 @@ CREATE TABLE `tabel_perhitungan_order` (
   `pajak` double NOT NULL,
   `ongkir` double NOT NULL,
   `grand_total` double NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -1310,6 +1371,7 @@ INSERT INTO `tabel_perhitungan_order` (`no_order`, `total_keranjang`, `diskon`, 
 ('OUT3605217', 720000, 0, 0, 0, 720000, '2020-03-04 08:00:53'),
 ('OUT4309761', 24000, 0, 0, 0, 24000, '2020-03-04 08:03:15'),
 ('OUT7129068', 720000, 0, 0, 0, 720000, '2020-03-04 07:53:49'),
+('PO.090320001', 525000, 0, 52500, 0, 577500, '2020-03-09 04:14:06'),
 ('wNPBVDyLUaXHJIux', 1300000, 50000, 125000, 0, 1375000, '2020-03-06 03:51:54');
 
 -- --------------------------------------------------------
@@ -1412,7 +1474,7 @@ CREATE TABLE `temp_purchase_order` (
   `total_harga` double NOT NULL,
   `tanggal_input` datetime NOT NULL,
   `user` varchar(255) NOT NULL,
-  `status` int(11) NOT NULL DEFAULT 0
+  `status` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1448,10 +1510,10 @@ CREATE TABLE `temp_tabel_keranjang_penjualan` (
   `harga_jual` double NOT NULL,
   `diskon` double NOT NULL,
   `total_harga` double NOT NULL,
-  `status` int(11) NOT NULL DEFAULT 0,
+  `status` int(11) NOT NULL DEFAULT '0',
   `user` varchar(255) NOT NULL,
-  `is_po` int(1) NOT NULL DEFAULT 0,
-  `tanggal_input` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `is_po` int(1) NOT NULL DEFAULT '0',
+  `tanggal_input` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1470,6 +1532,13 @@ CREATE TABLE `timeline_po` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
+-- Dumping data for table `timeline_po`
+--
+
+INSERT INTO `timeline_po` (`id`, `no_order`, `urutan`, `tanggal`, `pesan`, `user`) VALUES
+(1, 'PO.090320001', 1, '2020-03-09 05:14:18', 'Proses', 'hadi');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -1479,6 +1548,12 @@ CREATE TABLE `timeline_po` (
 ALTER TABLE `detail_biaya`
   ADD PRIMARY KEY (`id`),
   ADD KEY `master_biaya` (`nomor_referensi`);
+
+--
+-- Indexes for table `detail_coh`
+--
+ALTER TABLE `detail_coh`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `detail_detail_stok_opname`
@@ -1584,6 +1659,12 @@ ALTER TABLE `master_barang`
 ALTER TABLE `master_biaya`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nomor_referensi` (`nomor_referensi`);
+
+--
+-- Indexes for table `master_coh`
+--
+ALTER TABLE `master_coh`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `master_gaji`
@@ -1841,16 +1922,22 @@ ALTER TABLE `detail_biaya`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
+-- AUTO_INCREMENT for table `detail_coh`
+--
+ALTER TABLE `detail_coh`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `detail_detail_stok_opname`
 --
 ALTER TABLE `detail_detail_stok_opname`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `detail_gaji`
 --
 ALTER TABLE `detail_gaji`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=443;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=449;
 
 --
 -- AUTO_INCREMENT for table `detail_pembelian`
@@ -1904,7 +1991,7 @@ ALTER TABLE `detail_retur_penjualan`
 -- AUTO_INCREMENT for table `detail_stok_opname`
 --
 ALTER TABLE `detail_stok_opname`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=449;
 
 --
 -- AUTO_INCREMENT for table `detail_utang`
@@ -1919,10 +2006,16 @@ ALTER TABLE `master_biaya`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
+-- AUTO_INCREMENT for table `master_coh`
+--
+ALTER TABLE `master_coh`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `master_gaji`
 --
 ALTER TABLE `master_gaji`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `master_harga_pokok_penjualan`
@@ -1982,7 +2075,7 @@ ALTER TABLE `master_piutang`
 -- AUTO_INCREMENT for table `master_purchase_order`
 --
 ALTER TABLE `master_purchase_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `master_retur_pembelian`
@@ -2018,7 +2111,7 @@ ALTER TABLE `master_setting`
 -- AUTO_INCREMENT for table `master_stok_opname`
 --
 ALTER TABLE `master_stok_opname`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `master_utang`
@@ -2054,7 +2147,7 @@ ALTER TABLE `tabel_submenu`
 -- AUTO_INCREMENT for table `temp_purchase_order`
 --
 ALTER TABLE `temp_purchase_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=298;
 
 --
 -- AUTO_INCREMENT for table `temp_tabel_keranjang_pembelian`
@@ -2066,13 +2159,13 @@ ALTER TABLE `temp_tabel_keranjang_pembelian`
 -- AUTO_INCREMENT for table `temp_tabel_keranjang_penjualan`
 --
 ALTER TABLE `temp_tabel_keranjang_penjualan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=295;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=298;
 
 --
 -- AUTO_INCREMENT for table `timeline_po`
 --
 ALTER TABLE `timeline_po`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables

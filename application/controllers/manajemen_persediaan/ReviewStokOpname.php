@@ -76,8 +76,10 @@ class Reviewstokopname extends CI_Controller
         $detail_data = array();
 
         $char = range('A', 'Z');
+        $no = 0;
         foreach ($kode_barang as $key => $value) {
-            $data_barang = $char[$key] . '.   ' . $value['kode_barang'] . ' - ' . $value['nama_barang'] . ' (Selisih : <span class="text-danger">' . $value['selisih'] . '</span>)';
+            $no++;
+            $data_barang =$no. '.   ' . $value['kode_barang'] . ' - ' . $value['nama_barang'] . ' (Selisih : <span class="text-danger">' . $value['selisih'] . '</span>)';
             $detail = $this->modelMasterPersediaan->treeviewdetail($value['id']);
 
             foreach ($detail as $key => $value) {

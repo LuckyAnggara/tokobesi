@@ -84,13 +84,11 @@ class Model_Purchase_Order extends CI_Model
         $this->db->where('is_po', 1);
         $this->db->like('tanggal_transaksi', date("Y-m-d"));
         $this->db->group_by('no_order_penjualan');
-        echo $no_order;
         if ($no_order !== null) {
             $last_order = $this->db->get()->row_array();
             if ($no_order == $last_order['no_order_penjualan']) {
                 return "1";
             } else {
-                echo $last_order['no_order_penjualan'] . "</br>";
                 return "0";
             }
         } else {
@@ -187,7 +185,7 @@ class Model_Purchase_Order extends CI_Model
             'tanggal_input' => date("Y-m-d H:i:s"),
             'user' =>  $this->session->userdata['username'],
             'status' => 1, // artinya 1 adalah PO dan 0 adalah direct order ke toko
-            'is_po' => 0, // artinya 1 adalah PO dan 0 adalah direct order ke toko
+            'is_po' => 1, // artinya 1 adalah PO dan 0 adalah direct order ke toko
             'tanggal_input' => date("Y-m-d H:i:s"),
         ];
         $this->db->insert('temp_tabel_keranjang_penjualan', $data);

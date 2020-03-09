@@ -199,7 +199,7 @@
             "order": [
                 [3, "desc"]
             ],
-            "searching": false,
+            "searching": true,
             "info": false,
             "processing": true,
             "serverSide": false,

@@ -211,14 +211,13 @@ class Model_Master_Persediaan extends CI_Model
 
     function saldoBuku($kode_barang)
     {
+        
         // saldo awal
         $this->db->select('qty_awal, saldo_awal, harga_awal');
         $this->db->from('master_saldo_awal');
         $this->db->where('kode_barang', $kode_barang);
 
         $data = $this->db->get()->row_array();
-        print_r($data);
-        echo "<br>";
         if ($data == null) {
             $saldoAwal = 0;
         } else {
@@ -230,29 +229,52 @@ class Model_Master_Persediaan extends CI_Model
         $this->db->from('detail_pembelian');
         $this->db->where('kode_barang', $kode_barang);
         $data = $this->db->get()->row_array();
-        $saldoMasuk = $data['jumlah_pembelian'];
+        $jumlah_pembelian = $data['jumlah_pembelian'];
+
+        $this->db->select_sum('saldo_retur');
+        $this->db->from('detail_retur_barang_penjualan');
+        $this->db->where('kode_barang', $kode_barang);
+        $data = $this->db->get()->row_array();
+
+        $saldo_retur = $data['saldo_retur'];
+
+        $saldoMasuk = $jumlah_pembelian + $saldo_retur;
 
         // saldo keluar
+
         $this->db->select_sum('jumlah_penjualan');
         $this->db->from('detail_penjualan');
         $this->db->where('kode_barang', $kode_barang);
         $data = $this->db->get()->row_array();
-        $saldoKeluar = $data['jumlah_penjualan'];
+        $jumlah_penjualan = $data['jumlah_penjualan'];
+
+        $this->db->select_sum('jumlah_retur');
+        $this->db->from('detail_retur_pembelian');
+        $this->db->where('kode_barang', $kode_barang);
+        $data = $this->db->get()->row_array();
+        $saldo_retur = $data['jumlah_retur'];
+
+        $saldoKeluar = $jumlah_penjualan + $saldo_retur;
+
 
         // saldo keranjang
         $this->db->select_sum('jumlah_penjualan');
+        $this->db->from('temp_tabel_keranjang_penjualan');
+        $this->db->where('kode_barang', $kode_barang);
+        $this->db->where('is_po =', 0);
+        $data = $this->db->get()->row_array();
+        $saldoCart = $data['jumlah_penjualan'];
         $this->db->from('temp_tabel_keranjang_penjualan');
         $this->db->where('kode_barang', $kode_barang);
         $data = $this->db->get()->row_array();
         $saldoCart = $data['jumlah_penjualan'];
 
         // saldo Cart Po
-
         $this->db->select_sum('jumlah_penjualan');
         $this->db->from('temp_purchase_order');
         $this->db->where('kode_barang', $kode_barang);
-        $this->db->where('status !=', 99);
-        $this->db->where('status !=', 2);
+        $this->db->where('temp_purchase_order.status !=', 99);
+        $this->db->where('temp_purchase_order.status !=', 2);
         $data = $this->db->get()->row_array();
         $saldoCartPo = $data['jumlah_penjualan'];
 
