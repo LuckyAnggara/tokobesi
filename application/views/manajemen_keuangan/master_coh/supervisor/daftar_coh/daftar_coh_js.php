@@ -8,9 +8,20 @@
 <!-- script sendiri -->
 
 <script>
+    $(document).ready(function() {
+        init_table()
+    })
     $('#tambah_data').on('click', function() {
         cek();
     })
+
+    function nl2br(str, is_xhtml) {
+        if (typeof str === 'undefined' || str === null) {
+            return '';
+        }
+        var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+        return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+    }
 
 
     function cek() {
@@ -19,7 +30,7 @@
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = today.getFullYear();
 
-            date = mm + '/' + dd + '/' + yyyy;
+        date = mm + '/' + dd + '/' + yyyy;
         $.ajax({
             url: "<?= base_url('manajemen_keuangan/mastercoh/cek_data'); ?>",
             type: "post",
@@ -81,7 +92,13 @@
             processData: false,
             contentType: false,
             success: function(data) {
-                $('#datatable-daftar-gaji').DataTable().ajax.reload();
+                $('#datatable-master-coh').DataTable().ajax.reload();
+                swal.fire(
+                    'Sukses!',
+                    '',
+                    'success'
+                );
+                $('#add_data').modal('hide');
             }
         })
     })
@@ -99,27 +116,28 @@
             };
         };
 
-        //Init Datatabel Master Stok Persediaan 
-        var table = $('#datatable-master-coh').removeAttr('width').DataTable({
+        var table = $('#datatable-master-coh').DataTable({
             "destroy": true,
             "oLanguage": {
-                sProcessing: "Sabar yah...",
-                sZeroRecords: "Tidak ada Data..."
+                "sProcessing": "Sabar yah...",
+                "sZeroRecords": "Tidak ada Data..."
             },
-            "searching": true,
+            "buttons": ['copy', 'excel', 'pdf', 'print'],
+            "dom": 'Bfrtip',
+            "searching": false,
+            "fixedColumns": true,
             "processing": true,
             "serverSide": false,
-            "fixedColumns": true,
+            "ordering": true,
             "ajax": {
-                "url": '<?= base_url("manajemen_keuangan/mastergaji/get_master_gaji/"); ?>',
+                "url": '<?= base_url("manajemen_keuangan/mastercoh/get_data_master/"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
-                    data: "id",
                     targets: 0,
                     width: 20,
                     render: function(data, type, full, meta) {
-                        return data;
+                        return "";
                     }
                 }, {
                     data: "tanggal",
@@ -129,14 +147,14 @@
                         return data;
                     }
                 }, {
-                    data: "nomor_referensi",
+                    data: "saldo_awal",
                     targets: 2,
                     width: 150,
                     render: function(data, type, full, meta) {
-                        return data;
+                        return formatRupiah(data, 'Rp.');
                     }
                 }, {
-                    data: "total_pembayaran",
+                    data: "saldo_akhir",
                     targets: 3,
                     width: 150,
                     render: function(data, type, full, meta) {
@@ -147,7 +165,7 @@
                     targets: 4,
                     width: 400,
                     render: function(data, type, full, meta) {
-                        return data;
+                        return nl2br(data);
                     }
                 }, {
                     data: "status",
@@ -155,37 +173,34 @@
                     width: 50,
                     render: function(data, type, full, meta) {
                         if (data == "0") {
-                            var display = '<span class="badge badge-dark">Input</span>'
+                            var display = '<span class="badge badge-primary">Waiting</span>'
                         } else if (data == "1") {
-                            var display = '<span class="badge badge-primary">Waiting Approve</span>'
-                        } else if (data == "2") {
-                            var display = '<span class="badge badge-success">Dibayarkan</span>'
-                        } else if (data == "3") {
-                            var display = '<span class="badge badge-warning">Input Ulang</span>'
-                        } else if (data == "99") {
-                            var display = '<span class="badge badge-danger">Rejected</span>'
+                            var display = '<span class="badge badge-success">Open</span>'
+                        } else {
+                            var display = '<span class="badge badge-inverse">Close</span>'
+
                         }
                         return display;
                     }
                 },
                 {
                     data: {
-                        "nomor_referensi": "nomor_referensi",
+                        "id": "id",
                         "status": "status"
                     },
                     targets: 6,
-                    width: 70,
+                    width: 100,
                     render: function(data, type, full, meta) {
-                        var detail = '<a type="button" onClick = "detail_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-search" ></i> </a>';
-                        var edit = '<a type="button" onClick = "edit_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" ><i class="fa fa-search" ></i> </a>';
-                        var del = '<a type="button" onClick = "warning_delete(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-trash" ></i> </a>';
-                        var print = '<a type="button" onClick = "print_report(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-print" ></i> </a>';
+                        var detail = '<a type="button" onClick = "detail_data(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-search" ></i> </a>';
+                        // var edit = '<a type="button" onClick = "edit_data(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" ><i class="fa fa-search" ></i> </a>';
+                        var del = '<a type="button" onClick = "warning_delete(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-trash" ></i> </a>';
+                        var print = '<a type="button" onClick = "print_report(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-print" ></i> </a>';
                         if (data.status == 0) {
-                            return edit + ' ' + del;
-                        } else if (data.status == 2) {
-                            return detail + ' ' + print;
+                            return del;
+                        } else if (data.status == 1) {
+                            return detail;
                         } else {
-                            return detail
+                            return detail + ' ' + print;
                         }
                     }
                 }
@@ -203,7 +218,7 @@
     }
 
     function detail_data(no_ref) {
-        window.location.href = "<?= base_url('manajemen_keuangan/mastergaji/detail_data/'); ?>" + no_ref
+        window.location.href = "<?= base_url('manajemen_keuangan/mastercoh/detail_data/'); ?>" + no_ref
     }
 
     function edit_data(no_ref) {
@@ -214,10 +229,10 @@
         window.location.href = "<?= base_url('laporan/excel/detail_gaji/'); ?>" + no_ref
     }
 
-    function warning_delete(no_ref) {
+    function warning_delete(id) {
         swal.fire({
             title: 'Apa anda yakin?',
-            text: no_ref + " akan dihapus",
+            text: "",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -225,7 +240,7 @@
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                deleteData(no_ref);
+                deleteData(id);
                 swal.fire(
                     'Deleted!',
                     'Data telah dihapus!',
@@ -235,12 +250,12 @@
         });
     }
 
-    function deleteData(no_ref) {
+    function deleteData(id) {
         $.ajax({
-            url: "<?= base_url('manajemen_keuangan/mastergaji/delete_master_gaji'); ?>",
+            url: "<?= base_url('manajemen_keuangan/mastercoh/delete_master_coh'); ?>",
             type: "post",
             data: {
-                no_ref: no_ref
+                id: id
             },
             async: false,
             success: function(data) {

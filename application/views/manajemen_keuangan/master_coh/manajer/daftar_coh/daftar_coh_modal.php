@@ -24,6 +24,7 @@
                         <button id="md-close" name="button-close" type="button" class="btn btn-inverse waves-effect" data-dismiss="modal">Batal</button>
                         <button type="submit" name="button-add" class="btn btn-primary waves-effect waves-light">Submit</button>
                     </div>
+                </div>
             </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

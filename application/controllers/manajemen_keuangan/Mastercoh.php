@@ -16,21 +16,141 @@ class Mastercoh extends CI_Controller
         }
     }
 
-    function index()
+    public function index()
+	{
+		if ($this->session->userdata('role') == "1") {
+			redirect(base_url("manajemen_keuangan/mastercoh/kasir"));
+		}
+		if ($this->session->userdata('role') == "4") {
+			redirect(base_url("manajemen_keuangan/mastercoh/supervisor"));
+		}
+		if ($this->session->userdata('role') == "5") {
+			redirect(base_url("manajemen_keuangan/mastercoh/manajer"));
+		}
+	}
+
+    function manajer()
+    {
+        if ($this->session->userdata('role') != "5") {
+            redirect(base_url("dashboard"));
+        } else {
+            $data['menu'] = $this->modelSetting->data_menu();
+            $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+            $data['css'] = 'manajemen_keuangan/master_coh/manajer/daftar_coh/daftar_coh_css';
+
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('manajemen_keuangan/master_coh/manajer/daftar_coh/daftar_coh', $data);
+            $this->load->view('template/template_right');
+            $this->load->view('manajemen_keuangan/master_coh/manajer/daftar_coh/daftar_coh_modal');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('manajemen_keuangan/master_coh/manajer/daftar_coh/daftar_coh_js');
+            $this->load->view('template/template_app_js');
+        }
+    }
+
+    function get_data_master_permintaan()
+    {
+        $database = $this->modelCoh->get_data_master_permintaan();
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
+    function manajer_approve_coh()
+    {
+        $post = $this->input->post();
+        $data = $this->modelCoh->manajer_approve_coh($post);
+        echo $data;
+    }
+
+     function manajer_reject_coh()
+    {
+        $id = $this->input->post('id');
+        $data = $this->modelCoh->manajer_reject_coh($id);
+        echo $data;
+    }
+
+    // script spv
+
+    function supervisor()
+    {
+        if ($this->session->userdata('role') != "4") {
+            redirect(base_url("dashboard"));
+        } else {
+            $data['menu'] = $this->modelSetting->data_menu();
+            $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+            $data['css'] = 'manajemen_keuangan/master_coh/supervisor/daftar_coh/daftar_coh_css';
+
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('manajemen_keuangan/master_coh/supervisor/daftar_coh/daftar_coh', $data);
+            $this->load->view('template/template_right');
+            $this->load->view('manajemen_keuangan/master_coh/supervisor/daftar_coh/daftar_coh_modal');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('manajemen_keuangan/master_coh/supervisor/daftar_coh/daftar_coh_js');
+            $this->load->view('template/template_app_js');
+        }
+    }
+
+
+
+    function detail_data($string)
     {
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-        $data['css'] = 'manajemen_keuangan/master_coh/daftar_coh/daftar_coh_css';
+        $data['css'] = 'manajemen_keuangan/master_coh/supervisor/detail_coh/detail_coh_css';
 
+        $data['detail_data'] = $this->modelCoh->detail_master($string);
         $this->load->view('template/template_header', $data);
         $this->load->view('template/template_menu');
-        $this->load->view('manajemen_keuangan/master_coh/daftar_coh/daftar_coh', $data);
+        $this->load->view('manajemen_keuangan/master_coh/supervisor/detail_coh/detail_coh', $data);
         $this->load->view('template/template_right');
-        $this->load->view('manajemen_keuangan/master_coh/daftar_coh/daftar_coh_modal');
+        $this->load->view('manajemen_keuangan/master_coh/supervisor/detail_coh/detail_coh_modal');
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
-        $this->load->view('manajemen_keuangan/master_coh/daftar_coh/daftar_coh_js');
+        $this->load->view('manajemen_keuangan/master_coh/supervisor/detail_coh/detail_coh_js');
         $this->load->view('template/template_app_js');
+    }
+
+    public function get_data_master()
+    {
+        $database = $this->modelCoh->get_data_master();
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
+    public function get_detail_data()
+    {
+        $nomor_referensi = $this->input->post('no_ref');
+        $database = $this->modelCoh->get_detail_data($nomor_referensi);
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
     }
 
     public function cek_data()
@@ -46,156 +166,25 @@ class Mastercoh extends CI_Controller
         $this->modelCoh->start_of_day($post);
     }
 
-    public function edit_data($no_ref)
-    {
-        $data['menu'] = $this->modelSetting->data_menu();
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-
-        $data['master_coh'] = $this->modelCoh->get_view_master_coh($no_ref);
-        $data['css'] = 'manajemen_keuangan/master_coh/edit_gaji/edit_gaji_css';
-        if ($data['master_coh']['status'] == 2) {
-            redirect(base_url("manajemen_keuangan/mastergaji/detail_data/" . $no_ref));
-        }
-
-        $this->load->view('template/template_header', $data);
-        $this->load->view('template/template_menu');
-        $this->load->view('manajemen_keuangan/master_coh/edit_gaji/edit_gaji', $data);
-        $this->load->view('template/template_right');
-        $this->load->view('manajemen_keuangan/master_coh/edit_gaji/edit_gaji_modal');
-        $this->load->view('template/template_footer');
-        $this->load->view('template/template_js');
-        $this->load->view('manajemen_keuangan/master_coh/edit_gaji/edit_gaji_js');
-        $this->load->view('template/template_app_js');
-    }
-
-    public function detail_data($no_ref)
-    {
-        $data['menu'] = $this->modelSetting->data_menu();
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-
-        $data['master_coh'] = $this->modelCoh->get_view_master_coh($no_ref);
-        $data['css'] = 'manajemen_keuangan/master_coh/detail_gaji/detail_gaji_css';
-
-        $this->load->view('template/template_header', $data);
-        $this->load->view('template/template_menu');
-        $this->load->view('manajemen_keuangan/master_coh/detail_gaji/detail_gaji', $data);
-        $this->load->view('template/template_right');
-        $this->load->view('template/template_footer');
-        $this->load->view('template/template_js');
-        $this->load->view('manajemen_keuangan/master_coh/detail_gaji/detail_gaji_js');
-        $this->load->view('template/template_app_js');
-    }
-
-    public function get_view_detail_gaji()
-    {
-        $no_ref = $this->input->post('no_ref');
-        $database = $this->modelCoh->get_view_detail_gaji($no_ref);
-        $dataBarang = $database->result_array();
-        $output = array(
-            "recordsTotal" => $this->db->count_all_results(),
-            "recordsFiltered"  => $database->num_rows(),
-            "data" => $dataBarang
-        );
-        $output = json_encode($output);
-        echo $output;
-    }
-
-    public function get_detail_master_coh()
-    {
-        $no_ref = $this->input->post('no_ref');
-        $database = $this->modelCoh->get_detail_master_coh($no_ref);
-        $dataBarang = $database->result_array();
-        $output = array(
-            "recordsTotal" => $this->db->count_all_results(),
-            "recordsFiltered"  => $database->num_rows(),
-            "data" => $dataBarang
-        );
-        $output = json_encode($output);
-        echo $output;
-    }
-
-    function get_data_pegawai()
-    {
-        $database = $this->modelCoh->get_data_pegawai();
-        $data = $database->result_array();
-        $output = array(
-            // "draw" => $_POST['draw'],
-            "recordsTotal" => $this->db->count_all_results(),
-            "recordsFiltered"  => $database->num_rows(),
-            "data" => array()
-        );
-
-        foreach ($data as $value) {
-            $value['bonus'] = "0";
-            $value['total'] = $value['gaji_pokok'] + $value['uang_makan'] + $value['bonus'];
-            $output['data'][] = $value;
-        }
-        $output = json_encode($output);
-        echo $output;
-    }
-
-    public function get_master_coh()
-    {
-        $database = $this->modelCoh->get_master_coh();
-        $dataBarang = $database->result_array();
-        $output = array(
-            "recordsTotal" => $this->db->count_all_results(),
-            "recordsFiltered"  => $database->num_rows(),
-            "data" => $dataBarang
-        );
-
-        $output = json_encode($output);
-        echo $output;
-    }
-
-    public function random_ref()
-    {
-        $number = $this->modelCoh->random_ref();
-        if ($number == false) {
-            echo $number;
-        } else {
-            $output =  "REF" . $number;
-            $output = json_encode($output);
-            echo $output;
-        }
-    }
-
-    public function tambah_master_coh()
-    {
-        $post = $this->input->post();
-        $this->modelCoh->tambah_data($post);
-        $this->modelCoh->tambah_detail_data($post);
-    }
-
-    public function proses_bayar()
-    {
-        $post = $this->input->post();
-        $this->modelCoh->bayar_master($post);
-        $this->modelCoh->bayar_detail($post['output']);
-
-    }
-
     public function delete_master_coh()
     {
-        $no_ref = $this->input->post('no_ref');
-        $this->modelCoh->delete_master_coh($no_ref);
+        $id = $this->input->post('id');
+        $this->modelCoh->delete_master_coh($id);
     }
 
-    public function ubah_gaji_pokok()
+    // permintaan
+
+    public function permintaan_tarik_dana()
     {
         $post = $this->input->post();
-        $this->modelCoh->ubah_gaji_pokok($post);
+        $data = $this->modelCoh->permintaan_tarik_dana($post);
+        echo $data;
     }
 
-    public function ubah_uang_makan()
+    public function permintaan_setor_dana()
     {
         $post = $this->input->post();
-        $this->modelCoh->ubah_uang_makan($post);
-    }
-
-    public function ubah_bonus()
-    {
-        $post = $this->input->post();
-        $this->modelCoh->ubah_bonus($post);
+        $data = $this->modelCoh->permintaan_setor_dana($post);
+        echo $data;
     }
 }

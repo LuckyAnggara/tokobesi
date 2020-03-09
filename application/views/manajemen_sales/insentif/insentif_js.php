@@ -18,8 +18,6 @@
 
         init_table(d);
         init_data(d);
-
-
     });
 
     function init_table(bulan) {
