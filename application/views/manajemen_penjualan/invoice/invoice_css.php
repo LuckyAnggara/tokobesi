@@ -18,9 +18,9 @@
         /* margin you want for the content */
     }
 
-
     @media print {
     body, html {
         display: block;
+        }
     }
 </style>

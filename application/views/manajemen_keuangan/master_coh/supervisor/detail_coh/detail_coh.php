@@ -81,6 +81,11 @@ function rupiah($angka)
                                     Daftar Permintaan
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="#pending" data-toggle="tab" aria-expanded="true" class="nav-link">
+                                    Daftar Pending
+                                </a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade show active" id="transaksi">
@@ -100,12 +105,28 @@ function rupiah($angka)
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="notifikasi">
                                 <div class="table-responsive">
-                                    <table id="datatable-saldo-akhir" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                    <table id="datatable-daftar-permintaan" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th>Jam</th>
                                                 <th>User</th>
                                                 <th>Keterangan</th>
+                                                <th>Nominal</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="pending">
+                                <div class="table-responsive">
+                                    <table id="datatable-daftar-pending" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Jam</th>
+                                                <th>Keterangan</th>
+                                                <th>Nominal</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
                                             </tr>

@@ -257,6 +257,7 @@ class Penjualanbarang extends CI_Controller
                 $this->load->view('template/template_right');
                 $this->load->view('template/template_footer');
                 $this->load->view('template/template_js');
+                $this->load->view('manajemen_penjualan/invoice/invoice_js');
                 $this->load->view('template/template_app_js');
             }
         }
@@ -321,5 +322,11 @@ class Penjualanbarang extends CI_Controller
     {
         $post = $this->input->post();
         echo  $this->modelPenjualan->set_harga($post);
+    } 
+
+    function surat_jalan()
+    {
+        $post = $this->input->post();
+        echo $this->modelPenjualan->surat_jalan($post);
     }
 }

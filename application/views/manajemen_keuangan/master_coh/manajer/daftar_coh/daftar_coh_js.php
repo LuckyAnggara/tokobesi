@@ -97,7 +97,7 @@
                 render: function(data, type, full, meta) {
                     return data;
                 }
-            },{
+            }, {
                 data: "nominal",
                 targets: 3,
                 width: 150,
@@ -115,6 +115,10 @@
                         var display = "Penyetoran Dana"
                     } else if (data == 0) {
                         var display = "Cash awal hari"
+                    } else if (data == 3) {
+                        var display = "Buka Kas"
+                    } else if (data == 5) {
+                        var display = "Tutup Kas"
                     }
                     return display;
                 }
@@ -167,7 +171,7 @@
         });
     }
 
-    function approve_data(id, no_ref, nominal, jenis_permintaan) { 
+    function approve_data(id, no_ref, nominal, jenis_permintaan) {
         swal.fire({
             title: 'Approve?',
             text: "",
@@ -179,23 +183,23 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                url: "<?= base_url('manajemen_keuangan/mastercoh/manajer_approve_coh'); ?>",
+                    url: "<?= base_url('manajemen_keuangan/mastercoh/manajer_approve_coh'); ?>",
                     type: "post",
                     data: {
                         id: id,
-                        no_ref : no_ref,
-                        jenis : jenis_permintaan,
-                        nominal : nominal
+                        no_ref: no_ref,
+                        jenis: jenis_permintaan,
+                        nominal: nominal
                     },
                     async: false,
                     success: function(data) {
-                        if(data == 'sukses'){
+                        if (data == 'sukses') {
                             swal.fire(
                                 'Approved!',
                                 '',
                                 'success'
                             )
-                        }else{
+                        } else {
                             swal.fire(
                                 'Rejected!',
                                 '',
@@ -205,7 +209,7 @@
                         $('#datatable-master-permintaan-coh').DataTable().ajax.reload();
                     }
                 });
-                
+
             }
         });
     }
@@ -222,20 +226,20 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                url: "<?= base_url('manajemen_keuangan/mastercoh/manajer_reject_coh'); ?>",
+                    url: "<?= base_url('manajemen_keuangan/mastercoh/manajer_reject_coh'); ?>",
                     type: "post",
                     data: {
                         id: id
                     },
                     async: false,
                     success: function(data) {
-                        if(data == 'sukses'){
+                        if (data == 'sukses') {
                             swal.fire(
                                 'Approved!',
                                 '',
                                 'success'
                             )
-                        }else{
+                        } else {
                             swal.fire(
                                 'Rejected!',
                                 '',
@@ -245,9 +249,8 @@
                         $('#datatable-master-permintaan-coh').DataTable().ajax.reload();
                     }
                 });
-                
+
             }
         });
     }
-
 </script>

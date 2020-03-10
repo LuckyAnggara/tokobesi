@@ -132,14 +132,11 @@
             console.log(diskon);
             total = qty * normalrupiah(harga);
 
-
             retur_total = retur_total + total;
             retur_diskon = retur_diskon + diskon;
-
         }
-        if ($('#pajak').val() !== "") {
+        if ($('#pajak').val() !== "Rp. 0") {
             retur_pajak = ((retur_total - retur_diskon) * 0.1)
-
         } else {
             retur_pajak = 0
         }

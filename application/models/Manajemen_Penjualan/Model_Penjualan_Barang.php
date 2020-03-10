@@ -654,4 +654,15 @@ $this->db->query("UPDATE detail_pembelian SET saldo = $stok_update WHERE id = '$
                 break;
         }
     }
+
+    function surat_jalan($post)
+    {
+        $data = [
+            'no_polisi' => $post['no_pol']
+        ];
+        $this->db->where('no_order_penjualan', $post['no_order']);
+        $this->db->update('master_penjualan', $data);
+
+        return "sukses";
+    }
 }

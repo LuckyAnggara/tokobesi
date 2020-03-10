@@ -58,7 +58,7 @@ class Model_Pembelian_Barang extends CI_Model
         $post = $this->input->post();
         $data = [
             'no_order_pembelian' => $post['no_order_pembelian'],
-            'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'] . date("His"))),
+            'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
             'kode_barang' => $post['kode_barang'],
             'jumlah_pembelian' => $post["jumlah_pembelian"],
             'harga_beli' => $post["harga_beli"],
@@ -177,7 +177,7 @@ class Model_Pembelian_Barang extends CI_Model
         $data = array(
             'no_order_pembelian' => $post['no_order_pembelian'],
             'nomor_transaksi' => $post['nomor_transaksi'],
-            'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'] . date("His"))),
+            'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
             'kode_supplier' => $post['kode_supplier'],
             'tanggal_input' =>  date("Y-m-d H:i:s"),
             'status_bayar' => 1, // 1 untuk lunas 0 untuk nyicil cashbon

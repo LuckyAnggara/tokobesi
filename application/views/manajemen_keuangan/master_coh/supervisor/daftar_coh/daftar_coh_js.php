@@ -41,7 +41,13 @@
             success: function(data) {
                 if (data == 0) {
                     $('#add_data').modal('show');
-                } else {
+                } else if (data == 2) {
+                    swal.fire(
+                        'Ooopss!',
+                        'Status masih ada yang terbuka',
+                        'error'
+                    )
+                } else if (data == 1) {
                     swal.fire(
                         'Ooopss!',
                         'Anda telah memulai transaksi hari ini',
@@ -176,9 +182,10 @@
                             var display = '<span class="badge badge-primary">Waiting</span>'
                         } else if (data == "1") {
                             var display = '<span class="badge badge-success">Open</span>'
-                        } else {
+                        } else if(data == "2") {
                             var display = '<span class="badge badge-inverse">Close</span>'
-
+                        } else if(data == "4") {
+                            var display = '<span class="badge badge-primary">Waiting</span>'
                         }
                         return display;
                     }
@@ -192,15 +199,18 @@
                     width: 100,
                     render: function(data, type, full, meta) {
                         var detail = '<a type="button" onClick = "detail_data(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-search" ></i> </a>';
-                        // var edit = '<a type="button" onClick = "edit_data(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" ><i class="fa fa-search" ></i> </a>';
+                        var tutup = '<a type="button" onClick = "tutup_data(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-warning btn-sm" ><i class="fa fa-window-close-o" ></i> </a>';
                         var del = '<a type="button" onClick = "warning_delete(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-trash" ></i> </a>';
-                        var print = '<a type="button" onClick = "print_report(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-print" ></i> </a>';
+                        var print = '<a type="button" onClick = "print_report(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-inverse btn-sm" ><i class="fa fa-print" ></i> </a>';
                         if (data.status == 0) {
                             return del;
                         } else if (data.status == 1) {
-                            return detail;
-                        } else {
+                            return detail + ' ' + tutup;
+                        } else if(data.status==2){
                             return detail + ' ' + print;
+                        }else if(data.status == 4)
+                        {
+                            return "Tutup Kas";
                         }
                     }
                 }
@@ -221,12 +231,52 @@
         window.location.href = "<?= base_url('manajemen_keuangan/mastercoh/detail_data/'); ?>" + no_ref
     }
 
-    function edit_data(no_ref) {
-        window.location.href = "<?= base_url('manajemen_keuangan/mastergaji/edit_data/'); ?>" + no_ref
-    }
-
     function print_report(no_ref) {
         window.location.href = "<?= base_url('laporan/excel/detail_gaji/'); ?>" + no_ref
+    }
+
+    function tutup_data(id) {
+        swal.fire({
+            title: 'Tutup Kas?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Tutup!'
+        }).then((result) => {
+            if (result.value) {
+                tutupData(id)
+            }
+        });
+    }
+
+    function tutupData(id) {
+        $.ajax({
+            url: "<?= base_url('manajemen_keuangan/mastercoh/tutup_master_coh'); ?>",
+            type: "post",
+            data: {
+                id: id
+            },
+            async: false,
+            success: function(data) {
+                if(data == 0){
+                $('#datatable-master-coh').DataTable().ajax.reload();
+                swal.fire(
+                    'Terkirim!',
+                    'Permintaan terkirim ke atasan!',
+                    'success'
+                )
+                }else{
+                   swal.fire(
+                    'Oopss!',
+                    'Masih ada sisa saldo sebesar ' + formatRupiah(data.toString(),'Rp. '),
+                    'error'
+                );
+                }
+                
+            }   
+        });
     }
 
     function warning_delete(id) {
@@ -241,11 +291,7 @@
         }).then((result) => {
             if (result.value) {
                 deleteData(id);
-                swal.fire(
-                    'Deleted!',
-                    'Data telah dihapus!',
-                    'success'
-                )
+                
             }
         });
     }
@@ -260,6 +306,11 @@
             async: false,
             success: function(data) {
                 $('#datatable-master-coh').DataTable().ajax.reload();
+                swal.fire(
+                    'Deleted!',
+                    'Data telah dihapus!',
+                    'success'
+                )
             }
         });
     }

@@ -160,16 +160,51 @@ class Mastercoh extends CI_Controller
         echo $data;
     }
 
-    public function tambah_data()
-    {
-        $post = $this->input->post();
-        $this->modelCoh->start_of_day($post);
-    }
 
     public function delete_master_coh()
     {
         $id = $this->input->post('id');
         $this->modelCoh->delete_master_coh($id);
+    }
+
+    public function delete_permintaan()
+    {
+        $id = $this->input->post('id');
+        $this->modelCoh->delete_permintaan($id);
+    }
+
+
+
+    public function get_data_pending()
+    {
+        $post = $this->input->post();
+        $database = $this->modelCoh->get_data_pending($post);
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
+     public function get_data_permintaan()
+    {
+        $post = $this->input->post();
+        $database = $this->modelCoh->get_data_permintaan($post);
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
     }
 
     // permintaan
@@ -187,4 +222,17 @@ class Mastercoh extends CI_Controller
         $data = $this->modelCoh->permintaan_setor_dana($post);
         echo $data;
     }
+
+    public function tutup_master_coh()
+    {
+        $id = $this->input->post('id');
+        echo $this->modelCoh->tutup_master_coh($id);
+    }
+
+        public function tambah_data()
+    {
+        $post = $this->input->post();
+        $this->modelCoh->start_of_day($post);
+    }
+
 }
