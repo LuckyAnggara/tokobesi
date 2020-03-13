@@ -12,7 +12,7 @@ class Excel extends CI_Controller
         parent::__construct();
         $this->load->model('Manajemen_Keuangan/Model_Biaya', 'modelBiaya');
         $this->load->model('Manajemen_Keuangan/Model_Gaji', 'modelGaji');
-        $this->load->model('manajemen_persediaan/Model_Master_Persediaan', 'modelMasterPersediaan');
+        $this->load->model('Manajemen_Persediaan/Model_Master_Persediaan', 'modelMasterPersediaan');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
 
         if ($this->session->userdata('status') != "login") {

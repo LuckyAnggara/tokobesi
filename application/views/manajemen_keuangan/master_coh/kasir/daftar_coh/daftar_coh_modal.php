@@ -8,10 +8,17 @@
             </div>
             <form data-parsley-validate novalidate autocomplete="off" id="submitForm" method="post" enctype="multipart/form-data" class="form-horizontal">
                 <div class="modal-body">
+                     <div class="form-group row">
+                        <label class="col-3 col-form-label">Supervisor</label>
+                            <div class="col-9">
+                        <select name="id_supervisor" id="id_supervisor" class="form-control" placeholder="" required></select>
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         <label class="col-3 col-form-label">Cash Awal</label>
                         <div class="col-9">
-                            <input name="permintaan_cash" id="permintaan_cash" class="form-control" placeholder="" required>
+                            <input value="Rp.0" name="permintaan_cash" id="permintaan_cash" class="form-control" placeholder="" required>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -29,23 +36,3 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
-<div id="modal_password" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog md-sm">
-        <div class="modal-content">
-        <form data-parsley-validate novalidate autocomplete="off" id="passwordForm" method="post" enctype="multipart/form-data" class="form-horizontal">
-
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Input Password</label>
-                    <input type="password" id="password_input" class="form-control" aria-describedby="emailHelp" placeholder="Password">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="password-md-close" name="button-close" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Batal</button>
-                <button type="button" id="button-password-add" data-dismiss="modal" class="btn btn-danger waves-effect waves-light">Approve</button>
-            </div>
-        </form>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>

@@ -14,7 +14,7 @@
             },
             dataType: 'json',
             cache: false,
-            async: false,
+            
             beforeSend: function() {
                 $.LoadingOverlay("show");
             },
@@ -54,7 +54,6 @@
             },
             dataType: 'json',
             cache: false,
-            async: false,
             success: function(data) {
                 if (data.length > 0) {
                     $('#nomor').empty()
@@ -222,7 +221,7 @@
             },
             dataType: 'json',
             cache: false,
-            async: false,
+            
             beforeSend: function() {
                 $.LoadingOverlay("show");
             },
@@ -245,7 +244,6 @@
             },
             dataType: 'json',
             cache: false,
-            async: false,
             complete: function() {
                 $.LoadingOverlay("hide");
             }

@@ -182,6 +182,25 @@
             confirmButtonText: 'Yes!'
         }).then((result) => {
             if (result.value) {
+                konfirm_password(id, no_ref, nominal, jenis_permintaan);
+                // $('#modal_password').modal('show');
+            }
+        });
+    }
+
+    async function approve_data(id, no_ref, nominal, jenis_permintaan) {
+        const {
+            value: password
+        } = await Swal.fire({
+            title: 'Input Password',
+            input: 'password',
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Approve !'
+        })
+        if (password) {
                 $.ajax({
                     url: "<?= base_url('manajemen_keuangan/mastercoh/manajer_approve_coh'); ?>",
                     type: "post",
@@ -189,9 +208,15 @@
                         id: id,
                         no_ref: no_ref,
                         jenis: jenis_permintaan,
-                        nominal: nominal
+                        nominal: nominal,
+                        password : password
                     },
-                    async: false,
+                    beforeSend: function() {
+                        $.LoadingOverlay("show");
+                    },
+                    complete: function(data) {
+                        $.LoadingOverlay("hide");
+                    },
                     success: function(data) {
                         if (data == 'sukses') {
                             swal.fire(
@@ -199,20 +224,26 @@
                                 '',
                                 'success'
                             )
-                        } else {
+                        } else if(data=='salah'){
                             swal.fire(
-                                'Rejected!',
-                                '',
-                                'success'
+                                'Oppss!',
+                                'Password salah!',
+                                'error'
+                            )
+                            
+                            }else {
+                            swal.fire(
+                                'Oppss!',
+                                'Error, silahkan ulangi',
+                                'error'
                             )
                         }
                         $('#datatable-master-permintaan-coh').DataTable().ajax.reload();
                     }
                 });
-
-            }
-        });
+        } 
     }
+
 
     function reject_data(id) {
         swal.fire({

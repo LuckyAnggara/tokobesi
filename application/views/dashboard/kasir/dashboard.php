@@ -8,6 +8,52 @@
                     </div>
                 </div>
                 <div class="row">
+                <div class="col-xl-12">
+                        <div class="card-box">
+                            <div class="btn-group pull-right">
+                                <a type="button" id="print_btn" class="btn btn-primary waves-effect waves-light"><i class="fa fa-print"> </i> Laporan </a>
+                            </div>
+                            <h4 class="header-title mt-0 m-b-30">Laporan Kasir - <?= date('d F, Y');?></h4>
+                            <div class="row">
+                            <div class="table-responsive col-6">
+                                <table class="table" id="table-omzet-kasir">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>##</th>
+                                            <th>Nomor Faktur</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                            </div>
+                            <div class="col-1" id="d">
+                            </div>
+                            <div class="col-5" id="data_kasir">
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Cash on Hand</label>
+                                    <div class="col-9">
+                                <input name="cash_on_hand" id="cash_on_hand" class="form-control text-right" placeholder="" readonly value="Rp. 0">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Total Transaksi</label>
+                                    <div class="col-9">
+                                <input name="total_transaksi" id="total_transaksi" class="form-control  text-right" placeholder="" readonly value="0 Transaksi">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Total Omzet</label>
+                                    <div class="col-9">
+                                <input name="total_omzet" id="total_omzet" class="form-control text-right" placeholder="" readonly value="Rp. 0">
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div><!-- end col -->
                     <div class="col-xl-6">
                         <div class="card-box">
                             <h4 class="header-title mt-0 m-b-30">Penjualan Terakhir</h4>

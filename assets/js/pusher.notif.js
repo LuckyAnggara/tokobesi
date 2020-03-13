@@ -1,3 +1,6 @@
+
+
+
 $(document).ready(function () { // CALL FUNCTION SHOW PRODUCT
 
     var pusher = new Pusher('a198692078b54078587e', {
@@ -14,7 +17,34 @@ $(document).ready(function () { // CALL FUNCTION SHOW PRODUCT
         if (data.forceLogout.pesan ===  'logout'){
             forceLogout(data.forceLogout.username);
         }
+        if(data.notif.is_notif === 'yes'){
+            var data = data.notif
+            notifikasi(data.pesan, data.dari);
+        }
     });
+
+    function notifikasi(pesan,dari) {
+
+        toastr.options = {
+            "closeButton": true,
+            "debug": true,
+            "newestOnTop": true,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "100",
+            "hideDuration": "500",
+            "timeOut": "2000",
+            "extendedTimeOut": "500",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        Command : toastr["info"](pesan, "dari : " + dari)
+
+    }
 
     function forceLogout(username) {
         $.ajax({
@@ -52,6 +82,7 @@ $(document).ready(function () { // CALL FUNCTION SHOW PRODUCT
         Command : toastr["info"]("Order Baru dari Sales", "Order Baru !!")
 
     }
+
     function playAudio() {
         var url = "assets/sound/notif.mp3"
         new Audio(url).play();
@@ -61,8 +92,6 @@ $(document).ready(function () { // CALL FUNCTION SHOW PRODUCT
         var audio = document.getElementById("audio");
         audio.play();
     }
-
-
 
 
 });

@@ -30,7 +30,6 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-
         setTanggal()
         var pusher = new Pusher('a198692078b54078587e', {
             cluster: 'ap1',

@@ -5,21 +5,29 @@
     </a>
     <h4 class="">Notifications</h4>
     <div class="notification-list nicescroll">
-
-        <!-- <ul class="list-group list-no-border user-list">
+        <ul class="list-group list-no-border user-list" id="pesan_pesan">
             <li class="list-group-item">
                 <a href="#" class="user-list-item">
                     <div class="avatar">
-                        <img src="<?= base_url('assets/'); ?>images/users/avatar-2.jpg" alt="">
+                        <img src="<?= base_url('assets/'); ?>images/users/avatar-3.jpg" alt="">
                     </div>
                     <div class="user-desc">
-                        <span class="name">Michael Zenaty</span>
+                        <div class="row">
+                            <div class="col-9">
+                            <span class="name">Michael Zenaty</span> 
+                            </div>
+                            <div class="col-3">
+                            <span class="badge badge-primary">Read</span>
+                            </div>
+                        </div>
                         <span class="desc">There are new settings available</span>
                         <span class="time">2 hours ago</span>
                     </div>
                 </a>
             </li>
-            <li class="list-group-item">
+        </ul>
+
+        <!--    <li class="list-group-item">
                 <a href="#" class="user-list-item">
                     <div class="icon bg-info">
                         <i class="mdi mdi-account"></i>

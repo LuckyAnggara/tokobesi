@@ -309,6 +309,22 @@ class Model_Dashboard extends CI_Model
         $output = $this->db->get();
         return $output;
     }
+    // penjualan terakhir kasir hari ini
+
+    function get_data_penjualan_hari_ini($tanggal, $kasir = null)
+    {
+        $this->db->select('master_penjualan.status_bayar,master_penjualan.no_faktur, master_penjualan.sales, master_penjualan.total_penjualan, DATE_FORMAT(`tanggal_transaksi`, "%H:%i") as jam, DATE_FORMAT(`tanggal_transaksi`, "%d-%M-%y") as tanggal, master_user.nama, master_pelanggan.nama_pelanggan as nama_pelanggan');
+        $this->db->from('master_penjualan');
+        $this->db->join('master_user', 'master_user.username = master_penjualan.user');
+        $this->db->join('master_pelanggan', 'master_pelanggan.id_pelanggan = master_penjualan.id_pelanggan');
+        if($kasir !== null){
+            $this->db->where('master_penjualan.user',$kasir);
+        }
+        $this->db->like('tanggal_transaksi', date('Y-m-d', strtotime($tanggal)));
+        $this->db->order_by('master_penjualan.id', 'DESC');
+        $output = $this->db->get();
+        return $output;
+    }
 
     // get data laba
 
@@ -490,6 +506,50 @@ class Model_Dashboard extends CI_Model
         $this->db->where('sisa_utang !=', 0);
         $this->db->order_by('master_utang.tanggal_jatuh_tempo', 'ASC');
         $output = $this->db->get();
+        return $output;
+    }
+
+
+    // data kasir tambahan
+
+    function laporan_kasir($kasir = null)
+    {
+        $this->db->select_sum('total_penjualan');
+        $this->db->from('master_penjualan');
+        $this->db->like('tanggal_transaksi', date('Y-m-d'));
+        if($kasir !== null){
+            $this->db->where('user',$kasir);
+        }
+        $data = $this->db->get()->row();
+
+        $omzet = $data->total_penjualan;
+
+        $this->db->select('total_penjualan');
+        $this->db->from('master_penjualan');
+        $this->db->like('tanggal_transaksi', date('Y-m-d'));
+        if($kasir !== null){
+            $this->db->where('user',$kasir);
+        }
+        $data = $this->db->get()->num_rows();
+
+        $transaksi = $data;
+
+        $this->db->select('saldo_akhir');
+        $this->db->from('master_coh');
+        $this->db->like('tanggal_input', date('Y-m-d'));
+        if($kasir !== null){
+            $this->db->where('user',$kasir);
+            $this->db->where('status',1);
+        }
+        $data = $this->db->get()->row();
+
+        $cash = $data->saldo_akhir;
+
+        $output = [
+            'omzet' => $omzet,
+            'transaksi' => $transaksi,
+            'cash' => $cash
+        ];
         return $output;
     }
 }

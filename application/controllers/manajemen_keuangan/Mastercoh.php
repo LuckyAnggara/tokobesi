@@ -68,11 +68,23 @@ class Mastercoh extends CI_Controller
     function manajer_approve_coh()
     {
         $post = $this->input->post();
-        $data = $this->modelCoh->manajer_approve_coh($post);
-        echo $data;
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('username', $this->session->userdata('username'));
+        $user = $this->db->get()->row_array();
+
+        $isPasswordTrue = password_verify($post["password"], $user['password']);
+
+        if ($isPasswordTrue) {
+            $data = $this->modelCoh->manajer_approve_coh($post);
+            echo $data;
+        } else {
+            echo 'salah';
+        }
     }
 
-     function manajer_reject_coh()
+
+    function manajer_reject_coh()
     {
         $id = $this->input->post('id');
         $data = $this->modelCoh->manajer_reject_coh($id);
@@ -101,8 +113,6 @@ class Mastercoh extends CI_Controller
             $this->load->view('template/template_app_js');
         }
     }
-
-
 
     function detail_data($string)
     {
@@ -157,6 +167,33 @@ class Mastercoh extends CI_Controller
     {
         $post = $this->input->post();
         $data = $this->modelCoh->cek_data($post);
+        echo $data;
+    }
+
+
+    function supervisor_approve_coh()
+    {
+        $post = $this->input->post();
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('username', $this->session->userdata('username'));
+        $user = $this->db->get()->row_array();
+
+        $isPasswordTrue = password_verify($post["password"], $user['password']);
+
+        if ($isPasswordTrue) {
+            $data = $this->modelCoh->supervisor_approve_coh($post);
+            echo $data;
+        } else {
+            echo 'salah';
+        }
+    }
+
+
+     function supervisor_reject_coh()
+    {
+        $id = $this->input->post('id');
+        $data = $this->modelCoh->supervisor_reject_coh($id);
         echo $data;
     }
 
@@ -229,10 +266,117 @@ class Mastercoh extends CI_Controller
         echo $this->modelCoh->tutup_master_coh($id);
     }
 
-        public function tambah_data()
+    public function tambah_data()
     {
         $post = $this->input->post();
         $this->modelCoh->start_of_day($post);
+    }
+
+    public function get_jumlah_data_pending(){
+        $post = $this->input->post();
+        $data = $this->modelCoh->get_jumlah_data_pending($post);
+        echo $data;
+    }
+
+    public function get_jumlah_data_permintaan(){
+        $post = $this->input->post();
+        $data = $this->modelCoh->get_jumlah_data_permintaan($post);
+        echo $data;
+    }
+       
+    // script kasir
+
+
+    function kasir()
+    {
+        if ($this->session->userdata('role') != "1") {
+            redirect(base_url("dashboard"));
+        } else {
+            $data['menu'] = $this->modelSetting->data_menu();
+            $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+            $data['css'] = 'manajemen_keuangan/master_coh/kasir/daftar_coh/daftar_coh_css';
+
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('manajemen_keuangan/master_coh/kasir/daftar_coh/daftar_coh', $data);
+            $this->load->view('template/template_right');
+            $this->load->view('manajemen_keuangan/master_coh/kasir/daftar_coh/daftar_coh_modal');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('manajemen_keuangan/master_coh/kasir/daftar_coh/daftar_coh_js');
+            $this->load->view('template/template_app_js');
+        }
+    }
+
+
+
+    function detail_data_kasir($string)
+    {
+        $data['menu'] = $this->modelSetting->data_menu();
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+        $data['css'] = 'manajemen_keuangan/master_coh/kasir/detail_coh/detail_coh_css';
+
+        $data['detail_data'] = $this->modelCoh->detail_master($string);
+        $this->load->view('template/template_header', $data);
+        $this->load->view('template/template_menu');
+        $this->load->view('manajemen_keuangan/master_coh/kasir/detail_coh/detail_coh', $data);
+        $this->load->view('template/template_right');
+        $this->load->view('manajemen_keuangan/master_coh/kasir/detail_coh/detail_coh_modal');
+        $this->load->view('template/template_footer');
+        $this->load->view('template/template_js');
+        $this->load->view('manajemen_keuangan/master_coh/kasir/detail_coh/detail_coh_js');
+        $this->load->view('template/template_app_js');
+    }
+
+    public function get_data_master_kasir()
+    {
+        $database = $this->modelCoh->get_data_master_kasir();
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
+    public function spv_no_ref()
+    {
+        $query = $this->input->get('query');
+        $database = $this->modelCoh->spv_no_ref($query);
+        $data = $database->result_array();
+        $output = json_encode($data);
+        echo $output;
+    }
+
+    public function cek_data_kasir()
+    {
+        $post = $this->input->post();
+        $data = $this->modelCoh->cek_data_kasir($post);
+        echo $data;
+    }
+
+    public function tambah_data_kasir()
+    {
+        $post = $this->input->post();
+        echo $this->modelCoh->start_of_day_kasir($post);
+    }
+
+    public function permintaan_tarik_dana_kasir()
+    {
+        $post = $this->input->post();
+        $data = $this->modelCoh->permintaan_tarik_dana_kasir($post);
+        echo $data;
+    }
+
+    public function permintaan_setor_dana_kasir()
+    {
+        $post = $this->input->post();
+        $data = $this->modelCoh->permintaan_setor_dana_kasir($post);
+        echo $data;
     }
 
 }

@@ -11,6 +11,7 @@ function rupiah($angka)
         <div class="col-sm-12">
             <h4 class="page-title">Detail Cash on Hand</h4>
             <span id="nomor_referensi" hidden><?= $detail_data['nomor_referensi']; ?></span>
+            <span id="nomor_referensi_spv" hidden><?= $detail_data['nomor_referensi_spv']; ?></span>
         </div>
     </div>
     <div class="row">
@@ -59,6 +60,14 @@ function rupiah($angka)
                                 <button name="setor" id="setor" class="btn btn-primary waves-effect waves-light" data-target="#setor_modal" data-toggle="modal">
                                     <i class="fa fa-upload"></i>
                                     <span>Setor Dana</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <button name="setor" id="setor" class="btn btn-inverse waves-effect waves-light" data-target="#setor_modal" data-toggle="modal">
+                                    <i class="fa fa-transfer"></i>
+                                    <span>Transfer Dana</span>
                                 </button>
                             </div>
                         </div>

@@ -52,6 +52,47 @@ class Dashboard extends CI_Controller
 		echo $output;
 	}
 
+	public function data_penjualan_kasir_hari_ini()
+	{
+		$kasir = $this->session->userdata['username'];
+		$database = $this->modelDashboard->get_data_penjualan_hari_ini(date("Y-m-d 00-00-00"), $kasir);
+		$data = $database->result_array();
+		$output = array(
+			// "draw" => $_POST['draw'],
+			"recordsTotal" => $this->db->count_all_results('master_penjualan'),
+			"recordsFiltered"  => $database->num_rows(),
+			"data" => array()
+		);
+
+		foreach ($data as $key => $value) {
+			if ($value['status_bayar'] == 0) {
+				$data =  $this->modelDaftarTransaksiPenjualan->get_data_kredit($value['no_faktur']);
+				$value['kredit'] = $data;
+				$output['data'][] = $value;
+			} else {
+				$value['kredit'] = "";
+				$output['data'][] = $value;
+			}
+		}
+
+		$output = json_encode($output);
+		echo $output;
+	}
+
+	public function laporan_kasir()
+	{
+		$role = $this->session->userdata['role'];
+		if($role == 1){
+			$user = $this->session->userdata['username'];
+		}else{
+			$user = null;
+		}
+		$data = $this->modelDashboard->laporan_kasir($user);
+		
+		$output = json_encode($data);
+		echo $output;
+	}
+
 
 	public function data_penjualan_terakhir()
 	{
@@ -346,6 +387,7 @@ class Dashboard extends CI_Controller
 			$this->load->view('template/template_menu', $data);
 			$this->load->view('dashboard/kasir/dashboard', $data);
 			$this->load->view('template/template_right');
+			$this->load->view('dashboard/kasir/dashboard_modal');
 			$this->load->view('template/template_footer');
 			$this->load->view('template/template_js');
 			$this->load->view('dashboard/kasir/dashboard_js');

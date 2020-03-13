@@ -16,9 +16,8 @@
     <link href="<?= base_url('assets/'); ?>css/icons.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/'); ?>css/style.css" rel="stylesheet" type="text/css" />
 
-    <!-- Sweet Alert css -->
-    <!-- <link href="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.min.css" rel="stylesheet" type="text/css" /> -->
-    <!-- Notification css (Toastr) -->
+    <link href="<?= base_url('assets/'); ?>plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css" />
+
     <script src="<?= base_url('assets/'); ?>js/modernizr.min.js"></script>
 
 

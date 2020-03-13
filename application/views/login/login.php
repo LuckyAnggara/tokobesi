@@ -119,7 +119,6 @@
                     url: "<?= Base_url('login/aksi_login'); ?>",
                     type: "post",
                     data: data,
-                    async: false,
                     processData: false,
                     contentType: false,
                     beforeSend: function(data) {

@@ -147,8 +147,8 @@
             var results = [];
             $.each(data.data, function(index, item) {
               results.push({
-                id: item.kode_barang + ' - ' + item.harga_satuan + ' - ' + item.jumlah_persediaan + ' - ' + item.nama_satuan,
-                text: item.kode_barang + ' - ' + item.nama_barang,
+                id: item.kode_barang + '-' + item.harga_satuan + '-' + item.jumlah_persediaan + '-' + item.nama_satuan,
+                text: item.kode_barang + '-' + item.nama_barang,
                 // harga_satuan: item.harga_satuan,
                 // nama_satuan: item.nama_satuan,
                 // jumlah_persediaan: item.jumlah_persediaan
@@ -190,7 +190,7 @@
         // var harga_jual = $("#select_nama_barang option:selected").data('harga_satuan');
         // var sisa_persediaan = $("#select_nama_barang option:selected").data('jumlah_persediaan');
         // var satuan = $("#select_nama_barang option:selected").data('nama_satuan');
-        console.log(sisa_persediaan);
+        console.log(data);
         choose_barang(kode_barang, sisa_persediaan, satuan, harga_jual);
       })
     }
@@ -533,8 +533,6 @@
 
     // add ke keranjang ketika tambah di klik
 
-
-
     $('#button-penjualan-add').on('click', function() {
       var kode_barang = $('#label_kode_barang').text();
       var jumlah = $('#qty').val();
@@ -587,7 +585,7 @@
           password: password
         },
         cache: false,
-        async: false,
+
         success: function(data) {
           if (data == 0) {
             Swal.fire(
@@ -622,17 +620,15 @@
           diskon: diskon
         },
         cache: false,
-        async: false,
         beforeSend: function() {
-          $("#modal_detail_penjualan").LoadingOverlay("show");
+          $.LoadingOverlay("show");
         },
         success: function(data) {
           $('#datatable-keranjang-penjualan').DataTable().ajax.reload();
           total_harga_keranjang();
-          $('#loading_tambah').loading('stop');
         },
         complete: function() {
-          $("#modal_detail_penjualan").LoadingOverlay("hide", true);
+          $.LoadingOverlay("hide", true);
         }
       })
     }
@@ -898,7 +894,6 @@
           ongkir: ongkir,
         },
         cache: false,
-        async: false,
         success: function(data) {
           view_modal_checkout(no_order);
         }
@@ -1212,7 +1207,6 @@
           confirmButtonText: 'Proses!'
         }).then((result) => {
           if (result.value) {
-            $.LoadingOverlay("show");
             $.ajax({
               url: "<?= Base_url('manajemen_penjualan/penjualanbarang/bayar_checkout/'); ?>",
               type: "post",
@@ -1227,8 +1221,9 @@
                 down_payment: dp,
                 tanggal_jatuh_tempo: tanggal_jatuh_tempo
               },
-              cache: false,
-              async: false,
+              beforeSend: function() {
+                $.LoadingOverlay("show");
+              },
               success: function(data) {
                 if (data == "error") {
                   Swal.fire({

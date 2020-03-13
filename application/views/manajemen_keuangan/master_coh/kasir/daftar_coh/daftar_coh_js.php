@@ -1,16 +1,57 @@
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Validation js (Parsleyjs) -->
+<script type="text/javascript" src="<?= base_url('assets/'); ?>plugins/parsleyjs/dist/parsley.min.js"></script>
+
 <!-- Responsive examples -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.responsive.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/responsive.bootstrap4.min.js"></script>
+
+
+<!-- Select2 js -->
+<script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
 
 <!-- script sendiri -->
 
 <script>
     $(document).ready(function() {
         init_table()
+        init_spv_no_ref()
     })
+
+    function init_spv_no_ref() {
+        
+            $('#id_supervisor').select2({
+                dropdownParent: $('#add_data'),
+                placeholder: "Pilih Supervisor dan Nomor Referensi",
+                ajax: {
+                    url: '<?= base_url("manajemen_keuangan/mastercoh/spv_no_ref/"); ?>',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            query: params.term, // search term
+                        };
+                    },
+                    processResults: function(data) {
+                        var results = [];
+                        $.each(data, function(index, item) {
+                            results.push({
+                                id: item.nomor_referensi,
+                                text: item.nama_spv + ' - ' + item.nomor_referensi,
+                            });
+                        });
+                        return {
+                            results: results
+                        };
+                    },
+                },
+            })
+        }
+
+
     $('#tambah_data').on('click', function() {
         cek();
     })
@@ -32,19 +73,24 @@
 
         date = mm + '/' + dd + '/' + yyyy;
         $.ajax({
-            url: "<?= base_url('manajemen_keuangan/mastercoh/cek_data'); ?>",
+            url: "<?= base_url('manajemen_keuangan/mastercoh/cek_data_kasir'); ?>",
             type: "post",
             data: {
                 tanggal: date
             },
-            async: false,
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $.LoadingOverlay("hide");
+            },
             success: function(data) {
                 if (data == 0) {
                     $('#add_data').modal('show');
                 } else if (data == 2) {
                     swal.fire(
                         'Ooopss!',
-                        'Status masih ada yang terbuka',
+                        'Status masih ada yang terbuka / Kas SPV belum di buka',
                         'error'
                     )
                 } else if (data == 1) {
@@ -84,26 +130,46 @@
         $(this)
             .find("input,textarea,select")
             .val('')
-            .end()
+            .end();
+        $('#id_supervisor').val(null).trigger('change');
     });
 
     $('#submitForm').submit(function(e) {
         e.preventDefault();
         var data = new FormData(document.getElementById("submitForm"));
         $.ajax({
-            url: "<?= base_url("manajemen_keuangan/mastercoh/tambah_data"); ?>",
+            url: "<?= base_url("manajemen_keuangan/mastercoh/tambah_data_kasir"); ?>",
             type: "post",
             data: data,
-            async: false,
             processData: false,
             contentType: false,
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $.LoadingOverlay("hide");
+            },
             success: function(data) {
+                if(data=='sukses'){
                 $('#datatable-master-coh').DataTable().ajax.reload();
                 swal.fire(
                     'Sukses!',
                     '',
                     'success'
                 );
+                }else if(data=='kurang'){
+                swal.fire(
+                    'Saldo Supervisor Kurang!',
+                    '',
+                    'error'
+                );
+                }else{
+                swal.fire(
+                    'Oopss!',
+                    '',
+                    'error'
+                );
+                }
                 $('#add_data').modal('hide');
             }
         })
@@ -136,7 +202,7 @@
             "serverSide": false,
             "ordering": true,
             "ajax": {
-                "url": '<?= base_url("manajemen_keuangan/mastercoh/get_data_master/"); ?>',
+                "url": '<?= base_url("manajemen_keuangan/mastercoh/get_data_master_kasir/"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
@@ -186,6 +252,8 @@
                             var display = '<span class="badge badge-inverse">Close</span>'
                         } else if(data == "4") {
                             var display = '<span class="badge badge-primary">Waiting</span>'
+                        } else if(data == "99") {
+                            var display = '<span class="badge badge-danger">Rejected</span>'
                         }
                         return display;
                     }
@@ -202,7 +270,7 @@
                         var tutup = '<a type="button" onClick = "tutup_data(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-warning btn-sm" ><i class="fa fa-window-close-o" ></i> </a>';
                         var del = '<a type="button" onClick = "warning_delete(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-trash" ></i> </a>';
                         var print = '<a type="button" onClick = "print_report(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-inverse btn-sm" ><i class="fa fa-print" ></i> </a>';
-                        if (data.status == 0) {
+                        if (data.status == 0 || data.status == 99) {
                             return del;
                         } else if (data.status == 1) {
                             return detail + ' ' + tutup;
@@ -228,7 +296,7 @@
     }
 
     function detail_data(no_ref) {
-        window.location.href = "<?= base_url('manajemen_keuangan/mastercoh/detail_data/'); ?>" + no_ref
+        window.location.href = "<?= base_url('manajemen_keuangan/mastercoh/detail_data_kasir/'); ?>" + no_ref
     }
 
 

@@ -9,13 +9,16 @@
 
 <!-- CHART.js -->
 <script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
-
+<!-- DatePicker Js -->
+<script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
 <!-- SCRIPT DASHBOARD AWAL -->
 <script>
     $(document).ready(function() {
 
         initTableLatestOrder();
+        init_penjualan_hari_ini();
+        laporan_kasir();
     })
 
 
@@ -177,6 +180,97 @@
             }
         });
     }
+
+    function init_penjualan_hari_ini() {
+        $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+            return {
+                "iStart": oSettings._iDisplayStart,
+                "iEnd": oSettings.fnDisplayEnd(),
+                "iLength": oSettings._iDisplayLength,
+                "iTotal": oSettings.fnRecordsTotal(),
+                "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+            };
+        };
+        var table = $('#table-omzet-kasir').DataTable({
+            destroy: true,
+            paging: false,
+            "oLanguage": {
+                sProcessing: "Sabar yah...",
+                sZeroRecords: "Tidak ada Data..."
+            },
+            "bInfo": false,
+            "searching": false,
+            "processing": true,
+            "serverSide": false,
+            "ordering": false,
+            "ajax": {
+                "url": '<?= base_url("dashboard/data_penjualan_kasir_hari_ini/"); ?>',
+                "type": "POST",
+            },
+            "columnDefs": [{
+                    data: "no_faktur",
+                    targets: 0,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "tanggal",
+                    targets: 1,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "no_faktur",
+                    targets: 2,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "total_penjualan",
+                    targets: 3,
+                    render: function(data, type, full, meta) {
+                        var display = formatRupiah(data, 'Rp.')
+                        return display;
+                    }
+                },
+                {
+                    data: "kredit",
+                    targets: 4,
+                    render: function(data, type, full, meta) {
+                        var date = new Date(data.tanggal_jatuh_tempo);
+                        date = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
+                        if (data !== "") {
+                            var display =
+                                '<div class="btn-group">' +
+                                '<span class="badge badge-danger dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Belum Lunas <span class="caret"></span></span>' +
+                                '<div class="dropdown-menu">' +
+                                '<a class="dropdown-item"><b><u>Jatuh Tempo</u></b></a>' +
+                                '<a class="dropdown-item">' + date + '</a>' +
+                                '<a class="dropdown-item"><b><u>Sisa</u></b></a>' +
+                                '<a class="dropdown-item">' + formatRupiah(data.sisa_piutang.toString(), 'Rp.') + '</a>' +
+                                '</div></div>'
+                        } else {
+                            var display = '<span class="badge badge-success">Lunas</span>'
+                        }
+                        return display;
+                    }
+                },
+            ],
+            "deferRender": true,
+            "rowCallback": function(row, data, iDisplayIndex) {
+                var info = this.fnPagingInfo();
+                var page = info.iPage;
+                var length = info.iLength;
+                var index = page * length + (iDisplayIndex + 1);
+                $('td:eq(0)', row).html(index);
+            }
+        });
+    }
 </script>
 
 <!-- Chart Js Top Produk -->
@@ -247,4 +341,56 @@
             myDoughnutChart.update();
         }
     })
+</script>
+
+<!-- script data kasir dari omzet sampe transaksi dan sisa cash -->
+
+<script>
+    function laporan_kasir() {
+
+    // init data dan label
+    $.ajax({
+        url: "<?= Base_url('dashboard/laporan_kasir'); ?>",
+        type: "post",
+        dataType: "JSON",
+        beforeSend: function() {
+        $('#data_kasir').LoadingOverlay("show");
+        },
+        complete: function(data) {
+        $('#data_kasir').LoadingOverlay("hide");
+        },
+        success: function(data) {
+            $('#total_transaksi').val(data.transaksi + ' Transaksi')
+            $('#total_omzet').val(formatRupiah(data.omzet, 'Rp. '))
+            $('#cash_on_hand').val(formatRupiah(data.cash, 'Rp. '))
+        }
+        });
+    }
+
+    $('#print_btn').on('click', function(){
+        $('#tanggal').datepicker({
+                autoclose: true,
+                todayHighlight: true,
+                orientation: "auto",
+        });
+        $('#print_modal').modal('show');
+    })
+
+    // $('#tanggalForm').submit(function(e) {
+    //         e.preventDefault();
+    //         var kasir = "<?= $this->session->userdata['username'];?>";
+    //         console.log(kasir);
+    //         var data = new FormData(document.getElementById("tanggalForm"));
+    //         data.append('kasir', kasir);
+    //         $.ajax({
+    //             url: "<?= base_url("laporan/kasir/laporan_harian/"); ?>",
+    //             type: "post",
+    //             data: data,
+    //             processData: false,
+    //             contentType: false,
+    //             success: function(data) {
+    //                 window.open(this.url,'_blank' );
+    //             }
+    //         })
+    // })
 </script>
