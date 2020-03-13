@@ -362,7 +362,11 @@
         success: function(data) {
             $('#total_transaksi').val(data.transaksi + ' Transaksi')
             $('#total_omzet').val(formatRupiah(data.omzet, 'Rp. '))
-            $('#cash_on_hand').val(formatRupiah(data.cash, 'Rp. '))
+            if(data.cash == null){
+                $('#cash_on_hand').val(formatRupiah('0', 'Rp. '))
+            }else{
+                $('#cash_on_hand').val(formatRupiah(data.cash, 'Rp. '))
+            }
         }
         });
     }

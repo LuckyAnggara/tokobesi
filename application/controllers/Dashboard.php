@@ -55,7 +55,7 @@ class Dashboard extends CI_Controller
 	public function data_penjualan_kasir_hari_ini()
 	{
 		$kasir = $this->session->userdata['username'];
-		$database = $this->modelDashboard->get_data_penjualan_hari_ini(date("Y-m-d 00-00-00"), $kasir);
+		$database = $this->modelDashboardKasir->get_data_penjualan_hari_ini(date("Y-m-d"), $kasir);
 		$data = $database->result_array();
 		$output = array(
 			// "draw" => $_POST['draw'],
@@ -87,7 +87,7 @@ class Dashboard extends CI_Controller
 		}else{
 			$user = null;
 		}
-		$data = $this->modelDashboard->laporan_kasir($user);
+		$data = $this->modelDashboardKasir->laporan_kasir($user);
 		
 		$output = json_encode($data);
 		echo $output;

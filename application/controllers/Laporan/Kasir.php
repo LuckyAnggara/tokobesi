@@ -11,7 +11,7 @@ class Kasir extends CI_Controller
         parent::__construct();
         $this->load->model('Manajemen_Keuangan/Model_Biaya', 'modelBiaya');
         $this->load->model('Manajemen_Keuangan/Model_Gaji', 'modelGaji');
-        $this->load->model('Dashboard/Model_Dashboard', 'modelDashboard');
+        $this->load->model('Dashboard/Model_Dashboard_Kasir', 'modelDashboardKasir');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
 
         if ($this->session->userdata('status') != "login") {
@@ -24,7 +24,7 @@ class Kasir extends CI_Controller
         $kasir = $this->input->post('kasir');
         $tanggal = $this->input->post('tanggal');
         
-		$database = $this->modelDashboard->get_data_penjualan_hari_ini($tanggal, $kasir);
+		$database = $this->modelDashboardKasir->get_data_penjualan_hari_ini($tanggal, $kasir);
 		$data = $database->result_array();
 
 		foreach ($data as $key => $value) {
@@ -45,7 +45,7 @@ class Kasir extends CI_Controller
         $this->db->where('username', $kasir);
         $data_kasir = $this->db->get()->row_array();
 
-		$laporan_kasir = $this->modelDashboard->laporan_kasir($kasir);
+		$laporan_kasir = $this->modelDashboardKasir->laporan_kasir($kasir);
 		
 		// $output = json_encode($data);
 		// echo $output;
