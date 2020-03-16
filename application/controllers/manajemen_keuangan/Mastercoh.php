@@ -86,9 +86,23 @@ class Mastercoh extends CI_Controller
 
     function manajer_reject_coh()
     {
+        $post = $this->input->post();
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('username', $this->session->userdata('username'));
+        $user = $this->db->get()->row_array();
+
+        $isPasswordTrue = password_verify($post["password"], $user['password']);
+
+        if ($isPasswordTrue) {
+            $data = $this->modelCoh->manajer_reject_coh($post);
+            echo $data;
+        } else {
+            echo 'salah';
+        }
+
         $id = $this->input->post('id');
-        $data = $this->modelCoh->manajer_reject_coh($id);
-        echo $data;
+        
     }
 
     // script spv
@@ -116,25 +130,74 @@ class Mastercoh extends CI_Controller
 
     function detail_data($string)
     {
+        $this->db->select('id');
+        $this->db->from('master_coh');
+        $this->db->where('id', $string);
+        $this->db->where('user', $this->session->userdata('username'));
+        $cek = $this->db->get()->num_rows();
+
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['css'] = 'manajemen_keuangan/master_coh/supervisor/detail_coh/detail_coh_css';
 
-        $data['detail_data'] = $this->modelCoh->detail_master($string);
-        $this->load->view('template/template_header', $data);
-        $this->load->view('template/template_menu');
-        $this->load->view('manajemen_keuangan/master_coh/supervisor/detail_coh/detail_coh', $data);
-        $this->load->view('template/template_right');
-        $this->load->view('manajemen_keuangan/master_coh/supervisor/detail_coh/detail_coh_modal');
-        $this->load->view('template/template_footer');
-        $this->load->view('template/template_js');
-        $this->load->view('manajemen_keuangan/master_coh/supervisor/detail_coh/detail_coh_js');
-        $this->load->view('template/template_app_js');
+        if ($cek > 0) {
+            $data['detail_data'] = $this->modelCoh->detail_master($string);
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('manajemen_keuangan/master_coh/supervisor/detail_coh/detail_coh', $data);
+            $this->load->view('template/template_right');
+            $this->load->view('manajemen_keuangan/master_coh/supervisor/detail_coh/detail_coh_modal');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('manajemen_keuangan/master_coh/supervisor/detail_coh/detail_coh_js');
+            $this->load->view('template/template_app_js');
+        } else {
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('template/template_page_not_found');
+            $this->load->view('template/template_right');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('template/template_app_js');
+        }
     }
 
     public function get_data_master()
     {
         $database = $this->modelCoh->get_data_master();
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
+    public function get_data_master_histori()
+    {
+        $database = $this->modelCoh->get_data_master_histori();
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
+    
+
+    public function get_data_permintaan_spv()
+    {
+        $post = $this->input->post();
+        $database = $this->modelCoh->get_data_permintaan_spv($post);
         $data = $database->result_array();
         $output = array(
             // "draw" => $_POST['draw'],
@@ -228,7 +291,7 @@ class Mastercoh extends CI_Controller
         echo $output;
     }
 
-     public function get_data_permintaan()
+    public function get_data_permintaan()
     {
         $post = $this->input->post();
         $database = $this->modelCoh->get_data_permintaan($post);
@@ -312,20 +375,37 @@ class Mastercoh extends CI_Controller
 
     function detail_data_kasir($string)
     {
+        $this->db->select('id');
+        $this->db->from('master_coh');
+        $this->db->where('id', $string);
+        $this->db->where('user', $this->session->userdata('username'));
+        $cek = $this->db->get()->num_rows();
+    
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['css'] = 'manajemen_keuangan/master_coh/kasir/detail_coh/detail_coh_css';
 
-        $data['detail_data'] = $this->modelCoh->detail_master($string);
-        $this->load->view('template/template_header', $data);
-        $this->load->view('template/template_menu');
-        $this->load->view('manajemen_keuangan/master_coh/kasir/detail_coh/detail_coh', $data);
-        $this->load->view('template/template_right');
-        $this->load->view('manajemen_keuangan/master_coh/kasir/detail_coh/detail_coh_modal');
-        $this->load->view('template/template_footer');
-        $this->load->view('template/template_js');
-        $this->load->view('manajemen_keuangan/master_coh/kasir/detail_coh/detail_coh_js');
-        $this->load->view('template/template_app_js');
+        if($cek > 0){
+            $data['detail_data'] = $this->modelCoh->detail_master($string);
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('manajemen_keuangan/master_coh/kasir/detail_coh/detail_coh', $data);
+            $this->load->view('template/template_right');
+            $this->load->view('manajemen_keuangan/master_coh/kasir/detail_coh/detail_coh_modal');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('manajemen_keuangan/master_coh/kasir/detail_coh/detail_coh_js');
+            $this->load->view('template/template_app_js');
+        }else{
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('template/template_page_not_found');
+            $this->load->view('template/template_right');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('template/template_app_js');
+        }
+        
     }
 
     public function get_data_master_kasir()
@@ -342,6 +422,23 @@ class Mastercoh extends CI_Controller
         $output = json_encode($output);
         echo $output;
     }
+
+    public function get_data_master_kasir_histori()
+    {
+        $database = $this->modelCoh->get_data_master_kasir_histori();
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
+
 
     public function spv_no_ref()
     {
@@ -377,6 +474,12 @@ class Mastercoh extends CI_Controller
         $post = $this->input->post();
         $data = $this->modelCoh->permintaan_setor_dana_kasir($post);
         echo $data;
+    }
+
+    public function tutup_master_coh_kasir()
+    {
+        $id = $this->input->post('id');
+        echo $this->modelCoh->tutup_master_coh_kasir($id);
     }
 
 }

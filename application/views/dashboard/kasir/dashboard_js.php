@@ -348,41 +348,49 @@
 <script>
     function laporan_kasir() {
 
-    // init data dan label
-    $.ajax({
-        url: "<?= Base_url('dashboard/laporan_kasir'); ?>",
-        type: "post",
-        dataType: "JSON",
-        beforeSend: function() {
-        $('#data_kasir').LoadingOverlay("show");
-        },
-        complete: function(data) {
-        $('#data_kasir').LoadingOverlay("hide");
-        },
-        success: function(data) {
-            $('#total_transaksi').val(data.transaksi + ' Transaksi')
-            $('#total_omzet').val(formatRupiah(data.omzet, 'Rp. '))
-            if(data.cash == null){
-                $('#cash_on_hand').val(formatRupiah('0', 'Rp. '))
-            }else{
-                $('#cash_on_hand').val(formatRupiah(data.cash, 'Rp. '))
+        // init data dan label
+        $.ajax({
+            url: "<?= Base_url('dashboard/laporan_kasir'); ?>",
+            type: "post",
+            dataType: "JSON",
+            beforeSend: function() {
+                $('#data_kasir').LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $('#data_kasir').LoadingOverlay("hide");
+            },
+            success: function(data) {
+                if (data.cash == null) {
+                    $('#total_transaksi').val('0 Transaksi')
+                } else {
+                    $('#total_transaksi').val(data.transaksi + ' Transaksi')
+                }
+                if (data.omzet == null) {
+                    $('#total_omzet').val(formatRupiah('0', 'Rp. '))
+                } else {
+                    $('#total_omzet').val(formatRupiah(data.omzet, 'Rp. '))
+                }
+                if (data.cash == null) {
+                    $('#cash_on_hand').val(formatRupiah('0', 'Rp. '))
+                } else {
+                    $('#cash_on_hand').val(formatRupiah(data.cash, 'Rp. '))
+                }
             }
-        }
         });
     }
 
-    $('#print_btn').on('click', function(){
+    $('#print_btn').on('click', function() {
         $('#tanggal').datepicker({
-                autoclose: true,
-                todayHighlight: true,
-                orientation: "auto",
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "auto",
         });
         $('#print_modal').modal('show');
     })
 
     // $('#tanggalForm').submit(function(e) {
     //         e.preventDefault();
-    //         var kasir = "<?= $this->session->userdata['username'];?>";
+    //         var kasir = "<?= $this->session->userdata['username']; ?>";
     //         console.log(kasir);
     //         var data = new FormData(document.getElementById("tanggalForm"));
     //         data.append('kasir', kasir);

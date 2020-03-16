@@ -66,7 +66,7 @@ function rupiah($angka)
                         <div class="form-group row">
                             <div class="col-12">
                                 <button name="setor" id="setor" class="btn btn-inverse waves-effect waves-light" data-target="#setor_modal" data-toggle="modal">
-                                    <i class="fa fa-transfer"></i>
+                                    <i class="fa fa-exchange"></i>
                                     <span>Transfer Dana</span>
                                 </button>
                             </div>
@@ -87,7 +87,7 @@ function rupiah($angka)
                             </li>
                             <li class="nav-item">
                                 <a href="#notifikasi" data-toggle="tab" aria-expanded="true" class="nav-link">
-                                    Daftar Permintaan  <span class="badge badge-danger" id="jumlah_permintaan"></span>
+                                    Daftar Permintaan <span class="badge badge-danger" id="jumlah_permintaan"></span>
                                 </a>
                             </li>
                             <li class="nav-item">
