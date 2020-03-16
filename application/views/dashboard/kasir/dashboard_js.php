@@ -101,13 +101,14 @@
         };
         var table = $('#table-penjualan-terakhir').DataTable({
             destroy: true,
-            paging: false,
+            scrollCollapse: true,
             "oLanguage": {
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
             "bInfo": false,
-            "searching": true,
+            "paging": false,
+            "searching": false,
             "processing": true,
             "serverSide": false,
             "ordering": false,

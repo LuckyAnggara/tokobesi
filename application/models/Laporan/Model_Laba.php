@@ -185,30 +185,41 @@ class Model_Laba extends CI_Model
 
         $this->db->select('*');
         $this->db->from('master_kategori_biaya');
-        $kategori_biaya = $this->db->get()->result_array();
-       
-        foreach ($kategori_biaya as $key => $value) {
-            $this->db->select('SUM(`total`) as total_biaya');
-            $this->db->from('detail_biaya');
-            if ($tanggal !== "--") {
-                $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
-                $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
-            }
-            $this->db->where('kategori_biaya', $value['id']);
-            $data = $this->db->get()->row_array();
-            if($data['total_biaya'] == null)
-            {
-                $total_biaya =0;
-            }else{
-                $total_biaya = $data['total_biaya'];
-            }
-            $output[] = [
-                'nama_biaya' => $value['nama_biaya'],
-                'total'=> $total_biaya
-            ];
-        }
+        $data = $this->db->get();
+        $cek_data = $data->num_rows();
+        $kategori_biaya = $data->result_array();
 
-        return $output;
+        if($cek_data > 0){
+            foreach ($kategori_biaya as $key => $value) {
+                $this->db->select('SUM(`total`) as total_biaya');
+                $this->db->from('detail_biaya');
+                if ($tanggal !== "--") {
+                    $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
+                    $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
+                }
+                $this->db->where('kategori_biaya', $value['id']);
+                $data = $this->db->get()->row_array();
+                if ($data['total_biaya'] == null) {
+                    $total_biaya = 0;
+                } else {
+                    $total_biaya = $data['total_biaya'];
+                }
+                $output[] = [
+                    'nama_biaya' => $value['nama_biaya'],
+                    'total' => $total_biaya
+                ];
+            }
+
+            return $output;
+        }else{
+            $output[] = [
+                'nama_biaya' => '',
+                'total' => 0
+            ];
+            return $output;
+        }
+       
+        
     }
 
     function beban_operasional_usaha_v2($hari = null, $bulan = null, $tahun = null)
