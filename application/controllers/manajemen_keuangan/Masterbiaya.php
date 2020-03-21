@@ -7,6 +7,7 @@ class Masterbiaya extends CI_Controller
     function __construct()
     {
         parent::__construct();
+        $this->load->model('Manajemen_Keuangan/Model_Coh', 'modelCoh');
         $this->load->model('Manajemen_Keuangan/Model_Biaya', 'modelBiaya');
         $this->load->model('Setting/Model_Pusher', 'modelPusher');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
@@ -26,60 +27,16 @@ class Masterbiaya extends CI_Controller
         $this->load->view('template/template_menu');
         $this->load->view('manajemen_keuangan/master_biaya/daftar_biaya/daftar_biaya', $data);
         $this->load->view('template/template_right');
+        $this->load->view('manajemen_keuangan/master_biaya/daftar_biaya/daftar_biaya_modal');
         $this->load->view('template/template_footer');
         $this->load->view('template/template_js');
         $this->load->view('manajemen_keuangan/master_biaya/daftar_biaya/daftar_biaya_js');
         $this->load->view('template/template_app_js');
     }
 
-
-    public function tambah_data($no_ref = null)
+    public function get_daftar_biaya_hari_ini()
     {
-        $data['menu'] = $this->modelSetting->data_menu();
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-
-        $data['master_biaya'] = $this->modelBiaya->get_view_master_biaya($no_ref);
-        $data['css'] = 'manajemen_keuangan/master_biaya/tambah_biaya/tambah_biaya_css';
-
-        $this->load->view('template/template_header', $data);
-        $this->load->view('template/template_menu');
-        $this->load->view('manajemen_keuangan/master_biaya/tambah_biaya/tambah_biaya',$data);
-        $this->load->view('template/template_right');
-        $this->load->view('manajemen_keuangan/master_biaya/tambah_biaya/tambah_biaya_modal');
-        $this->load->view('template/template_footer');
-        $this->load->view('template/template_js');
-        $this->load->view('manajemen_keuangan/master_biaya/tambah_biaya/tambah_biaya_js');
-        $this->load->view('template/template_app_js');
-    }
-
-    public function detail_data($no_ref)
-    {
-        $data['menu'] = $this->modelSetting->data_menu();
-        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-
-        $data['master_biaya'] = $this->modelBiaya->get_view_master_biaya($no_ref);
-        $data['css'] = 'manajemen_keuangan/master_biaya/detail_biaya/detail_biaya_css';
-
-        $this->load->view('template/template_header', $data);
-        $this->load->view('template/template_menu');
-        $this->load->view('manajemen_keuangan/master_biaya/detail_biaya/detail_biaya',$data);
-        $this->load->view('template/template_right');
-        $this->load->view('template/template_footer');
-        $this->load->view('template/template_js');
-        $this->load->view('manajemen_keuangan/master_biaya/detail_biaya/detail_biaya_js');
-        $this->load->view('template/template_app_js');
-    }
-
-     public function tambah($no_ref = null)
-    {
-        $data = $this->modelBiaya->get_view_master_biaya($no_ref);
-        print_r($data);
-    }
-
-    public function get_detail_master_biaya()
-    {
-        $no_ref = $this->input->post('no_ref');
-        $database = $this->modelBiaya->get_detail_master_biaya($no_ref);
+        $database = $this->modelBiaya->get_daftar_biaya_hari_ini();
         $dataBarang = $database->result_array();
         $output = array(
             "recordsTotal" => $this->db->count_all_results(),
@@ -90,62 +47,18 @@ class Masterbiaya extends CI_Controller
         echo $output;
     }
 
-    function get_data_pegawai()
+    public function get_daftar_biaya_histori()
     {
-        $database = $this->modelBiaya->get_data_pegawai();
-        $data = $database->result_array();
-        $output = array(
-            // "draw" => $_POST['draw'],
-            "recordsTotal" => $this->db->count_all_results(),
-            "recordsFiltered"  => $database->num_rows(),
-            "data" => array()
-        );
-
-        foreach ($data as $value) {
-            $value['bonus'] = "0";
-            $value['total'] = $value['biaya_pokok'] + $value['uang_makan'] + $value['bonus'];
-            $output['data'][] = $value;
-        }
-        $output = json_encode($output);
-        echo $output;
-    }
-
-    public function get_master_biaya()
-    {
-        $database = $this->modelBiaya->get_master_biaya();
-        $data = $database->result_array();
+        $post = $this->input->post();
+        $database = $this->modelBiaya->get_daftar_biaya_histori($post);
+        $dataBarang = $database->result_array();
         $output = array(
             "recordsTotal" => $this->db->count_all_results(),
             "recordsFiltered"  => $database->num_rows(),
-            "data" => $data
+            "data" => $dataBarang
         );
-
         $output = json_encode($output);
         echo $output;
-    }
-
-    public function random_ref()
-    {
-        $number = $this->modelBiaya->random_ref();
-        if ($number == false) {
-            echo $number;
-        } else {
-            $output =  "REF" . $number;
-            $output = json_encode($output);
-            echo $output;
-        }
-    }
-
-    public function tambah_master_biaya()
-    {
-        $post = $this->input->post();
-        $this->modelBiaya->tambah_data($post);
-    }
-
-    public function tambah_detail_biaya()
-    {
-        $post = $this->input->post();
-        $this->modelBiaya->tambah_detail_biaya($post);
     }
 
     public function get_kategori_biaya()
@@ -157,22 +70,64 @@ class Masterbiaya extends CI_Controller
         echo $output;
     }
 
-    public function delete_detail_biaya()
-    {
-        $id = $this->input->post('id');
-        $this->modelBiaya->delete_detail_biaya($id);
+    public function get_total_biaya(){
+        $post = $this->input->post();
+        echo $this->modelBiaya->get_total_biaya($post);
     }
 
-    public function get_master_total()
+    public function tambah_biaya()
     {
-        $no_ref = $this->input->post('no_ref');
-        $output = $this->modelBiaya->get_master_total($no_ref);
+        $user = $this->session->userdata('username');
+        $dana = $this->modelCoh->cek_dana($user);
+        $post = $this->input->post();
+        $total_biaya = $this->normal($post['total_biaya']);
+        if($total_biaya > $dana){
+            echo "kurang";
+        }else{
+            $no_jurnal = $this->modelBiaya->tambah_biaya($post);
+            $this->modelCoh->pembayaran_biaya($user, $post, $no_jurnal);
+            echo $no_jurnal;
+        }
+    }
+
+    public function revisi_biaya()
+    {
+        $user = $this->session->userdata('username');
+        $post = $this->input->post();
+        $data = $this->modelBiaya->revisi_biaya($post);
+        $pengembalian = $this->normal($post['pengembalian']);
+        echo $pengembalian;
+        $this->modelCoh->revisi_pembayaran_biaya($user, $data, $pengembalian);
+    }
+
+
+    public function delete_biaya()
+    {
+        $user = $this->session->userdata('username');
+        $id = $this->input->post('id');
+        $data = $this->modelBiaya->delete_biaya($id);
+
+        $this->modelCoh->delete_pembayaran_biaya($user, $data);
+    }
+
+    public function detail_biaya()
+    {
+       
+        $id = $this->input->post('id');
+        $data = $this->modelBiaya->detail_biaya($id);
+        $output = json_encode($data);
         echo $output;
     }
 
-    public function proses_tutup()
+    function cek()
     {
-        $post = $this->input->post();
-        $this->modelBiaya->tutup_master($post);
+        echo $this->modelBiaya->nomor_jurnal();
+    }
+
+    function normal($value)
+    {
+        $value = str_replace("Rp.", "", $value);
+        $value = str_replace(".", "", $value);
+        return str_replace(",", "", $value);
     }
 }

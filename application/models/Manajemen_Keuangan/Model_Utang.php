@@ -50,6 +50,18 @@ class Model_Utang extends CI_Model
         return $output;
     }
 
+    function datapembayaran($post)
+    {
+        $this->db->select('*, master_user.nama as nama_pegawai, DATE_FORMAT(detail_utang.tanggal, "%d %b %Y") as tanggal');
+        $this->db->from('detail_utang');
+        $this->db->join('master_user', 'master_user.username = detail_utang.user');
+        $this->db->where('detail_utang.tanggal >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
+        $this->db->where('detail_utang.tanggal <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
+        $this->db->order_by('detail_utang.tanggal', 'DESC');
+        $output = $this->db->get();
+        return $output;
+    }
+
     function get_detail_pembayaran($nomor_transaksi)
     {
         $this->db->select('*, DATE_FORMAT(tanggal, "%d %b %Y") as tanggal');

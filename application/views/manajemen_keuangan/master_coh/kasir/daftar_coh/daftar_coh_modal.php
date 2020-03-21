@@ -24,7 +24,7 @@
                     <div class="form-group row">
                         <label class="col-3 col-form-label">Keterangan</label>
                         <div class="col-9">
-                            <textarea name="keterangan" id="keterangan" type="text" class="form-control" placeholder="" required></textarea>
+                            <textarea name="keterangan" id="keterangan" type="text" class="form-control" placeholder=""></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

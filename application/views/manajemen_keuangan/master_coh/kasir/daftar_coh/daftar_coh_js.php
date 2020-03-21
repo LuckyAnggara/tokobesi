@@ -1,7 +1,6 @@
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
-
 <!-- Validation js (Parsleyjs) -->
 <script type="text/javascript" src="<?= base_url('assets/'); ?>plugins/parsleyjs/dist/parsley.min.js"></script>
 
@@ -41,7 +40,7 @@
                     $.each(data, function(index, item) {
                         results.push({
                             id: item.nomor_referensi,
-                            text: item.nama_spv + ' - #' + item.nomor_referensi,
+                            text: item.nama_spv + ' - #' + item.tanggal,
                         });
                     });
                     return {
@@ -240,13 +239,13 @@
                     width: 50,
                     render: function(data, type, full, meta) {
                         if (data == "0") {
-                            var display = '<span class="badge badge-primary">Waiting</span>'
+                            var display = '<span class="badge badge-primary">Pending</span>'
                         } else if (data == "1") {
                             var display = '<span class="badge badge-success">Open</span>'
                         } else if (data == "2") {
                             var display = '<span class="badge badge-inverse">Close</span>'
                         } else if (data == "4") {
-                            var display = '<span class="badge badge-primary">Waiting</span>'
+                            var display = '<span class="badge badge-primary">Pending</span>'
                         }
                         return display;
                     }
@@ -348,13 +347,13 @@
                     width: 50,
                     render: function(data, type, full, meta) {
                         if (data == "0") {
-                            var display = '<span class="badge badge-primary">Waiting</span>'
+                            var display = '<span class="badge badge-primary">Pending</span>'
                         } else if (data == "1") {
                             var display = '<span class="badge badge-success">Open</span>'
                         } else if (data == "2") {
                             var display = '<span class="badge badge-inverse">Close</span>'
                         } else if (data == "4") {
-                            var display = '<span class="badge badge-primary">Waiting</span>'
+                            var display = '<span class="badge badge-primary">Pending</span>'
                         }
                         return display;
                     }
@@ -362,6 +361,7 @@
                 {
                     data: {
                         "id": "id",
+                        "nomor_referensi": "nomor_referensi",
                         "status": "status"
                     },
                     targets: 6,
@@ -394,8 +394,20 @@
     }
 
 
+
+
     function detail_data(no_ref) {
         window.location.href = "<?= base_url('manajemen_keuangan/mastercoh/detail_data_kasir/'); ?>" + no_ref
+    }
+
+    function print_report(id) {
+        $.ajax({
+            url: "<?= base_url('laporan/cash/laporan_cash_kasir/'); ?>" + id,
+            // dataType:'json',
+            success: function(data) {
+                window.open(this.url, '_blank');
+            }
+        })
     }
 
 
@@ -416,13 +428,14 @@
     }
 
     function tutupData(id) {
+        var data;
+        data.append('id', id);
         $.ajax({
             url: "<?= base_url('manajemen_keuangan/mastercoh/tutup_master_coh_kasir'); ?>",
             type: "post",
-            data: {
-                id: id
-            },
-            async: false,
+            data: data,
+            processData: false,
+            contentType: false,
             success: function(data) {
                 if (data == 0) {
                     $('#datatable-master-coh').DataTable().ajax.reload();
@@ -467,7 +480,6 @@
             data: {
                 id: id
             },
-            async: false,
             success: function(data) {
                 $('#datatable-master-coh').DataTable().ajax.reload();
                 swal.fire(

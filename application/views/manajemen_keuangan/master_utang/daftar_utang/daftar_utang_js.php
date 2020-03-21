@@ -51,6 +51,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         init_table();
+        init_table_detail_pembayaran();
         setSaldoUtang();
 
 
@@ -58,6 +59,7 @@
             var tanggal_awal = $('#tanggal_awal').val();
             var tanggal_akhir = $('#tanggal_akhir').val();
             init_table(tanggal_awal, tanggal_akhir);
+            init_table_detail_pembayaran(tanggal_awal, tanggal_akhir);
         });
     });
 
@@ -213,6 +215,123 @@
         });
     }
 
+    function init_table_detail_pembayaran(tanggal_awal = "01-01-" + new Date().getFullYear(), tanggal_akhir = "31-12-" + new Date().getFullYear()) {
+        var input = {
+            tanggal_awal: tanggal_awal,
+            tanggal_akhir: tanggal_akhir
+        }
+        $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+            return {
+                "iStart": oSettings._iDisplayStart,
+                "iEnd": oSettings.fnDisplayEnd(),
+                "iLength": oSettings._iDisplayLength,
+                "iTotal": oSettings.fnRecordsTotal(),
+                "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+            };
+        };
+        var role = "<?php echo $this->session->userdata('role'); ?>";
+        if (role == "4" || role == "5") {
+            var visible = true
+        } else {
+            var visible = false
+        }
+        var table = $('#datatable-detail-pembayaran-utang').DataTable({
+            destroy: true,
+            paging: true,
+            "oLanguage": {
+                sProcessing: "Sabar yah...",
+                sZeroRecords: "Tidak ada Data..."
+            },
+            "buttons": ['copy', 'excel', 'pdf', 'print'],
+            dom: 'Bfrtip',
+            "searching": true,
+            "fixedColumns": true,
+            "processing": true,
+            "serverSide": false,
+            "ajax": {
+                "url": '<?= base_url("manajemen_keuangan/masterutang/datapembayaran/"); ?>',
+                "data": input,
+                "type": "POST",
+            },
+            "columnDefs": [{
+                    targets: 0,
+                    render: function(data, type, full, meta) {
+                        return "";
+                    }
+                },
+                {
+                    data: "tanggal",
+                    targets: 1,
+                    render: function(data, type, full, meta) {
+
+                        return data;
+                    }
+                },
+                {
+                    data: "nomor_transaksi",
+                    targets: 2,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "nominal_pembayaran",
+                    targets: 3,
+                    render: function(data, type, full, meta) {
+                        var display = formatRupiah(data.toString(), 'Rp.');
+                        return display;
+                    }
+                },
+                {
+                    data: "nama_pegawai",
+                    targets: 4,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    data: "keterangan",
+                    targets: 5,
+                    render: function(data, type, full, meta) {
+                        var display = formatRupiah(data.toString(), 'Rp.');
+                        return data;
+                    }
+                },
+                {
+                    data: {
+                        "bukti": "bukti",
+                        "id": "id",
+                        "user": "user"
+                    },
+                    width: 20,
+                    targets: 6,
+                    render: function(data, type, full, meta) {
+                        var user = '<?php echo $this->session->userdata['username']; ?>'
+                        var dp = '<span class="badge badge-inverse"> DP </span>'
+                        var download = '<a type="button" onClick = "download_lampiran(\'' + data.bukti + '\')" class="btn btn-icon waves-effect waves-light btn-inverse btn-sm"><i class="fa fa-download" ></i> </a>';
+                        if (data.bukti == "") {
+                            return "";
+                        } else if (data.bukti == "1") {
+                            return dp;
+                        } else {
+                            return download;
+                        }
+                    }
+                }
+            ],
+            "deferRender": true,
+            "rowCallback": function(row, data, iDisplayIndex) {
+                var info = this.fnPagingInfo();
+                var page = info.iPage;
+                var length = info.iLength;
+                var index = page * length + (iDisplayIndex + 1);
+                $('td:eq(0)', row).html(index);
+            }
+        });
+    }
+
     function setSaldoUtang() {
         $.ajax({
             url: '<?= base_url("manajemen_keuangan/masterutang/saldoutang/"); ?>',
@@ -229,6 +348,10 @@
 <!-- Script Filter -->
 
 <script>
+    function download_lampiran(bukti) {
+        window.location.href = "<?= base_url('assets/upload/bukti/utang/'); ?>" + bukti;
+    }
+
     function detail_utang(nomor_faktur) {
         window.location.href = "<?= base_url('manajemen_keuangan/masterutang/detail_utang/'); ?>" + nomor_faktur;
     }

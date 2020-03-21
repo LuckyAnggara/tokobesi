@@ -6,12 +6,22 @@ class Model_Retur_Penjualan extends CI_Model
     function get_data($post)
     {
         $no_faktur = $post['nomor_faktur'];
-        $this->db->select('*');
-        $this->db->from('master_penjualan');
-        $this->db->join('master_pelanggan', 'master_pelanggan.id_pelanggan = master_penjualan.id_pelanggan');
-        $this->db->where('no_faktur', $no_faktur);
-        $output = $this->db->get()->row_array();
-        return $output;
+        $this->db->select('nomor_faktur_asli');
+        $this->db->from('master_retur_penjualan');
+        $this->db->where('nomor_faktur_asli', $no_faktur);
+        $cek = $this->db->get()->num_rows();
+
+        if($cek > 0){
+            return "ada";
+        }else{
+            $this->db->select('*');
+            $this->db->from('master_penjualan');
+            $this->db->join('master_pelanggan', 'master_pelanggan.id_pelanggan = master_penjualan.id_pelanggan');
+            $this->db->where('no_faktur', $no_faktur);
+            $output = $this->db->get()->row_array();
+            return $output;
+        }
+        
     }
 
     function get_detail_data($post)
@@ -42,6 +52,7 @@ class Model_Retur_Penjualan extends CI_Model
             "retur_pajak" => $post['retur_pajak'],
             "retur_grand_total" => $post['retur_grand_total'],
             'user' => $this->session->userdata['username'],
+            'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
         ];
         $this->db->insert('master_retur_penjualan', $data);
     }
@@ -60,6 +71,7 @@ class Model_Retur_Penjualan extends CI_Model
             "diskon" => $post['diskon'],
             "total_retur" => $post['retur_total'],
             'user' => $this->session->userdata['username'],
+            'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
         ];
         $this->db->insert('detail_retur_penjualan', $data);
     }

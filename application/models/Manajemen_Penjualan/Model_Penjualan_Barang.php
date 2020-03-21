@@ -351,6 +351,18 @@ class Model_Penjualan_Barang extends CI_Model
                 'keterangan' => 'Down Payment',
             );
             $this->db->insert('detail_piutang', $data);
+            // update COH
+            $nominal = $post['down_payment'];
+            $this->modelCoh->transaksi_penjualan_kredit($this->session->userdata['username'], $nominal, $no_faktur);
+        }else{
+            $this->db->select('grand_total');
+            $this->db->from('master_penjualan');
+            $this->db->where('no_faktur', $no_faktur);
+            $data = $this->db->get()->row_array();
+            $nominal = $data['grand_total'];
+
+            // update COH
+            $this->modelCoh->transaksi_penjualan_tunai($this->session->userdata['username'], $nominal, $no_faktur);
         }
     }
 
@@ -553,12 +565,16 @@ class Model_Penjualan_Barang extends CI_Model
                     'tanggal_transaksi' => date("Y-m-d H:i:s"),
                     'kode_barang' => $kode_barang,
                     'qty' => $stok_update,
+                    'sisa' => $stok_update,
                     'harga_pokok' => $saldo_awal['harga_awal'],
                     'harga_jual' => $post['harga_jual'],
-                    'keterangan' => $detail_barang['metode_hpp']
+                    'keterangan' => $detail_barang['metode_hpp'],
+                    'jenis_barang' => 'saldo_awal',
                 ];
                 $this->db->insert('master_harga_pokok_penjualan', $data);
                 $this->db->query("UPDATE master_saldo_awal SET saldo_awal = $stok_update WHERE kode_barang = '$kode_barang'");
+
+               
             } else {
 
                 if ($saldo_awal['saldo_awal'] !== 0) {
@@ -568,9 +584,11 @@ class Model_Penjualan_Barang extends CI_Model
                         'tanggal_transaksi' => date("Y-m-d H:i:s"),
                         'kode_barang' => $kode_barang,
                         'qty' => $saldo_awal['saldo_awal'],
+                        'sisa' => $stok_update,
                         'harga_pokok' => $saldo_awal['harga_awal'],
                         'harga_jual' => $post['harga_jual'],
-                        'keterangan' => $detail_barang['metode_hpp']
+                        'keterangan' => $detail_barang['metode_hpp'],
+                        'jenis_barang' => 'saldo_awal',
                     ];
                     $this->db->insert('master_harga_pokok_penjualan', $data);
                 }
@@ -603,21 +621,31 @@ class Model_Penjualan_Barang extends CI_Model
                             $jual = $qty_penjualan; // untuk update jual posisi ga bisa asal
                             $qty_penjualan = $qty_penjualan - $qty_penjualan;
                         }
+                        if ($value['jenis_saldo'] == 'retur') {
+                            $jenis_barang_dijual = 'barang_retur';
+                        } else {
+                            $jenis_barang_dijual = 'pembelian_bersih';
+                        }
                         $data = [
                             'nomor_faktur' => $post['nomor_faktur'],
                             'tanggal_transaksi' => date("Y-m-d H:i:s"),
                             'kode_barang' => $kode_barang,
                             'qty' => $jual,
+                            'sisa' => $stok_update,
                             'harga_pokok' => $harga_beli,
                             'harga_jual' => $post['harga_jual'],
-                            'keterangan' => $detail_barang['metode_hpp']
+                            'keterangan' => $detail_barang['metode_hpp'],
+                            'jenis_barang' => $jenis_barang_dijual,
                         ];
                         $this->db->insert('master_harga_pokok_penjualan', $data);
+
                         if($value['jenis_saldo'] == 'retur'){
-$this->db->query("UPDATE detail_retur_barang_penjualan SET saldo_tersedia = $stok_update WHERE id = '$id' AND kode_barang = '$kode_barang' AND tanggal_input = '$tgl'");
+                            $this->db->query("UPDATE detail_retur_barang_penjualan SET saldo_tersedia = $stok_update WHERE id = '$id' AND kode_barang = '$kode_barang' AND tanggal_input = '$tgl'");
                         }else{
-$this->db->query("UPDATE detail_pembelian SET saldo = $stok_update WHERE id = '$id' AND kode_barang = '$kode_barang' AND tanggal_transaksi = '$tgl'");
+                            $this->db->query("UPDATE detail_pembelian SET saldo = $stok_update WHERE id = '$id' AND kode_barang = '$kode_barang' AND tanggal_transaksi = '$tgl'");
                         }
+
+                        $this->tambah_detail_persediaan($kode_barang, $stok_update, $harga_beli,$post, $jenis_barang_dijual);
                         
                         
                     } else {
@@ -664,5 +692,18 @@ $this->db->query("UPDATE detail_pembelian SET saldo = $stok_update WHERE id = '$
         $this->db->update('master_penjualan', $data);
 
         return "sukses";
+    }
+
+    function tambah_detail_persediaan($kode_barang, $stok_update, $harga, $post, $jenis){
+        $data = [
+            'nomor_transaksi' => $post['nomor_faktur'],
+            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+            'kode_barang' => $kode_barang,
+            'saldo' => $stok_update,
+            'debit' => $post['jumlah_penjualan'],
+            'harga_pokok' => $harga,
+            'jenis_barang' => $jenis,
+        ];
+        $this->db->insert('detail_persediaan', $data);
     }
 }

@@ -47,7 +47,6 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        destroy: true,
         init_table();
 
         function init_table(status_bayar = null, tanggal_awal = "01-01-" + new Date().getFullYear(), tanggal_akhir = "31-12-" + new Date().getFullYear()) {

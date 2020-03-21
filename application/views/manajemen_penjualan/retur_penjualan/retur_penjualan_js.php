@@ -13,8 +13,6 @@
                 nomor_faktur: nomor_faktur
             },
             dataType: 'json',
-            cache: false,
-            async: false,
             beforeSend: function() {
                 $.LoadingOverlay("show");
             },
@@ -23,6 +21,12 @@
                     Swal.fire(
                         'Data tidak ditemukan !',
                         'Silahkan Cek Kembali',
+                        'error'
+                    )
+                } else if (data == "ada") {
+                    Swal.fire(
+                        'Oopss',
+                        nomor_faktur + ' Sudah pernah melakukan retur, silahkan cek Daftar Retur Penjualan',
                         'error'
                     )
                 } else {
@@ -61,8 +65,6 @@
                 nomor_faktur: nomor_faktur
             },
             dataType: 'json',
-            cache: false,
-            async: false,
             success: function(data) {
                 if (data.length > 0) {
                     $('#nomor').empty()
@@ -73,12 +75,10 @@
                     $('#keterangan').empty()
                     let nomor = 1;
                     for (var i in data) {
-                        console.log(data[i].kode_barang)
                         var kode_barang = data[i].kode_barang
-
                         var display_nomor = '<input type="text" class="form-control" placeholder="Email" value="' + nomor + '" readonly><br>';
                         var display_nama_barang = '<input type="text" class="form-control" value="' + data[i].kode_barang + ' - ' + data[i].nama_barang + '" readonly><br>';
-                        var display_qty = '<input type="text" class="form-control" value="' + data[i].jumlah_penjualan + '" readonly><br>';
+                        var display_qty = '<input id="qty_jual' + nomor + '"  type="text" class="form-control" value="' + data[i].jumlah_penjualan + '" readonly><br>';
                         var display_harga = '<input data-diskon="' + data[i].diskon + '" id="harga' + nomor + '" type="text" class="form-control" value="' + formatRupiah((data[i].harga_jual - data[i].diskon).toString(), 'Rp.') + '" readonly><br>';
                         var display_qty_retur = '<input id="retur' + nomor + '" data-id="' + data[i].id + '" data-kdbarang="' + data[i].kode_barang + '" type="text" class="form-control" value="0"><br>';
                         var display_keterangan = '<input id="keterangan' + nomor + '" type="text" class="form-control" placeholder="Silahkan isi alasan pengembalian barang.."><br>'
@@ -134,31 +134,37 @@
         var retur_pajak = 0;
         var retur_grand_total = 0;
         for (i = 1; i < jumlah_data; i++) {
+            var qty_jual = $('#qty_jual' + i).val();
             var qty = $('#retur' + i).val();
             var harga = $('#harga' + i).val();
             var diskon = $('#harga' + i).data('diskon');
-            console.log(diskon);
             total = qty * normalrupiah(harga);
-
-
             retur_total = retur_total + total;
             retur_diskon = retur_diskon + diskon;
-
         }
-        if ($('#pajak').val() !== "") {
-            retur_pajak = ((retur_total - retur_diskon) * 0.1)
-
+        if (parseInt(qty) > parseInt(qty_jual)) {
+            $.LoadingOverlay("hide");
+            Swal.fire(
+                'Oopss',
+                'Jumlah Retur Lebih Banyak dari Penjualan',
+                'error'
+            )
+            $('#proses').attr('hidden', true);
         } else {
-            retur_pajak = 0
+            if ($('#pajak').val() !== "Rp. 0") {
+                retur_pajak = ((retur_total - retur_diskon) * 0.1)
+            } else {
+                retur_pajak = 0
+            }
+            retur_grand_total = retur_total - retur_diskon + retur_pajak;
+            $('#retur_total').val(formatRupiah(retur_total.toString(), 'Rp.'));
+            $('#retur_diskon').val(formatRupiah(retur_diskon.toString(), 'Rp.'));
+            $('#retur_pajak').val(formatRupiah(retur_pajak.toString(), 'Rp.'));
+            $('#retur_grand_total').val(formatRupiah(retur_grand_total.toString(), 'Rp.'));
+            $('#proses').attr('hidden', false)
+            $.LoadingOverlay("hide");
         }
-        retur_grand_total = retur_total - retur_diskon + retur_pajak;
 
-        $('#retur_total').val(formatRupiah(retur_total.toString(), 'Rp.'));
-        $('#retur_diskon').val(formatRupiah(retur_diskon.toString(), 'Rp.'));
-        $('#retur_pajak').val(formatRupiah(retur_pajak.toString(), 'Rp.'));
-        $('#retur_grand_total').val(formatRupiah(retur_grand_total.toString(), 'Rp.'));
-        $('#proses').attr('hidden', false)
-        $.LoadingOverlay("hide");
     })
 
     $('#proses').on('click', function() {
@@ -187,12 +193,14 @@
 
     function proses_retur() {
         var nomor_faktur = $('#nomor_faktur').val();
-        var id_pelanggan = $('#id_pelanggan').val()
+        var id_pelanggan = $('#id_pelanggan').val();
+        var tanggal_transaksi = $('#tanggal_transaksi').val();
         var retur_total = normalrupiah($('#retur_total').val());
         var retur_diskon = normalrupiah($('#retur_diskon').val());
         var retur_pajak = normalrupiah($('#retur_pajak').val());
         var retur_grand_total = normalrupiah($('#retur_grand_total').val());
-        do_retur_master(nomor_faktur, id_pelanggan, retur_total, retur_diskon, retur_pajak, retur_grand_total)
+        do_retur_master(nomor_faktur, id_pelanggan, retur_total, retur_diskon, retur_pajak, retur_grand_total, tanggal_transaksi)
+
         for (i = 1; i < jumlah_data; i++) {
             var id = $('#retur' + i).data('id');
             var kode_barang = $('#retur' + i).data('kdbarang');
@@ -202,10 +210,10 @@
             var keterangan = $('#keterangan' + i).val();
             var retur_total = qty * normalrupiah(harga);
             if (qty > 0) {
-                do_retur_detail(id, nomor_faktur, kode_barang, keterangan, qty, harga, diskon, retur_total)
+                do_retur_detail(id, nomor_faktur, kode_barang, keterangan, qty, harga, diskon, retur_total, tanggal_transaksi)
             }
         }
-
+        $('.btn').attr('disabled', true);
         setTimeout(function() {
             window.location.href = "<?php echo base_url('manajemen_penjualan/returpenjualan/faktur/'); ?>RTR-" + nomor_faktur;
         }, 5000);
@@ -219,28 +227,26 @@
 
     }
 
-    function do_retur_master(nomor_faktur, id_pelanggan, retur_total, retur_diskon, retur_pajak, retur_grand_total) {
+    function do_retur_master(nomor_faktur, id_pelanggan, retur_total, retur_diskon, retur_pajak, retur_grand_total, tanggal_transaksi) {
         $.ajax({
             url: "<?= Base_url('manajemen_penjualan/returpenjualan/tambahdatamaster'); ?>",
             type: "post",
+            async: false,
             data: {
                 nomor_faktur: nomor_faktur,
                 id_pelanggan: id_pelanggan,
                 retur_total: retur_total,
                 retur_diskon: retur_diskon,
                 retur_pajak: retur_pajak,
-                retur_grand_total: retur_grand_total
+                retur_grand_total: retur_grand_total,
+                tanggal_transaksi: tanggal_transaksi,
             },
             dataType: 'json',
-            cache: false,
-            async: false,
-            beforeSend: function() {
-                $.LoadingOverlay("show");
-            },
+
         })
     }
 
-    function do_retur_detail(id, nomor_faktur, kode_barang, keterangan, qty, harga, diskon, retur_total) {
+    function do_retur_detail(id, nomor_faktur, kode_barang, keterangan, qty, harga, diskon, retur_total, tanggal_transaksi) {
         $.ajax({
             url: "<?= Base_url('manajemen_penjualan/returpenjualan/tambahdatadetail'); ?>",
             type: "post",
@@ -253,10 +259,12 @@
                 harga: harga,
                 diskon: diskon,
                 retur_total: retur_total,
+                tanggal_transaksi: tanggal_transaksi
             },
             dataType: 'json',
-            cache: false,
-            async: false,
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
             complete: function() {
                 $.LoadingOverlay("hide");
             }

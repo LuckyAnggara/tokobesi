@@ -15,7 +15,6 @@
 <!-- SCRIPT DASHBOARD AWAL -->
 <script>
     $(document).ready(function() {
-
         initTableLatestOrder();
         init_penjualan_hari_ini();
         laporan_kasir();
@@ -372,7 +371,9 @@
                 }
                 if (data.cash == null) {
                     $('#cash_on_hand').val(formatRupiah('0', 'Rp. '))
+                    $('#cash').val('Closed')
                 } else {
+                    $('#cash').val(formatRupiah(data.cash, 'Rp. '))
                     $('#cash_on_hand').val(formatRupiah(data.cash, 'Rp. '))
                 }
             }
@@ -388,21 +389,21 @@
         $('#print_modal').modal('show');
     })
 
-    // $('#tanggalForm').submit(function(e) {
-    //         e.preventDefault();
-    //         var kasir = "<?= $this->session->userdata['username']; ?>";
-    //         console.log(kasir);
-    //         var data = new FormData(document.getElementById("tanggalForm"));
-    //         data.append('kasir', kasir);
-    //         $.ajax({
-    //             url: "<?= base_url("laporan/kasir/laporan_harian/"); ?>",
-    //             type: "post",
-    //             data: data,
-    //             processData: false,
-    //             contentType: false,
-    //             success: function(data) {
-    //                 window.open(this.url,'_blank' );
-    //             }
-    //         })
-    // })
+    $('#tanggalForm').submit(function(e) {
+            e.preventDefault();
+            var kasir = "<?= $this->session->userdata['username']; ?>";
+            console.log(kasir);
+            var data = new FormData(document.getElementById("tanggalForm"));
+            data.append('kasir', kasir);
+            $.ajax({
+                url: "<?= base_url("laporan/kasir/laporan_harian/"); ?>",
+                type: "post",
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    window.open(this.url,'_blank' );
+                }
+            })
+    })
 </script>

@@ -32,26 +32,6 @@ class Model_Pembelian_Barang extends CI_Model
         return $this->db->get()->result_array();
     }
 
-    function get_data_barang($string)
-    {
-        if ($string == null) {
-            $this->db->select('master_persediaan.*, master_barang.*, master_satuan_barang.nama_satuan');
-            $this->db->from('master_persediaan');
-            $this->db->join('master_barang', 'master_barang.kode_barang = master_persediaan.kode_barang');
-            $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
-            $output = $this->db->get();
-            return $output;
-        } else {
-            $this->db->select('master_persediaan.*, master_barang.*, master_satuan_barang.nama_satuan');
-            $this->db->from('master_persediaan');
-            $this->db->join('master_barang', 'master_barang.kode_barang = master_persediaan.kode_barang');
-            $this->db->join('master_satuan_barang', 'master_satuan_barang.id_satuan = master_barang.kode_satuan');
-            $this->db->like("master_persediaan.kode_barang", $string);
-            $this->db->or_like("nama_barang", $string);
-            $output = $this->db->get();
-            return $output;
-        }
-    }
 
     function push_data_barang()
     {
@@ -194,7 +174,7 @@ class Model_Pembelian_Barang extends CI_Model
 
         // $this->_tambah_data_persediaan($post);
 
-        $this->_tambah_detail_persediaan($post);
+        // $this->_tambah_detail_persediaan($post);
 
         $this->_delete_detail_pembelian_temp($post);
     }
@@ -219,7 +199,7 @@ class Model_Pembelian_Barang extends CI_Model
 
         $this->_tambah_detail_pembelian($post);
         $this->_delete_detail_pembelian_temp($post);
-        $this->_tambah_detail_persediaan($post);
+        // $this->_tambah_detail_persediaan($post);
         $this->_proses_kredit($post);
     }
 
@@ -253,6 +233,8 @@ class Model_Pembelian_Barang extends CI_Model
             'keterangan' => 'Down Payment',
         );
         $this->db->insert('detail_utang', $data);
+
+        $this->_tambah_detail_persediaan($post);
     }
 
     private function _tambah_detail_pembelian($post)
@@ -260,6 +242,8 @@ class Model_Pembelian_Barang extends CI_Model
         $nomor_transaksi = $post['nomor_transaksi'];
 
         $this->db->query("INSERT INTO `detail_pembelian`(`nomor_transaksi`,`tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input`,`saldo`) SELECT '" .  $nomor_transaksi . "', `tanggal_transaksi`, `no_order_pembelian`, `kode_barang`, `jumlah_pembelian`,`harga_beli`,`diskon`,`total_harga`,`tanggal_input`,`jumlah_pembelian` FROM temp_tabel_keranjang_pembelian WHERE no_order_pembelian = '" . $post['no_order_pembelian'] . "'");
+
+        $this->_tambah_detail_persediaan($post);
     }
 
     private function _delete_detail_pembelian_temp($post)
@@ -268,30 +252,25 @@ class Model_Pembelian_Barang extends CI_Model
         $this->db->delete('temp_tabel_keranjang_pembelian');
     }
 
-    private function _tambah_data_persediaan($post)
-    {
-        $this->db->select('*');
-        $this->db->from('detail_pembelian');
-        $this->db->where('no_order_pembelian', $post['no_order_pembelian']);
-        $data = $this->db->get()->result_array();
-
-        foreach ($data as $key => $value) {
-            $this->db->select('*');
-            $this->db->from('master_persediaan');
-            $this->db->where('kode_barang', $value['kode_barang']);
-            $jumlah_lama = $this->db->get()->row_array();
-
-            $update = [
-                'jumlah_persediaan' => $value['jumlah_pembelian'] + $jumlah_lama['jumlah_persediaan'],
-                'tanggal_input' => date("Y-m-d H:i:s"),
-            ];
-            $this->db->where('kode_barang', $value['kode_barang']);
-            $this->db->update('master_persediaan', $update);
-        }
-    }
 
     private function _tambah_detail_persediaan($post)
     {
-        $this->db->query("INSERT INTO `detail_persediaan`(`tanggal_transaksi`, `nomor_transaksi`, `kode_barang`, `jumlah`,`harga_beli`,`saldo`) SELECT `tanggal_transaksi`, `nomor_transaksi`, `kode_barang`, `jumlah_pembelian`,`harga_beli`, `jumlah_pembelian` FROM detail_pembelian WHERE nomor_transaksi = '" . $post['nomor_transaksi'] . "'");
+        $this->db->select('*');
+        $this->db->from('detail_pembelian');
+        $this->db->where('nomor_transaksi', $post['nomor_transaksi']);
+        $data_barang = $this->db->get()->row_array();
+
+        $data = [
+            'kode_barang' => $data_barang['kode_barang'],
+            'nomor_transaksi' => $data_barang['nomor_transaksi'],
+            'jenis_barang' => 'pembelian_bersih',
+            'saldo' => $data_barang['jumlah_pembelian'],
+            'harga_pokok' => $data_barang['harga_beli'],
+            'debit' => 0,
+            'tanggal_transaksi' => $data_barang['tanggal_transaksi'],
+        ];
+
+        $this->db->insert('detail_persediaan', $data);
+
     }
 }

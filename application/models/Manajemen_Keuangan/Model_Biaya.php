@@ -3,63 +3,66 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Model_Biaya extends CI_Model
 {
-
-    function get_data_pegawai()
+    function get_kategori_biaya($query)
     {
-        $this->db->select('nip, nama_lengkap,jabatan,biaya_pokok,uang_makan');
-        $this->db->from('master_pegawai');
+        $this->db->select('*');
+        $this->db->from('master_kategori_biaya');
+        $this->db->like('nama_biaya', $query);
+        $this->db->where('status', 0);
+        $output = $this->db->get();
+        return $output;
+    }
+
+    function get_daftar_biaya_hari_ini()
+    {
+        $this->db->select('detail_biaya.id,detail_biaya.nomor_jurnal, detail_biaya.keterangan, detail_biaya.total, master_kategori_biaya.nama_biaya, DATE_FORMAT(tanggal, "%H:%i") as jam');
+        $this->db->from('detail_biaya');
+        $this->db->join('master_kategori_biaya', 'master_kategori_biaya.id = detail_biaya.kategori_biaya');
+        $this->db->where('tanggal >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal <=', date('Y-m-d 23:59:59'));
         return $this->db->get();
     }
 
-    function get_master_biaya()
+    function get_daftar_biaya_histori($post)
     {
-        $this->db->select('master_biaya.id,master_biaya.nomor_referensi, master_biaya.total_biaya,master_biaya.status, master_biaya.keterangan, DATE_FORMAT(master_biaya.tanggal, "%d-%b-%y") as tanggal, master_user.nama as nama_admin,');
-        $this->db->from('master_biaya');
-        $this->db->join('master_user', 'master_user.username = master_biaya.user');
-        $this->db->where('user', $this->session->userdata['username']);
-        return $this->db->get();
-    }
-
-    function random_ref()
-    {
-        $data = random_string('numeric', 7);
-        $this->db->select('nomor_referensi');
-        $this->db->from('master_biaya');
-        $this->db->where('nomor_referensi', $data);
-
-        $cek = $this->db->get()->num_rows();
-
-        if ($cek > 0) {
-            return false;
-        } else {
-            return $data;
+        $tanggal_awal = $post['tanggal_awal'];
+        $tanggal_akhir = $post['tanggal_akhir'];
+        $this->db->select('detail_biaya.id,detail_biaya.nomor_jurnal, detail_biaya.keterangan, detail_biaya.total, master_kategori_biaya.nama_biaya, DATE_FORMAT(tanggal, "%d %b %y | %H:%i") as jam_tanggal');
+        $this->db->from('detail_biaya');
+        $this->db->join('master_kategori_biaya', 'master_kategori_biaya.id = detail_biaya.kategori_biaya');
+        if ($tanggal_awal !== null) {
+            $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggal_awal)));
+            $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal_akhir)));
         }
+        $this->db->order_by('detail_biaya.tanggal', 'DESC');
+        return $this->db->get();
     }
 
-    function tambah_data($post)
+    function get_total_biaya($post)
     {
+        $tanggal_awal = $post['tanggal_awal'];
+        $tanggal_akhir = $post['tanggal_akhir'];
+        
+        $this->db->select_sum('total');
+        $this->db->from('detail_biaya');
+        if($tanggal_awal == null){
+            $this->db->where('tanggal >=', date('Y-m-d 00:00:00'));
+            $this->db->where('tanggal <=', date('Y-m-d 23:59:59'));
+        }else{
+            $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggal_awal)));
+            $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal_akhir)));
+        }
+    
+        $output = $this->db->get();
+        return $output->row()->total;
+    }
+
+    function tambah_biaya($post)
+    {
+        $no_jurnal = $this->nomor_jurnal();
         $data = [
-            'nomor_referensi' => $post['nomor_referensi'],
-            'tanggal' =>  date('Y-m-d H:i:s', strtotime($post['tanggal'])),
-            'keterangan' => $post['keterangan'],
-            'total_biaya' => '0',
-            'status' => '0',
-            'user' => $this->session->userdata['username']
-        ];
-        $this->db->insert('master_biaya', $data);
-    }
-
-    function delete_master_stok_opname($no_ref)
-    {
-        $this->db->where('nomor_referensi', $no_ref);
-        $this->db->delete('master_stok_opname');
-    }
-
-    function tambah_detail_biaya($post)
-    {
-        $data = [
-            'nomor_referensi' => $post['nomor_referensi'],
             'kategori_biaya' => $post['kategori_biaya'],
+            'nomor_jurnal' =>$no_jurnal,
             'keterangan' => $post['keterangan'],
             'total' => $this->normal($post['total_biaya']),
             'status' => 0,
@@ -67,26 +70,7 @@ class Model_Biaya extends CI_Model
             'user' => $this->session->userdata['username']
         ];
         $this->db->insert('detail_biaya', $data);
-    }
-
-    function get_detail_master_biaya($no_ref)
-    {
-        $this->db->select('detail_biaya.id,detail_biaya.nomor_referensi,detail_biaya.keterangan as ket,detail_biaya.total,DATE_FORMAT(detail_biaya.tanggal, "%d %M %Y") as jam,master_kategori_biaya.nama_biaya');
-        $this->db->from('detail_biaya');
-        $this->db->join('master_kategori_biaya', 'master_kategori_biaya.id = detail_biaya.kategori_biaya');
-        $this->db->where('nomor_referensi', $no_ref);
-        $this->db->order_by('detail_biaya.id', 'ASC');
-        return $this->db->get();
-    }
-
-    function get_kategori_biaya($query)
-    {
-        $this->db->select('*');
-        $this->db->from('master_kategori_biaya');
-        $this->db->like('nama_biaya', $query);
-        $this->db->where('status',0);
-        $output = $this->db->get();
-        return $output;
+        return $no_jurnal;
     }
 
     function normal($value)
@@ -96,63 +80,62 @@ class Model_Biaya extends CI_Model
         return str_replace(",", "", $value);
     }
 
-    function delete_detail_biaya($id)
+    function nomor_jurnal()
     {
-        $this->db->where('id', $id);
-        $this->db->delete('detail_biaya');
-    }
-
-    function get_master_total($no_ref)
-    {
-        $this->db->select_sum('total');
-        $this->db->from('detail_biaya');
-        $this->db->where('nomor_referensi', $no_ref);
-        $output = $this->db->get();
-        return $output->row()->total;
-    }
-
-    function get_view_master_biaya($no_ref)
-    {
-        $this->db->select('master_biaya.id,master_biaya.nomor_referensi, master_biaya.total_biaya,master_biaya.status, master_biaya.keterangan, DATE_FORMAT(master_biaya.tanggal, "%d-%b-%y") as tanggal, master_user.nama as nama_admin,');
-        $this->db->from('master_biaya');
-        $this->db->join('master_user', 'master_user.username = master_biaya.user');
-        $this->db->where('nomor_referensi', $no_ref);
-        $data = $this->db->get()->row_array();
-
-        if(isset($data)){
-            return $data;
-        }else{
-            $data = [
-                "nomor_referensi" => "",
-                "tanggal" => "",
-                "keterangan" => "",
-            ];
-            return $data;
+        $this->db->select_max('nomor_jurnal');
+        $data = $this->db->get('detail_biaya');
+        if ($data->row('nomor_jurnal') !== null) {
+            $number = substr($data->row('nomor_jurnal'),7);
+            $number = $number + 1;
+            $tgl = date('dmy');
+            return $tgl . '4' . $number;
+        } else {
+            $tgl = date('dmy');
+            return $tgl . '4' . '1';
         }
     }
-    function get_view_detail_biaya($no_ref)
+
+    // revisi dan delete
+
+    function detail_biaya($id)
     {
-        $this->db->select('detail_biaya.id,detail_biaya.nomor_referensi,detail_biaya.keterangan as ket,detail_biaya.total,DATE_FORMAT(detail_biaya.tanggal, "%d %M %Y") as jam,master_kategori_biaya.nama_biaya');
+        $this->db->select('detail_biaya.total, detail_biaya.id, detail_biaya.keterangan as ket, master_kategori_biaya.nama_biaya');
         $this->db->from('detail_biaya');
         $this->db->join('master_kategori_biaya', 'master_kategori_biaya.id = detail_biaya.kategori_biaya');
-        $this->db->where('nomor_referensi', $no_ref);
-        $this->db->order_by('detail_biaya.id', 'ASC');
-        return $this->db->get();
+        $this->db->where('detail_biaya.id', $id);
+        $data_biaya = $this->db->get()->row_array();
+
+        return $data_biaya;
     }
 
-    function tutup_master($post)
+    function revisi_biaya($post)
     {
+        $this->db->select('*');
+        $this->db->from('detail_biaya');
+        $this->db->where('id', $post['id']);
+        $data_biaya = $this->db->get()->row_array();
+
+        $real_biaya = $this->normal($post['real_biaya']);
         $data = [
-            'status' => 2,
-            'total_biaya' => $this->normal($post['total_biaya']),
+            'total' => $real_biaya,
+            'keterangan' => $post['revisi_keterangan']
         ];
-        $this->db->where('nomor_referensi', $post['no_ref']);
-        $this->db->update('master_biaya', $data);
+        $this->db->where('id', $post['id']);
+        $this->db->update('detail_biaya', $data);
+
+        return $data_biaya;
     }
 
-    
+    function delete_biaya($id){
+        $this->db->select('*');
+        $this->db->from('detail_biaya');
+        $this->db->where('id', $id);
+        $data_biaya = $this->db->get()->row_array();
 
+        $this->db->where('id', $id);
+        $this->db->delete('detail_biaya');
 
-    // view detail
+        return $data_biaya;
+    }
 
 }

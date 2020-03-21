@@ -296,7 +296,12 @@
         url: '<?= base_url("manajemen_pembelian/pembelianbarang/get_data_barang/"); ?>' + kata_kunci,
         type: "POST",
         dataType: "JSON",
-        async: false,
+        beforeSend: function() {
+          $('#result_page').LoadingOverlay("show");
+        },
+        complete: function(data) {
+          $('#result_page').LoadingOverlay("hide");
+        },
         success: function(data) {
           if (data.jumlah_data > 0) {
             $("#result_page").empty();
@@ -422,7 +427,12 @@
   function deleteData_pembelian(id) {
     $.ajax({
       url: "<?= base_url('manajemen_pembelian/pembelianbarang/delete_data_keranjang/'); ?>" + id,
-      async: false,
+      beforeSend: function() {
+        $.LoadingOverlay("show");
+      },
+      complete: function() {
+        $.LoadingOverlay("hide");
+      },
       success: function(data) {
         $('#datatable-keranjang-pembelian').DataTable().ajax.reload();
       }
@@ -451,8 +461,12 @@
         harga_beli: harga_beli,
         diskon: diskon
       },
-      cache: false,
-      async: false,
+      beforeSend: function() {
+        $.LoadingOverlay("show");
+      },
+      complete: function() {
+        $.LoadingOverlay("hide");
+      },
       success: function(data) {
         $('#datatable-keranjang-pembelian').DataTable().ajax.reload();
         push_total_perhitungan(no_order_pembelian, 0, 0);
@@ -881,8 +895,6 @@
     var dp = $('#dp').val();
     var tanggal_jatuh_tempo = $('#tanggal_jatuh_tempo').val();
 
-    $.LoadingOverlay("show");
-
     $.ajax({
       url: "<?= Base_url('manajemen_pembelian/pembelianbarang/proses_kredit'); ?>",
       type: "post",
@@ -894,8 +906,12 @@
         tanggal_jatuh_tempo: tanggal_jatuh_tempo,
         down_payment: dp,
       },
-      cache: false,
-      async: false,
+      beforeSend: function() {
+        $.LoadingOverlay("show");
+      },
+      complete: function() {
+        $.LoadingOverlay("hide");
+      },
       success: function(data) {
         if (data == 1) {
           Swal.fire({
@@ -934,7 +950,6 @@
     var no_order_pembelian = $('#no_order_pembelian').text();
     var kode_supplier = $('#select_nama_supplier').val();
     var tanggal_transaksi = $('#tanggal_transaksi').val();
-    $.LoadingOverlay("show");
     $.ajax({
       url: "<?= Base_url('manajemen_pembelian/pembelianbarang/proses_tunai'); ?>",
       type: "post",
@@ -944,8 +959,9 @@
         tanggal_transaksi: tanggal_transaksi,
         kode_supplier: kode_supplier,
       },
-      cache: false,
-      async: false,
+      beforeSend: function() {
+        $.LoadingOverlay("show");
+      },
       success: function(data) {
         if (data == 1) {
           Swal.fire({
@@ -970,10 +986,10 @@
         }
       },
       complete: function(data) {
+        $.LoadingOverlay("hide");
         $('.btn').attr('disabled', 'true');
         $('#datatable-keranjang-pembelian').empty()
         // Hide image container
-        $.LoadingOverlay("hide");
       }
     })
   }

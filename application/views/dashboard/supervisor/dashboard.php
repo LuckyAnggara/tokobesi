@@ -4,8 +4,42 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-12">
+                        <div class="btn-group pull-right m-t-20">
+                            <button id="sign" type="button" class="btn btn-danger" data-toggle="dropdown" aria-expanded="false">Closed</button>
+                        </div>
                         <h4 class="page-title">Selamat Datang <i><b><?= $this->session->userdata['nama']; ?></b></i></h4>
                     </div>
+                </div>
+                <div class="row">
+                   
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card-box widget-user ">
+                            <h4 class="header-title mt-0 m-b-30">Dana Tersedia</h4>
+                            <div>
+                                <img src="<?= base_url('assets/images/'); ?>money.png    " class="img-responsive rounded-circle" alt="user">
+                                <div class="wid-u-info text-right">
+                                    <h3 class="mb-0 counterRupiah" id="dana_tersedia">0</h3>
+                                    <p class="text-muted">hari ini</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- end col -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card-box">
+                            <h4 class="header-title mt-0 m-b-30">Total Pengeluaran</h4>
+                            <div class="widget-box-2">
+                                <div class="widget-detail-2">
+                                    <div class="btn-group  pull-left">
+                                        <span class="badge dropdown-toggle badge-pill   " data-toggle="dropdown" aria-expanded="false" id="penjualan_trending">0% <i class="mdi mdi-trending-up"></i> </span>
+                                        <div class="dropdown-menu" id="dropdown_penjualan">
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-0 counterRupiah" id="pengeluaran">0</h3>
+                                    <p class="text-muted">hari ini</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- end col -->
                 </div>
                 <div class="row">
                     <div class="col-xl-6">

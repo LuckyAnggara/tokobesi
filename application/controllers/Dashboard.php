@@ -3,33 +3,43 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Dashboard extends CI_Controller
 {
-
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->model('Setting/Model_Setting', 'modelSetting');
 		$this->load->model('Manajemen_Penjualan/Model_Daftar_Transaksi_Penjualan', 'modelDaftarTransaksiPenjualan');
+        $this->load->model('Manajemen_Keuangan/Model_Coh', 'modelCoh');
 		$this->load->model('Dashboard/Model_Dashboard', 'modelDashboard');
 		$this->load->model('Dashboard/Model_Dashboard_Kasir', 'modelDashboardKasir');
 		$this->load->model('Dashboard/Model_Dashboard_Admin', 'modelDashboardAdmin');
 		$this->load->model('Dashboard/Model_Dashboard_Supervisor', 'modelDashboardSpv');
+		$this->load->model('Dashboard/Model_Dashboard_Manajer', 'modelDashboardManajer');
 		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("login"));
 		}
 	}
-
+	function rupiah($angka)
+	{
+		$hasil_rupiah = "Rp " . number_format($angka, 0, ',', '.');
+		return $hasil_rupiah;
+	}
 
 	// dashboard manajer
 	public function data()
 	{
+		$data['total_utang'] = $this->modelDashboardManajer->data_utang(date("Y-01-01"));
+		$data['total_piutang'] = $this->modelDashboardManajer->data_piutang(date("Y-01-01"));
+
 		$data['transaksi'] = $this->modelDashboard->data_transaksi(date("Y-m-d"));
 		$data['total_penjualan'] = $this->modelDashboard->data_penjualan(date("Y-m-d"));
 		$data['total_pembelian'] = $this->modelDashboard->data_pembelian(date("Y-m-d"));
 		$data['total_produk_terjual'] = $this->modelDashboard->data_produk_terjual(date("Y-m-d"));
+		
 		$data['trend_transaksi'] = $this->modelDashboard->trend_transaksi(date("Y-m-d"));
 		$data['trend_penjualan'] = $this->modelDashboard->trend_penjualan(date("Y-m-d"));
 		$data['trend_pembelian'] = $this->modelDashboard->trend_pembelian(date("Y-m-d"));
 		$data['trend_produk_terjual'] = $this->modelDashboard->trend_produk_terjual(date("Y-m-d"));
+		
 		$data['dropdown_penjualan'] = $this->modelDashboard->dropdown_penjualan();
 		$data['dropdown_pembelian'] = $this->modelDashboard->dropdown_pembelian();
 		$data['dropdown_produk_terjual'] = $this->modelDashboard->dropdown_produk_terjual();
@@ -93,6 +103,20 @@ class Dashboard extends CI_Controller
 		echo $output;
 	}
 
+	public function laporan_spv()
+	{
+		$role = $this->session->userdata['role'];
+		if ($role == 1) {
+			$user = $this->session->userdata['username'];
+		} else {
+			$user = null;
+		}
+		$data = $this->modelDashboardSpv->laporan_spv($user);
+
+		$output = json_encode($data);
+		echo $output;
+	}
+
 
 	public function data_penjualan_terakhir()
 	{
@@ -127,10 +151,13 @@ class Dashboard extends CI_Controller
 
 
 		$data['label'] = $this->modelDashboard->calendar($bulan, $tahun);
-
+		$total = 0;
 		foreach ($data['label'] as $key => $value) {
-			$data['total'][] = $this->modelDashboard->get_data_laba_total($value, $bulan, $tahun);
-			$data['harian'][] = $this->modelDashboard->get_data_laba_harian($value, $bulan, $tahun);
+			$laba = $this->modelDashboardManajer->get_data_laba_harian($value, $bulan, $tahun);
+			$total = $total + $laba;
+			$data['total'][] = $total;
+			$data['harian'][] = $laba;
+
 		}
 
 		$output = json_encode($data);
@@ -175,7 +202,7 @@ class Dashboard extends CI_Controller
 
 	function cek()
 	{
-		$data = $this->modelDashboard->data_produktifitas_sales('lucky15');
+		$data = $this->modelDashboard->get_data_laba_harian(18,03,2020);
 		$output = json_encode($data);
 		echo $output;
 	}
@@ -283,6 +310,8 @@ class Dashboard extends CI_Controller
 
 		$data_stok_opname = $this->modelDashboardSpv->data_pending_stok_opname();
 		$data_insentif = $this->modelDashboardSpv->data_pending_insentif();
+		$data_coh = $this->modelCoh->get_data_pending_user($this->session->userdata('username'));	
+
 		foreach ($data_stok_opname as $key => $value) {
 			$pending = [
 				'tanggal' => $value['tanggal'],
@@ -290,7 +319,7 @@ class Dashboard extends CI_Controller
 				'link' => 'manajemen_persediaan/reviewstokopname/review_detail/' . $value['nomor_referensi'],
 			];
 
-			$ouput['data'][] = $pending;
+			$output['data'][] = $pending;
 		}
 
 		foreach ($data_insentif as $key => $value) {
@@ -299,11 +328,35 @@ class Dashboard extends CI_Controller
 				'task' => 'Isentif a.n ' . $value['nama'],
 				'link' => 'manajemen_pegawai/insentifsales/',
 			];
-			$ouput['data'][] = $pending;
+			$output['data'][] = $pending;
 		}
+
+		foreach ($data_coh as $key => $value) {
+
+			$nominal = $this->rupiah($value['nominal']);
+
+			if($value['jenis_permintaan'] == '3'){
+			$task = 'Permintaan Cash Awal Sebesar <b class="text-danger">'. $nominal . '</b> dari ' . $value['nama_pegawai'];
+			}else if ($value['jenis_permintaan'] == '1'){
+			$task = 'Permintaan Penarikan Dana Sebesar <b class="text-danger">' . $nominal . '</b> dari ' . $value['nama_pegawai'];
+			} else if ($value['jenis_permintaan'] == '2') {
+			$task = 'Permintaan Setoran Dana Sebesar <b class="text-danger">' . $nominal . '</b> dari ' . $value['nama_pegawai'];
+			} else if ($value['jenis_permintaan'] == '5') {
+				$task = 'Permintaan Penutupan Dana dari ' . $value['nama_pegawai'];
+			}
+
+			$pending = [
+				'tanggal' => $value['jam'],
+				'task' => $task,
+				'link' => 'manajemen_keuangan/mastercoh/',
+			];
+			$output['data'][] = $pending;
+		}
+
 
 		$output = json_encode($output);
 		echo $output;
+		// print_r($data_coh);
 	}
 
 	// dashboard manajer
@@ -499,4 +552,7 @@ class Dashboard extends CI_Controller
 			$this->load->view('template/template_app_js');
 		}
 	}
+
+	// manajer
+
 }

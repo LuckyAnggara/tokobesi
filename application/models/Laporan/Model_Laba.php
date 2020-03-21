@@ -3,6 +3,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Model_Laba extends CI_Model
 {
+    // global
+
+    function get_data_laba_total($hari, $bulan, $tahun)
+    {
+        return 0;
+
+    }
+
+    // private
     function total_penjualan($hari = null, $bulan = null, $tahun = null)
     {
         $tanggal = $tahun . "-" . $bulan . "-" . $hari;
@@ -48,8 +57,8 @@ class Model_Laba extends CI_Model
         $this->db->select_sum('retur_total');
         $this->db->from('master_retur_penjualan');
         if ($tanggal !== "--") {
-            $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
-            $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
+            $this->db->where('tanggal_transaksi >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
+            $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
         }
         $output = $this->db->get()->row();
         if($output->retur_total == null)
@@ -59,8 +68,6 @@ class Model_Laba extends CI_Model
         return $output->retur_total;
         }
     }
-
-
 
     function harga_pokok_penjualan($hari = null, $bulan = null, $tahun = null)
     {
@@ -81,10 +88,125 @@ class Model_Laba extends CI_Model
         }
     }
 
+    function persediaan_awal($hari = null, $bulan = null, $tahun = null)
+    {
+        $tanggal = $tahun . "-" . $bulan . "-" . $hari;
+        $tanggalawal = $tahun . "-" . 01 . "-" . 01;
+        $this->db->select('SUM(`qty_awal`*`harga_awal`) as persediaan_awal');
+        $this->db->from('master_saldo_awal');
+        $output = $this->db->get()->row();
+        if ($output->persediaan_awal == null) {
+            return "0";
+        } else {
+            return $output->persediaan_awal;
+        }
+    }
+
+    function pembelian_bersih($hari = null, $bulan = null, $tahun = null)
+    {
+        $tanggal = $tahun . "-" . $bulan . "-" . $hari;
+        $tanggalawal = $tahun . "-" . 01 . "-" . 01;
+        $this->db->select('SUM(`total_pembelian`) as pembelian_bersih');
+        $this->db->from('master_pembelian');
+        if ($tanggal !== "--") {
+            $this->db->where('tanggal_transaksi >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
+            $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
+        }
+        $output = $this->db->get()->row();
+        if ($output->pembelian_bersih == null) {
+            return "0";
+        } else {
+            return $output->pembelian_bersih;
+        }
+    }
+
+    function diskon_pembelian($hari = null, $bulan = null, $tahun = null)
+    {
+        $tanggal = $tahun . "-" . $bulan . "-" . $hari;
+        $tanggalawal = $tahun . "-" . 01 . "-" . 01;
+        $this->db->select('SUM(`diskon`) as diskon_pembelian');
+        $this->db->from('master_pembelian');
+        if ($tanggal !== "--") {
+            $this->db->where('tanggal_transaksi >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
+            $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
+        }
+        $output = $this->db->get()->row();
+        if ($output->diskon_pembelian == null) {
+            return "0";
+        } else {
+            return $output->diskon_pembelian;
+        }
+    }
+
+    function retur_pembelian($hari = null, $bulan = null, $tahun = null)
+    {
+        $tanggal = $tahun . "-" . $bulan . "-" . $hari;
+        $tanggalawal = $tahun . "-" . 01 . "-" . 01;
+        $this->db->select('SUM(`retur_total`) as retur_pembelian');
+        $this->db->from('master_retur_pembelian');
+        if ($tanggal !== "--") {
+            $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
+            $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
+        }
+        $output = $this->db->get()->row();
+        if ($output->retur_pembelian == null) {
+            return "0";
+        } else {
+            return $output->retur_pembelian;
+        }
+    }
+
+
+    function persediaan_akhir($hari = null, $bulan = null, $tahun = null)
+    {
+        $tanggal = $tahun . "-" . $bulan . "-" . $hari;
+        $tanggalawal = $tahun . "-" . 01 . "-" . 01;
+
+        $this->db->select('SUM(`saldo_awal`*`harga_awal`) as sisa_persediaan_awal');
+        $this->db->from('master_saldo_awal');
+        if ($tanggal !== "--") {
+            $this->db->where('tanggal_input >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
+            $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
+        }
+        $output = $this->db->get()->row();
+        $sisa_persediaan_awal = $output->sisa_persediaan_awal;
+
+        $this->db->select('SUM(`saldo`*`harga_beli`) as sisa_pembelian_bersih');
+        $this->db->from('detail_pembelian');
+        if ($tanggal !== "--") {
+            $this->db->where('tanggal_transaksi >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
+            $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
+        }
+        $output = $this->db->get()->row();
+        $sisa_pembelian_bersih = $output->sisa_pembelian_bersih;
+
+        $this->db->select('SUM(`saldo_retur`*`harga_pokok`) as persediaan_retur');
+        $this->db->from('detail_retur_barang_penjualan');
+        if ($tanggal !== "--") {
+            $this->db->where('tanggal_transaksi >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
+            $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
+        }
+        $output = $this->db->get()->row();
+        $persediaan_retur = $output->persediaan_retur;
+
+
+        return $sisa_persediaan_awal + $sisa_pembelian_bersih + $persediaan_retur ;
+
+
+        // $output = $this->db->get()->row();
+        // if ($output->pembelian_bersih == null) {
+        //     return "0";
+        // } else {
+        //     return $output->pembelian_bersih;
+        // }
+    }
+
     function harga_pokok_penjualanv2($hari = null, $bulan = null, $tahun = null)
     {
         $tanggal = $tahun . "-" . $bulan . "-" . $hari;
         $tanggalawal = $tahun . "-" . 01 . "-" . 01;
+
+        
 
         $this->db->select('SUM(`qty_awal`*`harga_awal`) as persediaan_awal');
         $this->db->from('master_saldo_awal');

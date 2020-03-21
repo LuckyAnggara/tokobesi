@@ -52,6 +52,10 @@
             async: false,
             dataType: "JSON",
             success: function(data) {
+
+                $('#utang_value').text(data.total_utang);
+                $('#piutang_value').text(data.total_piutang);
+
                 $('#penjualan_value').text(data.total_penjualan);
                 $('#pembelian_value').text(data.total_pembelian);
                 $('#transaksi_value').text(data.transaksi);
@@ -67,7 +71,6 @@
                 // $("#penjualan_trending").append(trend(data.trend_penjualan));
                 // $("#pembelian_trending").append(trend(data.trend_pembelian));
                 // $("#produk_terjual_trending").append(trend(data.trend_produk_terjual));
-
                 $("#penjualan_trending").addClass(trendUpDown(data.trend_penjualan));
                 $("#pembelian_trending").addClass(trendUpDown(data.trend_pembelian));
                 $("#transaksi_trending").addClass(trendUpDown(data.trend_transaksi));
@@ -429,16 +432,13 @@
             // init data dan label
             $.ajax({
                 url: "<?= Base_url('dashboard/data_total_laba'); ?>",
-                async: false,
                 type: "post",
+                async: false,
                 data: {
                     bulan: bulan,
                     tahun: tahun
                 },
                 dataType: "JSON",
-                beforeSend: function() {
-
-                },
                 success: function(data) {
                     label = data.label;
                     total = data.total;

@@ -148,7 +148,7 @@
             $.each(data.data, function(index, item) {
               results.push({
                 id: item.kode_barang + '-' + item.harga_satuan + '-' + item.jumlah_persediaan + '-' + item.nama_satuan,
-                text: item.kode_barang + '-' + item.nama_barang,
+                text: item.kode_barang + ' - ' + item.nama_barang + '      -Stok : ' + item.jumlah_persediaan,
                 // harga_satuan: item.harga_satuan,
                 // nama_satuan: item.nama_satuan,
                 // jumlah_persediaan: item.jumlah_persediaan

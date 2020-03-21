@@ -14,10 +14,44 @@
 <!-- SCRIPT DASHBOARD AWAL -->
 <script>
     $(document).ready(function() {
+        set_cash();
 
-        init_pending_task()
-        init_table_persediaan()
+        init_pending_task();
+        init_table_persediaan();
     })
+
+    function set_cash() {
+        // init data dan label
+        $.ajax({
+            url: "<?= Base_url('dashboard/laporan_spv'); ?>",
+            type: "post",
+            dataType: "JSON",
+            beforeSend: function() {
+                $('#cash').LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $('#cash').LoadingOverlay("hide");
+            },
+            success: function(data) {
+                if (data.cash == null) {
+                    $('#dana_tersedia').text('<span class="text-danger">Close</span>')
+                } else {
+                    $('#sign').text('Open')
+                    $('#sign').removeClass('btn-danger')
+                    $('#sign').addClass('btn-success')
+                    $('#dana_tersedia').text(data.cash)
+                }
+                if (data.total_pengeluaran == null) {
+                    // $('#pengeluaran').text('Rp. 0')
+                } else {
+                    $('#pengeluaran').text(data.total_pengeluaran)
+                }
+
+                counterJalan()
+
+            }
+        });
+    }
 
 
     function formatRupiah(angka, prefix) {
@@ -58,28 +92,11 @@
     }
 
     function counterJalan() {
-        $('.counter').counterUp();
         $('.counterRupiah').counterUp({
             time: 1000,
             offset: 70,
             formatter: function(n) {
                 return formatRupiah(n, 'Rp.');
-            }
-        });
-        $('.counterTrend').counterUp({
-            time: 1000,
-            offset: 70,
-            beginAt: 100,
-            formatter: function(n) {
-                return n + '%' + trend(n);
-            }
-        });
-        $('.counterSatuan').counterUp({
-            time: 1000,
-            offset: 70,
-            beginAt: 100,
-            formatter: function(n) {
-                return formatSatuan(n);
             }
         });
     }

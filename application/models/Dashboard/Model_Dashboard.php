@@ -324,6 +324,8 @@ class Model_Dashboard extends CI_Model
         return $data;
     }
 
+    
+
     function get_data_laba_total($hari, $bulan, $tahun)
     {
         $tanggal = $tahun . "-" . $bulan . "-" . $hari;
@@ -346,7 +348,7 @@ class Model_Dashboard extends CI_Model
         // cari hpp nya
     }
 
-    function get_data_laba_harian($hari, $bulan, $tahun)
+    function get_data_laba_harianv2($hari, $bulan, $tahun)
     {
 
         $tanggal = $tahun . "-" . $bulan . "-" . $hari;
@@ -361,12 +363,53 @@ class Model_Dashboard extends CI_Model
         $data =  $this->db->get()->row_array();
         $totalPokok = $data['totalpokok'];
         $totalJual = $data['totaljual'];
-        $hasil = $totalJual - $totalPokok;
 
-        return $hasil ;
+        $total_retur = $this->retur_penjualan($hari, $bulan, $tahun);
+        $persediaan_retur = $this->retur_persediaan_penjualan($hari, $bulan, $tahun);
+        $hasil = ($totalJual - $total_retur) - ($totalPokok - $persediaan_retur);
+
+        return $hasil;
 
         // cari hpp nya
     }
+
+    function retur_penjualan($hari, $bulan, $tahun){
+        $tanggal = $tahun . "-" . $bulan . "-" . $hari;
+        $tanggal1 =  date("Y-m-d 00:00:00", strtotime($tanggal));
+        $tanggal2 =  date("Y-m-d 23:59:59", strtotime($tanggal));
+
+        $this->db->select('sum(`retur_total`) as total_retur');
+        $this->db->from('master_retur_penjualan');
+        $this->db->where('tanggal_transaksi >=', $tanggal1);
+        $this->db->where('tanggal_transaksi <=', $tanggal2);
+        $output = $this->db->get()->row();
+        if ($output->total_retur == null) {
+            return 0;
+        } else {
+            return $output->total_retur;
+        }
+
+    }
+
+    function retur_persediaan_penjualan($hari, $bulan, $tahun)
+    {
+        $tanggal = $tahun . "-" . $bulan . "-" . $hari;
+        $tanggal1 =  date("Y-m-d 00:00:00", strtotime($tanggal));
+        $tanggal2 =  date("Y-m-d 23:59:59", strtotime($tanggal));
+
+        $this->db->select('sum(`saldo_retur`*`harga_pokok`) as total_retur');
+        $this->db->from('detail_retur_barang_penjualan');
+        $this->db->where('tanggal_transaksi >=', $tanggal1);
+        $this->db->where('tanggal_transaksi <=', $tanggal2);
+        $output = $this->db->get()->row();
+        if ($output->total_retur == null) {
+            return 0;
+        } else {
+            return $output->total_retur;
+        }
+    }
+
+ 
     // function get_data_laba_total($hari, $bulan, $tahun)
     // {
     //     $tanggal = $tahun . "-" . $bulan . "-" . $hari;
@@ -499,5 +542,138 @@ class Model_Dashboard extends CI_Model
 
     // data kasir tambahan
 
+    function get_data_laba_harian($hari, $bulan, $tahun)
+    {
+
+        $tanggal = $tahun . "-" . $bulan . "-" . $hari;
+        $tanggal1 =  date("Y-m-d 00:00:00", strtotime($tanggal));
+        $tanggal2 =  date("Y-m-d 23:59:59", strtotime($tanggal));
+
+        $persediaan_awal = $this->saldo_persediaan_awal();
+        $sisa_persediaan_awal = $this->saldo_sisa_persediaan_awal($tanggal1, $tanggal2);
+        $pembelian_bersih = $this->saldo_pembelian_bersih($tanggal1, $tanggal2);
+        $retur_pembelian = $this->saldo_retur_pembelian($tanggal1, $tanggal2);
+        $sisa_saldo_pembelian_bersih = $this->saldo_sisa_pembelian_bersih($tanggal1, $tanggal2);
+        $penjualan_bersih = $this->saldo_penjualan_bersih($tanggal1, $tanggal2);
+        $retur_penjualan_bersih = $this->saldo_retur_penjualan($tanggal1, $tanggal2); 
+        
+
+        $awal = $persediaan_awal - $sisa_persediaan_awal;
+        $pembelian = ($pembelian_bersih - $sisa_saldo_pembelian_bersih) - $retur_pembelian;
+        $penjualan = $penjualan_bersih - $retur_penjualan_bersih;
+
+        $hasil = $penjualan - ($awal + $pembelian);
+       // return $hasil;
+
+        $output = [
+            'persediaan_awal' => $persediaan_awal,
+            'sisa_persediaan_awal' => $sisa_persediaan_awal,
+            'pembelian_bersih' => $pembelian_bersih,
+            'retur_pembelian' => $retur_pembelian,
+            'sisa_saldo_pembelian_bersih' => $sisa_saldo_pembelian_bersih,
+            'penjualan_bersih' => $penjualan_bersih,
+            'retur_penjualan_bersih' => $retur_penjualan_bersih,
+        ];
+
+        return $output;
+    }
+
+    private function saldo_persediaan_awal()
+    {
+        $this->db->select('SUM(`qty_awal`*`harga_awal`) as persediaan_awal');
+        $this->db->from('master_saldo_awal');
+        $output = $this->db->get()->row();
+        if ($output->persediaan_awal == null) {
+            return 0;
+        } else {
+            return $output->persediaan_awal;
+        }
+    }
+
+    private function saldo_sisa_persediaan_awal($tanggal1, $tanggal2)
+    {
+        $this->db->select('SUM(`saldo_awal`*`harga_awal`) as sisa_persediaan_awal');
+        $this->db->from('master_saldo_awal');
+        $this->db->where('tanggal_input >=', date('Y-m-d 00:00:00', strtotime($tanggal1)));
+        $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59', strtotime($tanggal2)));
+        $output = $this->db->get()->row();
+        if ($output->sisa_persediaan_awal == null) {
+            return 0;
+        } else {
+            return $output->sisa_persediaan_awal;
+        }
+    }
+
+
+    private function saldo_pembelian_bersih($tanggal1, $tanggal2)
+    {
+        $this->db->select('SUM(`jumlah_pembelian`*`harga_beli`) as pembelian_bersih');
+        $this->db->from('detail_pembelian');
+        $this->db->where('tanggal_transaksi >=', date('Y-m-d 00:00:00', strtotime($tanggal1)));
+        $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($tanggal2)));
+        $output = $this->db->get()->row();
+        if ($output->pembelian_bersih == null) {
+            return 0;
+        } else {
+            return $output->pembelian_bersih;
+        }
+    }
+
+    private function saldo_retur_pembelian($tanggal1, $tanggal2)
+    {
+        $this->db->select('SUM(`jumlah_retur`*`harga_retur`) as retur_pembelian');
+        $this->db->from('detail_retur_pembelian');
+        $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggal1)));
+        $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal2)));
+        $output = $this->db->get()->row();
+        if ($output->retur_pembelian == null) {
+            return 0;
+        } else {
+            return $output->retur_pembelian;
+        }
+
+    }
+
+    private function saldo_sisa_pembelian_bersih($tanggal1, $tanggal2)
+    {
+        $this->db->select('SUM(`saldo`*`harga_beli`) as sisa_pembelian_bersih');
+        $this->db->from('detail_pembelian');
+        $this->db->where('tanggal_transaksi >=', date('Y-m-d 00:00:00', strtotime($tanggal1)));
+        $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($tanggal2)));
+        $output = $this->db->get()->row();
+        if ($output->sisa_pembelian_bersih == null) {
+            return 0;
+        } else {
+        return $output->sisa_pembelian_bersih;
+        }
+    }
+    private function saldo_penjualan_bersih($tanggal1, $tanggal2)
+    {
+        $this->db->select_sum('total_penjualan');
+        $this->db->from('master_penjualan');
+        $this->db->where('tanggal_transaksi >=', date('Y-m-d 00:00:00', strtotime($tanggal1)));
+        $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($tanggal2)));
+        $output = $this->db->get()->row();
+        if ($output->total_penjualan == null) {
+            return 0;
+        } else {
+            return $output->total_penjualan;
+        }
+    }
+    private function saldo_retur_penjualan($tanggal1, $tanggal2)
+    {
+        $this->db->select_sum('retur_total');
+        $this->db->from('master_retur_penjualan');
+        $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggal1)));
+        $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal2)));
+        $output = $this->db->get()->row();
+        if ($output->retur_total == null) {
+            return 0;
+        } else {
+            return $output->retur_total;
+        }
+    }
+
     
+      
 }

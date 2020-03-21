@@ -57,7 +57,22 @@ class Masterutang extends CI_Controller
         $output = json_encode($output);
         echo $output;
     }
+    public function datapembayaran()
+    {
+        $post = $this->input->post();
+        $database = $this->modelUtang->datapembayaran($post);
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results('detail_utang'),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
 
+        $output = json_encode($output);
+        echo $output;
+    }
+    
     public function detail_utang($nomor_transaksi)
     {
 
@@ -94,6 +109,8 @@ class Masterutang extends CI_Controller
         }
     }
 
+   
+
     public function getDetailPembayaran()
     {
         $nomor_transaksi = $this->input->post('nomor_transaksi');
@@ -104,7 +121,7 @@ class Masterutang extends CI_Controller
         $data = $database->result_array();
         $output = array(
             // "draw" => $_POST['draw'],
-            "recordsTotal" => $this->db->count_all_results('master_user'),
+            "recordsTotal" => $this->db->count_all_results('detail_utang'),
             "recordsFiltered"  => $database->num_rows(),
             "data" => array()
         );

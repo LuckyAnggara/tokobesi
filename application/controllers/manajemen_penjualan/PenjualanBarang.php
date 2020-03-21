@@ -11,9 +11,10 @@ class Penjualanbarang extends CI_Controller
         $this->load->model('Manajemen_Penjualan/Model_Penjualan_Barang', 'modelPenjualan');
         $this->load->model('Manajemen_Persediaan/Model_Persediaan_Barang', 'modelPersediaan');
         $this->load->model('Manajemen_Penjualan/Model_Invoice', 'modelInvoice');
+        $this->load->model('Manajemen_Keuangan/Model_Coh', 'modelCoh');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
         $this->load->model('Setting/Model_Pusher', 'modelPusher');
-
+ 
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
         }
@@ -46,21 +47,31 @@ class Penjualanbarang extends CI_Controller
         if ($this->session->userdata('role') !== "1") {
             redirect(base_url("dashboard"));
         } else {
-            $this->init_no_order();
+            $cek_status = $this->modelCoh->cek_ready_kasir();
             $data['menu'] = $this->modelSetting->data_menu();
             $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-            $data['no_order'] = $this->session->userdata('no_order_dummy');
             $data['css'] = 'manajemen_penjualan/penjualan_barang/penjualan_barang_css';
-            $data['title'] = "Penjualan Barang";
-            $this->load->view('template/template_header', $data);
-            $this->load->view('template/template_menu');
-            $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang', $data);
-            $this->load->view('template/template_right');
-            $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_modal');
-            $this->load->view('template/template_footer');
-            $this->load->view('template/template_js');
-            $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang_js');
-            $this->load->view('template/template_app_js');
+            if($cek_status > 0){
+                $this->init_no_order();
+                $data['no_order'] = $this->session->userdata('no_order_dummy');
+                $this->load->view('template/template_header', $data);
+                $this->load->view('template/template_menu');
+                $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang', $data);
+                $this->load->view('template/template_right');
+                $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_modal');
+                $this->load->view('template/template_footer');
+                $this->load->view('template/template_js');
+                $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang_js');
+                $this->load->view('template/template_app_js');
+            }else{
+                $this->load->view('template/template_header', $data);
+                $this->load->view('template/template_menu');
+                $this->load->view('template/template_lock');
+                $this->load->view('template/template_right');
+                $this->load->view('template/template_footer');
+                $this->load->view('template/template_js');
+                $this->load->view('template/template_app_js');
+            }
         }
     }
 

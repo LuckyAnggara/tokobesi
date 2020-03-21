@@ -25,7 +25,7 @@ class Model_Master_User extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('master_pegawai');
-        $this->db->like('username', $query);
+        $this->db->like('nip', $query);
         $this->db->or_like('nama_lengkap', $query);
         $this->db->having('has_user', 0);
         $output = $this->db->get();

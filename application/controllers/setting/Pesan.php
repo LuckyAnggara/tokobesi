@@ -29,4 +29,12 @@ class Pesan extends CI_Controller
         $this->db->where('id',$id);
         $this->db->update('notif',$data);
     }
+
+    public function delete_pesan()
+    {
+        $id = $this->input->post('id');
+
+        $this->db->where('id', $id);
+        $this->db->delete('notif');
+    }
 }

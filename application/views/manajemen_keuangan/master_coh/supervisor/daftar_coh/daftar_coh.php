@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
-            <h4 class="page-title">Cash On Hand Kasir</h4>
+            <h4 class="page-title">Cash On Hand Supervisor</h4>
         </div>
     </div>
 
@@ -36,6 +36,21 @@
                                             <th>Keterangan</th>
                                             <th>Status</th>
                                             <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+
+                            <h5 class="page-title">Cash On Hand Kasir</h5>
+
+                            <div class="table-responsive">
+                                <table id="datatable-detail-coh-kasir" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Nama Kasir</th>
+                                            <th>Cash Awal</th>
+                                            <th>Cash Akhir</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                 </table>

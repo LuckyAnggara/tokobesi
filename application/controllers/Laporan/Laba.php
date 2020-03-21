@@ -25,7 +25,17 @@ class Laba extends CI_Controller
             'retur_penjualan' => $this->retur_penjualan($hari,$bulan,$tahun),
             'total_potongan_penjualan'=>$this->total_potongan_penjualan($hari,$bulan,$tahun),
             'penjualan_kotor'=>$this->penjualan_kotor($hari,$bulan,$tahun),
-            'harga_pokok_penjualan' => $this->harga_pokok_penjualan($hari,$bulan,$tahun),
+            // hpp
+
+            'persediaan_awal' => $this->persediaan_awal($hari,$bulan,$tahun),
+            'pembelian_bersih' => $this->pembelian_bersih($hari,$bulan,$tahun),
+            'diskon_pembelian' => $this->diskon_pembelian($hari,$bulan,$tahun),
+            'retur_pembelian' => $this->retur_pembelian($hari, $bulan, $tahun),
+            'harga_pokok_penjualan' => $this->harga_pokok_penjualan($hari, $bulan, $tahun),
+            'persediaan_barang_dijual' => $this->persediaan_barang_dijual($hari, $bulan, $tahun),
+            'persediaan_akhir' => $this->persediaan_akhir($hari, $bulan, $tahun),
+            
+
             'laba_rugi_kotor' => $this->laba_rugi_kotor($hari,$bulan,$tahun),
             // pendapatan lain - lain
             'ongkos_kirim' => $this->ongkos_kirim($hari,$bulan,$tahun),
@@ -104,9 +114,48 @@ class Laba extends CI_Controller
         return $total_penjualan - $total_potongan_penjualan;
     }
 
+    // hpp
+
+    function persediaan_awal($hari, $bulan, $tahun)
+    {
+        return $this->modelLaba->persediaan_awal($hari, $bulan, $tahun);
+    }
+
+    function pembelian_bersih($hari, $bulan, $tahun)
+    {
+        return $this->modelLaba->pembelian_bersih($hari, $bulan, $tahun);
+    }
+
+    function diskon_pembelian($hari, $bulan, $tahun)
+    {
+        return $this->modelLaba->diskon_pembelian($hari, $bulan, $tahun);
+    }
+
+    function retur_pembelian($hari, $bulan, $tahun)
+    {
+        return $this->modelLaba->retur_pembelian($hari, $bulan, $tahun);
+    }
+
+    function persediaan_barang_dijual($hari, $bulan, $tahun)
+    {
+        $persediaan_awal = $this->persediaan_awal($hari, $bulan, $tahun);
+        $pembelian_bersih = $this->pembelian_bersih($hari, $bulan, $tahun);
+        $diskon_pembelian = $this->diskon_pembelian($hari, $bulan, $tahun);
+        $retur_pembelian = $this->retur_pembelian($hari, $bulan, $tahun);
+        return $persediaan_awal + ($pembelian_bersih - $diskon_pembelian - $retur_pembelian);
+    }
+
+    function persediaan_akhir($hari, $bulan, $tahun)
+    {
+        return $this->modelLaba->persediaan_akhir($hari, $bulan, $tahun);
+    }
+    
+
     function harga_pokok_penjualan($hari,$bulan,$tahun)
     {
-        return $this->modelLaba->harga_pokok_penjualanv2($hari,$bulan,$tahun);
+        $persediaan_awal = $this->persediaan_barang_dijual($hari, $bulan, $tahun);
+        $persediaan_akhir = $this->persediaan_akhir($hari, $bulan, $tahun);
+        return $persediaan_awal - $persediaan_akhir;
     }
 
     function laba_rugi_kotor($hari,$bulan,$tahun)

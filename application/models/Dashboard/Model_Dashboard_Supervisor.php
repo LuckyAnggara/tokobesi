@@ -20,4 +20,35 @@ class Model_Dashboard_Supervisor extends CI_Model
         return $this->db->get()->result_array();
     }
 
+    function laporan_spv($kasir = null)
+    {
+
+        $this->db->select('saldo_akhir');
+        $this->db->from('master_coh');
+        $this->db->like('tanggal_input', date('Y-m-d'));
+        if ($kasir !== null) {
+            $this->db->where('user', $kasir);
+            $this->db->where('status', 1);
+        }
+        $data = $this->db->get()->row_array();
+
+        $cash = $data['saldo_akhir'];
+
+
+
+        $this->db->select_sum('total');
+        $this->db->from('detail_biaya');
+        $this->db->where('tanggal >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal <=', date('Y-m-d 23:59:59'));
+        $data = $this->db->get()->row();
+        $total_biaya = $data->total;
+
+        $output = [
+
+            'cash' => $cash,
+            'total_pengeluaran' => $total_biaya
+        ];
+        return $output;
+    }
+
 }

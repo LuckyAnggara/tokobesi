@@ -177,6 +177,24 @@ class Mastercoh extends CI_Controller
         echo $output;
     }
 
+
+    public function get_data_master_kasir_aktif()
+    {
+        $database = $this->modelCoh->get_data_master_kasir_aktif();
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
+    
+
     public function get_data_master_histori()
     {
         $database = $this->modelCoh->get_data_master_histori();
@@ -255,9 +273,21 @@ class Mastercoh extends CI_Controller
 
      function supervisor_reject_coh()
     {
-        $id = $this->input->post('id');
-        $data = $this->modelCoh->supervisor_reject_coh($id);
-        echo $data;
+        $post = $this->input->post();
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('username', $this->session->userdata('username'));
+        $user = $this->db->get()->row_array();
+
+        $isPasswordTrue = password_verify($post["password"], $user['password']);
+
+        if ($isPasswordTrue) {
+            $data = $this->modelCoh->supervisor_reject_coh($post);
+            echo $data;
+        } else {
+            echo 'salah';
+        }
+
     }
 
 
@@ -438,12 +468,37 @@ class Mastercoh extends CI_Controller
         echo $output;
     }
 
+    public function get_data_permintaan_kasir()
+    {
+        $post = $this->input->post();
+        $database = $this->modelCoh->get_data_permintaan_kasir($post);
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
 
 
     public function spv_no_ref()
     {
         $query = $this->input->get('query');
         $database = $this->modelCoh->spv_no_ref($query);
+        $data = $database->result_array();
+        $output = json_encode($data);
+        echo $output;
+    }
+
+    public function data_transfer_kasir()
+    {
+        $query = $this->input->get('query');
+        $database = $this->modelCoh->data_transfer_kasir($query);
         $data = $database->result_array();
         $output = json_encode($data);
         echo $output;
@@ -476,10 +531,65 @@ class Mastercoh extends CI_Controller
         echo $data;
     }
 
+    public function permintaan_transfer_dana_kasir()
+    {
+        $post = $this->input->post();
+        $data = $this->modelCoh->permintaan_transfer_dana_kasir($post);
+        echo $data;
+    }
+
     public function tutup_master_coh_kasir()
     {
         $id = $this->input->post('id');
         echo $this->modelCoh->tutup_master_coh_kasir($id);
+    }
+
+    function kasir_approve_coh()
+    {
+        $post = $this->input->post();
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('username', $this->session->userdata('username'));
+        $user = $this->db->get()->row_array();
+
+        $isPasswordTrue = password_verify($post["password"], $user['password']);
+
+        if ($isPasswordTrue) {
+            $data = $this->modelCoh->kasir_approve_coh($post);
+            echo $data;
+        } else {
+            echo 'salah';
+        }
+    }
+
+
+    function kasir_reject_coh()
+    {
+        $post = $this->input->post();
+        $this->db->select('*');
+        $this->db->from('master_user');
+        $this->db->where('username', $this->session->userdata('username'));
+        $user = $this->db->get()->row_array();
+
+        $isPasswordTrue = password_verify($post["password"], $user['password']);
+
+        if ($isPasswordTrue) {
+            $data = $this->modelCoh->kasir_reject_coh($post);
+            echo $data;
+        } else {
+            echo 'salah';
+        }
+    }
+
+
+    function saldo_akhir()
+    {
+        $no_ref = $this->input->post('no_ref');
+        $this->db->select('saldo_akhir');
+        $this->db->from('master_coh');
+        $this->db->where('nomor_referensi', $no_ref);
+        $data = $this->db->get()->row_array();
+        echo $data['saldo_akhir'];
     }
 
 }

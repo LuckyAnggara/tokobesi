@@ -1,16 +1,70 @@
 <!-- Required datatable js -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/jszip.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/pdfmake.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/vfs_fonts.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.html5.min.js"></script>
+<script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 <!-- Responsive examples -->
 <script src="<?= base_url('assets/'); ?>plugins/datatables/dataTables.responsive.min.js"></script>
 <script src="<?= base_url('assets/'); ?>plugins/datatables/responsive.bootstrap4.min.js"></script>
+<!-- DatePicker Js -->
+<script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<!-- Select2 js -->
+<script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
+
 <!-- script sendiri -->
 
 <script>
+    $(document).ready(function() {
+        init_table();
+        init_table_histori();
+        init_total_biaya()
+        init_total_biaya_histori("01/01/" + new Date().getFullYear(), "12/31/" + new Date().getFullYear())
+        $('#tanggal_awal').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            constrainInput: false,
+
+        });
+        $('#tanggal_awal').datepicker("setDate", "01-01-" + new Date().getFullYear());
+        $('#tanggal_akhir').datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        $('#tanggal_akhir').datepicker("setDate", "12-31-" + new Date().getFullYear());
+    });
+
+
     $('#tambah_data').on('click', function() {
-        window.location.href = "<?= base_url('manajemen_keuangan/masterbiaya/tambah_data'); ?>"
+        init_kategori();
+        set_cash();
+        $('#add_data').modal('show');
     })
-    init_table();
+
+    $('#filter').on('click', function() {
+        var tanggal_awal = $('#tanggal_awal').val();
+        var tanggal_akhir = $('#tanggal_akhir').val();
+        init_table_histori(tanggal_awal, tanggal_akhir);
+        init_total_biaya_histori(tanggal_awal, tanggal_akhir);
+    });
+
+
+    // $('#tambah_data').on('click', function() {
+    //     window.location.href = "<?= base_url('manajemen_keuangan/masterbiaya/tambah_data'); ?>"
+    // })
+    function normalrupiah(angka) {
+
+        var tanparp = angka.replace(/[^0-9]+/g, "");
+        var tanparp = tanparp.replace("Rp", "");
+        var tanparp = tanparp.replace(",-", "");
+        var tanpatitik = tanparp.split(".").join("");
+        return tanpatitik;
+    }
 
     function formatRupiah(angka, prefix) {
         var number_string = angka.replace(/[^,\d]/g, '').toString(),
@@ -28,6 +82,107 @@
         rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
         return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
     }
+    var total_biaya = document.getElementById('total_biaya');
+    total_biaya.addEventListener('keyup', function(e) {
+        total_biaya.value = formatRupiah(this.value, 'Rp.');
+    });
+
+    var real_biaya = document.getElementById('real_biaya');
+    real_biaya.addEventListener('keyup', function(e) {
+        real_biaya.value = formatRupiah(this.value, 'Rp.');
+    });
+
+
+    $('#real_biaya').on('keyup', function() {
+        var total_biaya = normalrupiah($('#revisi_total_biaya').val());
+        var real_bayar = normalrupiah($('#real_biaya').val())
+        var kembali = parseInt(real_bayar) - parseInt(total_biaya);
+        if (parseInt(total_biaya) > parseInt(real_bayar)) {
+            $('#pengembalian').val(formatRupiah(kembali.toString(), 'Rp.'));
+        } else {
+            $('#pengembalian').val('Biaya Real lebih besar dari Total Biaya');
+        }
+    });
+
+
+
+    function set_cash() {
+        // init data dan label
+        $.ajax({
+            url: "<?= Base_url('dashboard/laporan_spv'); ?>",
+            type: "post",
+            dataType: "JSON",
+            success: function(data) {
+                if (data.cash == null) {
+                    $('#saldo_cash').val('Rp. 0')
+                } else {
+                    $('#saldo_cash').val(formatRupiah(data.cash, 'Rp. '))
+                }
+            }
+        });
+    }
+
+    function init_kategori() {
+        $('#kategori_biaya').select2({
+            dropdownParent: $('#add_data'),
+            ajax: {
+                url: '<?= base_url("manajemen_keuangan/masterbiaya/get_kategori_biaya/"); ?>',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        query: params.term, // search term
+                    };
+                },
+                processResults: function(data) {
+                    var results = [];
+                    $.each(data, function(index, item) {
+                        results.push({
+                            id: item.id,
+                            text: item.nama_biaya,
+                        });
+                    });
+                    return {
+                        results: results
+                    };
+                },
+            },
+        })
+    }
+
+    function init_total_biaya(tanggal_awal = null, tanggal_akhir = null) {
+        $.ajax({
+            url: '<?= base_url("manajemen_keuangan/masterbiaya/get_total_biaya"); ?>',
+            type: "POST",
+            data: {
+                tanggal_awal: tanggal_awal,
+                tanggal_akhir: tanggal_akhir,
+            },
+            dataType: "JSON",
+            async: false,
+            success: function(data) {
+                var display = formatRupiah(data.toString(), 'Rp.');
+                $('#saldo_akhir').val(display);
+            }
+        });
+    }
+
+    function init_total_biaya_histori(tanggal_awal, tanggal_akhir) {
+        $.ajax({
+            url: '<?= base_url("manajemen_keuangan/masterbiaya/get_total_biaya"); ?>',
+            type: "POST",
+            data: {
+                tanggal_awal: tanggal_awal,
+                tanggal_akhir: tanggal_akhir,
+            },
+            dataType: "JSON",
+            async: false,
+            success: function(data) {
+                var display = formatRupiah(data.toString(), 'Rp.');
+                $('#saldo_akhir_histori').val(display);
+            }
+        });
+    }
 
     function init_table() {
         $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
@@ -42,96 +197,70 @@
             };
         };
 
-        //Init Datatabel Master Stok Persediaan 
-        var table = $('#datatable-master-biaya').removeAttr('width').DataTable({
+        var table = $('#datatable-daftar-biaya').DataTable({
             "destroy": true,
             "oLanguage": {
                 sProcessing: "Sabar yah...",
                 sZeroRecords: "Tidak ada Data..."
             },
-            "searching": true,
-            "responsive":true,
+            "buttons": ['copy', 'excel', 'pdf', 'print'],
+            "dom": 'Bfrtip',
+            "searching": false,
+            "lengthChange": false,
+            "responsive": true,
             "processing": true,
             "serverSide": false,
             "fixedColumns": true,
             "ajax": {
-                "url": '<?= base_url("manajemen_keuangan/masterbiaya/get_master_biaya/"); ?>',
+                "url": '<?= base_url("manajemen_keuangan/masterbiaya/get_daftar_biaya_hari_ini/"); ?>',
                 "type": "POST",
             },
             "columnDefs": [{
-                    data: "id",
                     targets: 0,
                     width: 20,
                     render: function(data, type, full, meta) {
-                        return data;
+                        return "";
                     }
                 }, {
-                    data: "tanggal",
+                    data: "jam",
                     targets: 1,
                     width: 100,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 }, {
-                    data: "nomor_referensi",
+                    data: "nama_biaya",
                     targets: 2,
                     width: 150,
                     render: function(data, type, full, meta) {
                         return data;
                     }
                 }, {
-                    data: "total_biaya",
+                    data: {
+                        "keterangan": "keterangan",
+                        'nomor_jurnal': 'nomor_jurnal'
+                    },
                     targets: 3,
+                    width: 300,
+                    render: function(data, type, full, meta) {
+                        return data.keterangan + ' Nomor Jurnal : <span class="text-primary">#' + data.nomor_jurnal + '</span>';
+                    }
+                }, {
+                    data: "total",
+                    targets: 4,
                     width: 150,
                     render: function(data, type, full, meta) {
                         return formatRupiah(data, 'Rp.');
                     }
-                }, {
-                    data: "keterangan",
-                    targets: 4,
-                    width: 400,
-                    render: function(data, type, full, meta) {
-                        return data;
-                    }
-                }, {
-                    data: "status",
-                    targets: 5,
-                    width: 50,
-                    render: function(data, type, full, meta) {
-                        if (data == "0") {
-                            var display = '<span class="badge badge-dark">Input</span>'
-                        } else if (data == "1") {
-                            var display = '<span class="badge badge-primary">Waiting Approve</span>'
-                        } else if (data == "2") {
-                            var display = '<span class="badge badge-success">Terbuku</span>'
-                        } else if (data == "3") {
-                            var display = '<span class="badge badge-warning">Input Ulang</span>'
-                        } else if (data == "99") {
-                            var display = '<span class="badge badge-danger">Rejected</span>'
-
-                        }
-                        return display;
-                    }
                 },
                 {
-                     data: {
-                        "nomor_referensi": "nomor_referensi",
-                        "status": "status"
-                    },
-                    targets: 6,
-                    width: 70,
+                    data: 'id',
+                    targets: 5,
+                    width: 100,
                     render: function(data, type, full, meta) {
-                        var detail = '<a type="button" onClick = "detail_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-search" ></i> </a>';
-                        var edit = '<a type="button" onClick = "edit_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" ><i class="fa fa-search" ></i> </a>';
-                        var del = '<a type="button" onClick = "warning_delete(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-trash" ></i> </a>';
-                        var print = '<a type="button" onClick = "print_report(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-inverse btn-sm" ><i class="fa fa-print" ></i> </a>';
-                        if (data.status == 0) {
-                            return edit + ' ' + del;
-                        } else if (data.status == 2) {
-                            return detail + ' ' + print;
-                        } else {
-                            return detail
-                        }
+                        var detail = '<a type="button" onClick = "revisi_biaya(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-primary btn-sm"><i class="fa fa-mail-reply" ></i> </a>';
+                        var del = '<a type="button" onClick = "warning_delete(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm"><i class="fa fa-trash" ></i> </a>';
+                        return detail + ' ' + del
                     }
                 }
             ],
@@ -147,49 +276,273 @@
         });
     }
 
-    function edit_data(no_ref) {
-        window.location.href = "<?= base_url('manajemen_keuangan/masterbiaya/tambah_data/'); ?>" + no_ref
+    function init_table_histori(tanggal_awal = "01-01-" + new Date().getFullYear(), tanggal_akhir = "31-12-" + new Date().getFullYear()) {
+        var input = {
+            tanggal_awal: tanggal_awal,
+            tanggal_akhir: tanggal_akhir
+        }
+        $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+            return {
+                "iStart": oSettings._iDisplayStart,
+                "iEnd": oSettings.fnDisplayEnd(),
+                "iLength": oSettings._iDisplayLength,
+                "iTotal": oSettings.fnRecordsTotal(),
+                "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+            };
+        };
+
+        //Init Datatabel Master Stok Persediaan 
+        var table = $('#datatable-daftar-biaya-histori').DataTable({
+            "destroy": true,
+            "oLanguage": {
+                sProcessing: "Sabar yah...",
+                sZeroRecords: "Tidak ada Data..."
+            },
+            "buttons": ['copy', 'excel', 'pdf', 'print'],
+            "dom": 'Bfrtip',
+            "searching": false,
+            "lengthChange": false,
+            "order": [
+                [0, "desc"]
+            ],
+            "responsive": true,
+            "processing": true,
+            "serverSide": false,
+            "fixedColumns": true,
+            "ajax": {
+                "url": '<?= base_url("manajemen_keuangan/masterbiaya/get_daftar_biaya_histori/"); ?>',
+                "type": "POST",
+                'data': input
+            },
+            "columnDefs": [{
+                    data: "jam_tanggal",
+                    targets: 0,
+                    width: 100,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                }, {
+                    data: "nama_biaya",
+                    targets: 1,
+                    width: 150,
+                    render: function(data, type, full, meta) {
+                        return data;
+                    }
+                }, {
+                    data: {
+                        "keterangan": "keterangan",
+                        'nomor_jurnal': 'nomor_jurnal'
+                    },
+                    targets: 2,
+                    width: 300,
+                    render: function(data, type, full, meta) {
+                        return data.keterangan + ' Nomor Jurnal : <span class="text-primary">#' + data.nomor_jurnal + '</span>';
+                    }
+                }, {
+                    data: "total",
+                    targets: 3,
+                    width: 150,
+                    render: function(data, type, full, meta) {
+                        return formatRupiah(data, 'Rp.');
+                    }
+                },
+                {
+                    data: 'id',
+                    targets: 4,
+                    width: 100,
+                    render: function(data, type, full, meta) {
+                        var detail = '<a type="button" onClick = "detail_data(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-mail-reply" ></i> </a>';
+                        return ""
+                    }
+                }
+            ]
+        });
+    }
+</script>
+
+<!-- script tambah detail biaya -->
+<script>
+    $('#add_data').on('hidden.bs.modal', function(e) {
+        $(this)
+            .find("input,textarea,select")
+            .val('')
+            .end();
+        $('#kategori_biaya').val(null).trigger('change');
+    });
+
+    $(document).ready(function() {
+        $('#submitForm').submit(function(e) {
+            e.preventDefault();
+            var data = new FormData(document.getElementById("submitForm"));
+            $.ajax({
+                url: "<?= Base_url('manajemen_keuangan/masterbiaya/tambah_biaya'); ?>",
+                type: "post",
+                data: data,
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+                    $('#add_data').LoadingOverlay("show");
+                },
+                complete: function(data) {
+                    $('#add_data').LoadingOverlay("hide");
+                },
+                success: function(data) {
+                    $('#datatable-daftar-biaya').DataTable().ajax.reload();
+                    $('#datatable-daftar-biaya-histori').DataTable().ajax.reload();
+                    init_total_biaya()
+                    init_total_biaya_histori("01/01/" + new Date().getFullYear(), "12/31/" + new Date().getFullYear())
+                    $('#add_data').modal('hide');
+                    if (data !== 'kurang') {
+                        Swal.fire(
+                            'Sukses!',
+                            '',
+                            'success'
+                        )
+                    } else {
+                        Swal.fire(
+                            'Oppss!',
+                            'Dana Kurang!',
+                            'error'
+                        )
+                    }
+                }
+            })
+        });
+    });
+</script>
+
+
+<!-- edit detail delete -->
+<script>
+    $('#revisi_data').on('hidden.bs.modal', function(e) {
+        $(this)
+            .find("input,textarea,select")
+            .val('')
+            .end();
+        $('#revisi_kategori_biaya').val(null).trigger('change');
+    });
+
+
+    function revisi_biaya(id) {
+        set_data_revisi(id);
+        $('#revisi_data').modal('show');
     }
 
-     function detail_data(no_ref) {
-        window.location.href = "<?= base_url('manajemen_keuangan/masterbiaya/detail_data/'); ?>" + no_ref
+    function set_data_revisi(id) {
+        $.ajax({
+            url: "<?= base_url('manajemen_keuangan/masterbiaya/detail_biaya/'); ?>",
+            type: "post",
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                $('#revisi_data').LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $('#revisi_data').LoadingOverlay("hide");
+            },
+            success: function(data) {
+                $('#id_biaya').text(data.id);
+                $('#revisi_total_biaya').val(formatRupiah(data.total, 'Rp. '));
+                $('#revisi_kategori_biaya').val(data.nama_biaya);
+                $('#revisi_keterangan').val(data.ket);
+                $('#real_biaya').val(formatRupiah('0', 'Rp. '));
+                $('#pengembalian').val(formatRupiah(data.total, 'Rp. '))
+
+            }
+        });
     }
+
+    $('#revisiForm').submit(function(e) {
+        e.preventDefault();
+        var data = new FormData(document.getElementById("revisiForm"));
+        var id = $('#id_biaya').text();
+        var ket = $('#pengembalian').val()
+        data.append('id', id)
+        if (ket !== 'Biaya Real lebih besar dari Total Biaya') {
+            $.ajax({
+                url: "<?= base_url('manajemen_keuangan/masterbiaya/revisi_biaya/'); ?>",
+                type: "post",
+                data: data,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                beforeSend: function() {
+                    $('#revisi_data').LoadingOverlay("show");
+                },
+                complete: function(data) {
+                    $('#revisi_data').LoadingOverlay("hide");
+                },
+                success: function(data) {
+                    $('#datatable-daftar-biaya').DataTable().ajax.reload();
+                    $('#datatable-daftar-biaya-histori').DataTable().ajax.reload();
+                    init_total_biaya()
+                    init_total_biaya_histori("01/01/" + new Date().getFullYear(), "12/31/" + new Date().getFullYear())
+                    $('#revisi_data').modal('hide');
+                    Swal.fire(
+                        'Sukses!',
+                        'Revisi berhasil!',
+                        'success'
+                    )
+                }
+            });
+        } else {
+            swal.fire(
+                'Oopss!',
+                'Biaya real lebih besar dari Total Biaya!',
+                'error'
+            )
+        }
+
+    });
 
     function print_report(no_ref) {
         window.location.href = "<?= base_url('laporan/excel/detail_biaya/'); ?>" + no_ref
     }
 
-    function warning_delete(no_ref) {
+    function warning_delete(id) {
         swal.fire({
             title: 'Apa anda yakin?',
-            text: "Data Baiaya Referensi " + no_ref + " akan terhapus",
+            text: "",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'YA!'
         }).then((result) => {
             if (result.value) {
-                deleteData(no_ref);
+                deleteData(id);
+            }
+        });
+    }
+
+    function deleteData(id) {
+        $.ajax({
+            url: "<?= base_url('manajemen_keuangan/masterbiaya/delete_biaya/'); ?>",
+            type: "post",
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $.LoadingOverlay("hide");
+            },
+            success: function(data) {
+                $('#datatable-daftar-biaya').DataTable().ajax.reload();
+                $('#datatable-daftar-biaya-histori').DataTable().ajax.reload();
+                init_total_biaya()
+                init_total_biaya_histori("01/01/" + new Date().getFullYear(), "12/31/" + new Date().getFullYear())
                 swal.fire(
                     'Deleted!',
                     'Data telah dihapus!',
                     'success'
                 )
-            }
-        });
-    }
-
-    function deleteData(no_ref) {
-        $.ajax({
-            url: "<?= base_url('manajemen_persediaan/stokopname/delete_master_stok_opname'); ?>",
-            type: "post",
-            data: {
-                no_ref: no_ref
-            },
-            async: false,
-            success: function(data) {
-                $('#datatable-master-opname').DataTable().ajax.reload();
             }
         });
     }

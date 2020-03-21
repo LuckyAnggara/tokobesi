@@ -74,7 +74,7 @@
                 <hr>
                 <div class="text-right" id="div_saldo_akhir">
                     <div class="form-group row">
-                        <label class="col-4 col-form-label"></label>
+                        <label class="col-6 col-form-label"></label>
                         <label class="col-3 col-form-label">Saldo Akhir</label>
                         <div class="col-3">
                             <input name="saldo_akhir" id="saldo_akhir" type="text" class="form-control" placeholder="" readonly>

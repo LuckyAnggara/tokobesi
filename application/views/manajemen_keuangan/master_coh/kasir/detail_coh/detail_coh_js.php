@@ -12,7 +12,8 @@
 <script src="<?= base_url('assets/'); ?>plugins/datatables/buttons.print.min.js"></script>
 <!-- DatePicker Js -->
 <script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-
+<!-- Select2 js -->
+<script src="<?= base_url('assets/'); ?>plugins/select2/js/select2.min.js" type="text/javascript"></script>
 <!-- script sendiri -->
 
 <script>
@@ -25,8 +26,7 @@
         init_table(no_ref)
         init_table_permintaan(no_ref)
         init_table_pending(no_ref)
-        init_jumlah_permintaan(no_ref)
-        init_jumlah_pending(no_ref)
+        ini_data_kasir_lain();
     })
 
     function normalrupiah(angka) {
@@ -61,6 +61,36 @@
         }
         var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
         return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+    }
+
+    function ini_data_kasir_lain() {
+
+        $('#no_ref_kasir').select2({
+            dropdownParent: $('#transfer_modal'),
+            placeholder: "Pilih Kasir",
+            ajax: {
+                url: '<?= base_url("manajemen_keuangan/mastercoh/data_transfer_kasir/"); ?>',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        query: params.term, // search term
+                    };
+                },
+                processResults: function(data) {
+                    var results = [];
+                    $.each(data, function(index, item) {
+                        results.push({
+                            id: item.nomor_referensi,
+                            text: item.nama_kasir + ' - #' + item.tanggal,
+                        });
+                    });
+                    return {
+                        results: results
+                    };
+                },
+            },
+        })
     }
 
 
@@ -183,7 +213,7 @@
             "serverSide": false,
             "ordering": true,
             "ajax": {
-                "url": '<?= base_url("manajemen_keuangan/mastercoh/get_data_permintaan/"); ?>',
+                "url": '<?= base_url("manajemen_keuangan/mastercoh/get_data_permintaan_kasir/"); ?>',
                 "type": "POST",
                 "data": {
                     tanggal: tanggal,
@@ -246,18 +276,19 @@
             }, {
                 data: {
                     "id": "id",
+                    "spv": "spv",
                     "nomor_referensi": "nomor_referensi",
                     "nominal": "nominal",
                     "jenis_permintaan": "jenis_permintaan",
-                    "status": "status"
+                    "status": "status",
+                    "nama_pegawai": "nama_pegawai"
                 },
                 targets: 5,
                 width: 50,
                 render: function(data, type, full, meta) {
 
-                    var approve = '<a type="button" onClick = "approve_data(\'' + data.id + '\', \'' + data.nomor_referensi + '\',  \'' + data.nominal + '\',  \'' + data.jenis_permintaan + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-check" ></i> </a>';
-                    var reject = '<a type="button" onClick = "reject_data(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-times-rectangle" ></i> </a>';
-
+                    var approve = '<a type="button" onClick = "approve_data(\'' + data.id + '\', \'' + data.nomor_referensi + '\',  \'' + data.spv + '\', \'' + data.nominal + '\',  \'' + data.jenis_permintaan + '\',  \'' + data.nama_pegawai + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-check" ></i> </a>';
+                    var reject = '<a type="button" onClick = "reject_data(\'' + data.id + '\', \'' + data.nomor_referensi + '\',  \'' + data.spv + '\', \'' + data.nominal + '\',  \'' + data.jenis_permintaan + '\',  \'' + data.nama_pegawai + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-times-rectangle" ></i> </a>';
                     if (data.status == 1) {
                         return approve + ' ' + reject;
                     } else {
@@ -382,6 +413,14 @@
             .end()
     });
 
+    $('#transfer_modal').on('hidden.bs.modal', function(e) {
+        $(this)
+            .find("input,textarea,select")
+            .val('')
+            .end();
+        $('#no_ref_kasir').val(null).trigger('change');
+    });
+
     var tarik = document.getElementById('tarik_dana');
     tarik.addEventListener('keyup', function(e) {
         tarik.value = formatRupiah(this.value, 'Rp.');
@@ -390,6 +429,11 @@
     var setor = document.getElementById('setor_dana');
     setor.addEventListener('keyup', function(e) {
         setor.value = formatRupiah(this.value, 'Rp.');
+    });
+
+    var transfer = document.getElementById('transfer_dana');
+    transfer.addEventListener('keyup', function(e) {
+        transfer.value = formatRupiah(this.value, 'Rp.');
     });
 </script>
 
@@ -489,6 +533,50 @@
             })
         }
     })
+
+    $('#transferForm').submit(function(e) {
+        e.preventDefault();
+        var no_ref = $('#nomor_referensi').text();
+        var no_ref_kasir = $('#nomor_referensi_spv').text();
+        var data = new FormData(document.getElementById("transferForm"));
+        data.append('no_ref', no_ref);
+        $.ajax({
+            url: "<?= base_url("manajemen_keuangan/mastercoh/permintaan_transfer_dana_kasir"); ?>",
+            type: "post",
+            data: data,
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                $('#transfer_modal').LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $('#transfer_modal').LoadingOverlay("hide");
+            },
+            success: function(data) {
+                if (data == 'sukses') {
+                    swal.fire(
+                        'Sukses!',
+                        'Permintaan dana telah di kirim',
+                        'success'
+                    );
+                } else if (data == 'kurang') {
+                    swal.fire(
+                        'Saldo Kurang!',
+                        '',
+                        'error'
+                    );
+                } else {
+                    swal.fire(
+                        'Oopss!',
+                        'Ada kesalahan sistem, silahkan ulangi!',
+                        'error'
+                    );
+                }
+                $('#datatable-daftar-pending').DataTable().ajax.reload();
+                $('#transfer_modal').modal('hide');
+            }
+        })
+    })
 </script>
 
 
@@ -536,131 +624,147 @@
         });
     }
 
-    function approve_data(id, no_ref, nominal, jenis_permintaan) {
-        swal.fire({
-            title: 'Approve?',
-            text: "",
-            icon: 'warning',
+    async function approve_data(id, no_ref, spv, nominal, jenis_permintaan, nama_pegawai) {
+        const {
+            value: password
+        } = await Swal.fire({
+            title: 'Input Password',
+            input: 'password',
+            focusConfirm: false,
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: "<?= base_url('manajemen_keuangan/mastercoh/manajer_approve_coh'); ?>",
-                    type: "post",
-                    data: {
-                        id: id,
-                        no_ref: no_ref,
-                        jenis: jenis_permintaan,
-                        nominal: nominal
-                    },
-                    beforeSend: function() {
-                        $.LoadingOverlay("show");
-                    },
-                    complete: function(data) {
-                        $.LoadingOverlay("hide");
-                    },
-                    success: function(data) {
-                        if (data == 'sukses') {
-                            swal.fire(
-                                'Approved!',
-                                '',
-                                'success'
-                            )
-                        } else {
-                            swal.fire(
-                                'Rejected!',
-                                '',
-                                'success'
-                            )
-                        }
-                        $('#datatable-master-permintaan-coh').DataTable().ajax.reload();
-                    }
-                });
+            confirmButtonText: 'Approve !'
+        })
+        if (password) {
+            $.ajax({
+                url: "<?= base_url('manajemen_keuangan/mastercoh/kasir_approve_coh'); ?>",
+                type: "post",
+                data: {
+                    id: id,
+                    spv: spv,
+                    no_ref: no_ref,
+                    jenis: jenis_permintaan,
+                    nominal: nominal,
+                    password: password,
+                    nama_pegawai: nama_pegawai
+                },
+                beforeSend: function() {
+                    $.LoadingOverlay("show");
+                },
+                complete: function(data) {
+                    $.LoadingOverlay("hide");
+                },
+                success: function(data) {
+                    if (data == 'sukses') {
+                        swal.fire(
+                            'Approved!',
+                            '',
+                            'success'
+                        )
+                    } else if (data == 'salah') {
+                        swal.fire(
+                            'Oppss!',
+                            'Password salah!',
+                            'error'
+                        )
 
-            }
-        });
+                    } else {
+                        swal.fire(
+                            'Oppss!',
+                            'Error, silahkan ulangi',
+                            'error'
+                        )
+                    }
+                    $('#datatable-detail-coh').DataTable().ajax.reload();
+                    $('#datatable-daftar-permintaan').DataTable().ajax.reload();
+                    $('#datatable-daftar-pending').DataTable().ajax.reload();
+                    saldo_refresh()
+                }
+            });
+        }
     }
 
-    function reject_data(id) {
-        swal.fire({
-            title: 'Reject?',
-            text: "",
-            icon: 'warning',
+    async function reject_data(id, no_ref, no_ref_kasir, nominal, jenis_permintaan, nama_pegawai) {
+        const {
+            value: password
+        } = await Swal.fire({
+            title: 'Input Password',
+            input: 'password',
+            focusConfirm: false,
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: "<?= base_url('manajemen_keuangan/mastercoh/manajer_reject_coh'); ?>",
-                    type: "post",
-                    data: {
-                        id: id
-                    },
-                    beforeSend: function() {
-                        $.LoadingOverlay("show");
-                    },
-                    complete: function(data) {
-                        $.LoadingOverlay("hide");
-                    },
-                    success: function(data) {
-                        if (data == 'sukses') {
-                            swal.fire(
-                                'Approved!',
-                                '',
-                                'success'
-                            )
-                        } else {
-                            swal.fire(
-                                'Rejected!',
-                                '',
-                                'success'
-                            )
-                        }
-                        $('#datatable-master-permintaan-coh').DataTable().ajax.reload();
+            confirmButtonText: 'Reject !'
+        })
+        if (password) {
+            $.ajax({
+                url: "<?= base_url('manajemen_keuangan/mastercoh/kasir_reject_coh'); ?>",
+                type: "post",
+                data: {
+                    id: id,
+                    no_ref_kasir: no_ref_kasir,
+                    no_ref: no_ref,
+                    jenis: jenis_permintaan,
+                    nominal: nominal,
+                    password: password,
+                    nama_pegawai: nama_pegawai
+                },
+                beforeSend: function() {
+                    $.LoadingOverlay("show");
+                },
+                complete: function(data) {
+                    $.LoadingOverlay("hide");
+                },
+                success: function(data) {
+                    if (data == 'sukses') {
+                        swal.fire(
+                            'Rejected!',
+                            '',
+                            'success'
+                        )
+                    } else if (data == 'salah') {
+                        swal.fire(
+                            'Oppss!',
+                            'Password salah!',
+                            'error'
+                        )
+
+                    } else {
+                        swal.fire(
+                            'Oppss!',
+                            'Error, silahkan ulangi',
+                            'error'
+                        )
                     }
-                });
-            }
-        });
+                    $('#datatable-detail-coh').DataTable().ajax.reload();
+                    $('#datatable-daftar-permintaan').DataTable().ajax.reload();
+                    $('#datatable-daftar-pending').DataTable().ajax.reload();
+                    saldo_refresh()
+                }
+            });
+        }
     }
 </script>
 
-<!-- menghitung jumlah pending dan permintaan -->
 <script>
-    function init_jumlah_pending(no_ref) {
-        var tanggal = $('#tanggal').val();
+    function saldo_refresh(no_ref) {
+        var no_ref = $('#nomor_referensi').text();
         $.ajax({
-            url: "<?= base_url('manajemen_keuangan/mastercoh/get_jumlah_data_pending'); ?>",
+            url: "<?= base_url('manajemen_keuangan/mastercoh/saldo_akhir'); ?>",
             type: "post",
+            dataType : 'json',
             data: {
-                tanggal: tanggal,
                 no_ref: no_ref
             },
-            success: function(data) {
-                var jumlah_pending = $('#jumlah_pending')
-                jumlah_pending.text(data);
-            }
-        });
-    }
-
-
-    function init_jumlah_permintaan(no_ref) {
-        var tanggal = $('#tanggal').val();
-        $.ajax({
-            url: "<?= base_url('manajemen_keuangan/mastercoh/get_jumlah_data_permintaan'); ?>",
-            type: "post",
-            data: {
-                tanggal: tanggal,
-                no_ref: no_ref
+            beforeSend: function() {
+                $('#saldo_akhir').LoadingOverlay("show");
             },
-            async: false,
+            complete: function(data) {
+                $('#saldo_akhir').LoadingOverlay("hide");
+            },
             success: function(data) {
-                var jumlah_permintaan = $('#jumlah_permintaan')
-                jumlah_permintaan.text(data);
+                $('#saldo_akhir').val(formatRupiah(data.toString(), 'Rp.'))
             }
         });
     }

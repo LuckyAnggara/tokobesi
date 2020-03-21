@@ -12,14 +12,211 @@ class Model_Coh extends CI_Model
 
     }
 
+    // global
+
+    function cek_ready_kasir()
+    {
+        $this->db->select('*');
+        $this->db->from('master_coh');
+        $this->db->where('user', $this->session->userdata('username'));
+        $this->db->where('tanggal_input >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59'));
+        $this->db->where('status',1);
+        return $this->db->get()->num_rows();
+    }
+
+    function transaksi_penjualan_tunai($user, $nominal, $no_faktur){
+        $this->db->select('*');
+        $this->db->from('master_coh');
+        $this->db->where('user', $user);
+        $this->db->where('tanggal_input >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59'));
+        $this->db->where('status', 1);
+        $data_coh = $this->db->get()->row_array();
+        $data = [
+            'saldo_akhir'=> $data_coh['saldo_akhir'] + $nominal,
+        ];
+        $this->db->where('nomor_referensi', $data_coh['nomor_referensi']);
+        $this->db->update('master_coh', $data);
+
+        // update detail
+        $data = [
+            'nomor_referensi' => $data_coh['nomor_referensi'],
+            'nominal' => $nominal,
+            'saldo' => $data_coh['saldo_akhir'] + $nominal,
+            'jenis' => 1,
+            'keterangan' => 'Penjualan Cash Nomor Faktur : '.$no_faktur ,
+            'tanggal_input' => date("Y-m-d H:i:s"),
+        ];
+        $this->db->insert('detail_coh', $data);
+    }
+
+    function transaksi_penjualan_kredit($user, $nominal, $no_faktur)
+    {
+        $this->db->select('*');
+        $this->db->from('master_coh');
+        $this->db->where('user', $user);
+        $this->db->where('tanggal_input >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59'));
+        $this->db->where('status', 1);
+        $data_coh = $this->db->get()->row_array();
+        $data = [
+            'saldo_akhir' => $data_coh['saldo_akhir'] + $nominal,
+        ];
+        $this->db->where('nomor_referensi', $data_coh['nomor_referensi']);
+        $this->db->update('master_coh', $data);
+
+        // update detail
+        $data = [
+            'nomor_referensi' => $data_coh['nomor_referensi'],
+            'nominal' => $nominal,
+            'saldo' => $data_coh['saldo_akhir'] + $nominal,
+            'jenis' => 1,
+            'keterangan' => 'Penjualan Kredit Nomor Faktur : ' . $no_faktur,
+            'tanggal_input' => date("Y-m-d H:i:s"),
+        ];
+        $this->db->insert('detail_coh', $data);
+    }
+
+    function pembayaran_biaya($user, $post, $no_jurnal){
+        $nominal = $this->normal($post['total_biaya']);
+
+        $this->db->select('*');
+        $this->db->from('master_coh');
+        $this->db->where('user', $user);
+        $this->db->where('tanggal_input >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59'));
+        $this->db->where('status', 1);
+        $data_coh = $this->db->get()->row_array();
+        $data = [
+            'saldo_akhir' => $data_coh['saldo_akhir'] - $nominal,
+        ];
+        $this->db->where('nomor_referensi', $data_coh['nomor_referensi']);
+        $this->db->update('master_coh', $data);
+
+        // cek nama biaya
+        $this->db->select('nama_biaya');
+        $this->db->from('master_kategori_biaya');
+        $this->db->where('id', $post['kategori_biaya']);
+        $data = $this->db->get()->row_array();
+        $nama_biaya = $data['nama_biaya'];
+
+        // update detail
+        $data = [
+            'nomor_referensi' => $data_coh['nomor_referensi'],
+            'nominal' => $nominal,
+            'saldo' => $data_coh['saldo_akhir'] - $nominal,
+            'jenis' => 2,
+            'keterangan' => 'Debit Biaya '.$nama_biaya. ' Nomor Jurnal : #' . $no_jurnal,
+            'tanggal_input' => date("Y-m-d H:i:s"),
+        ];
+        $this->db->insert('detail_coh', $data);
+    }
+
+    function revisi_pembayaran_biaya($user, $post, $pengembalian)
+    {
+        $nominal = $pengembalian;
+
+        $this->db->select('*');
+        $this->db->from('master_coh');
+        $this->db->where('user', $user);
+        $this->db->where('tanggal_input >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59'));
+        $this->db->where('status', 1);
+        $data_coh = $this->db->get()->row_array();
+        $data = [
+            'saldo_akhir' => $data_coh['saldo_akhir'] + $nominal,
+        ];
+        $this->db->where('nomor_referensi', $data_coh['nomor_referensi']);
+        $this->db->update('master_coh', $data);
+
+        // cek nama biaya
+        $this->db->select('nama_biaya');
+        $this->db->from('master_kategori_biaya');
+        $this->db->where('id', $post['kategori_biaya']);
+        $data = $this->db->get()->row_array();
+        $nama_biaya = $data['nama_biaya'];
+
+        // update detail
+        $data = [
+            'nomor_referensi' => $data_coh['nomor_referensi'],
+            'nominal' => $nominal,
+            'saldo' => $data_coh['saldo_akhir'] + $nominal,
+            'jenis' => 1,
+            'keterangan' => 'Pengembalian Biaya ' . $nama_biaya . ' Nomor Jurnal :#' . $post['nomor_jurnal'],
+            'tanggal_input' => date("Y-m-d H:i:s"),
+        ];
+        $this->db->insert('detail_coh', $data);
+    }
+
+    function delete_pembayaran_biaya($user, $post)
+    {
+        $nominal = $this->normal($post['total']);
+
+        $this->db->select('*');
+        $this->db->from('master_coh');
+        $this->db->where('user', $user);
+        $this->db->where('tanggal_input >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59'));
+        $this->db->where('status', 1);
+        $data_coh = $this->db->get()->row_array();
+        $data = [
+            'saldo_akhir' => $data_coh['saldo_akhir'] + $nominal,
+        ];
+        $this->db->where('nomor_referensi', $data_coh['nomor_referensi']);
+        $this->db->update('master_coh', $data);
+
+        // cek nama biaya
+        $this->db->select('nama_biaya');
+        $this->db->from('master_kategori_biaya');
+        $this->db->where('id', $post['kategori_biaya']);
+        $data = $this->db->get()->row_array();
+        $nama_biaya = $data['nama_biaya'];
+
+        // update detail
+        $data = [
+            'nomor_referensi' => $data_coh['nomor_referensi'],
+            'nominal' => $nominal,
+            'saldo' => $data_coh['saldo_akhir'] + $nominal,
+            'jenis' =>1,
+            'keterangan' => 'Pengembalian Biaya ' . $nama_biaya . ' Nomor Jurnal :#' . $post['nomor_jurnal'],
+            'tanggal_input' => date("Y-m-d H:i:s"),
+        ];
+        $this->db->insert('detail_coh', $data);
+    }
+
+    function cek_dana($user)
+    {
+        $this->db->select('*');
+        $this->db->from('master_coh');
+        $this->db->where('user', $user);
+        $this->db->where('tanggal_input >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59'));
+        $this->db->where('status', 1);
+        $data = $this->db->get()->row_array();
+        return $data['saldo_akhir'];
+    }
+
+    function get_data_pending_user($user)
+    {
+        $this->db->select('*, master_user.nama as nama_pegawai, DATE_FORMAT(tanggal, "%d %b %y | %H:%i") as jam');
+        $this->db->from('master_coh_permintaan');
+        $this->db->join('master_user','master_user.username = master_coh_permintaan.user');
+        $this->db->where('tanggal >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal <=', date('Y-m-d 23:59:59'));
+        $this->db->where('master_coh_permintaan.status', 1);
+        $this->db->where('spv', $user);
+        return $this->db->get()->result_array();
+    }
+
     //manajer
     function get_data_master_permintaan()
     {
         $this->db->select(' DATE_FORMAT(master_coh_permintaan.tanggal, "%d %b %y | %H:%i") as tanggal , master_coh_permintaan.nominal, master_coh_permintaan.status, master_coh_permintaan.jenis_permintaan, master_coh_permintaan.id,master_coh_permintaan.nomor_referensi, master_user.nama as nama_pegawai');
         $this->db->from('master_coh_permintaan');
         $this->db->join('master_user','master_coh_permintaan.user = master_user.username');
-        // $this->db->where('master_coh_permintaan.tanggal >=', date('Y-m-d 00:00:00'));
-        // $this->db->where('master_coh_permintaan.tanggal <=', date('Y-m-d 23:59:59'));
+        ///$this->db->where('master_coh_permintaan.tanggal >=', date('Y-m-d 00:00:00'));
+        //$this->db->where('master_coh_permintaan.tanggal <=', date('Y-m-d 23:59:59'));
         $this->db->where('level', 3);
         $this->db->order_by('master_coh_permintaan.tanggal', 'DESC');
         return $this->db->get();
@@ -144,6 +341,24 @@ class Model_Coh extends CI_Model
         return $this->db->get();
     }
 
+    function get_data_master_kasir_aktif()
+    {
+        // cek last nomor_ref yang aktif
+        $this->db->select('nomor_referensi');
+        $this->db->from('master_coh');
+        $this->db->where('status', 1);
+        $this->db->where('user', $this->session->userdata('username'));
+        $data = $this->db->get()->row_array();
+
+        $this->db->select('master_coh.saldo_awal, master_coh.saldo_akhir, master_coh.status, master_coh.nomor_referensi_spv, DATE_FORMAT(master_coh.tanggal_input, "%d %b %Y") as tanggal, master_user.nama as nama_kasir');
+        $this->db->from('master_coh');
+        $this->db->join('master_user', 'master_user.username = master_coh.user');
+        $this->db->where('master_coh.status !=', 99);
+
+        $this->db->having('nomor_referensi_spv', $data['nomor_referensi']);
+        return $this->db->get();
+    }
+
     function get_data_master_histori()
     {
         $this->db->select('*, DATE_FORMAT(master_coh.tanggal_input, "%d %b %Y") as tanggal');
@@ -164,7 +379,7 @@ class Model_Coh extends CI_Model
 
     function get_detail_data($nomor_referensi)
     {
-        $this->db->select('*, DATE_FORMAT(tanggal_input, "%d %b %y | %H:%i") as jam');
+        $this->db->select('*, DATE_FORMAT(tanggal_input, "%d %b %y | %H:%i") as jam, DATE_FORMAT(tanggal_input, "%H:%i") as jam_jam');
         $this->db->from('detail_coh');
         $this->db->where('nomor_referensi', $nomor_referensi);
         return $this->db->get();
@@ -175,8 +390,8 @@ class Model_Coh extends CI_Model
         $this->db->select('DATE_FORMAT(master_coh_permintaan.tanggal,  "%d %b %y | %H:%i") as jam,master_coh_permintaan.tanggal , master_coh_permintaan.nominal, master_coh_permintaan.status, master_coh_permintaan.jenis_permintaan, master_coh_permintaan.id,master_coh_permintaan.nomor_referensi, master_user.nama as nama_pegawai');
         $this->db->from('master_coh_permintaan');
         $this->db->join('master_user', 'master_coh_permintaan.user = master_user.username');
-        // $this->db->where('master_coh_permintaan.tanggal >=', date('Y-m-d 00:00:00'));
-        // $this->db->where('master_coh_permintaan.tanggal <=', date('Y-m-d 23:59:59'));
+        $this->db->where('master_coh_permintaan.tanggal >=', date('Y-m-d 00:00:00'));
+        $this->db->where('master_coh_permintaan.tanggal <=', date('Y-m-d 23:59:59'));
         $this->db->where('level', 2);
         $this->db->where('spv', $this->session->userdata('username'));
         $this->db->order_by('master_coh_permintaan.tanggal', 'DESC');
@@ -238,7 +453,7 @@ class Model_Coh extends CI_Model
             'saldo' => $nominal,
             'nominal' => $nominal,
             'jenis' => 1,  // 1 cash awal (masuk) 2 tarik baru (masuk) 3 permintaan keluar (keluar) 4 setor ke atas (keluar)
-            'keterangan' => 'Saldo Awal Penarikan',
+            'keterangan' => 'Saldo Awal',
             'tanggal_input' => date("Y-m-d H:i:s"),
         ];
         $this->db->insert('detail_coh', $data);
@@ -336,8 +551,8 @@ class Model_Coh extends CI_Model
             $data = [
                 'nomor_referensi' => $data_coh['nomor_referensi_spv'],
                 'nominal' => $post['nominal'],
-                'saldo' => $data_coh_spv['saldo_akhir'] - $post['nominal'],
-                'jenis' => 4,
+                'saldo' => $data_coh_spv['saldo_akhir'] + $post['nominal'],
+                'jenis' => 1,
                 'keterangan' => 'Dana di setorkan oleh ' . $post['nama_pegawai'],
                 'tanggal_input' => date("Y-m-d H:i:s"),
             ];
@@ -394,18 +609,18 @@ class Model_Coh extends CI_Model
         }
     }
 
-    function supervisor_reject_coh($id)
+    function supervisor_reject_coh($post)
     {
         $data = [
             'status' => 99,
             'approval' => $this->session->userdata['username'],
         ];
-        $this->db->where('id', $id);
+        $this->db->where('id', $post['id']);
         $this->db->update('master_coh_permintaan', $data);
 
         $this->db->select('*');
         $this->db->from('master_coh_permintaan');
-        $this->db->where('id',$id);
+        $this->db->where('id', $post['id']);
         $data_coh = $this->db->get()->row_array();
 
         $jenis_permintaan = $data_coh['jenis_permintaan'];
@@ -416,9 +631,16 @@ class Model_Coh extends CI_Model
             ];
             $this->db->where('nomor_referensi', $data_coh['nomor_referensi']);
             $this->db->update('master_coh', $data);
+        }else if ($jenis_permintaan == '5') {
+            $data = [
+                'status' => 1, // 5 minta tutup toko tapi di reject jd mulai lagi
+            ];
+            $this->db->where('nomor_referensi', $data_coh['nomor_referensi']);
+            $this->db->update('master_coh', $data);
+            // echo $data_coh['nomor_referensi'];
         }
-              
         return "sukses";
+              
     }
 
     
@@ -486,7 +708,7 @@ class Model_Coh extends CI_Model
         $this->db->delete('master_coh');
     }
 
-        function delete_permintaan($id)
+    function delete_permintaan($id)
     {
         $this->db->where('id', $id);
         $this->db->delete('master_coh_permintaan');
@@ -595,10 +817,23 @@ class Model_Coh extends CI_Model
 
     function spv_no_ref($query)
     {
-        $this->db->select('*, master_user.nama as nama_spv');
+        $this->db->select('*, master_user.nama as nama_spv, DATE_FORMAT(tanggal_input, "%d %b %Y") as tanggal');
         $this->db->from('master_coh');
         $this->db->join('master_user','master_user.username = master_coh.user');
         $this->db->where('level',4);
+        $this->db->like('tanggal_input', date('Y-m-d'));
+        $this->db->having('master_coh.status', 1);
+        $output = $this->db->get();
+        return $output;
+    }
+
+    function data_transfer_kasir($query)
+    {
+        $this->db->select('*, master_user.nama as nama_kasir, DATE_FORMAT(tanggal_input, "%d %b %Y") as tanggal');
+        $this->db->from('master_coh');
+        $this->db->join('master_user', 'master_user.username = master_coh.user');
+        $this->db->where('level', 1);
+        $this->db->where('user !=', $this->session->userdata('username'));
         $this->db->like('tanggal_input', date('Y-m-d'));
         $this->db->having('master_coh.status', 1);
         $output = $this->db->get();
@@ -680,7 +915,19 @@ class Model_Coh extends CI_Model
         {
             return "kurang";
         }
-        
+    }
+
+    function get_data_permintaan_kasir()
+    {
+        $this->db->select('DATE_FORMAT(master_coh_permintaan.tanggal,  "%d %b %y | %H:%i") as jam,master_coh_permintaan.tanggal , master_coh_permintaan.nominal, master_coh_permintaan.status, master_coh_permintaan.jenis_permintaan, master_coh_permintaan.id,master_coh_permintaan.nomor_referensi, master_user.nama as nama_pegawai, spv');
+        $this->db->from('master_coh_permintaan');
+        $this->db->join('master_user', 'master_coh_permintaan.user = master_user.username');
+        // $this->db->where('master_coh_permintaan.tanggal >=', date('Y-m-d 00:00:00'));
+        // $this->db->where('master_coh_permintaan.tanggal <=', date('Y-m-d 23:59:59'));
+        $this->db->where('level', 1);
+        $this->db->where('spv', $this->session->userdata('username'));
+        $this->db->order_by('master_coh_permintaan.tanggal', 'DESC');
+        return $this->db->get();
     }
 
     function cek_data_spv($id_supervisor)
@@ -764,17 +1011,17 @@ class Model_Coh extends CI_Model
                 ];
                 $this->db->where('id', $id);
                 $this->db->update('master_coh', $data);
-                $this->permintaan_tutup_kas_kasir($data_master->nomor_referensi);
+                $this->permintaan_tutup_kas_kasir($data_master);
                 return $data_master->saldo_akhir;
             }
     
     }
 
-    function permintaan_tutup_kas_kasir($no_ref)
+    function permintaan_tutup_kas_kasir($data_master)
     {
-        $data_spv = $this->cek_data_spv($no_ref);
+        $data_spv = $this->cek_data_spv($data_master->nomor_referensi_spv);
         $data = [
-            'nomor_referensi' => $no_ref,
+            'nomor_referensi' => $data_master->nomor_referensi,
             'nominal' => 0,
             'jenis_permintaan' => 5, // 1 untuk tarik dana 2 untuk setor dana , 5 untuk tutup kas
             'status' => 1, // 1 untuk pending 2 untuk approve 99 untuk reject
@@ -786,8 +1033,111 @@ class Model_Coh extends CI_Model
         $this->db->insert('master_coh_permintaan', $data);
     }
 
-    
+    function permintaan_transfer_dana_kasir($post)
+    {
+        $data_kasir= $this->cek_data_spv($post['no_ref_kasir']);
+        if ($data_kasir['saldo_akhir'] >= $this->normal($post['transfer_dana'])) {
+            $data = [
+                'nomor_referensi' => $post['no_ref'],
+                'nominal' => $this->normal($post['transfer_dana']),
+                'jenis_permintaan' => 1, // 1 untuk tarik dana 2 untuk setor dana
+                'status' => 1, // 1 untuk pending 2 untuk approve 99 untuk reject
+                'level' => 1, // 1 kasir dengan kasir , 2 kasir dengan spv, 3 spv dengan manajer
+                'spv' => $data_kasir['user'],
+                'tanggal' => date("Y-m-d H:i:s"),
+                'user' => $this->session->userdata['username'],
+            ];
+            $this->db->insert('master_coh_permintaan', $data);
+            return "sukses";
+        } else {
+            return "kurang";
+        }
+    }
 
+    function kasir_approve_coh($post)
+    {
     
+      
+
+        // tarik data coh
+        $this->db->select('*, nama as nama_kasir');
+        $this->db->from('master_coh');
+        $this->db->join('master_user', 'master_user.username = master_coh.user');
+        $this->db->where('nomor_referensi', $post['no_ref']);
+        $data_coh = $this->db->get()->row_array();
+
+        // tarik data coh kasir lain
+
+        $this->db->select('*, nama as nama_kasir');
+        $this->db->from('master_coh');
+        $this->db->join('master_user', 'master_user.username = master_coh.user');
+        $this->db->where('user', $post['spv']);
+        $this->db->where('master_coh.status', 1);
+        $data_coh_kasir_lain = $this->db->get()->row_array();
+        // tarik data coh kasir lain
+
+        if ($post['jenis'] == 1) { // tarik
+            $data = [
+                'nomor_referensi' => $data_coh['nomor_referensi'],
+                'nominal' => $post['nominal'],
+                'saldo' => $data_coh['saldo_akhir'] + $post['nominal'],
+                'jenis' => 1,
+                'keterangan' => 'Transfer Dana dari '. $data_coh_kasir_lain['nama_kasir'],
+                'tanggal_input' => date("Y-m-d H:i:s"),
+            ];
+            $this->db->insert('detail_coh', $data);
+
+            // nambah kas kasir
+            $data = [
+                'saldo_akhir' => $data_coh['saldo_akhir'] + $post['nominal'],
+            ];
+            $this->db->where('nomor_referensi', $post['no_ref']);
+            $this->db->update('master_coh', $data);
+
+            // kurang kas spv
+            $data = [
+                'saldo_akhir' => $data_coh_kasir_lain['saldo_akhir'] - $post['nominal'],
+            ];
+            $this->db->where('nomor_referensi', $data_coh_kasir_lain['nomor_referensi']);
+            $this->db->update('master_coh', $data);
+
+            $data = [
+                'nomor_referensi' => $data_coh_kasir_lain['nomor_referensi'],
+                'nominal' => $post['nominal'],
+                'saldo' => $data_coh_kasir_lain['saldo_akhir'] - $post['nominal'],
+                'jenis' => 2,
+                'keterangan' => 'Transfer dana ke ' . $post['nama_pegawai'],
+                'tanggal_input' => date("Y-m-d H:i:s"),
+            ];
+            $this->db->insert('detail_coh', $data);
+
+            $approval = $this->session->userdata['username'];
+            // update data permintaan
+            $data = [
+                'status' => 2,
+                'approval' => $approval,
+            ];
+            $this->db->where('id', $post['id']);
+            $this->db->update('master_coh_permintaan', $data);
+            return "sukses";
+
+        } else{
+            return "error";
+        }
+
+        
+    }
+
+    function kasir_reject_coh($post)
+    {
+        $data = [
+            'status' => 99,
+            'approval' => $this->session->userdata['username'],
+        ];
+        $this->db->where('id', $post['id']);
+        $this->db->update('master_coh_permintaan', $data);
+
+        return "sukses";
+    }
 
 }

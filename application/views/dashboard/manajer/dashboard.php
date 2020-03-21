@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h4 class="page-title">Dashboard Executive</h4>
+                        <h4 class="page-title">Dashboard</h4>
                     </div>
                 </div>
                 <div class="row">
@@ -18,7 +18,7 @@
                                     <a href="javascript:void(0);" class="dropdown-item">Action</a>
                                 </div>
                             </div>
-                            <h4 class="header-title mt-0">Laba Penjualan</h4>
+                            <h4 class="header-title mt-0">Laba Usaha</h4>
                             <div class="form-group row m-b-10 col-xl-6 col-sm-12 col-lg-6 col-md-6">
                                 <label class="col-2 col-form-label">Bulan</label>
                                 <div class="col-9">
@@ -42,8 +42,38 @@
                         </div>
                     </div><!-- end col -->
                 </div>
+                <div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <a href="www.google.com">
+                            <div class="card-box">
+                                <h4 class="header-title mt-0 m-b-30">Total Utang Usaha</h4>
+                                <div class="widget-box-2">
+                                    <div class="widget-detail-2">
+                                        <h3 class="mb-0 counterRupiah" id="utang_value">0</h3>
+                                        <p class="text-muted">hari ini</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div><!-- end col -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card-box">
+                            <h4 class="header-title mt-0 m-b-30">Total Piutang Usaha</h4>
+                            <div class="widget-box-2">
+                                <div class="widget-detail-2">
+                                    <h3 class="mb-0 counterRupiah" id="piutang_value">0</h3>
+                                    <p class="text-muted">hari ini</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- end col -->
+                </div>
                 <!-- end row -->
-
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3 class="page-title">Transaksi Hari Ini</h3>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-xl-3 col-md-6">
                         <div class="card-box">
@@ -150,7 +180,7 @@
                     </div><!-- end col -->
                     <div class="col-xl-8">
                         <div class="card-box">
-                            <h4 class="header-title mt-0 m-b-30">Penjualan Terakhir</h4>
+                            <h4 class="header-title mt-0 m-b-30">Penjualan Hari Ini</h4>
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered  dt-responsive nowrap" id="table-penjualan-terakhir">
                                     <thead class="thead-dark">
@@ -170,7 +200,11 @@
                     </div><!-- end col -->
                 </div>
                 <!-- end row -->
-
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3 class="page-title">Produktifitas</h3>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-xl-6">
                         <div class="card-box">

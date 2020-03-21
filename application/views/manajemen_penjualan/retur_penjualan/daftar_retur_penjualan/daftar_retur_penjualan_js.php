@@ -170,13 +170,13 @@
                         targets: 9,
                         render: function(data, type, full, meta) {
                             var user = "<?php echo $this->session->userdata('username'); ?>";
-                            var display1 = '<a type="button" onClick = "view_faktur(\'' + data.nomor_faktur + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Detail"><i class="fa fa-search" ></i> </a>';
-                            var display2 = '<a type="button" onClick = "warning_delete(\'' + data.nomor_faktur + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
+                            var detail = '<a type="button" onClick = "view_faktur(\'' + data.nomor_faktur + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Detail"><i class="fa fa-search" ></i> </a>';
+                            var del = '<a type="button" onClick = "warning_delete(\'' + data.nomor_faktur + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
 
                             if (data.user == user) {
-                                return display1 + ' ' + display2;
+                                return detail;
                             } else {
-                                return display1;
+                                return detail;
                             }
                         }
                     }

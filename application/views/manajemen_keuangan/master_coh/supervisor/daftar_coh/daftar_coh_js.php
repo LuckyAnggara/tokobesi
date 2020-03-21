@@ -11,6 +11,7 @@
     $(document).ready(function() {
         init_table()
         init_table_histori()
+        init_table_coh_kasir()
     })
     $('#tambah_data').on('click', function() {
         cek();
@@ -174,13 +175,13 @@
                     width: 50,
                     render: function(data, type, full, meta) {
                         if (data == "0") {
-                            var display = '<span class="badge badge-primary">Waiting</span>'
+                            var display = '<span class="badge badge-primary">Pending</span>'
                         } else if (data == "1") {
                             var display = '<span class="badge badge-success">Open</span>'
                         } else if (data == "2") {
                             var display = '<span class="badge badge-inverse">Close</span>'
                         } else if (data == "4") {
-                            var display = '<span class="badge badge-primary">Waiting</span>'
+                            var display = '<span class="badge badge-primary">Pending</span>'
                         }
                         return display;
                     }
@@ -282,13 +283,13 @@
                     width: 50,
                     render: function(data, type, full, meta) {
                         if (data == "0") {
-                            var display = '<span class="badge badge-primary">Waiting</span>'
+                            var display = '<span class="badge badge-primary">Pending</span>'
                         } else if (data == "1") {
                             var display = '<span class="badge badge-success">Open</span>'
                         } else if (data == "2") {
                             var display = '<span class="badge badge-inverse">Close</span>'
                         } else if (data == "4") {
-                            var display = '<span class="badge badge-primary">Waiting</span>'
+                            var display = '<span class="badge badge-primary">Pending</span>'
                         }
                         return display;
                     }
@@ -324,6 +325,77 @@
                 // $(row).find('td:eq(2)').css('color', 'blue');
 
             }
+        });
+    }
+
+    function init_table_coh_kasir() {
+        $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+            return {
+                "iStart": oSettings._iDisplayStart,
+                "iEnd": oSettings.fnDisplayEnd(),
+                "iLength": oSettings._iDisplayLength,
+                "iTotal": oSettings.fnRecordsTotal(),
+                "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+            };
+        };
+
+        var table = $('#datatable-detail-coh-kasir').DataTable({
+            "destroy": true,
+            "oLanguage": {
+                "sProcessing": "Sabar yah...",
+                "sZeroRecords": "Tidak ada Data..."
+            },
+            "buttons": ['copy', 'excel', 'pdf', 'print'],
+            "dom": 'Bfrtip',
+            "searching": false,
+            "fixedColumns": true,
+            "processing": true,
+            "serverSide": false,
+            "ordering": true,
+            "ajax": {
+                "url": '<?= base_url("manajemen_keuangan/mastercoh/get_data_master_kasir_aktif/"); ?>',
+                "type": "POST",
+            },
+            "columnDefs": [{
+                data: "nama_kasir",
+                targets: 0,
+                width: 100,
+                render: function(data, type, full, meta) {
+                    return data;
+                }
+            }, {
+                data: "saldo_awal",
+                targets: 1,
+                width: 150,
+                render: function(data, type, full, meta) {
+                    return formatRupiah(data, 'Rp.');
+                }
+            }, {
+                data: "saldo_akhir",
+                targets: 2,
+                width: 150,
+                render: function(data, type, full, meta) {
+                    return formatRupiah(data, 'Rp.');
+                }
+            }, {
+                data: "status",
+                targets: 3,
+                width: 50,
+                render: function(data, type, full, meta) {
+                    if (data == "0") {
+                        var display = '<span class="badge badge-primary">Pending</span>'
+                    } else if (data == "1") {
+                        var display = '<span class="badge badge-success">Open</span>'
+                    } else if (data == "2") {
+                        var display = '<span class="badge badge-inverse">Close</span>'
+                    } else if (data == "4") {
+                        var display = '<span class="badge badge-primary">Pending</span>'
+                    }
+                    return display;
+                }
+            }, ],
         });
     }
 
@@ -416,5 +488,15 @@
                 )
             }
         });
+    }
+
+    function print_report(id) {
+        $.ajax({
+            url: "<?= base_url('laporan/cash/laporan_cash_spv/'); ?>" + id,
+            // dataType:'json',
+            success: function(data) {
+                window.open(this.url, '_blank');
+            }
+        })
     }
 </script>
