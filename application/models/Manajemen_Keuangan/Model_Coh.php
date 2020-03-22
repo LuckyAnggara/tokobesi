@@ -72,7 +72,7 @@ class Model_Coh extends CI_Model
             'nominal' => $nominal,
             'saldo' => $data_coh['saldo_akhir'] + $nominal,
             'jenis' => 1,
-            'keterangan' => 'Penjualan Kredit Nomor Faktur : ' . $no_faktur,
+            'keterangan' => 'Down Payment (DP) Penjualan Kredit Nomor Faktur : ' . $no_faktur,
             'tanggal_input' => date("Y-m-d H:i:s"),
         ];
         $this->db->insert('detail_coh', $data);
@@ -426,7 +426,7 @@ class Model_Coh extends CI_Model
 
     function start_of_day($post)
     {
-        $this->db->select_max('nomor_referensi');
+        $this->db->select('MAX(CAST(`nomor_referensi` as INT)) AS nomor_referensi');
         $this->db->from('master_coh');
         $data = $this->db->get()->row_array();
         $no = $data['nomor_referensi'];
@@ -890,7 +890,7 @@ class Model_Coh extends CI_Model
     {
         $data_spv = $this->cek_data_spv($post['id_supervisor']);
         if($data_spv['saldo_akhir'] >= $this->normal($post['permintaan_cash'])){
-            $this->db->select_max('nomor_referensi');
+            $this->db->select('MAX(CAST(`nomor_referensi` as INT)) AS nomor_referensi');
             $this->db->from('master_coh');
             $data = $this->db->get()->row_array();
             $no = $data['nomor_referensi'];

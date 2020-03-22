@@ -353,7 +353,7 @@ class Model_Penjualan_Barang extends CI_Model
             $this->db->insert('detail_piutang', $data);
             // update COH
             $nominal = $post['down_payment'];
-            $this->modelCoh->transaksi_penjualan_kredit($this->session->userdata['username'], $nominal, $no_faktur);
+            // $this->modelCoh->transaksi_penjualan_kredit($this->session->userdata['username'], $nominal, $no_faktur);
         }else{
             $this->db->select('grand_total');
             $this->db->from('master_penjualan');
@@ -362,7 +362,7 @@ class Model_Penjualan_Barang extends CI_Model
             $nominal = $data['grand_total'];
 
             // update COH
-            $this->modelCoh->transaksi_penjualan_tunai($this->session->userdata['username'], $nominal, $no_faktur);
+            // $this->modelCoh->transaksi_penjualan_tunai($this->session->userdata['username'], $nominal, $no_faktur);
         }
     }
 
@@ -506,7 +506,7 @@ class Model_Penjualan_Barang extends CI_Model
       function fifo_lifo_retur($kode_barang, $detail_barang)
     {
 
-        $this->db->select('id, harga_pokok as harga_beli, kode_barang, saldo_tersedia as saldo, tanggal_input as tanggal_transaksi, "retur" jenis_saldo');
+        $this->db->select('id, nomor_faktur as nomor_transaksi,harga_pokok as harga_beli, kode_barang, saldo_tersedia as saldo, tanggal_input as tanggal_transaksi, "retur" jenis_saldo');
         $this->db->from('detail_retur_barang_penjualan');
         $this->db->where('saldo_tersedia !=', 0);
         $this->db->where('kode_barang', $kode_barang);
@@ -570,6 +570,7 @@ class Model_Penjualan_Barang extends CI_Model
                     'harga_jual' => $post['harga_jual'],
                     'keterangan' => $detail_barang['metode_hpp'],
                     'jenis_barang' => 'saldo_awal',
+                    'tag' => 'saldoawal_'.$saldo_awal['id'],
                 ];
                 $this->db->insert('master_harga_pokok_penjualan', $data);
                 $this->db->query("UPDATE master_saldo_awal SET saldo_awal = $stok_update WHERE kode_barang = '$kode_barang'");
@@ -589,6 +590,7 @@ class Model_Penjualan_Barang extends CI_Model
                         'harga_jual' => $post['harga_jual'],
                         'keterangan' => $detail_barang['metode_hpp'],
                         'jenis_barang' => 'saldo_awal',
+                        'tag' => 'saldoawal_'.$saldo_awal['id'],
                     ];
                     $this->db->insert('master_harga_pokok_penjualan', $data);
                 }
@@ -602,7 +604,7 @@ class Model_Penjualan_Barang extends CI_Model
                     $id = $value['id'];
                     $tgl = $value['tanggal_transaksi'];
                     $stok = $value['saldo'];
-
+                    $tag = $value['id'];
                     // nentuain harga baragng jiga AVERAGE
                     if ($detail_barang['metode_hpp'] == "AVERAGE") {
                         $harga_beli = $pembilang / $penyebut;
@@ -636,6 +638,7 @@ class Model_Penjualan_Barang extends CI_Model
                             'harga_jual' => $post['harga_jual'],
                             'keterangan' => $detail_barang['metode_hpp'],
                             'jenis_barang' => $jenis_barang_dijual,
+                            'tag' => $tag,
                         ];
                         $this->db->insert('master_harga_pokok_penjualan', $data);
 

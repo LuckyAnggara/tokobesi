@@ -51,7 +51,7 @@ class Penjualanbarang extends CI_Controller
             $data['menu'] = $this->modelSetting->data_menu();
             $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
             $data['css'] = 'manajemen_penjualan/penjualan_barang/penjualan_barang_css';
-            if($cek_status > 0){
+            // if($cek_status > 0){
                 $this->init_no_order();
                 $data['no_order'] = $this->session->userdata('no_order_dummy');
                 $this->load->view('template/template_header', $data);
@@ -63,15 +63,15 @@ class Penjualanbarang extends CI_Controller
                 $this->load->view('template/template_js');
                 $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang_js');
                 $this->load->view('template/template_app_js');
-            }else{
-                $this->load->view('template/template_header', $data);
-                $this->load->view('template/template_menu');
-                $this->load->view('template/template_lock');
-                $this->load->view('template/template_right');
-                $this->load->view('template/template_footer');
-                $this->load->view('template/template_js');
-                $this->load->view('template/template_app_js');
-            }
+            // }else{
+            //     $this->load->view('template/template_header', $data);
+            //     $this->load->view('template/template_menu');
+            //     $this->load->view('template/template_lock');
+            //     $this->load->view('template/template_right');
+            //     $this->load->view('template/template_footer');
+            //     $this->load->view('template/template_js');
+            //     $this->load->view('template/template_app_js');
+            // }
         }
     }
 

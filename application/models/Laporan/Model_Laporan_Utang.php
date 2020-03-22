@@ -55,7 +55,7 @@ class Model_Laporan_Utang extends CI_Model
     function data_utang_lengkap($post)
     {
         $data_supplier = $this->data_utang_supplier($post);
-
+        $output = array();
         foreach ($data_supplier as $key => $value) {
 
             $data_faktur = $this->detail_pembayaran($post, $value['kode_supplier']);

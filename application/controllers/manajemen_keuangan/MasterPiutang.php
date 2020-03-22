@@ -60,6 +60,22 @@ class Masterpiutang extends CI_Controller
         echo $output;
     }
 
+    public function datapembayaran()
+    {
+        $post = $this->input->post();
+        $database = $this->modelPiutang->datapembayaran($post);
+        $data = $database->result_array();
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results('detail_piutang'),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $data
+        );
+
+        $output = json_encode($output);
+        echo $output;
+    }
+
     public function detail_piutang($no_faktur)
     {
 

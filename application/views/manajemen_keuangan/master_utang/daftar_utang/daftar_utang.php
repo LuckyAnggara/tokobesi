@@ -70,7 +70,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="#notifikasi" data-toggle="tab" aria-expanded="true" class="nav-link">
-                                Detail Pembayaran
+                                Daftar Pembayaran
                             </a>
                         </li>
                     </ul>

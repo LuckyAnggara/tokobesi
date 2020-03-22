@@ -9,13 +9,13 @@ class Backup extends CI_Controller
         $this->load->helper('file');
 
         $config = array(
-            'format'    => 'zip',
-            'filename'    => 'database.sql'
+            'format'    => 'sql',
+            'filename'    => 'database'
         );
 
         $backup = $this->dbutil->backup($config);
 
-        $save = './assets/backup/backupdbse-' . date("ymdHis") . '.zip';
+        $save = './assets/backup/database-' . date("ymdHis") . '.sql';
 
         write_file($save, $backup);
     }

@@ -428,14 +428,15 @@
     }
 
     function tutupData(id) {
-        var data;
-        data.append('id', id);
+        // var data;
+        // data.append('id', id);
         $.ajax({
-            url: "<?= base_url('manajemen_keuangan/mastercoh/tutup_master_coh_kasir'); ?>",
+            url: "<?= base_url('manajemen_keuangan/mastercoh/tutup_master_coh_kasir/'); ?>",
             type: "post",
-            data: data,
-            processData: false,
-            contentType: false,
+            data: {
+                id: id
+            },
+            async: false,
             success: function(data) {
                 if (data == 0) {
                     $('#datatable-master-coh').DataTable().ajax.reload();

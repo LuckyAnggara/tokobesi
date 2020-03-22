@@ -359,7 +359,7 @@
                 $('#data_kasir').LoadingOverlay("hide");
             },
             success: function(data) {
-                if (data.cash == null) {
+                if (data.transaksi == null) {
                     $('#total_transaksi').val('0 Transaksi')
                 } else {
                     $('#total_transaksi').val(data.transaksi + ' Transaksi')
@@ -390,20 +390,20 @@
     })
 
     $('#tanggalForm').submit(function(e) {
-            e.preventDefault();
-            var kasir = "<?= $this->session->userdata['username']; ?>";
-            console.log(kasir);
-            var data = new FormData(document.getElementById("tanggalForm"));
-            data.append('kasir', kasir);
-            $.ajax({
-                url: "<?= base_url("laporan/kasir/laporan_harian/"); ?>",
-                type: "post",
-                data: data,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-                    window.open(this.url,'_blank' );
-                }
-            })
+        e.preventDefault();
+        var kasir = "<?= $this->session->userdata['username']; ?>";
+        console.log(kasir);
+        var data = new FormData(document.getElementById("tanggalForm"));
+        data.append('kasir', kasir);
+        $.ajax({
+            url: "<?= base_url("laporan/kasir/laporan_harian/"); ?>",
+            type: "post",
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                window.open(this.url, '_blank');
+            }
+        })
     })
 </script>

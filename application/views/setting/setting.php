@@ -30,6 +30,11 @@
                                     Notifikasi
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="#databasesetting" data-toggle="tab" aria-expanded="false" class="nav-link">
+                                    Database
+                                </a>
+                            </li>
                         </ul>
 
                         <div class="tab-content">
@@ -136,6 +141,20 @@
                                     <tbody>
                                         <tr>
                                             <td width="35%">Notifikasi</td>
+                                            <td width="65%"><a href="javascript:void(0);" id="notifikasi"></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Frequensi (Dalam Menit)</td>
+                                            <td><a href="javascript:void(0);" class="edit_number" id="frekuensi_notifikasi"></a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="databasesetting">
+                                <table class="table table-bordered table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td width="35%">Database</td>
                                             <td width="65%"><a href="javascript:void(0);" id="notifikasi"></a></td>
                                         </tr>
                                         <tr>
