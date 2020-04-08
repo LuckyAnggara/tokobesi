@@ -42,7 +42,34 @@ class Model_Daftar_Transaksi_Penjualan extends CI_Model
 
     function delete_data($no_faktur)
     {
+        $this->db->select('*');
+        $this->db->from('master_harga_pokok_penjualan');
+        $this->db->where('nomor_faktur', $no_faktur);
+        $output = $this->db->get()->result_array();
+
+
+
+        foreach ($output as $key => $value) {
+            $this->db->select('*');
+            $this->db->from('detail_pembelian');
+            $this->db->where('id', $value['tag']);
+            $data = $this->db->get()->row_array();
+            $saldo = $data['saldo'];
+
+            $update = [
+                'saldo' => $saldo + $value['qty']
+            ];
+            $this->db->where('id', $value['tag']);
+            $this->db->update('detail_pembelian', $update);
+        }
+
+        
         $this->db->where('no_faktur', $no_faktur);
         $this->db->delete('master_penjualan');
+
+        $this->db->where('nomor_faktur_asli', $no_faktur);
+        $this->db->delete('master_retur_penjualan');
+
+        return "ok";
     }
 }

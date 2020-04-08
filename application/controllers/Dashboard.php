@@ -9,6 +9,8 @@ class Dashboard extends CI_Controller
 		$this->load->model('Setting/Model_Setting', 'modelSetting');
 		$this->load->model('Manajemen_Penjualan/Model_Daftar_Transaksi_Penjualan', 'modelDaftarTransaksiPenjualan');
         $this->load->model('Manajemen_Keuangan/Model_Coh', 'modelCoh');
+        $this->load->model('Laporan/Model_Laba', 'modelLaba');
+        $this->load->model('Manajemen_Persediaan/Model_Master_Persediaan', 'modelMasterPersediaan');
 		$this->load->model('Dashboard/Model_Dashboard', 'modelDashboard');
 		$this->load->model('Dashboard/Model_Dashboard_Kasir', 'modelDashboardKasir');
 		$this->load->model('Dashboard/Model_Dashboard_Admin', 'modelDashboardAdmin');
@@ -27,6 +29,8 @@ class Dashboard extends CI_Controller
 	// dashboard manajer
 	public function data()
 	{
+		$data['total_laba'] = $this->total_laba();
+		$data['total_beban'] = $this->total_beban();
 		$data['total_utang'] = $this->modelDashboardManajer->data_utang(date("Y-01-01"));
 		$data['total_piutang'] = $this->modelDashboardManajer->data_piutang(date("Y-01-01"));
 
@@ -47,6 +51,30 @@ class Dashboard extends CI_Controller
 
 		$output = json_encode($data);
 		echo $output;
+	}
+
+	public function total_laba()
+	{
+		$hari = date("d");
+		$bulan = date("m");
+		$tahun = date("Y");
+
+		$data= $this->modelLaba->laba_berjalan($hari, $bulan, $tahun);
+
+		return $data;
+	}
+
+	function total_beban()
+	{
+		$hari = date("d");
+		$bulan = date("m");
+		$tahun = date("Y");
+
+		$beban_operasional = $this->modelLaba->total_beban_operasional($hari, $bulan, $tahun);
+		$beban_gaji = $this->modelLaba->total_beban_gaji($hari, $bulan, $tahun);
+		$data = $beban_operasional + $beban_gaji;
+		return $data;
+
 	}
 
 	public function top_sales()
@@ -149,7 +177,6 @@ class Dashboard extends CI_Controller
 		$bulan = $this->input->post('bulan');
 		$tahun = $this->input->post('tahun');
 
-
 		$data['label'] = $this->modelDashboard->calendar($bulan, $tahun);
 		$total = 0;
 		foreach ($data['label'] as $key => $value) {
@@ -157,7 +184,6 @@ class Dashboard extends CI_Controller
 			$total = $total + $laba;
 			$data['total'][] = $total;
 			$data['harian'][] = $laba;
-
 		}
 
 		$output = json_encode($data);
@@ -191,7 +217,7 @@ class Dashboard extends CI_Controller
 		} else {
 			foreach ($data as $key => $value) {
 				$dataset['bulan'][] = $value['bulan'];
-				$dataset['value'][] = $value['total_penjualan'] / 1000000;
+				$dataset['value'][] = $value['total_penjualan'];
 			}
 		}
 
@@ -399,6 +425,53 @@ class Dashboard extends CI_Controller
 		echo $output;
 	}
 
+	public function get_data_persediaan()
+	{
+		$post = $this->input->post();
+
+		$database = $this->modelMasterPersediaan->getDataBarang();
+		$dataBarang = $database->result_array();
+		$output = array(
+			"recordsTotal" => $this->db->count_all_results(),
+			"recordsFiltered"  => $database->num_rows(),
+			"data" => array()
+		);
+
+		foreach ($dataBarang as $key => $value) {
+			$saldoAwal =  $this->modelMasterPersediaan->saldoAwal($value['kode_barang'], $post);
+			if ($saldoAwal == null) {
+				$saldoAwal['qty_awal'] = 0;
+				$saldoAwal['saldo_awal'] = 0;
+				$saldoAwal['harga_awal'] = 0;
+			}
+
+
+			$saldoMasuk =  $this->modelMasterPersediaan->saldoMasuk($value['kode_barang'], $post);
+
+			$saldoKeluar =  $this->modelMasterPersediaan->saldoKeluar($value['kode_barang'], $post);
+
+			$saldoCart =  $this->modelMasterPersediaan->saldoCart($value['kode_barang'], $post);
+			$saldoCartPo =  $this->modelMasterPersediaan->saldoCartPo($value['kode_barang'], $post);
+
+			$saldoAkhir =  $this->modelMasterPersediaan->saldoAkhir($saldoAwal, $saldoMasuk, $saldoKeluar, $saldoCart, $saldoCartPo);
+
+			$value['saldo_awal'] = $saldoAwal;
+
+			$value['saldo_masuk'] = $saldoMasuk;
+
+			$value['saldo_keluar'] = $saldoKeluar;
+			$value['saldo_cart'] = $saldoCart;
+			$value['saldo_cart_po'] = $saldoCartPo;
+			$value['saldo_akhir'] = $saldoAkhir;
+			if($saldoAkhir !== 0){
+				$output['data'][] = $value;
+			}
+		}
+
+		$output = json_encode($output);
+		echo $output;
+	}
+
 
 
 	// VIEW
@@ -510,18 +583,17 @@ class Dashboard extends CI_Controller
 
 		$data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
 		$data['menu'] = $this->modelSetting->data_menu();
-
 		$data['css'] = 'dashboard/manajer/dashboard_css';
 
 		if ($this->session->userdata('role') != "5") {
 			redirect(base_url("dashboard"));
 		} else {
-
 			$data['sales'] = $this->modelDashboard->getDataSales();
 			$this->load->view('template/template_header', $data);
 			$this->load->view('template/template_menu', $data);
 			$this->load->view('dashboard/manajer/dashboard', $data);
 			$this->load->view('template/template_right');
+			$this->load->view('dashboard/kasir/dashboard_modal');
 			$this->load->view('template/template_footer');
 			$this->load->view('template/template_js');
 			$this->load->view('dashboard/manajer/dashboard_js');
@@ -544,7 +616,6 @@ class Dashboard extends CI_Controller
 			$data['sales'] = $this->modelDashboard->getDataSales();
 			$this->load->view('template/template_header', $data);
 			$this->load->view('template/template_menu', $data);
-			$this->load->view('dashboard/manajer/dashboard', $data);
 			$this->load->view('template/template_right');
 			$this->load->view('template/template_footer');
 			$this->load->view('template/template_js');

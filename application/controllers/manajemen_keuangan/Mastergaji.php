@@ -7,6 +7,7 @@ class Mastergaji extends CI_Controller
     function __construct()
     {
         parent::__construct();
+        $this->load->model('Manajemen_Keuangan/Model_Coh', 'modelCoh');
         $this->load->model('Manajemen_Keuangan/Model_Gaji', 'modelGaji');
         $this->load->model('Setting/Model_Pusher', 'modelPusher');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
@@ -104,10 +105,24 @@ class Mastergaji extends CI_Controller
         echo $output;
     }
 
-    public function get_detail_master_gaji()
+    public function get_detail_master_gaji_harian()
     {
         $no_ref = $this->input->post('no_ref');
-        $database = $this->modelGaji->get_detail_master_gaji($no_ref);
+        $database = $this->modelGaji->get_detail_master_gaji($no_ref, 0);
+        $dataBarang = $database->result_array();
+        $output = array(
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => $database->num_rows(),
+            "data" => $dataBarang
+        );
+        $output = json_encode($output);
+        echo $output;
+    }
+
+    public function get_detail_master_gaji_bulanan()
+    {
+        $no_ref = $this->input->post('no_ref');
+        $database = $this->modelGaji->get_detail_master_gaji($no_ref, 1);
         $dataBarang = $database->result_array();
         $output = array(
             "recordsTotal" => $this->db->count_all_results(),
@@ -174,15 +189,43 @@ class Mastergaji extends CI_Controller
     public function proses_bayar()
     {
         $post = $this->input->post();
-        $this->modelGaji->bayar_master($post);
-        $this->modelGaji->bayar_detail($post['output']);
+
+        $user = $this->session->userdata('username');
+        $dana = $this->modelCoh->cek_dana($user);
+        $post = $this->input->post();
+
+        $total_pembayaran = $this->normal($post['total_pembayaran']);
+        if ($total_pembayaran > $dana) {
+            echo "kurang";
+        } else {
+            $no_ref = $this->modelGaji->bayar_master($post);
+            $this->modelGaji->bayar_detail($post['output']);
+            $this->modelCoh->pembayaran_gaji($user, $post, $no_ref);
+            echo "ok";
+        }
 
     }
 
     public function delete_master_gaji()
     {
+        $user = $this->session->userdata('username');
+        $data = $this->input->post();
+       
         $no_ref = $this->input->post('no_ref');
-        $this->modelGaji->delete_master_gaji($no_ref);
+        $output = $this->modelGaji->delete_master_gaji($no_ref);
+
+        $this->modelCoh->delete_pembayaran_gaji($user, $data);
+
+        echo $output;
+
+    }
+
+
+    function normal($value)
+    {
+        $value = str_replace("Rp.", "", $value);
+        $value = str_replace(".", "", $value);
+        return str_replace(",", "", $value);
     }
 
     public function ubah_gaji_pokok()

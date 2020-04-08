@@ -6,14 +6,14 @@ class Model_Retur_Persediaan extends CI_Model
 
     function get_data_barang($string)
     {
-        $this->db->select('*');
-        $this->db->select_sum('jumlah_retur', 'saldo');
+        $this->db->select('master_barang.kode_barang, master_barang.nama_barang');
+        $this->db->select_sum('detail_retur_penjualan.saldo', 'saldo');
         $this->db->from('detail_retur_penjualan');
         $this->db->join('master_barang', 'detail_retur_penjualan.kode_barang = master_barang.kode_barang');
         $this->db->group_by('detail_retur_penjualan.kode_barang', $string);
         $this->db->like('detail_retur_penjualan.kode_barang', $string);
         $this->db->or_like('nama_barang', $string);
-        $this->db->having('detail_retur_penjualan.saldo !=', 0);
+        $this->db->having('saldo !=', 0);
         return $this->db->get();
     }
 
@@ -31,6 +31,7 @@ class Model_Retur_Persediaan extends CI_Model
         $this->db->select('*, DATE_FORMAT(tanggal, "%d %b %Y") as tanggal');
         $this->db->from('detail_retur_penjualan');
         $this->db->where('kode_barang', $kode_barang);
+        $this->db->having('saldo !=', 0);
         return $this->db->get();
     }
 

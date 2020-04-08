@@ -72,6 +72,7 @@ class Model_Master_Pegawai extends CI_Model
                 'jabatan' =>  strtoupper($post['jabatan']),
                 'nomor_telepon' => strtoupper($post["nomor_telepon"]),
                 'nomor_rekening' => strtoupper($post["nama_bank"]) . ' - ' . strtoupper($post["nomor_rekening"]),
+                'status_gaji' => $post["status_gaji"],
                 'gaji_pokok' => $this->normal($post["gaji_pokok"]),
                 'uang_makan' => $this->normal($post["uang_makan"]),
                 'npwp' => strtoupper($post["npwp"]),

@@ -77,8 +77,6 @@
                 no_order: no_order,
             },
             dataType: 'json',
-            cache: false,
-            async: false,
             beforeSend: function() {
                 $("#loading").LoadingOverlay("show");
             },
@@ -121,7 +119,6 @@
         var no_order = $('#no_order').text()
         $.ajax({
             url: "<?= base_url('manajemen_penjualan/purchaseordersales/delete_data_keranjang/'); ?>" + id,
-            async: false,
             success: function(data) {
                 $('#loading').empty();
                 setData();
@@ -144,7 +141,6 @@
     function deleteMasterPo(no_order) {
         $.ajax({
             url: "<?= base_url('manajemen_penjualan/purchaseordersales/delete_data_po/'); ?>" + no_order,
-            async: false,
         });
     }
 </script>
@@ -166,7 +162,6 @@
                 no_order: no_order,
             },
             dataType: "JSON",
-            async: false,
             beforeSend: function() {
                 $("#total_loading").LoadingOverlay("show");
             },
@@ -193,8 +188,6 @@
                 pajak: pajak,
                 ongkir: ongkir,
             },
-            cache: false,
-            async: false,
             success: function(data) {
                 set_grand_total(no_order);
             },
@@ -252,7 +245,6 @@
                 url: '<?= base_url("manajemen_penjualan/purchaseordersales/get_data_pelanggan/"); ?>' + id_pelanggan.val(),
                 type: "POST",
                 dataType: "JSON",
-                async: false,
                 beforeSend: function() {
                     $("#pelanggan_loading").LoadingOverlay("show");
                 },

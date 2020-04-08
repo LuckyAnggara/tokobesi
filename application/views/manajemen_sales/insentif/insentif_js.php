@@ -74,7 +74,7 @@
                     }
                 },
                 {
-                    data: "total_insentif",
+                    data: "gross_penjualan",
                     targets: 3,
                     render: function(data, type, full, meta) {
                         var display = formatRupiah(data, 'Rp.');
@@ -82,8 +82,16 @@
                     }
                 },
                 {
-                    data: "status",
+                    data: "total_insentif",
                     targets: 4,
+                    render: function(data, type, full, meta) {
+                        var display = formatRupiah(data, 'Rp.');
+                        return display;
+                    }
+                },
+                {
+                    data: "status",
+                    targets: 5,
                     render: function(data, type, full, meta) {
                         if (data == "0") {
                             var display = '<span class="badge badge-primary">Waiting Approve</span>'

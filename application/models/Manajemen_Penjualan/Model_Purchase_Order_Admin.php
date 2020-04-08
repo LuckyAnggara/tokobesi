@@ -512,12 +512,19 @@ class Model_Purchase_Order_Admin extends CI_Model
         $this->db->where('no_faktur', $no_faktur);
         $data_penjualan = $this->db->get()->row_array();
 
+        $this->db->select('nip');
+        $this->db->from('master_user');
+        $this->db->where('username' , $data_penjualan['sales']);
+        $data = $this->db->get()->row_array();
+        $nip = $data['nip'];
+
         $data = array(
             'nomor_faktur' => $no_faktur,
             'gross_penjualan' =>  $data_penjualan['total_penjualan'],
             'insentif' => $insentif,
             'total_insentif' => ($insentif / 100) *  $data_penjualan['total_penjualan'],
-            'sales' =>  $data_penjualan['sales'],
+            'sales' => $data_penjualan['sales'],
+            'nip' => $nip,
             'status' => 0,
             'tanggal' => $data_penjualan['tanggal_transaksi']
         );

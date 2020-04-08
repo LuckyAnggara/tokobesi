@@ -35,7 +35,6 @@ class Model_Dashboard_Supervisor extends CI_Model
         $cash = $data['saldo_akhir'];
 
 
-
         $this->db->select_sum('total');
         $this->db->from('detail_biaya');
         $this->db->where('tanggal >=', date('Y-m-d 00:00:00'));
@@ -43,10 +42,17 @@ class Model_Dashboard_Supervisor extends CI_Model
         $data = $this->db->get()->row();
         $total_biaya = $data->total;
 
-        $output = [
+        $this->db->select_sum('total');
+        $this->db->from('detail_gaji');
+        $this->db->where('status', 2);
+        $this->db->where('tanggal_pembayaran >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal_pembayaran <=', date('Y-m-d 23:59:59'));
+        $data = $this->db->get()->row();
+        $total_gaji = $data->total;
 
+        $output = [
             'cash' => $cash,
-            'total_pengeluaran' => $total_biaya
+            'total_pengeluaran' => $total_biaya + $total_gaji
         ];
         return $output;
     }

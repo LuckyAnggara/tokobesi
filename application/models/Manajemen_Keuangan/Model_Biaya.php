@@ -34,7 +34,7 @@ class Model_Biaya extends CI_Model
             $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggal_awal)));
             $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal_akhir)));
         }
-        $this->db->order_by('detail_biaya.tanggal', 'DESC');
+        $this->db->order_by('detail_biaya.id', 'DESC');
         return $this->db->get();
     }
 

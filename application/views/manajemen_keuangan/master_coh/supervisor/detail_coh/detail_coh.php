@@ -41,13 +41,13 @@ function rupiah($angka)
                                 <div class="input-group">
                                     <input id="saldo_akhir" autocomplete="off" name="saldo_akhir" type="text" class="form-control" readonly value="<?= rupiah($detail_data['saldo_akhir']); ?>">
                                     <div class=" input-group-append">
-                                        <span class="input-group-text btn-success"><i class="ti-money"></i></span>
+                                        <span class="input-group-text btn-inverse"><i class="ti-money"></i></span>
                                     </div>
                                 </div><!-- input-group -->
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <button name="tarik" id="tarik" class="btn btn-danger waves-effect waves-light" data-target="#tarik_modal" data-toggle="modal">
                                     <i class="fa fa-download"></i>
                                     <span>Tarik Dana</span>
@@ -59,6 +59,14 @@ function rupiah($angka)
                                 <button name="setor" id="setor" class="btn btn-primary waves-effect waves-light" data-target="#setor_modal" data-toggle="modal">
                                     <i class="fa fa-upload"></i>
                                     <span>Setor Dana</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <button name=" masuk" id="masuk" class="btn btn-inverse waves-effect waves-light" data-target="#masuk_modal" data-toggle="modal">
+                                    <i class="fa fa-money"></i>
+                                    <span>Dana Masuk</span>
                                 </button>
                             </div>
                         </div>
@@ -78,12 +86,14 @@ function rupiah($angka)
                             </li>
                             <li class="nav-item">
                                 <a href="#notifikasi" data-toggle="tab" aria-expanded="true" class="nav-link">
-                                    Daftar Permintaan  <span class="badge badge-danger" id="jumlah_permintaan"></span>
+                                    Daftar Permintaan
+                                    <!-- <span class="badge badge-danger" id="jumlah_permintaan"></span> -->
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="#pending" data-toggle="tab" aria-expanded="true" class="nav-link">
-                                    Daftar Pending <span class="badge badge-danger" id="jumlah_pending"></span>
+                                    Daftar Pending
+                                    <!-- <span class="badge badge-danger" id="jumlah_pending"></span> -->
                                 </a>
                             </li>
                         </ul>

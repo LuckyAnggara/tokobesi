@@ -353,6 +353,13 @@ class Mastercoh extends CI_Controller
         echo $data;
     }
 
+    public function dana_masuk()
+    {
+        $post = $this->input->post();
+        $data = $this->modelCoh->dana_masuk($post);
+        echo $data;
+    }
+
     public function tutup_master_coh()
     {
         $id = $this->input->post('id');

@@ -138,21 +138,30 @@ $str = explode("-", $pegawai['nomor_rekening']);
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                        <label class="col-3 col-form-label">Gaji Pokok</label>
-                                        <div class="col-9">
-                                            <input name="gaji_pokok" id="gaji_pokok" type="text" class="form-control" value="<?= $pegawai['gaji_pokok']; ?>" readonly required>
-                                        </div>
+                                    <label class="col-3 col-form-label">Pembayaran Gaji</label>
+                                    <div class="col-9">
+                                        <select disabled name="status_gaji" id="status_gaji" class="select2 form-control">
+                                            <option value="0" <?php if ($pegawai['status_gaji'] == 0) : ?> selected="selected" <?php endif; ?>>Harian</option>
+                                            <option value="1" <?php if ($pegawai['status_gaji'] == 1) : ?> selected="selected" <?php endif; ?>>Bulanan</option>
+                                        </select>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-3 col-form-label">Uang Makan</label>
-                                        <div class="col-9">
-                                            <input name="uang_makan" id="uang_makan" type="text" class="form-control" value="<?= $pegawai['uang_makan']; ?>" readonly required>
-                                        </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Gaji Pokok</label>
+                                    <div class="col-9">
+                                        <input name="gaji_pokok" id="gaji_pokok" type="text" class="form-control" value="<?= $pegawai['gaji_pokok']; ?>" readonly required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Uang Makan</label>
+                                    <div class="col-9">
+                                        <input name="uang_makan" id="uang_makan" type="text" class="form-control" value="<?= $pegawai['uang_makan']; ?>" readonly required>
+                                    </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Tanggal Mulai Bekerja</label>
                                     <div class="col-9">
-                                        <input name="tanggal_masuk" id="tanggal_masuk" type="text" class="form-control" value="<?= $pegawai['tanggal_masuk']; ?>" readonly required>
+                                        <input name="tanggal_masuk" id="tanggal_masuk" type="text" class="form-control" value="<?= $pegawai['tanggal_masuk']; ?>" disabled required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -179,11 +188,11 @@ $str = explode("-", $pegawai['nomor_rekening']);
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label">Nomor Rekening</label>
                                     <div class="col-3">
-                                        <input name="nomor_rekening" id="nomor_rekening" type="number" class="form-control" value="<?= $str[0]; ?>" readonly>
+                                        <input name="nomor_rekening" id="nomor_rekening" type="text" class="form-control" value="<?= $str[1]; ?>" readonly>
                                     </div>
                                     <label class="col-3 col-form-label">Nama Bank</label>
                                     <div class="col-3">
-                                        <input name="nama_bank" id="nama_bank" type="text" class="form-control" value="<?= $str[1]; ?>" readonly>
+                                        <input name="nama_bank" id="nama_bank" type="text" class="form-control" value="<?= $str[0]; ?>" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">

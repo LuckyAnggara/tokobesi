@@ -297,7 +297,6 @@
 
         $('#submitForm').submit(function(e) {
             e.preventDefault();
-            $.LoadingOverlay('show', true);
             var saldo_piutang = parseInt(normalrupiah($('#saldo_piutang').val()));
             var nominal = parseInt(normalrupiah($('#nominal_pembayaran').val()));
             console.log(nominal > saldo_piutang);
@@ -317,9 +316,14 @@
                     url: "<?= Base_url('manajemen_keuangan/masterpiutang/tambahpembayaran'); ?>",
                     type: "post",
                     data: data,
-                    async: false,
                     processData: false,
                     contentType: false,
+                    beforeSend: function(data) {
+                        $.LoadingOverlay('show', true);
+                    },
+                    complete: function(data) {
+                        $.LoadingOverlay('hide', true);
+                    },
                     success: function(data) {
                         $('#add_modal').modal('hide');
                         Swal.fire(
@@ -329,9 +333,7 @@
                         )
                         setSaldoPiutang(nomor_faktur);
                     },
-                    complete: function(data) {
-                        $.LoadingOverlay('hide', true);
-                    }
+
                 })
             }
         });
@@ -406,7 +408,6 @@
 
     // Upload Lampiran
     $('#lampiran_form').submit(function(e) {
-        $('#upload_lampiran').LoadingOverlay("show", true);
         e.preventDefault();
         var id = $('#id_lampiran').text();
         var nomor_faktur = $('#nomor_faktur').text();
@@ -417,21 +418,24 @@
             url: '<?= base_url("manajemen_keuangan/masterpiutang/setlampiran/"); ?>',
             type: "post",
             data: data,
-            async: false,
             processData: false,
             contentType: false,
-            success: function(data) {
-                $('#upload_lampiran').modal('hide');
-                $('#datatable-detail-pembayaran').DataTable().ajax.reload();
+            beforeSend: function(data) {
+                $('#upload_lampiran').LoadingOverlay("show", true);
             },
             complete: function(data) {
                 $('#upload_lampiran').LoadingOverlay("hide", true);
+
+            },
+            success: function(data) {
+                $('#upload_lampiran').modal('hide');
+                $('#datatable-detail-pembayaran').DataTable().ajax.reload();
                 Swal.fire(
                     'Sukes',
                     'Lampiran telah di Upload!',
                     'success'
                 );
-            }
+            },
         })
     })
 
@@ -462,7 +466,6 @@
 
     function deleteData(id) {
         var nomor_faktur = $('#nomor_faktur').text();
-        $.LoadingOverlay("show", true);
         $.ajax({
             url: "<?= base_url('manajemen_keuangan/masterpiutang/delete_data/'); ?>",
             data: {
@@ -470,18 +473,21 @@
                 id: id
             },
             type: "post",
-            async: false,
-            success: function(data) {
-                $('#datatable-detail-pembayaran').DataTable().ajax.reload();
+            beforeSend: function(data) {
+                $.LoadingOverlay("show", true);
             },
             complete: function(data) {
                 $.LoadingOverlay("hide", true);
+            },
+            success: function(data) {
+                $('#datatable-detail-pembayaran').DataTable().ajax.reload();
                 Swal.fire(
                     'Deleted!',
                     '',
                     'success'
                 )
-            }
+            },
+
         });
     }
 </script>

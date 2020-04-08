@@ -41,7 +41,7 @@
 <div id="bonus_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-sm">
         <div class="modal-content">
-            <button data-parsley-validate novalidate autocomplete="off" id="bonus_form" method="post" enctype="multipart/form-data" class="form-horizontal">
+            <form data-parsley-validate novalidate autocomplete="off" id="bonus_form" method="post" enctype="multipart/form-data" class="form-horizontal">
                 <div class="modal-body">
                     <div class="form-group">
                         <label hidden id="id_bonus"></label>
@@ -53,7 +53,7 @@
                     <button name="button-close" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Batal</button>
                     <button type="submit" name="button-add" class="btn btn-primary waves-effect waves-light">Submit</button>
                 </div>
-            </button>
+            </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

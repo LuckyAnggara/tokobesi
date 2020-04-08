@@ -133,37 +133,44 @@
         var retur_diskon = 0;
         var retur_pajak = 0;
         var retur_grand_total = 0;
+        var error = 0;
         for (i = 1; i < jumlah_data; i++) {
             var qty_jual = $('#qty_jual' + i).val();
             var qty = $('#retur' + i).val();
             var harga = $('#harga' + i).val();
             var diskon = $('#harga' + i).data('diskon');
-            total = qty * normalrupiah(harga);
-            retur_total = retur_total + total;
-            retur_diskon = retur_diskon + diskon;
-        }
-        if (parseInt(qty) > parseInt(qty_jual)) {
-            $.LoadingOverlay("hide");
-            Swal.fire(
-                'Oopss',
-                'Jumlah Retur Lebih Banyak dari Penjualan',
-                'error'
-            )
-            $('#proses').attr('hidden', true);
-        } else {
-            if ($('#pajak').val() !== "Rp. 0") {
-                retur_pajak = ((retur_total - retur_diskon) * 0.1)
+            if (parseInt(qty) > parseInt(qty_jual)) {
+                Swal.fire(
+                    'Oopss',
+                    'Jumlah Retur Lebih Banyak dari Penjualan',
+                    'error'
+                )
+                error++;
+                break;
+                $('#proses').attr('hidden', true);
             } else {
-                retur_pajak = 0
+                total = qty * normalrupiah(harga);
+                retur_total = retur_total + total;
+                retur_diskon = retur_diskon + diskon;
             }
+        }
+
+        if ($('#pajak').val() !== "Rp. 0") {
+            retur_pajak = ((retur_total - retur_diskon) * 0.1)
+        } else {
+            retur_pajak = 0
+        }
+        if (error < 1) {
             retur_grand_total = retur_total - retur_diskon + retur_pajak;
             $('#retur_total').val(formatRupiah(retur_total.toString(), 'Rp.'));
             $('#retur_diskon').val(formatRupiah(retur_diskon.toString(), 'Rp.'));
             $('#retur_pajak').val(formatRupiah(retur_pajak.toString(), 'Rp.'));
             $('#retur_grand_total').val(formatRupiah(retur_grand_total.toString(), 'Rp.'));
             $('#proses').attr('hidden', false)
-            $.LoadingOverlay("hide");
         }
+        $.LoadingOverlay("hide");
+
+
 
     })
 
@@ -200,7 +207,6 @@
         var retur_pajak = normalrupiah($('#retur_pajak').val());
         var retur_grand_total = normalrupiah($('#retur_grand_total').val());
         do_retur_master(nomor_faktur, id_pelanggan, retur_total, retur_diskon, retur_pajak, retur_grand_total, tanggal_transaksi)
-
         for (i = 1; i < jumlah_data; i++) {
             var id = $('#retur' + i).data('id');
             var kode_barang = $('#retur' + i).data('kdbarang');
@@ -261,6 +267,7 @@
                 retur_total: retur_total,
                 tanggal_transaksi: tanggal_transaksi
             },
+            async: false,
             dataType: 'json',
             beforeSend: function() {
                 $.LoadingOverlay("show");

@@ -136,20 +136,35 @@ class Model_Dashboard_Manajer extends CI_Model
 
     function total_penjualan($hari = null, $bulan = null, $tahun = null)
     {
-            $tanggal = $tahun . "-" . $bulan . "-" . $hari;
-            $tanggalawal = $tahun . "-" . $bulan . "-" . $hari;
-            $this->db->select_sum('total_penjualan');
-            $this->db->from('master_penjualan');
-            if ($tanggal !== "--") {
-                $this->db->where('tanggal_transaksi >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
-                $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
-            }
-            $output = $this->db->get()->row();
-            if ($output->total_penjualan == null) {
-                return "0";
-            } else {
-                return $output->total_penjualan;
-            }
+        $tanggal = $tahun . "-" . $bulan . "-" . $hari;
+        $tanggalawal = $tahun . "-" . $bulan . "-" . $hari;
+        $this->db->select_sum('total_penjualan');
+        $this->db->from('master_penjualan');
+        if ($tanggal !== "--") {
+            $this->db->where('tanggal_transaksi >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
+            $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
+        }
+        $total_penjualan = $this->db->get()->row();
+        if ($total_penjualan->total_penjualan == null) {
+            $total_penjualan = "0";
+        } else {
+            $total_penjualan =  $total_penjualan->total_penjualan;
+        }
+
+        // $this->db->select_sum('retur_total');
+        // $this->db->from('master_retur_penjualan');
+        // if ($tanggal !== "--") {
+        //     $this->db->where('tanggal_transaksi >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
+        //     $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
+        // }
+        //     $total_retur = $this->db->get()->row();
+        //     if ($total_retur->retur_total == null) {
+        //         $total_retur =  "0";
+        //     } else {
+        //     $total_retur = $total_retur->retur_total;
+        // }
+
+        return $total_penjualan;
     }
 
     function potongan_penjualan($hari = null, $bulan = null, $tahun = null)
@@ -274,6 +289,36 @@ class Model_Dashboard_Manajer extends CI_Model
 
 
     // data utang dan piutang
+
+    function data_laba($tanggal)
+    {
+        $this->db->select_sum('sisa_utang');
+        $this->db->from('master_utang');
+        $this->db->where('tanggal_input >=', $tanggal);
+        $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59'));
+
+        $output = $this->db->get()->row_array();
+        if ($output['sisa_utang'] == null) {
+            return "0";
+        } else {
+            return $output['sisa_utang'];
+        }
+    }
+
+    function data_beban($tanggal)
+    {
+        $this->db->select_sum('sisa_utang');
+        $this->db->from('master_utang');
+        $this->db->where('tanggal_input >=', $tanggal);
+        $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59'));
+
+        $output = $this->db->get()->row_array();
+        if ($output['sisa_utang'] == null) {
+            return "0";
+        } else {
+            return $output['sisa_utang'];
+        }
+    }
 
     function data_utang($tanggal)
     {

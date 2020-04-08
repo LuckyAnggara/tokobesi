@@ -91,9 +91,14 @@ class Model_Piutang extends CI_Model
     function update_master($post)
     {
         $total_pembayaran = $this->_total_pembayaran($post['nomor_faktur']);
+        $this->db->select('total_tagihan');
+        $this->db->from('master_piutang');
+        $this->db->where('no_faktur', $post['nomor_faktur']);
+        $total_tagihan = $this->db->get()->row_array();
+
         $data = [
             'total_pembayaran' => $total_pembayaran,
-            'sisa_piutang' => $post['grand_total'] - $total_pembayaran,
+            'sisa_piutang' => $total_tagihan['total_tagihan']  - $total_pembayaran,
         ];
 
         $this->db->where('no_faktur', $post['nomor_faktur']);

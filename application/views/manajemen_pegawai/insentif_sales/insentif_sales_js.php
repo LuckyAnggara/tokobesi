@@ -129,7 +129,7 @@
         console.log(id);
         swal.fire({
             title: 'Approve Insentif?',
-            text: "Approve Insentif Sales?",
+            text: "",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

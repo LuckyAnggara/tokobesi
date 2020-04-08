@@ -90,9 +90,15 @@ class Model_Utang extends CI_Model
     function update_master($post)
     {
         $total_pembayaran = $this->_total_pembayaran($post['nomor_transaksi']);
+
+        $this->db->select('total_tagihan');
+        $this->db->from('master_utang');
+        $this->db->where('nomor_transaksi', $post['nomor_transaksi']);
+        $total_tagihan = $this->db->get()->row_array();
+        
         $data = [
             'total_pembayaran' => $total_pembayaran,
-            'sisa_utang' => $post['grand_total'] - $total_pembayaran,
+            'sisa_utang' => $total_tagihan['total_tagihan'] - $total_pembayaran,
         ];
 
         $this->db->where('nomor_transaksi', $post['nomor_transaksi']);

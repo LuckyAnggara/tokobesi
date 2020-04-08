@@ -35,18 +35,18 @@
     cari_versi_select2()
   })
 
-   $('#add_data').on('hidden.bs.modal', function(e) {
-        $(this)
-            .find("input,textarea,select")
-            .val('')
-            .end()
-            .find("input[type=checkbox], input[type=radio]")
-            .prop("checked", "")
-            .end();
-        $('#rootwizard').bootstrapWizard({
-            firstSelector: 'wizard li.first'
-        })
-    });
+  $('#add_data').on('hidden.bs.modal', function(e) {
+    $(this)
+      .find("input,textarea,select")
+      .val('')
+      .end()
+      .find("input[type=checkbox], input[type=radio]")
+      .prop("checked", "")
+      .end();
+    $('#rootwizard').bootstrapWizard({
+      firstSelector: 'wizard li.first'
+    })
+  });
 </script>
 <!-- Kode Barang -->
 <script>
@@ -95,16 +95,17 @@
       },
       dataType: "JSON",
       cache: false,
-      async: false,
       beforeSend: function() {
-        $("#barang_div").loading();
+        $("#barang_div").LoadingOverlay("show");
+      },
+      complete: function() {
+        $("#barang_div").LoadingOverlay("hide");
       },
       success: function(data) {
         console.log(data.nama_barang)
         $('#nama_barang').val(data.nama_barang);
         $('#metode').val(data.metode_hpp);
         $('#satuan').val(data.nama_satuan);
-        $("#barang_div").loading('stop');
       }
     });
   }
@@ -249,7 +250,7 @@
       Swal.fire({
         icon: 'error',
         title: 'Over',
-        text: 'Nominal pembayaran melebihi saldo Piutang !!',
+        text: 'Quantitas melebihi Sisa Saldo Stok !!',
       });
       qty.value = '';
     }
@@ -279,11 +280,13 @@
         url: "<?= Base_url('manajemen_persediaan/returpersediaan/push_retur'); ?>",
         type: "post",
         data: data,
-        async: false,
         processData: false,
         contentType: false,
         beforeSend: function() {
-          $("#submitForm").loading();
+          $.LoadingOverlay("show");
+        },
+        complete: function() {
+          $.LoadingOverlay("hide");
         },
         success: function(data) {
           $('#datatable-kartu-persediaan').DataTable().ajax.reload();
@@ -294,12 +297,9 @@
             'Persediaan telah di Transfer.',
             'success'
           )
-          $("#submitForm").loading('stop');
           $('#add_data').modal('hide');
         }
       })
-
-
     });
   });
 </script>

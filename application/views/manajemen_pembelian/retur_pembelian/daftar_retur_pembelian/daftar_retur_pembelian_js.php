@@ -172,10 +172,10 @@
                         render: function(data, type, full, meta) {
                             var user = "<?php echo $this->session->userdata('username'); ?>";
                             var display1 = '<a type="button" onClick = "view_faktur(\'' + data.nomor_transaksi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Detail"><i class="fa fa-search" ></i> </a>';
-                            var display2 = '<a type="button" onClick = "warning_delete(\'' + data.nomor_transaksi + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
+                            var del = '<a type="button" onClick = "warning_delete(\'' + data.nomor_transaksi + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
 
-                            if (data.user == user) {
-                                return display1 + ' ' + display2;
+                            if (role == 5) {
+                                return display1 + ' ' + del;
                             } else {
                                 return display1;
                             }
@@ -232,13 +232,13 @@
 <script type="text/javascript">
     function warning_delete(nomor_transaksi) {
         swal.fire({
-            title: 'Apa anda yakin akan hapus data ini?',
-            text: "Menghapus data ini akan mempengaruhi pendapatan !!",
+            title: 'Apa anda yakin ?',
+            text: "Menghapus data ini akan mempengaruhi Persediaan !!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Ya!'
         }).then((result) => {
             if (result.value) {
                 deleteData(nomor_transaksi);
@@ -266,7 +266,22 @@
                 $.LoadingOverlay("hide");
             },
             success: function(data) {
+                if (data == 'ok') {
+                    swal.fire(
+                        'Deleted!',
+                        'Data telah dihapus!',
+                        'success'
+                    )
+                } 
+                else {
+                    swal.fire(
+                        'Oopss!',
+                        'ada kesalahan, silahkan ulangi',
+                        'error'
+                    )
+                }
                 $('#datatable-daftar-retur-pembelian').DataTable().ajax.reload();
+
             }
         });
     }

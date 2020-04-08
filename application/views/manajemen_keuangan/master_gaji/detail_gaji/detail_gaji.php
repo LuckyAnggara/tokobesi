@@ -46,7 +46,7 @@ function rupiah($angka)
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-sm-form-label m-t-10">Maker</label>
+                            <label class="col-5 col-sm-form-label m-t-10">Pemutus</label>
                             <div class="col-7">
                                 <input name="maker" id="maker" type="text" class="form-control" placeholder="" value="<?= $master_gaji['nama_admin']; ?>" readonly>
                             </div>

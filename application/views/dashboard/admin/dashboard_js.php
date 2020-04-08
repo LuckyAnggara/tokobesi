@@ -151,9 +151,14 @@
                     data: "kredit",
                     targets: 4,
                     render: function(data, type, full, meta) {
-                        var date = new Date(data.tanggal_jatuh_tempo);
-                        date = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
-                        if (data !== "") {
+                        if (data == null) {
+                            var display = '<span class="badge badge-success">Lunas</span>'
+                        } else if (data == '') {
+                            var display = '<span class="badge badge-success">Lunas</span>'
+
+                        } else {
+                            var date = new Date(data.tanggal_jatuh_tempo);
+                            date = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
                             var display =
                                 '<div class="btn-group">' +
                                 '<span class="badge badge-danger dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Belum Lunas <span class="caret"></span></span>' +
@@ -163,8 +168,6 @@
                                 '<a class="dropdown-item"><b><u>Sisa</u></b></a>' +
                                 '<a class="dropdown-item">' + formatRupiah(data.sisa_utang.toString(), 'Rp.') + '</a>' +
                                 '</div></div>'
-                        } else {
-                            var display = '<span class="badge badge-success">Lunas</span>'
                         }
                         return display;
                     }

@@ -195,8 +195,13 @@
                         targets: 11,
                         render: function(data, type, full, meta) {
                             var display1 = '<a type="button" onClick = "view_detail(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Detail"><i class="fa fa-search" ></i> </a>';
-                            var display2 = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
-                            return display1;
+                            var del = '<a type="button" onClick = "warning_delete(\'' + data + '\')" data-button="' + data + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="Click untuk melakukan Hapus Data"><i class="fa fa-trash" ></i> </a>';
+                            if (role == 5) {
+                                return display1 + ' ' + del;
+                            } else {
+                                return display1;
+
+                            }
                         }
                     }
                 ],
@@ -251,31 +256,50 @@
 <script type="text/javascript">
     function warning_delete(no_faktur) {
         swal.fire({
-            title: 'Hapus data ini?',
-            text: "Data " + no_faktur + " terhapus",
+            title: 'Apa anda yakin?',
+            text: "Jumlah Barang akan kembali ke Persediaan!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Ya!'
         }).then((result) => {
             if (result.value) {
                 deleteData(no_faktur);
-                swal.fire(
-                    'Deleted!',
-                    'Data telah dihapus!',
-                    'success'
-                )
             }
         });
     }
 
     function deleteData(no_faktur) {
         $.ajax({
-            url: "<?= base_url('manajemen_penjualan/daftartransaksipenjualan/delete_data/'); ?>" + no_faktur,
-            async: false,
+            url: '<?= base_url("manajemen_penjualan/daftartransaksipenjualan/delete_data/"); ?>',
+            type: "post",
+            data: {
+                no_faktur: no_faktur
+            },
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $.LoadingOverlay("hide");
+            },
             success: function(data) {
-                $('#datatable-master-pelanggan').DataTable().ajax.reload();
+                if (data == 'ok') {
+                    swal.fire(
+                        'Deleted!',
+                        'Data telah dihapus!',
+                        'success'
+                    )
+                }  else {
+                    swal.fire(
+                        'Oopss!',
+                        'ada kesalahan, silahkan ulangi',
+                        'error'
+                    )
+                }
+
+                $('#datatable-daftar-penjualan').DataTable().ajax.reload();
+
             }
         });
     }

@@ -55,6 +55,7 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th>#</th>
+                                <th>Tanggal Retur</th>
                                 <th>Tanggal Transaksi</th>
                                 <th>Nomor Faktur</th>
                                 <th>Nama Pelanggan</th>

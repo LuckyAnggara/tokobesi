@@ -14,7 +14,7 @@
             },
             dataType: 'json',
             cache: false,
-            
+
             beforeSend: function() {
                 $.LoadingOverlay("show");
             },
@@ -69,7 +69,7 @@
 
                         var display_nomor = '<input type="text" class="form-control" placeholder="Email" value="' + nomor + '" readonly><br>';
                         var display_nama_barang = '<input type="text" class="form-control" value="' + data[i].kode_barang + ' - ' + data[i].nama_barang + '" readonly><br>';
-                        var display_qty = '<input type="text" class="form-control" value="' + data[i].jumlah_pembelian + '" readonly><br>';
+                        var display_qty = '<input id="qty_beli' + nomor + '" type="text" class="form-control" value="' + data[i].jumlah_pembelian + '" readonly><br>';
                         var display_harga = '<input data-diskon="' + data[i].diskon + '" id="harga' + nomor + '" type="text" class="form-control" value="' + formatRupiah((data[i].harga_beli - data[i].diskon).toString(), 'Rp.') + '" readonly><br>';
                         var display_qty_retur = '<input id="retur' + nomor + '" data-id="' + data[i].id + '" data-kdbarang="' + data[i].kode_barang + '" type="text" class="form-control" value="0"><br>';
                         var display_keterangan = '<input id="keterangan' + nomor + '" type="text" class="form-control" placeholder="Silahkan isi alasan pengembalian barang.."><br>'
@@ -124,15 +124,28 @@
         var retur_diskon = 0;
         var retur_pajak = 0;
         var retur_grand_total = 0;
+        var error = 0;
+
         for (i = 1; i < jumlah_data; i++) {
+            var qty_beli = $('#qty_beli' + i).val();
             var qty = $('#retur' + i).val();
             var harga = $('#harga' + i).val();
             var diskon = $('#harga' + i).data('diskon');
-            console.log(diskon);
-            total = qty * normalrupiah(harga);
+            if (parseInt(qty) > parseInt(qty_beli)) {
+                Swal.fire(
+                    'Oopss',
+                    'Jumlah Retur Lebih Banyak dari Penjualan',
+                    'error'
+                )
+                error++;
+                break;
+                $('#proses').attr('hidden', true);
+            } else {
+                total = qty * normalrupiah(harga);
+                retur_total = retur_total + total;
+                retur_diskon = retur_diskon + diskon;
+            }
 
-            retur_total = retur_total + total;
-            retur_diskon = retur_diskon + diskon;
         }
         if ($('#pajak').val() !== "Rp. 0") {
             retur_pajak = ((retur_total - retur_diskon) * 0.1)
@@ -140,13 +153,15 @@
             retur_pajak = 0
         }
         retur_grand_total = retur_total - retur_diskon + retur_pajak;
-
-        $('#retur_total').val(formatRupiah(retur_total.toString(), 'Rp.'));
-        $('#retur_diskon').val(formatRupiah(retur_diskon.toString(), 'Rp.'));
-        $('#retur_pajak').val(formatRupiah(retur_pajak.toString(), 'Rp.'));
-        $('#retur_grand_total').val(formatRupiah(retur_grand_total.toString(), 'Rp.'));
-        $('#proses').attr('hidden', false)
+        if (error < 1) {
+            $('#retur_total').val(formatRupiah(retur_total.toString(), 'Rp.'));
+            $('#retur_diskon').val(formatRupiah(retur_diskon.toString(), 'Rp.'));
+            $('#retur_pajak').val(formatRupiah(retur_pajak.toString(), 'Rp.'));
+            $('#retur_grand_total').val(formatRupiah(retur_grand_total.toString(), 'Rp.'));
+            $('#proses').attr('hidden', false)
+        }
         $.LoadingOverlay("hide");
+
     })
 
     $('#proses').on('click', function() {
@@ -176,11 +191,13 @@
     function proses_retur() {
         var nomor_transaksi = $('#nomor_transaksi').val();
         var kode_supplier = $('#kode_supplier').val()
+        var tanggal_transaksi = $('#tanggal_transaksi').val();
         var retur_total = normalrupiah($('#retur_total').val());
         var retur_diskon = normalrupiah($('#retur_diskon').val());
         var retur_pajak = normalrupiah($('#retur_pajak').val());
         var retur_grand_total = normalrupiah($('#retur_grand_total').val());
-        do_retur_master(nomor_transaksi, kode_supplier, retur_total, retur_diskon, retur_pajak, retur_grand_total)
+        $.LoadingOverlay("show");
+        do_retur_master(nomor_transaksi, kode_supplier, retur_total, retur_diskon, retur_pajak, retur_grand_total, tanggal_transaksi)
         for (i = 1; i < jumlah_data; i++) {
             var id = $('#retur' + i).data('id');
             var kode_barang = $('#retur' + i).data('kdbarang');
@@ -191,9 +208,10 @@
 
             var retur_total = qty * normalrupiah(harga);
             if (qty > 0) {
-                do_retur_detail(id, nomor_transaksi, kode_barang, keterangan, qty, harga, diskon, retur_total)
+                do_retur_detail(id, nomor_transaksi, kode_barang, keterangan, qty, harga, diskon, retur_total, tanggal_transaksi)
             }
         }
+        $.LoadingOverlay("hide");
         setTimeout(function() {
             window.location.href = "<?php echo base_url('manajemen_pembelian/returpembelian/faktur/'); ?>RTR-" + nomor_transaksi;
         }, 3000);
@@ -207,7 +225,7 @@
 
     }
 
-    function do_retur_master(nomor_transaksi, kode_supplier, retur_total, retur_diskon, retur_pajak, retur_grand_total) {
+    function do_retur_master(nomor_transaksi, kode_supplier, retur_total, retur_diskon, retur_pajak, retur_grand_total, tanggal_transaksi) {
         $.ajax({
             url: "<?= Base_url('manajemen_pembelian/returpembelian/tambahdatamaster'); ?>",
             type: "post",
@@ -217,18 +235,15 @@
                 retur_total: retur_total,
                 retur_diskon: retur_diskon,
                 retur_pajak: retur_pajak,
-                retur_grand_total: retur_grand_total
+                retur_grand_total: retur_grand_total,
+                tanggal_transaksi: tanggal_transaksi
             },
             dataType: 'json',
             cache: false,
-            
-            beforeSend: function() {
-                $.LoadingOverlay("show");
-            },
         })
     }
 
-    function do_retur_detail(id, nomor_transaksi, kode_barang, keterangan, qty, harga, diskon, retur_total) {
+    function do_retur_detail(id, nomor_transaksi, kode_barang, keterangan, qty, harga, diskon, retur_total, tanggal_transaksi) {
         $.ajax({
             url: "<?= Base_url('manajemen_pembelian/returpembelian/tambahdatadetail'); ?>",
             type: "post",
@@ -241,12 +256,9 @@
                 harga: harga,
                 diskon: diskon,
                 retur_total: retur_total,
+                tanggal_transaksi: tanggal_transaksi
             },
             dataType: 'json',
-            cache: false,
-            complete: function() {
-                $.LoadingOverlay("hide");
-            }
         })
     }
 </script>

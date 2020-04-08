@@ -44,7 +44,7 @@
         };
 
         //Init Datatabel Master Stok Persediaan 
-        var table = $('#datatable-master-gaji').removeAttr('width').DataTable({
+        var table = $('#datatable-master-gaji').DataTable({
             "destroy": true,
             "oLanguage": {
                 sProcessing: "Sabar yah...",
@@ -115,19 +115,20 @@
                 {
                     data: {
                         "nomor_referensi": "nomor_referensi",
-                        "status": "status"
+                        "status": "status",
+                        "total_pembayaran": "total_pembayaran"
                     },
                     targets: 6,
                     width: 70,
                     render: function(data, type, full, meta) {
                         var detail = '<a type="button" onClick = "detail_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-search" ></i> </a>';
                         var edit = '<a type="button" onClick = "edit_data(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" ><i class="fa fa-search" ></i> </a>';
-                        var del = '<a type="button" onClick = "warning_delete(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-trash" ></i> </a>';
-                        var print = '<a type="button" onClick = "print_report(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-print" ></i> </a>';
+                        var del = '<a type="button" onClick = "warning_delete(\'' + data.nomor_referensi + '\',\'' + data.total_pembayaran + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" ><i class="fa fa-trash" ></i> </a>';
+                        var print = '<a type="button" onClick = "print_report(\'' + data.nomor_referensi + '\')" class="btn btn-icon waves-effect waves-light btn-inverse btn-sm" ><i class="fa fa-print" ></i> </a>';
                         if (data.status == 0) {
                             return edit + ' ' + del;
                         } else if (data.status == 2) {
-                            return detail + ' ' + print;
+                            return detail + ' ' + print + ' ' + del;
                         } else {
                             return detail
                         }
@@ -158,10 +159,10 @@
         window.location.href = "<?= base_url('laporan/excel/detail_gaji/'); ?>" + no_ref
     }
 
-    function warning_delete(no_ref) {
+    function warning_delete(no_ref, total_pembayaran) {
         swal.fire({
             title: 'Apa anda yakin?',
-            text: no_ref + " akan dihapus",
+            text: "",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -169,25 +170,40 @@
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                deleteData(no_ref);
-                swal.fire(
-                    'Deleted!',
-                    'Data telah dihapus!',
-                    'success'
-                )
+                deleteData(no_ref, total_pembayaran);
             }
         });
     }
 
-    function deleteData(no_ref) {
+    function deleteData(no_ref, total_pembayaran) {
         $.ajax({
             url: "<?= base_url('manajemen_keuangan/mastergaji/delete_master_gaji'); ?>",
             type: "post",
             data: {
-                no_ref: no_ref
+                no_ref: no_ref,
+                total_pembayaran: total_pembayaran
             },
-            async: false,
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $.LoadingOverlay("hide");
+            },
             success: function(data) {
+                if (data == 'ok') {
+                    swal.fire(
+                        'Deleted!',
+                        'Data telah dihapus!',
+                        'success'
+                    )
+                } else {
+                    swal.fire(
+                        'Oopss!',
+                        'Ada kesalahan!, silahkan ulangi',
+                        'error'
+                    )
+                }
+
                 $('#datatable-master-gaji').DataTable().ajax.reload();
             }
         });

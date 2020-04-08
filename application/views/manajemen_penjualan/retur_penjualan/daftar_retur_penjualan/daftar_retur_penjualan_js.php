@@ -111,35 +111,44 @@
                         }
                     },
                     {
-                        data: "nomor_faktur",
+                        data: "tanggal_transaksi",
                         targets: 2,
+                        render: function(data, type, full, meta) {
+                            var date = new Date(data);
+                            date = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
+                            return date;
+                        }
+                    },
+                    {
+                        data: "nomor_faktur",
+                        targets: 3,
                         render: function(data, type, full, meta) {
                             return data;
                         }
                     },
                     {
                         data: "nama_pelanggan",
-                        targets: 3,
+                        targets: 4,
                         render: function(data, type, full, meta) {
                             return data;
                         }
                     }, {
                         data: "retur_total",
-                        targets: 4,
+                        targets: 5,
                         render: function(data, type, full, meta) {
                             var display = formatRupiah(data.toString(), 'Rp.');
                             return display;
                         }
                     }, {
                         data: "retur_diskon",
-                        targets: 5,
+                        targets: 6,
                         render: function(data, type, full, meta) {
                             var display = '<span class="text-danger">' + formatRupiah(data.toString(), 'Rp.') + '</span>'
                             return display;
                         }
                     }, {
                         data: "retur_pajak",
-                        targets: 6,
+                        targets: 7,
                         render: function(data, type, full, meta) {
                             var display = formatRupiah(data.toString(), 'Rp.');
                             return display;
@@ -147,7 +156,7 @@
                     },
                     {
                         data: "retur_grand_total",
-                        targets: 7,
+                        targets: 8,
                         render: function(data, type, full, meta) {
                             var display = '<b>' + formatRupiah(data.toString(), 'Rp.'); + '</b>'
                             return display;
@@ -156,7 +165,7 @@
                     {
 
                         data: "nama_pegawai",
-                        targets: 8,
+                        targets: 9,
                         visible: visible,
                         render: function(data, type, full, meta) {
                             return data
@@ -167,7 +176,7 @@
                             "nomor_faktur": "nomor_faktur",
                             "user": "user"
                         },
-                        targets: 9,
+                        targets: 10,
                         render: function(data, type, full, meta) {
                             var user = "<?php echo $this->session->userdata('username'); ?>";
                             var detail = '<a type="button" onClick = "view_faktur(\'' + data.nomor_faktur + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Detail"><i class="fa fa-search" ></i> </a>';

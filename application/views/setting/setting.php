@@ -25,7 +25,7 @@
                                     Transaksi
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a href="#settings1" data-toggle="tab" aria-expanded="false" class="nav-link">
                                     Notifikasi
                                 </a>
@@ -34,7 +34,7 @@
                                 <a href="#databasesetting" data-toggle="tab" aria-expanded="false" class="nav-link">
                                     Database
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
 
                         <div class="tab-content">

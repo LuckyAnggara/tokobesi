@@ -144,9 +144,26 @@ class Invoice extends CI_Controller
         $pdf->Cell(30, 7, 'Note :', 0, 0);
         $pdf->MultiCell(90, 4, $setting_perusahaan['catatan_faktur_cash'], 0, 'J');
         // $pdf->Cell(90,6,nl2br($setting_perusahaan['catatan_faktur_cash']),1,0);
+        
+        $pdf->Output();
 
-        if($data_order['no_polisi'] !== ""){
+
+    }
+
+    function no_polisi($no_order)
+    {
+        $setting_perusahaan = $this->modelSetting->get_data_perusahaan();
+        $no_order_penjualan = $no_order;
+        $data_order = $this->modelInvoice->get_data_order($no_order_penjualan);
+        $detail_order = $this->modelInvoice->get_detail_order($no_order_penjualan);
+
+        $tanggal_transaksi = $this->tgl_indo(date("Y-m-d-D", strtotime($data_order['tanggal_transaksi'])));
+
+
+        $pdf = new FPDF('p', 'mm', 'letter');
             $pdf->AddPage();
+        $pdf->AddFont('Tahoma', 'B', 'tahomabd.php');
+        $pdf->AddFont('Tahoma', '', 'tahoma.php');
             // setting jenis font yang akan digunakan
             $pdf->SetFont('Tahoma', 'B', 11);
             // mencetak string
@@ -236,8 +253,7 @@ class Invoice extends CI_Controller
             $pdf->Cell(50, 5, '(                                 )', 0, 0, 'C');
             $pdf->Cell(95, 5, '(                                 )', 0, 0, 'C');
             $pdf->Cell(50, 5, '(                                 )', 0, 0, 'C');
-        }
-        
+
         $pdf->Output();
     }
 

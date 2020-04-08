@@ -62,11 +62,13 @@ class Daftartransaksipembelian extends CI_Controller
 
 
 
-    public function delete_data($nomor_transaksi)
+    public function delete_data()
     {
+        $nomor_transaksi = $this->input->post('nomor_transaksi');
         if (empty($nomor_transaksi)) {
         } else {
-            $this->modelDaftarTransaksiPembelian->delete_data($nomor_transaksi); // tambah data siswa
+           $data = $this->modelDaftarTransaksiPembelian->delete_data($nomor_transaksi); 
+           echo $data;
         }
     }
 

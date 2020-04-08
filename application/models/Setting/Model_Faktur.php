@@ -40,7 +40,6 @@ class Model_Faktur extends CI_Model
         } else {
             return sprintf("%07d", 1);
         }
-
         // $this->db->like('no_faktur', date('dmy'));
         // $data = $this->db->get('master_penjualan');
         // if ($data->row('no_faktur') !== null) {
@@ -52,10 +51,13 @@ class Model_Faktur extends CI_Model
 
     function tanggal_nomor_urut()
     {
-        $this->db->select_max('no_faktur');
-        $data = $this->db->get('master_penjualan');
-        if ($data->row('no_faktur') !== null) {
-            $number = substr($data->row('no_faktur'), -3);
+        $this->db->select('MAX(`id`) as id');
+        $this->db->from('master_penjualan');
+        $data = $this->db->get()->row_array();
+        $string = $data['id'];
+        if ($string  !== null) {
+            $number = substr($string, 0, 10);
+            // $number = substr($string, -3);
             $number = $number + 1;
             $tgl = date('dmy');
             return $tgl. sprintf("%03d", $number);
@@ -63,6 +65,15 @@ class Model_Faktur extends CI_Model
             $tgl = date('dmy');
             return $tgl . sprintf("%03d", 1);
         }
+
+        // if ($data !== "1") {
+        //     //$nourut = substr($data, 3, 4);
+        //     $nourut = $data;
+        // }
+        // $nourut++;
+        // $string = substr($string, 0, 3);
+        // $nourut =  sprintf("%04s", $nourut);
+        // echo strtoupper($string) . $nourut;
     }
 
     function _generate_no_faktur($post)

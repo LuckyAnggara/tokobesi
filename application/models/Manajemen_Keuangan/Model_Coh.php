@@ -25,6 +25,33 @@ class Model_Coh extends CI_Model
         return $this->db->get()->num_rows();
     }
 
+    function retur_penjualan($user, $nominal, $no_faktur)
+    {
+        $this->db->select('*');
+        $this->db->from('master_coh');
+        $this->db->where('user', $user);
+        $this->db->where('tanggal_input >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59'));
+        $this->db->where('status', 1);
+        $data_coh = $this->db->get()->row_array();
+        $data = [
+            'saldo_akhir' => $data_coh['saldo_akhir'] - $nominal,
+        ];
+        $this->db->where('nomor_referensi', $data_coh['nomor_referensi']);
+        $this->db->update('master_coh', $data);
+
+        // update detail
+        $data = [
+            'nomor_referensi' => $data_coh['nomor_referensi'],
+            'nominal' => $nominal,
+            'saldo' => $data_coh['saldo_akhir'] - $nominal,
+            'jenis' => 2,
+            'keterangan' => 'Retur Penjualan Nomor Faktur : ' . $no_faktur,
+            'tanggal_input' => date("Y-m-d H:i:s"),
+        ];
+        $this->db->insert('detail_coh', $data);
+    }
+
     function transaksi_penjualan_tunai($user, $nominal, $no_faktur){
         $this->db->select('*');
         $this->db->from('master_coh');
@@ -45,7 +72,7 @@ class Model_Coh extends CI_Model
             'nominal' => $nominal,
             'saldo' => $data_coh['saldo_akhir'] + $nominal,
             'jenis' => 1,
-            'keterangan' => 'Penjualan Cash Nomor Faktur : '.$no_faktur ,
+            'keterangan' => 'Penjualan Tunai Nomor Faktur : '.$no_faktur ,
             'tanggal_input' => date("Y-m-d H:i:s"),
         ];
         $this->db->insert('detail_coh', $data);
@@ -184,6 +211,68 @@ class Model_Coh extends CI_Model
         ];
         $this->db->insert('detail_coh', $data);
     }
+
+    function pembayaran_gaji($user, $post, $no_ref)
+    {
+        $nominal = $this->normal($post['total_pembayaran']);
+
+        $this->db->select('*');
+        $this->db->from('master_coh');
+        $this->db->where('user', $user);
+        $this->db->where('tanggal_input >=', date('Y-m-d 00:00:00'));
+        $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59'));
+        $this->db->where('status', 1);
+        $data_coh = $this->db->get()->row_array();
+        $data = [
+            'saldo_akhir' => $data_coh['saldo_akhir'] - $nominal,
+        ];
+        $this->db->where('nomor_referensi', $data_coh['nomor_referensi']);
+        $this->db->update('master_coh', $data);
+
+        // update detail
+        $data = [
+            'nomor_referensi' => $data_coh['nomor_referensi'],
+            'nominal' => $nominal,
+            'saldo' => $data_coh['saldo_akhir'] - $nominal,
+            'jenis' => 2,
+            'keterangan' => 'Debit Pembayaran Gaji Nomor Jurnal : #' . $no_ref,
+            'tanggal_input' => date("Y-m-d H:i:s"),
+        ];
+        $this->db->insert('detail_coh', $data);
+    }
+
+    function delete_pembayaran_gaji($user, $post)
+    {
+        $nominal = $this->normal($post['total_pembayaran']);
+        if($nominal == 0){
+            $this->db->select('*');
+            $this->db->from('master_coh');
+            $this->db->where('user', $user);
+            $this->db->where('tanggal_input >=', date('Y-m-d 00:00:00'));
+            $this->db->where('tanggal_input <=', date('Y-m-d 23:59:59'));
+            $this->db->where('status', 1);
+            $data_coh = $this->db->get()->row_array();
+            $data = [
+                'saldo_akhir' => $data_coh['saldo_akhir'] + $nominal,
+            ];
+            $this->db->where('nomor_referensi', $data_coh['nomor_referensi']);
+            $this->db->update('master_coh', $data);
+
+
+            // update detail
+            $data = [
+                'nomor_referensi' => $data_coh['nomor_referensi'],
+                'nominal' => $nominal,
+                'saldo' => $data_coh['saldo_akhir'] + $nominal,
+                'jenis' => 1,
+                'keterangan' => 'Pengembalian Pembayaran Gaji Nomor Jurnal :#' . $post['no_ref'],
+                'tanggal_input' => date("Y-m-d H:i:s"),
+            ];
+            $this->db->insert('detail_coh', $data);
+        }
+        
+    }
+
 
     function cek_dana($user)
     {
@@ -365,6 +454,7 @@ class Model_Coh extends CI_Model
         $this->db->from('master_coh');
         $this->db->where('user', $this->session->userdata['username']);
         $this->db->where('status', 2);
+        $this->db->order_by('tanggal_input', 'DESC');
         return $this->db->get();
     }
 
@@ -444,6 +534,31 @@ class Model_Coh extends CI_Model
         ];
         $this->db->insert('master_coh', $data);
         $this->permintaan_awal_dana($no, $post);
+    }
+
+    function dana_masuk($post)
+    {
+        $this->db->select('*');
+        $this->db->from('master_coh');
+        $this->db->where('nomor_referensi', $post['no_ref']);
+        $data_coh = $this->db->get()->row_array();
+        $nominal = $this->normal($post['dana_masuk']);
+        $data = [
+            'saldo_akhir' => $data_coh['saldo_akhir'] + $nominal,
+        ];
+        $this->db->where('nomor_referensi', $post['no_ref']);
+        $this->db->update('master_coh', $data);
+        
+        $data = [
+            'nomor_referensi' => $post['no_ref'],
+            'nominal' => $nominal,
+            'saldo' => $data_coh['saldo_akhir'] + $nominal,
+            'jenis' => 1,
+            'keterangan' => 'Dana Masuk : ' . $post['keterangan_dana_masuk'],
+            'tanggal_input' => date("Y-m-d H:i:s"),
+        ];
+        $this->db->insert('detail_coh', $data);
+        return "sukses";
     }
 
     private function _tambah_data_awal($no, $nominal)
@@ -752,7 +867,6 @@ class Model_Coh extends CI_Model
     }
 
     // permintaan
-
     function permintaan_tarik_dana($post)
     {
         $data = [
@@ -848,6 +962,7 @@ class Model_Coh extends CI_Model
         $this->db->or_where('status', 1);
         $this->db->or_where('status', 0);
         $this->db->having('user', $this->session->userdata['username']);
+        $this->db->order_by('tanggal_input', 'DESC');
         return $this->db->get();
     }
 
@@ -857,6 +972,7 @@ class Model_Coh extends CI_Model
         $this->db->from('master_coh');
         $this->db->where('user', $this->session->userdata['username']);
         $this->db->where('status', 2);
+        $this->db->order_by('tanggal_input', 'DESC');
         return $this->db->get();
     }
 
@@ -1054,11 +1170,10 @@ class Model_Coh extends CI_Model
         }
     }
 
+    
+
     function kasir_approve_coh($post)
     {
-    
-      
-
         // tarik data coh
         $this->db->select('*, nama as nama_kasir');
         $this->db->from('master_coh');

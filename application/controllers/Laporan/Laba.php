@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class Laba extends CI_Controller
 {
     function __construct()
@@ -14,37 +16,81 @@ class Laba extends CI_Controller
         }
     }
 
+    function tgl_indo($tanggal)
+    {
+        $bulan = array(
+            1 =>   'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember'
+        );
+        $pecahkan = explode('-', $tanggal);
+
+        // variabel pecahkan 0 = tanggal
+        // variabel pecahkan 1 = bulan
+        // variabel pecahkan 2 = tahun
+
+        switch ($pecahkan[3]) {
+            case 'Sun':
+                $hari_ini = "Minggu";
+                break;
+
+            case 'Mon':
+                $hari_ini = "Senin";
+                break;
+
+            case 'Tue':
+                $hari_ini = "Selasa";
+                break;
+
+            case 'Wed':
+                $hari_ini = "Rabu";
+                break;
+
+            case 'Thu':
+                $hari_ini = "Kamis";
+                break;
+
+            case 'Fri':
+                $hari_ini = "Jumat";
+                break;
+
+            case 'Sat':
+                $hari_ini = "Sabtu";
+                break;
+
+            default:
+                $hari_ini = "Tidak di ketahui";
+                break;
+        }
+
+        return $hari_ini . ', ' . $pecahkan[2] . ' ' . $bulan[(int) $pecahkan[1]] . ' ' . $pecahkan[0];
+    }
+
     public function index()
     {
         $hari = date("d");
         $bulan = date("M");
         $tahun = date("Y");
-        $data = [
-            'total_penjualan' => $this->total_penjualan($hari,$bulan,$tahun),
-            'potongan_penjualan' => $this->potongan_penjualan($hari,$bulan,$tahun),
-            'retur_penjualan' => $this->retur_penjualan($hari,$bulan,$tahun),
-            'total_potongan_penjualan'=>$this->total_potongan_penjualan($hari,$bulan,$tahun),
-            'penjualan_kotor'=>$this->penjualan_kotor($hari,$bulan,$tahun),
-            // hpp
 
-            'persediaan_awal' => $this->persediaan_awal($hari,$bulan,$tahun),
-            'pembelian_bersih' => $this->pembelian_bersih($hari,$bulan,$tahun),
-            'diskon_pembelian' => $this->diskon_pembelian($hari,$bulan,$tahun),
-            'retur_pembelian' => $this->retur_pembelian($hari, $bulan, $tahun),
-            'harga_pokok_penjualan' => $this->harga_pokok_penjualan($hari, $bulan, $tahun),
-            'persediaan_barang_dijual' => $this->persediaan_barang_dijual($hari, $bulan, $tahun),
-            'persediaan_akhir' => $this->persediaan_akhir($hari, $bulan, $tahun),
-            
+        $data['pendapatan'] = $this->modelLaba->get_data_laba_penjualan($hari, $bulan, $tahun);
+        $data['kategori_biaya'] = $this->modelLaba->beban_operasional_usaha($hari, $bulan, $tahun);
+        $data['total_beban_operasional'] = $this->modelLaba->total_beban_operasional($hari, $bulan, $tahun);
+        $data['beban_gaji'] = $this->modelLaba->beban_gaji($hari, $bulan, $tahun);
+        $data['total_beban_gaji'] = $this->modelLaba->total_beban_gaji($hari, $bulan, $tahun);
+        $data['laba_berjalan'] = $this->modelLaba->laba_berjalan($hari, $bulan, $tahun);
+        $data['total_pendapatan_bersih'] = $this->modelLaba->total_pendapatan_bersih($hari, $bulan, $tahun);
 
-            'laba_rugi_kotor' => $this->laba_rugi_kotor($hari,$bulan,$tahun),
-            // pendapatan lain - lain
-            'ongkos_kirim' => $this->ongkos_kirim($hari,$bulan,$tahun),
-            'pendapatan_lain'=>$this->pendapatan_lain($hari,$bulan,$tahun),
-            'beban_operasional_usaha'=>$this->beban_operasional_usaha($hari,$bulan,$tahun),
-            'beban_gaji'=>$this->beban_gaji($hari,$bulan,$tahun),
-            'total_beban'=>$this->total_beban($hari,$bulan,$tahun),
-            'laba_rugi'=>$this->laba_rugi($hari,$bulan,$tahun)
-        ];
+        // $output = json_encode($output);
+        // echo $output;
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
         $data['css'] = 'laporan/laba/laba_css';
@@ -58,148 +104,258 @@ class Laba extends CI_Controller
         $this->load->view('template/template_app_js');
     }
 
-    function generate_data()
+    public function generate_data()
     {
-          $post = $this->input->post();
-          $hari = $post['hari'];
-          $bulan = $post['bulan'];
-          $tahun = $post['tahun'];
-          $data = [
-            'total_penjualan' => $this->total_penjualan($hari,$bulan,$tahun),
-            'potongan_penjualan' => $this->potongan_penjualan($hari,$bulan,$tahun),
-            'retur_penjualan' => $this->retur_penjualan($hari,$bulan,$tahun),
-            'total_potongan_penjualan'=>$this->total_potongan_penjualan($hari,$bulan,$tahun),
-            'penjualan_kotor'=>$this->penjualan_kotor($hari,$bulan,$tahun),
-            'harga_pokok_penjualan' => $this->harga_pokok_penjualan($hari,$bulan,$tahun),
-            'laba_rugi_kotor' => $this->laba_rugi_kotor($hari,$bulan,$tahun),
-            // pendapatan lain - lain
-            'ongkos_kirim' => $this->ongkos_kirim($hari,$bulan,$tahun),
-            'pendapatan_lain'=>$this->pendapatan_lain($hari,$bulan,$tahun),
-            'beban_operasional_usaha'=>$this->beban_operasional_usaha($hari,$bulan,$tahun),
-            'beban_gaji'=>$this->beban_gaji($hari,$bulan,$tahun),
-            'total_beban'=>$this->total_beban($hari,$bulan,$tahun),
-            'laba_rugi'=>$this->laba_rugi($hari,$bulan,$tahun),
-        ];
+        $post = $this->input->post();
+        $hari = $post['hari'];
+        $bulan = $post['bulan'];
+        $tahun = $post['tahun'];
+
+        $data['pendapatan'] = $this->modelLaba->get_data_laba_penjualan($hari, $bulan, $tahun);
+        $data['kategori_biaya'] = $this->modelLaba->beban_operasional_usaha($hari, $bulan, $tahun);
+        $data['total_beban_operasional'] = $this->modelLaba->total_beban_operasional($hari, $bulan, $tahun);
+        $data['beban_gaji'] = $this->modelLaba->beban_gaji($hari, $bulan, $tahun);
+        $data['total_beban_gaji'] = $this->modelLaba->total_beban_gaji($hari, $bulan, $tahun);
+        $data['laba_berjalan'] = $this->modelLaba->laba_berjalan($hari, $bulan, $tahun);
+        $data['total_pendapatan_bersih'] = $this->modelLaba->total_pendapatan_bersih($hari, $bulan, $tahun);
+
         $output = json_encode($data);
         echo $output;
-
     }
 
-    function total_penjualan($hari,$bulan,$tahun)
+    public function data_download($hari, $bulan, $tahun)
     {
-        return $this->modelLaba->total_penjualan($hari,$bulan,$tahun);
-    }
-
-    function potongan_penjualan($hari,$bulan,$tahun)
-    {
-        return $this->modelLaba->potongan_penjualan($hari,$bulan,$tahun);
-    }
-
-    function retur_penjualan($hari,$bulan,$tahun)
-    {
-        return $this->modelLaba->retur_penjualan($hari,$bulan,$tahun); 
-    }
-
-    function total_potongan_penjualan($hari,$bulan,$tahun)
-    {
-        $potongan_penjualan = $this->potongan_penjualan($hari,$bulan,$tahun);
-        $retur_penjualan = $this->retur_penjualan($hari,$bulan,$tahun);
-        return $potongan_penjualan + $retur_penjualan;
-    }
-
-    function penjualan_kotor($hari,$bulan,$tahun)
-    {
-        $total_penjualan = $this->total_penjualan($hari,$bulan,$tahun);
-        $total_potongan_penjualan = $this->total_potongan_penjualan($hari,$bulan,$tahun);
-        return $total_penjualan - $total_potongan_penjualan;
-    }
-
-    // hpp
-
-    function persediaan_awal($hari, $bulan, $tahun)
-    {
-        return $this->modelLaba->persediaan_awal($hari, $bulan, $tahun);
-    }
-
-    function pembelian_bersih($hari, $bulan, $tahun)
-    {
-        return $this->modelLaba->pembelian_bersih($hari, $bulan, $tahun);
-    }
-
-    function diskon_pembelian($hari, $bulan, $tahun)
-    {
-        return $this->modelLaba->diskon_pembelian($hari, $bulan, $tahun);
-    }
-
-    function retur_pembelian($hari, $bulan, $tahun)
-    {
-        return $this->modelLaba->retur_pembelian($hari, $bulan, $tahun);
-    }
-
-    function persediaan_barang_dijual($hari, $bulan, $tahun)
-    {
-        $persediaan_awal = $this->persediaan_awal($hari, $bulan, $tahun);
-        $pembelian_bersih = $this->pembelian_bersih($hari, $bulan, $tahun);
-        $diskon_pembelian = $this->diskon_pembelian($hari, $bulan, $tahun);
-        $retur_pembelian = $this->retur_pembelian($hari, $bulan, $tahun);
-        return $persediaan_awal + ($pembelian_bersih - $diskon_pembelian - $retur_pembelian);
-    }
-
-    function persediaan_akhir($hari, $bulan, $tahun)
-    {
-        return $this->modelLaba->persediaan_akhir($hari, $bulan, $tahun);
+        $data['pendapatan'] = $this->modelLaba->get_data_laba_penjualan($hari, $bulan, $tahun);
+        $data['kategori_biaya'] = $this->modelLaba->beban_operasional_usaha($hari, $bulan, $tahun);
+        $data['total_beban_operasional'] = $this->modelLaba->total_beban_operasional($hari, $bulan, $tahun);
+        $data['beban_gaji'] = $this->modelLaba->beban_gaji($hari, $bulan, $tahun);
+        $data['total_beban_gaji'] = $this->modelLaba->total_beban_gaji($hari, $bulan, $tahun);
+        $data['laba_berjalan'] = $this->modelLaba->laba_berjalan($hari, $bulan, $tahun);
+        $data['total_pendapatan_bersih'] = $this->modelLaba->total_pendapatan_bersih($hari, $bulan, $tahun);
+        return $data;
     }
     
 
-    function harga_pokok_penjualan($hari,$bulan,$tahun)
+    public function download()
     {
-        $persediaan_awal = $this->persediaan_barang_dijual($hari, $bulan, $tahun);
-        $persediaan_akhir = $this->persediaan_akhir($hari, $bulan, $tahun);
-        return $persediaan_awal - $persediaan_akhir;
+
+        $post = $this->input->post();
+        $hari = date('d', strtotime($post['tanggal']));
+        $bulan = date('m', strtotime($post['tanggal']));
+        $tahun = date('Y', strtotime($post['tanggal']));
+        
+        $data = $this->data_download($hari, $bulan, $tahun);
+
+        $data_perusahaan = $this->modelSetting->get_data_perusahaan();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // SET HEADER
+        // SET JUDUL
+
+        $sheet->mergeCells('A1:F1'); // merge
+        $sheet->mergeCells('A2:F2'); // merge
+        $sheet->mergeCells('A4:F4'); // merge
+        $sheet->setCellValue('A1', 'LAPORAN LABA / RUGI USAHA');
+        $sheet->setCellValue('A2', $data_perusahaan['nama_perusahaan']);
+        $sheet->setCellValue('A4', 'DATA PER TANGGAL : ' . $this->tgl_indo(date("Y-m-d-D", strtotime($post['tanggal']))));
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('A2')->getAlignment()->setHorizontal('center');
+
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+        $sheet->getColumnDimension('E')->setAutoSize(true);
+        $sheet->getColumnDimension('F')->setAutoSize(true);
+
+        $styleArray = [
+            'font' => [
+                'bold' => true,
+                'size' => 12,
+            ],
+        ];
+
+        $minus = [
+            'font' => [
+                'color' => array('rgb' => 'FF0000')
+            ],
+        ];
+
+        $hpp = [
+            'font' => [
+                'color' => array('rgb' => 'FF0000'),
+                'bold' => true,
+                'size' => 12,
+            ],
+        ];
+
+
+        $kolom = 6;
+        $spreadsheet->getActiveSheet()->getStyle('D:F')->getNumberFormat()
+            ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->mergeCells('A' . $kolom . ':D' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'PENJUALAN');
+        $sheet->setCellValue('E' . $kolom, $data['pendapatan']['total_penjualan']);
+        $kolom++;
+        $sheet->setCellValue('B' . $kolom, 'DISKON PENJUALAN');
+        $spreadsheet->getActiveSheet()->getStyle('D' . $kolom)->applyFromArray($minus); // style bold
+        $sheet->setCellValue('D' . $kolom, $data['pendapatan']['potongan_penjualan']);
+        $kolom++;
+        $sheet->setCellValue('B' . $kolom, 'RETUR PENJUALAN');
+        $spreadsheet->getActiveSheet()->getStyle('D' . $kolom)->applyFromArray($minus); // style bold
+        $sheet->setCellValue('D' . $kolom, $data['pendapatan']['retur_penjualan']);
+        $kolom++;
+        $sheet->mergeCells('A' . $kolom . ':D' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'TOTAL PENJUALAN');
+        $sheet->setCellValue('E' . $kolom, $data['pendapatan']['total_penjualan_bersih']);
+        $kolom++;
+        $kolom++;
+        $sheet->mergeCells('A' . $kolom . ':E' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom .  ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'HARGA POKOK PENJUALAN');
+        $kolom++;
+        $sheet->setCellValue('B' . $kolom, 'PERSEDIAAN AWAL');
+        $sheet->setCellValue('D' . $kolom, $data['pendapatan']['persediaan_awal']);
+        $kolom++;
+        $sheet->setCellValue('B' . $kolom, 'PEMBELIAN');
+        $sheet->setCellValue('D' . $kolom, $data['pendapatan']['total_pembelian']);
+        $kolom++;
+        $sheet->setCellValue('B' . $kolom, 'DISKON PEMBELIAN');
+        $spreadsheet->getActiveSheet()->getStyle('D' . $kolom)->applyFromArray($minus); // style bold
+        $sheet->setCellValue('D' . $kolom, $data['pendapatan']['potongan_pembelian']);
+        $kolom++;
+        $sheet->setCellValue('B' . $kolom, 'RETUR PEMBELIAN');
+        $spreadsheet->getActiveSheet()->getStyle('D' . $kolom)->applyFromArray($minus); // style bold
+        $sheet->setCellValue('D' . $kolom, $data['pendapatan']['retur_pembelian']);
+        $kolom++;
+        $sheet->setCellValue('B' . $kolom, 'PERSEDIAAN TERSEDIA DI JUAL');
+        $sheet->setCellValue('E' . $kolom, $data['pendapatan']['persediaan_tersedia']);
+        $kolom++;
+        $sheet->setCellValue('B' . $kolom, 'PERSEDIAAN AKHIR');
+        $spreadsheet->getActiveSheet()->getStyle('E' . $kolom)->applyFromArray($minus); // style bold
+        $sheet->setCellValue('E' . $kolom, $data['pendapatan']['persediaan_akhir']);
+        $kolom++;
+        $spreadsheet->getActiveSheet()->getStyle('B' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('B' . $kolom, 'HARGA POKOK PENJUALAN');
+        $spreadsheet->getActiveSheet()->getStyle('F' . $kolom)->applyFromArray($hpp); // style bold
+        $sheet->setCellValue('E' . $kolom, $data['pendapatan']['harga_pokok_penjualan']);
+        $kolom++;
+        $kolom++;
+        $sheet->mergeCells('A' . $kolom . ':D' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'PENDAPATAN DARI PENJUALAN');
+        // $sheet->setCellValue('E' . $kolom, $data['pendapatan']['laba_penjualan']);
+        // $kolom++;
+
+        // $sheet->mergeCells('A' . $kolom . ':E' . $kolom); // merge
+        // $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        // $sheet->setCellValue('A' . $kolom, 'LABA / RUGI PENJUALAN');
+
+        if ($data['pendapatan']['laba_penjualan'] < 0) {
+            $spreadsheet->getActiveSheet()->getStyle('E' . $kolom)->applyFromArray($hpp); // style bold
+            $sheet->setCellValue('E' . $kolom, $data['pendapatan']['laba_penjualan']);
+        } else {
+            $spreadsheet->getActiveSheet()->getStyle('E' . $kolom)->applyFromArray($styleArray); // style bold
+            $sheet->setCellValue('E' . $kolom, $data['pendapatan']['laba_penjualan']);
+        }
+        $kolom++;
+        $kolom++;
+        $sheet->mergeCells('A' . $kolom . ':D' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'PENDAPATAN LAIN - LAIN');
+        $kolom++;
+        $sheet->setCellValue('B' . $kolom, 'ONGKOS KIRIM');
+        $sheet->setCellValue('D' . $kolom, $data['pendapatan']['pendapatan_lain']);
+        $kolom++;
+        $sheet->mergeCells('A' . $kolom . ':D' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'TOTAL PENDAPATAN LAIN - LAIN');
+        $sheet->setCellValue('E' . $kolom, $data['pendapatan']['total_pendapatan_lain']);
+        $kolom++;
+        $kolom++;
+        $sheet->mergeCells('A' . $kolom . ':D' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'TOTAL PENDAPATAN BERSIH');
+        $sheet->setCellValue('F' . $kolom, $data['total_pendapatan_bersih']);
+        $kolom++;
+        $kolom++;
+        $sheet->mergeCells('A' . $kolom . ':D' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'BEBAN OPERASIONAL');
+        $kolom++;
+        foreach ($data['kategori_biaya'] as $key => $value) {
+            $sheet->setCellValue('B' . $kolom, $value['nama_biaya']);
+            $sheet->setCellValue('D' . $kolom, $value['total']);
+            $kolom++;
+        }
+        $sheet->mergeCells('A' . $kolom . ':D' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'TOTAL BEBAN OPERASIONAL');
+        $sheet->setCellValue('E' . $kolom, $data['total_beban_operasional']);
+        $kolom++;
+        $kolom++;
+        $sheet->mergeCells('A' . $kolom . ':D' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'BEBAN GAJI');
+        $kolom++;
+        $sheet->setCellValue('B' . $kolom, 'GAJI POKOK');
+        $sheet->setCellValue('D' . $kolom, $data['beban_gaji']['gaji_pokok']);
+        $kolom++;
+        $sheet->setCellValue('B' . $kolom, 'UANG MAKAN');
+        $sheet->setCellValue('D' . $kolom, $data['beban_gaji']['uang_makan']);
+        $kolom++;
+        $sheet->setCellValue('B' . $kolom, 'BONUS');
+        $sheet->setCellValue('D' . $kolom, $data['beban_gaji']['bonus']);
+        $kolom++;
+        $sheet->mergeCells('A' . $kolom . ':D' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'TOTAL BEBAN GAJI');
+        $sheet->setCellValue('E' . $kolom, $data['total_beban_gaji']);
+        $kolom++;
+        $kolom++;
+        $sheet->mergeCells('A' . $kolom . ':D' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'TOTAL BEBAN USAHA');
+        $total_beban_usaha = $data['total_beban_gaji'] + $data['total_beban_operasional'];
+        $sheet->setCellValue('F' . $kolom, $total_beban_usaha);
+        $spreadsheet->getActiveSheet()->getStyle('F' . $kolom)->applyFromArray($hpp); // style bold
+        $kolom++;
+        $kolom++;
+        $sheet->mergeCells('A' . $kolom . ':D' . $kolom); // merge
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('A' . $kolom, 'LABA / RUGI');
+        if ($data['laba_berjalan'] < 0) {
+        $spreadsheet->getActiveSheet()->getStyle('F' . $kolom)->applyFromArray($hpp); // style bold
+        $sheet->setCellValue('F' . $kolom, $data['laba_berjalan']);
+        } else {
+        $spreadsheet->getActiveSheet()->getStyle('F' . $kolom)->applyFromArray($styleArray); // style bold
+        $sheet->setCellValue('F' . $kolom, $data['laba_berjalan']);
+        }
+
+
+        $writer = new Xlsx($spreadsheet);
+
+        $filename = 'laporan laba penjualan ' . $post['tanggal'];
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
     }
 
-    function laba_rugi_kotor($hari,$bulan,$tahun)
+    public function cek()
     {
-        $penjualan_kotor = $this->penjualan_kotor($hari,$bulan,$tahun);
-        $harga_pokok_penjualan = $this->harga_pokok_penjualan($hari,$bulan,$tahun);
+        $hari = '25';
+        $bulan = '03';
+        $tahun = '2020';
 
-        return $penjualan_kotor - $harga_pokok_penjualan;
-    }
-
-    // pendapatan lain - lain
-
-    function ongkos_kirim($hari,$bulan,$tahun)
-    {
-          return $this->modelLaba->ongkos_kirim($hari,$bulan,$tahun);
-    }
-
-    function pendapatan_lain($hari,$bulan,$tahun)
-    {
-        $ongkir = $this->modelLaba->ongkos_kirim($hari,$bulan,$tahun);
-        return $ongkir;
-    }
-
-    function beban_operasional_usaha($hari,$bulan,$tahun)
-    {
-        return $this->modelLaba->beban_operasional_usaha($hari,$bulan,$tahun);
-    }
-
-    function beban_gaji($hari,$bulan,$tahun)
-    {
-        return $this->modelLaba->beban_gaji($hari,$bulan,$tahun);
-    }
-
-
-    function total_beban($hari,$bulan,$tahun)
-    {
-        return $this->modelLaba->total_beban($hari,$bulan,$tahun);
-    }
-
-    function laba_rugi($hari,$bulan,$tahun)
-    {
-        $laba_rugi_kotor = $this->laba_rugi_kotor($hari,$bulan,$tahun);
-        $total_beban = $this->total_beban($hari,$bulan,$tahun);
-
-        return $laba_rugi_kotor - $total_beban;
+        $data = $this->data_download($hari, $bulan, $tahun);
+        $output = json_encode($data);
+        echo $output;
     }
 }

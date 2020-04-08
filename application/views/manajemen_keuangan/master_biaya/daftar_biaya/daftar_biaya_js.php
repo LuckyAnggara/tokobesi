@@ -205,7 +205,7 @@
             },
             "buttons": ['copy', 'excel', 'pdf', 'print'],
             "dom": 'Bfrtip',
-            "searching": false,
+            "searching": true,
             "lengthChange": false,
             "responsive": true,
             "processing": true,
@@ -302,15 +302,11 @@
             },
             "buttons": ['copy', 'excel', 'pdf', 'print'],
             "dom": 'Bfrtip',
-            "searching": false,
+            "searching": true,
             "lengthChange": false,
-            "order": [
-                [0, "desc"]
-            ],
             "responsive": true,
             "processing": true,
             "serverSide": false,
-            "fixedColumns": true,
             "ajax": {
                 "url": '<?= base_url("manajemen_keuangan/masterbiaya/get_daftar_biaya_histori/"); ?>',
                 "type": "POST",

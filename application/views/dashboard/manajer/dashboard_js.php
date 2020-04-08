@@ -10,6 +10,8 @@
 
 <!-- CHART.js -->
 <script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
+<!-- DatePicker Js -->
+<script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
 
 <!-- SCRIPT DASHBOARD AWAL -->
@@ -52,9 +54,13 @@
             async: false,
             dataType: "JSON",
             success: function(data) {
-
-                $('#utang_value').text(data.total_utang);
+                if (data.total_laba < 0) {
+                    $('#laba_value').addClass('text-danger');
+                }
+                $('#laba_value').text(data.total_laba);
+                $('#beban_value').text(data.total_beban);
                 $('#piutang_value').text(data.total_piutang);
+                $('#utang_value').text(data.total_utang);
 
                 $('#penjualan_value').text(data.total_penjualan);
                 $('#pembelian_value').text(data.total_pembelian);
@@ -385,14 +391,27 @@
                 scales: {
                     yAxes: [{
                             id: "y-axis-1",
-                            position: "left"
+                            position: "left",
+                            ticks: {
+                                // Include a dollar sign in the ticks
+                                callback: function(value, index, values) {
+                                    return formatRupiah(value.toString(), 'Rp.');
+                                }
+                            }
                         },
                         {
                             id: "y-axis-2",
-                            position: "right"
+                            position: "right",
+                            ticks: {
+                                // Include a dollar sign in the ticks
+                                callback: function(value, index, values) {
+                                    return formatRupiah(value.toString(), 'Rp.');
+                                }
+                            }
                         },
 
                     ],
+
                 },
                 tooltips: {
                     mode: 'index',
@@ -414,6 +433,8 @@
                 }
             }
         });
+
+
 
         $('#laba_bulan').change(function() {
             var data = $(this).val();
@@ -550,11 +571,6 @@
                     label: 'Produktifitas',
                     backgroundColor: '#71B37C',
                     yAxisID: 'y-axis-2'
-                    // barPercentage: 0.5,
-                    // barThickness: 6,
-                    // maxBarThickness: 8,
-                    // minBarLength: 2,
-                    //data: [10, 20, 30, 40, 50, 60, 70]
                 }]
             },
             options: {
@@ -575,7 +591,7 @@
                             stepSize: 600,
                             // Include a dollar sign in the ticks
                             callback: function(value, index, values) {
-                                return 'Rp. ' + formatSatuan(value.toString()) + ' Juta';
+                                return formatRupiah(value.toString(), 'Rp. ');
                             }
                         }
                     }]
@@ -586,7 +602,7 @@
                     callbacks: {
                         label: function(t, d) {
                             if (t.datasetIndex === 0) {
-                                return formatSatuan(t.yLabel.toString()) + ' Juta';
+                                return formatRupiah(t.yLabel.toString(), 'Rp. ');
                             }
                         },
                         title: function(t, d) {
@@ -836,7 +852,7 @@
             "processing": true,
             "serverSide": false,
             "ajax": {
-                "url": '<?= base_url("manajemen_persediaan/masterpersediaan/getData"); ?>',
+                "url": '<?= base_url("dashboard/get_data_persediaan"); ?>',
                 "type": "POST",
                 "data": input,
             },
@@ -885,4 +901,12 @@
             }
         });
     }
+    $('#print_btn').on('click', function() {
+        $('#tanggal').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "auto",
+        });
+        $('#print_modal').modal('show');
+    })
 </script>

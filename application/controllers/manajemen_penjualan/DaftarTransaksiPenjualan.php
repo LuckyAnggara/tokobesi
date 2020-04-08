@@ -61,11 +61,13 @@ class Daftartransaksipenjualan extends CI_Controller
 
 
 
-    public function delete_data($no_faktur)
+    public function delete_data()
     {
+        $no_faktur = $this->input->post('no_faktur');
         if (empty($no_faktur)) {
         } else {
-            $this->modelDaftarTransaksiPenjualan->delete_data($no_faktur); // tambah data siswa
+            $data = $this->modelDaftarTransaksiPenjualan->delete_data($no_faktur); // tambah data siswa
+            echo $data;
         }
     }
 }

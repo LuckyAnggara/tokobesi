@@ -1,10 +1,17 @@
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 text-center">
-                    Copyright 24codes.my.id
-                </div>
+        <div class="row">
+            <div class="col-3 text-left">
+                <span>
+                    Powered By 24codes
+                </span>
+            </div>
+            <div class="col-6 text-left">
+            </div>
+            <div class="col-3 text-right">
+                <span>
+                    Application Version 1.0.0
+                </span>
             </div>
         </div>
     </footer>

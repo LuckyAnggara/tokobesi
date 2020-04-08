@@ -25,8 +25,8 @@
         init_table(no_ref)
         init_table_permintaan(no_ref)
         init_table_pending(no_ref)
-        init_jumlah_permintaan(no_ref)
-        init_jumlah_pending(no_ref)
+        // init_jumlah_permintaan(no_ref)
+        // init_jumlah_pending(no_ref)
     })
 
     function normalrupiah(angka) {
@@ -382,6 +382,13 @@
             .end()
     });
 
+    $('#masuk_modal').on('hidden.bs.modal', function(e) {
+        $(this)
+            .find("input,textarea,select")
+            .val('')
+            .end()
+    });
+
     var tarik = document.getElementById('tarik_dana');
     tarik.addEventListener('keyup', function(e) {
         tarik.value = formatRupiah(this.value, 'Rp.');
@@ -390,6 +397,11 @@
     var setor = document.getElementById('setor_dana');
     setor.addEventListener('keyup', function(e) {
         setor.value = formatRupiah(this.value, 'Rp.');
+    });
+
+    var masuk = document.getElementById('dana_masuk');
+    masuk.addEventListener('keyup', function(e) {
+        masuk.value = formatRupiah(this.value, 'Rp.');
     });
 </script>
 
@@ -475,6 +487,45 @@
                 }
             })
         }
+    })
+
+    $('#masukForm').submit(function(e) {
+        e.preventDefault();
+        var dana_masuk = $('#dana_masuk').val();
+        var no_ref = $('#nomor_referensi').text();
+        var data = new FormData(document.getElementById("masukForm"));
+        data.append('no_ref', no_ref);
+        $.ajax({
+            url: "<?= base_url("manajemen_keuangan/mastercoh/dana_masuk"); ?>",
+            type: "post",
+            data: data,
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $.LoadingOverlay("hide");
+            },
+            success: function(data) {
+                if (data == 'sukses') {
+                    swal.fire(
+                        'Sukses!',
+                        'Dana sebesar ' + dana_masuk + ' telah masuk!',
+                        'success'
+                    );
+                } else {
+                    swal.fire(
+                        'Oopss!',
+                        'Ada kesalahan sistem, silahkan ulangi!',
+                        'error'
+                    );
+                }
+                $('#datatable-detail-coh').DataTable().ajax.reload();
+                saldo_refresh()
+                $('#masuk_modal').modal('hide');
+            }
+        })
     })
 </script>
 
@@ -687,40 +738,40 @@
 
 <!-- menghitung jumlah pending dan permintaan -->
 <script>
-    function init_jumlah_pending(no_ref) {
-        var tanggal = $('#tanggal').val();
-        $.ajax({
-            url: "<?= base_url('manajemen_keuangan/mastercoh/get_jumlah_data_pending'); ?>",
-            type: "post",
-            data: {
-                tanggal: tanggal,
-                no_ref: no_ref
-            },
-            async: false,
-            success: function(data) {
-                var jumlah_pending = $('#jumlah_pending')
-                jumlah_pending.text(data);
-            }
-        });
-    }
+    // function init_jumlah_pending(no_ref) {
+    //     var tanggal = $('#tanggal').val();
+    //     $.ajax({
+    //         url: "<?= base_url('manajemen_keuangan/mastercoh/get_jumlah_data_pending'); ?>",
+    //         type: "post",
+    //         data: {
+    //             tanggal: tanggal,
+    //             no_ref: no_ref
+    //         },
+    //         async: false,
+    //         success: function(data) {
+    //             var jumlah_pending = $('#jumlah_pending')
+    //             jumlah_pending.text(data);
+    //         }
+    //     });
+    // }
 
 
-    function init_jumlah_permintaan(no_ref) {
-        var tanggal = $('#tanggal').val();
-        $.ajax({
-            url: "<?= base_url('manajemen_keuangan/mastercoh/get_jumlah_data_permintaan'); ?>",
-            type: "post",
-            data: {
-                tanggal: tanggal,
-                no_ref: no_ref
-            },
-            async: false,
-            success: function(data) {
-                var jumlah_permintaan = $('#jumlah_permintaan')
-                jumlah_permintaan.text(data);
-            }
-        });
-    }
+    // function init_jumlah_permintaan(no_ref) {
+    //     var tanggal = $('#tanggal').val();
+    //     $.ajax({
+    //         url: "<?= base_url('manajemen_keuangan/mastercoh/get_jumlah_data_permintaan'); ?>",
+    //         type: "post",
+    //         data: {
+    //             tanggal: tanggal,
+    //             no_ref: no_ref
+    //         },
+    //         async: false,
+    //         success: function(data) {
+    //             var jumlah_permintaan = $('#jumlah_permintaan')
+    //             jumlah_permintaan.text(data);
+    //         }
+    //     });
+    // }
 
     function saldo_refresh(no_ref) {
         var no_ref = $('#nomor_referensi').text();

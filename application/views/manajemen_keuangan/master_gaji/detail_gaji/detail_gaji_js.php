@@ -55,8 +55,6 @@
 
         //Init Datatabel Master Stok Persediaan 
         var table = $('#datatable-daftar-gaji').DataTable({
-            "scrollY": '50vh',
-            "scrollCollapse": true,
             "destroy": true,
             "bInfo": false,
             "paging": false,
@@ -68,7 +66,6 @@
             "buttons": ['copy', 'excel', 'pdf', 'print'],
             "dom": 'Bfrtip',
             "searching": false,
-            "fixedColumns": true,
             "processing": true,
             "serverSide": false,
             "ordering": true,

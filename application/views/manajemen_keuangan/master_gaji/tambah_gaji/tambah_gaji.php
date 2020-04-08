@@ -60,29 +60,69 @@
             <div class="card-box">
                 <div class="row">
                     <div class="col-12">
-                        <div class="pull-right">
-                            <button type="button" id="confirm" class="btn btn-primary waves-effect waves-light" hidden> Bayar</button>
-                        </div>
                         <h4 class="m-t-0 header-title">Data Pegawai</h4>
                     </div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="table-responsive">
-                            <table id="datatable-daftar-gaji" class="table table-bordered  dt-responsive nowrap" cellspacing="0" width="100%">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th></th>
-                                        <th>Nama Pegawai</th>
-                                        <th>Jabatan</th>
-                                        <th>Gaji Pokok</th>
-                                        <th>Uang Makan</th>
-                                        <th>Bonus</th>
-                                        <th>Total Gaji</th>
-                                    </tr>
-                                </thead>
-                            </table>
+                        <div class="col-sm-12">
+                            <ul class="nav nav-tabs nav-pills ">
+                                <li class="nav-item">
+                                    <a href="#transaksi" data-toggle="tab" aria-expanded="false" class="nav-link active">
+                                        Gaji Harian
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#notifikasi" data-toggle="tab" aria-expanded="true" class="nav-link">
+                                        Gaji Bulanan
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade show active" id="transaksi">
+
+                                    <div class="pull-right">
+                                        <button type="button" id="confirm_harian" class="btn btn-success waves-effect waves-light" hidden> Bayar</button>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table id="datatable-daftar-gaji-harian" class="table table-bordered  dt-responsive nowrap" cellspacing="0" width="100%">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Nama Pegawai</th>
+                                                    <th>Jabatan</th>
+                                                    <th>Gaji Pokok</th>
+                                                    <th>Uang Makan</th>
+                                                    <th>Bonus</th>
+                                                    <th>Total Gaji</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="notifikasi">
+                                    <div class="pull-right">
+                                        <button type="button" id="confirm_bulanan" class="btn btn-success waves-effect waves-light" hidden> Bayar</button>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table id="datatable-daftar-gaji-bulanan" class="table table-bordered  dt-responsive nowrap" cellspacing="0" width="100%">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Nama Pegawai</th>
+                                                    <th>Jabatan</th>
+                                                    <th>Gaji Pokok</th>
+                                                    <th>Uang Makan</th>
+                                                    <th>Bonus</th>
+                                                    <th>Total Gaji</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <hr>
                     </div>

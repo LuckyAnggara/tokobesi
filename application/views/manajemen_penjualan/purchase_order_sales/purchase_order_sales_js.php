@@ -110,8 +110,6 @@
             data: {
               no_order: no_order,
             },
-            cache: false,
-            async: false,
             beforeSend: function() {
               $.LoadingOverlay("show");
             },
@@ -139,7 +137,6 @@
       }).then((result) => {
         if (result.value) {
           $.ajax({
-            async: false,
             url: '<?= base_url("manajemen_penjualan/purchaseordersales/clear_keranjang_belanja/"); ?>' + $('#no_order').text(),
             success: function(data) {
               deleteMasterPo($('#no_order').text())
@@ -166,7 +163,6 @@
     function deleteMasterPo(no_order) {
       $.ajax({
         url: "<?= base_url('manajemen_penjualan/purchaseordersales/delete_data_po/'); ?>" + no_order,
-        async: false,
       });
     }
 
@@ -353,7 +349,6 @@
           url: '<?= base_url("manajemen_penjualan/purchaseordersales/get_data_pelanggan/"); ?>' + id_pelanggan.val(),
           type: "POST",
           dataType: "JSON",
-          async: false,
           success: function(data) {
             if (data !== null) {
               nama_pelanggan.val(data.nama_pelanggan);
@@ -409,7 +404,6 @@
           url: '<?= base_url("manajemen_penjualan/purchaseordersales/get_data_barang/"); ?>' + kata_kunci,
           type: "POST",
           dataType: "JSON",
-          async: false,
           beforeSend: function() {
             $("#result_page").LoadingOverlay('show');
           },
@@ -518,10 +512,10 @@
       var diskon = $('#diskon').val();
       var persediaan = $.ajax({
         type: "POST",
+        async: false,
         url: '<?= base_url("manajemen_penjualan/purchaseordersales/get_data_persediaan/"); ?>' + kode_barang,
-        dataType: "text",
-        async: false
       }).responseText;
+      console.log(persediaan);
       if (jumlah == 0 || jumlah == "") {
         Swal.fire(
           'Quantitas Salah',
@@ -580,8 +574,6 @@
         data: {
           password: password
         },
-        cache: false,
-        async: false,
         success: function(data) {
           if (data == 0) {
             Swal.fire(
@@ -602,7 +594,6 @@
   <script>
     function push_keranjang_belanja(kode_barang, jumlah, harga_jual, diskon) {
       var no_order = $('#no_order').text();
-
       $.ajax({
         url: "<?= Base_url('manajemen_penjualan/purchaseordersales/push_data_barang'); ?>",
         type: "post",
@@ -613,20 +604,18 @@
           harga_jual: harga_jual,
           diskon: diskon
         },
-        cache: false,
-        async: false,
         beforeSend: function() {
-          $("#modal_detail_penjualan").LoadingOverlay("show");
+          $.LoadingOverlay("show");
+        },
+                complete: function() {
+          $.LoadingOverlay("hide", true);
         },
         success: function(data) {
-          $('#loading_tambah').loading('stop');
           notiftoast();
           notifKeranjang();
           search($('#cari_barang').val());
         },
-        complete: function() {
-          $("#modal_detail_penjualan").LoadingOverlay("hide", true);
-        }
+
       })
     }
 
@@ -642,8 +631,6 @@
           kode_barang: kode_barang,
           jumlah_penjualan: jumlah_penjualan,
         },
-        cache: false,
-        async: false,
         success: function(data) {}
       })
     }
@@ -655,8 +642,6 @@
         data: {
           id: id,
         },
-        cache: false,
-        async: false,
         success: function(data) {}
       })
     }
@@ -666,7 +651,6 @@
         url: "<?= base_url("manajemen_penjualan/purchaseordersales/get_sum_keranjang/"); ?>" + $('#no_order').text(),
         type: "post",
         dataType: "JSON",
-        async: false,
         success: function(data) {
           if (data.total_harga == null) {
             total = 0;
@@ -715,8 +699,6 @@
         data: {
           no_order: no_order,
         },
-        cache: false,
-        async: false,
         beforeSend: function() {
           $("#keranjang").LoadingOverlay("show");
         },
@@ -749,8 +731,6 @@
         data: {
           no_order: no_order,
         },
-        cache: false,
-        async: false,
         beforeSend: function() {
           $("#total_div").LoadingOverlay("show");
         },
@@ -779,11 +759,7 @@
         confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
         if (result.value) {
-          swal.fire(
-            'Deleted!',
-            'Data telah dihapus!',
-            'success'
-          )
+
           deleteData_keranjang(id);
         }
       });
@@ -793,11 +769,21 @@
       var no_order = $('#no_order').text();
       $.ajax({
         url: "<?= base_url('manajemen_penjualan/purchaseordersales/delete_data_keranjang/'); ?>" + id,
-        async: false,
+        beforeSend: function() {
+          $.LoadingOverlay("show");
+        },
+        complete: function() {
+          $.LoadingOverlay("hide");
+        },
         success: function(data) {
           push_total_perhitungan(no_order, 0, 0);
           notifKeranjang();
           notifTotalKeranjang();
+          swal.fire(
+            'Deleted!',
+            'Data telah dihapus!',
+            'success'
+          )
         }
       });
     }
@@ -811,8 +797,6 @@
           pajak: pajak,
           ongkir: ongkir,
         },
-        cache: false,
-        async: false,
         success: function(data) {
 
         }
@@ -823,7 +807,6 @@
 
       $.ajax({
         url: '<?= base_url("manajemen_penjualan/purchaseordersales/clear_keranjang_belanja/"); ?>' + no_order,
-        async: false,
         success: function(data) {
           console.log('harus nya ad sukses');
         }

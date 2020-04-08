@@ -17,7 +17,6 @@ class Model_Gaji extends CI_Model
         $this->db->select('master_gaji.id,master_gaji.nomor_referensi, master_gaji.total_pembayaran,master_gaji.status, master_gaji.keterangan, DATE_FORMAT(master_gaji.tanggal, "%d-%b-%y") as tanggal, master_user.nama as nama_admin,');
         $this->db->from('master_gaji');
         $this->db->join('master_user', 'master_user.username = master_gaji.user');
-        $this->db->where('user', $this->session->userdata['username']);
         return $this->db->get();
     }
 
@@ -64,13 +63,11 @@ class Model_Gaji extends CI_Model
         $output = array();
 
         foreach ($data as $value) {
-            $bonus = $this->bonus($post['nip']);
+            $bonus = $this->bonus($value['nip']);
             $value['bonus'] = $bonus;
             $value['total'] = $value['gaji_pokok'] + $value['uang_makan'] + $value['bonus'];
             $output[] = $value;
         }
-
-
 
         foreach ($output as $key => $value) {
             $data = [
@@ -87,12 +84,13 @@ class Model_Gaji extends CI_Model
         }
     }
 
-    function get_detail_master_gaji($no_ref)
+    function get_detail_master_gaji($no_ref, $jenis_pembayaran)
     {
         $this->db->select('master_pegawai.nama_lengkap,master_pegawai.jabatan, detail_gaji.id as idid, detail_gaji.*');
         $this->db->from('detail_gaji');
         $this->db->join('master_pegawai', 'master_pegawai.nip = detail_gaji.nip');
         $this->db->where('nomor_referensi', $no_ref);
+        $this->db->where('status_gaji', $jenis_pembayaran);
         $this->db->order_by('master_pegawai.nama_lengkap', 'ASC');
         return $this->db->get();
     }
@@ -105,6 +103,7 @@ class Model_Gaji extends CI_Model
         ];
         $this->db->where('nomor_referensi', $post['no_ref']);
         $this->db->update('master_gaji', $data);
+        return $post['no_ref'];
     }
 
     function bayar_detail($post)
@@ -123,10 +122,10 @@ class Model_Gaji extends CI_Model
     function bonus($nip)
     {
         // hitung umur bekerja
-        $this->db->select('*');
+        $this->db->select('master_pegawai.tanggal_masuk, master_user.role, ');
         $this->db->from('master_pegawai');
-        $this->db->where('nip', $nip);
-
+        $this->db->join('master_user','master_user.nip = master_pegawai.nip');
+        $this->db->where('master_pegawai.nip', $nip);
         $datapegawai = $this->db->get()->row_array();
 
         list($year, $month, $day) = explode("-", $datapegawai['tanggal_masuk']);
@@ -144,7 +143,6 @@ class Model_Gaji extends CI_Model
         $this->db->where('tanggal_transaksi', date('Y-m-d'));
         $output = $this->db->get()->row_array();
         $omzet = $output['total_penjualan'];
-
 
         $this->db->select('value');
         $this->db->from('master_setting');
@@ -165,13 +163,39 @@ class Model_Gaji extends CI_Model
         $bonus_junior = $data['value'];
 
 
-        if ($omzet > $threshold_bonus) {
-            if ($year_diff >= 4) {
-                return $bonus_senior;
+        // cek sales atau bukan..
+        if($datapegawai['role'] == '3'){
+            $bonus_sales = $this->bonus_sales($nip);
+            echo "cek";
+            return $bonus_sales;
+        }else{
+            if ($omzet > $threshold_bonus) {
+                if ($year_diff >= 4) {
+                    return $bonus_senior;
+                } else {
+                    return $bonus_junior;
+                }
             } else {
-                return $bonus_junior;
+                return 0;
             }
-        } else {
+        }
+    }
+
+    function bonus_sales($nip){
+        $bulan = date('m');
+        $tahun = date('Y');
+        $tanggal = $tahun . "-" . $bulan . "-" . 31;
+        $tanggalawal = $tahun . "-" . $bulan . "-" . 01;
+
+        $this->db->select('SUM(`total_insentif`) as total');
+        $this->db->from('master_insentif');
+        $this->db->where('nip', $nip);
+        $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggalawal)));
+        $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal)));
+        $data = $this->db->get()->row();
+        if($data->total !== null){
+            return $data->total;
+        }else{
             return 0;
         }
     }
@@ -180,6 +204,7 @@ class Model_Gaji extends CI_Model
     {
         $this->db->where('nomor_referensi', $no_ref);
         $this->db->delete('master_gaji');
+        return 'ok';
     }
 
     function ubah_gaji_pokok($post)

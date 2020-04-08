@@ -37,6 +37,7 @@
                                 <th>#</th>
                                 <th>Tanggal</th>
                                 <th>Nomor Faktur</th>
+                                <th>Total Penjualan</th>
                                 <th>Total Insentif</th>
                                 <th>Status</th>
                             </tr>

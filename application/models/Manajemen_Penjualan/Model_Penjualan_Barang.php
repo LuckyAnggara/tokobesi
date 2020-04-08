@@ -353,7 +353,7 @@ class Model_Penjualan_Barang extends CI_Model
             $this->db->insert('detail_piutang', $data);
             // update COH
             $nominal = $post['down_payment'];
-            // $this->modelCoh->transaksi_penjualan_kredit($this->session->userdata['username'], $nominal, $no_faktur);
+            $this->modelCoh->transaksi_penjualan_kredit($this->session->userdata['username'], $nominal, $no_faktur);
         }else{
             $this->db->select('grand_total');
             $this->db->from('master_penjualan');
@@ -362,7 +362,7 @@ class Model_Penjualan_Barang extends CI_Model
             $nominal = $data['grand_total'];
 
             // update COH
-            // $this->modelCoh->transaksi_penjualan_tunai($this->session->userdata['username'], $nominal, $no_faktur);
+            $this->modelCoh->transaksi_penjualan_tunai($this->session->userdata['username'], $nominal, $no_faktur);
         }
     }
 
@@ -564,7 +564,7 @@ class Model_Penjualan_Barang extends CI_Model
                     'nomor_faktur' => $post['nomor_faktur'],
                     'tanggal_transaksi' => date("Y-m-d H:i:s"),
                     'kode_barang' => $kode_barang,
-                    'qty' => $stok_update,
+                    'qty' => $qty_penjualan,
                     'sisa' => $stok_update,
                     'harga_pokok' => $saldo_awal['harga_awal'],
                     'harga_jual' => $post['harga_jual'],
@@ -585,7 +585,7 @@ class Model_Penjualan_Barang extends CI_Model
                         'tanggal_transaksi' => date("Y-m-d H:i:s"),
                         'kode_barang' => $kode_barang,
                         'qty' => $saldo_awal['saldo_awal'],
-                        'sisa' => $stok_update,
+                        'sisa' => 0,
                         'harga_pokok' => $saldo_awal['harga_awal'],
                         'harga_jual' => $post['harga_jual'],
                         'keterangan' => $detail_barang['metode_hpp'],
@@ -694,7 +694,7 @@ class Model_Penjualan_Barang extends CI_Model
         $this->db->where('no_order_penjualan', $post['no_order']);
         $this->db->update('master_penjualan', $data);
 
-        return "sukses";
+        return $post['no_pol'];
     }
 
     function tambah_detail_persediaan($kode_barang, $stok_update, $harga, $post, $jenis){

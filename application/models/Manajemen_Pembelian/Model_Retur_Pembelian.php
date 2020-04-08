@@ -42,6 +42,7 @@ class Model_Retur_Pembelian extends CI_Model
             "retur_diskon" => $post['retur_diskon'],
             "retur_pajak" => $post['retur_pajak'],
             "retur_grand_total" => $post['retur_grand_total'],
+            'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
             'user' => $this->session->userdata['username'],
         ];
         $this->db->insert('master_retur_pembelian', $data);
@@ -59,6 +60,7 @@ class Model_Retur_Pembelian extends CI_Model
             "harga_retur" => $this->normal($post['harga']),
             "diskon" => $post['diskon'],
             "total_retur" => $post['retur_total'],
+            'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
             'user' => $this->session->userdata['username'],
         ];
         $this->db->insert('detail_retur_pembelian', $data);
@@ -115,8 +117,30 @@ class Model_Retur_Pembelian extends CI_Model
 
     function delete_data($nomor_transaksi)
     {
+
+        $this->db->select('*');
+        $this->db->from('detail_retur_pembelian');
+        $this->db->where('nomor_transaksi', $nomor_transaksi);
+        $output = $this->db->get()->result_array();
+
+        foreach ($output as $key => $value) {
+            $this->db->select('*');
+            $this->db->from('detail_pembelian');
+            $this->db->where('id', $value['id_detail_pembelian']);
+            $data = $this->db->get()->row_array();
+            $saldo = $data['saldo'];
+
+            $update = [
+                'saldo' => $saldo + $value['jumlah_retur']
+            ];
+            $this->db->where('id', $value['id_detail_pembelian']);
+            $this->db->update('detail_pembelian', $update);
+        }
+
         $this->db->where('nomor_transaksi', $nomor_transaksi);
         $this->db->delete('master_retur_pembelian');
+
+        return "ok";
     }
 
 

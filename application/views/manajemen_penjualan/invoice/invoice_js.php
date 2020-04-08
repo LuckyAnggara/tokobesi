@@ -13,7 +13,7 @@
             if (result.value) {
                 konfirm(no_order);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                proses_surat_jalan('', no_order)
+                window.open("<?= base_url('laporan/invoice/tunai/'); ?>" + no_order);
             }
         })
     })
@@ -55,16 +55,19 @@
                 no_pol: no_pol,
                 no_order: no_order,
             },
-            async: false,
+            dataType: 'json',
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            complete: function() {
+                $.LoadingOverlay("hide", true);
+            },
             success: function(data) {
-                if (data == "sukses") {
-                    window.location.href = "<?= base_url('laporan/invoice/tunai/'); ?>" + no_order
+                if (data !== "") {
+                    window.open("<?= base_url('laporan/invoice/no_polisi/'); ?>" + no_order);
+                    window.open("<?= base_url('laporan/invoice/tunai/'); ?>" + no_order);
                 } else {
-                    Swal.fire({
-                        title: 'Oopss!',
-                        text: 'Ulangi',
-                        icon: 'error',
-                    })
+
                 }
             },
         });

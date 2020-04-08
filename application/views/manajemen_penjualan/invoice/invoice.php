@@ -187,7 +187,7 @@
                                                              <th style="width: 25%">Total Harga</th>
                                                          </tr>
                                                      </thead>
-                                                     <tbody>
+                                                     <tbody">
                                                          <?php foreach ($detail_order as $key => $value) : ?>
                                                              <tr>
                                                                  <td><?php
@@ -195,13 +195,13 @@
                                                                  <td><?= $value['kode_barang']; ?></td>
                                                                  <td><?= $value['nama_barang']; ?></td>
                                                                  <td><?= $value['kode_satuan']; ?></td>
-                                                                 <td><?= rupiah($value['harga_jual']); ?></td>
-                                                                 <td><?= $value['jumlah_penjualan']; ?></td>
-                                                                 <td><?= rupiah($value['diskon']); ?></td>
-                                                                 <td><?= rupiah($value['total_harga']); ?></td>
+                                                                 <td class="text-right"><?= rupiah($value['harga_jual']); ?></td>
+                                                                 <td class="text-right"><?= $value['jumlah_penjualan']; ?></td>
+                                                                 <td class="text-right"><?= rupiah($value['diskon']); ?></td>
+                                                                 <td class="text-right"><?= rupiah($value['total_harga']); ?></td>
                                                              </tr>
                                                          <?php endforeach; ?>
-                                                     </tbody>
+                                                     </tbody">
                                                  </table>
                                              </div>
                                          </div>
@@ -284,4 +284,3 @@
                      </div> <!-- container -->
                  </footer>
              </div> <!-- end container -->
-

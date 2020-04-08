@@ -3,6 +3,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Model_Retur_Penjualan extends CI_Model
 {
+    function __construct()
+    {
+        parent::__construct();
+        $this->load->model('Setting/Model_Faktur', 'modelFaktur');
+    }
+
     function get_data($post)
     {
         $no_faktur = $post['nomor_faktur'];
@@ -38,7 +44,6 @@ class Model_Retur_Penjualan extends CI_Model
     function tambah_data_master($post)
     {
         $cekDouble = $this->cek_double($post['nomor_faktur']);
-
         if ($cekDouble > 0) {
             $this->db->where('nomor_faktur', 'RTR-' . $post['nomor_faktur']);
             $this->db->delete('master_retur_penjualan');
@@ -55,6 +60,18 @@ class Model_Retur_Penjualan extends CI_Model
             'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
         ];
         $this->db->insert('master_retur_penjualan', $data);
+        $nominal = $post['retur_grand_total'];
+
+
+        $this->db->select('no_faktur');
+        $this->db->from('master_piutang');
+        $this->db->where('no_faktur', $post['nomor_faktur']);
+        $cekKredit = $this->db->get()->num_rows();
+        if ($cekKredit < 1) {
+            $this->modelCoh->retur_penjualan($this->session->userdata['username'], $nominal, $post['nomor_faktur']);
+        }else{
+            return 'sukses';
+        }
     }
 
     function tambah_data_detail($post)

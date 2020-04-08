@@ -42,7 +42,7 @@ function rupiah($angka)
                                 <div class="input-group">
                                     <input id="saldo_akhir" autocomplete="off" name="saldo_akhir" type="text" class="form-control" readonly value="<?= rupiah($detail_data['saldo_akhir']); ?>">
                                     <div class=" input-group-append">
-                                        <span class="input-group-text btn-success"><i class="ti-money"></i></span>
+                                        <span class="input-group-text btn-inverse"><i class="ti-money"></i></span>
                                     </div>
                                 </div><!-- input-group -->
                             </div>

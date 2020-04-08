@@ -47,9 +47,6 @@ class Kasir extends CI_Controller
 
 		$laporan_kasir = $this->modelDashboardKasir->laporan_kasir($kasir);
 		
-		// $output = json_encode($data);
-		// echo $output;
-
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         
@@ -57,20 +54,21 @@ class Kasir extends CI_Controller
         // SET JUDUL
 
         $sheet->mergeCells('A1:D1'); // merge
-        $sheet->mergeCells('A2:B2'); // merge
         $sheet->mergeCells('A3:B3'); // merge
-        $sheet->setCellValue('A1', 'LAPORAN PENJUALAN');
+        $sheet->mergeCells('A3:B3'); // merge
+        $sheet->setCellValue('A1', 'LAPORAN KASIR');
         $sheet->setCellValue('A2', 'TANGGAL ');
         $sheet->setCellValue('A3', 'NAMA KASIR ');
         $sheet->setCellValue('C2', ': '. $this->tgl_indo(date("Y-m-d-D", strtotime($tanggal))));
         $sheet->setCellValue('C3', ': '. $data_kasir['nama']);
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
 
         // HEADER ISI
-        $sheet->setCellValue('A6', 'NO');
-        $sheet->setCellValue('B6', 'NOMOR FAKTUR');
-        $sheet->setCellValue('C6', 'NAMA PELANGGAN');
-        $sheet->setCellValue('D6', 'TOTAL PENJUALAN');
-        $sheet->setCellValue('E6', 'STATUS');
+        $sheet->setCellValue('A5', 'NO');
+        $sheet->setCellValue('B5', 'NOMOR FAKTUR');
+        $sheet->setCellValue('C5', 'NAMA PELANGGAN');
+        $sheet->setCellValue('D5', 'TOTAL PENJUALAN');
+        $sheet->setCellValue('E5', 'STATUS');
 
         $sheet->getColumnDimension('A')->setAutoSize(true);
         $sheet->getColumnDimension('B')->setAutoSize(true);
@@ -79,7 +77,7 @@ class Kasir extends CI_Controller
         $sheet->getColumnDimension('E')->setAutoSize(true);
 
 
-        $kolom = 7;
+        $kolom = 6;
         $nomor = 1;
 
         $styleArray = [
@@ -98,7 +96,8 @@ class Kasir extends CI_Controller
             ],
         ]
         ];
-
+        $spreadsheet->getActiveSheet()->getStyle('D')->getNumberFormat()
+            ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         foreach ($output as $key => $value) {
 
         $sheet->setCellValue('A' . $kolom, $nomor);
@@ -107,12 +106,12 @@ class Kasir extends CI_Controller
         $sheet->setCellValue('D' . $kolom, $value['total_penjualan']);
         $sheet->setCellValue('E' . $kolom, $value['kredit']);
 
-        $spreadsheet->getActiveSheet()->getStyle('A6' . ':E6')->applyFromArray($styleArray);
-        $spreadsheet->getActiveSheet()->getStyle('A6' . ':E' . $kolom)->applyFromArray($styleArray);
-        $spreadsheet->getActiveSheet()->getStyle('B6' . ':B' . $kolom)->applyFromArray($styleArray);
-        $spreadsheet->getActiveSheet()->getStyle('B6' . ':B' . $kolom)->applyFromArray($styleArray);
-        $spreadsheet->getActiveSheet()->getStyle('D6' . ':D' . $kolom)->applyFromArray($styleArray);
-        $spreadsheet->getActiveSheet()->getStyle('E6' . ':E' . $kolom)->applyFromArray($styleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A5' . ':E5')->applyFromArray($styleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A5' . ':E' . $kolom)->applyFromArray($styleArray);
+        $spreadsheet->getActiveSheet()->getStyle('B5' . ':B' . $kolom)->applyFromArray($styleArray);
+        $spreadsheet->getActiveSheet()->getStyle('B5' . ':B' . $kolom)->applyFromArray($styleArray);
+        $spreadsheet->getActiveSheet()->getStyle('D5' . ':D' . $kolom)->applyFromArray($styleArray);
+        $spreadsheet->getActiveSheet()->getStyle('E5' . ':E' . $kolom)->applyFromArray($styleArray);
 
         $kolom++;
         $nomor++;

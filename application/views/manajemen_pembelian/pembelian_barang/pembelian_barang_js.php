@@ -182,7 +182,6 @@
         async: false,
         url: '<?= base_url("manajemen_pembelian/pembelianbarang/clear_keranjang_pembelian/"); ?>' + sessionStorage.getItem("no_order_pembelian"),
       });
-      console.log('unload');
     });
 
     $("#select_nama_supplier").select2({

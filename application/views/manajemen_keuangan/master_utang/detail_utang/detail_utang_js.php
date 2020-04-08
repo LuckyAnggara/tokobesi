@@ -193,6 +193,7 @@
                         var user = '<?php echo $this->session->userdata['username']; ?>'
 
                         var dp = '<span class="badge badge-inverse"> DP </span>'
+                        var retur = '<span class="badge badge-inverse"> RETUR </span>'
                         var upload = '<a type="button" onClick = "upload_lampiran(\'' + data.id + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-upload" ></i> </a>';
                         var download = '<a type="button" onClick = "download_lampiran(\'' + data.bukti + '\')" class="btn btn-icon waves-effect waves-light btn-inverse btn-sm"><i class="fa fa-download" ></i> </a>';
                         if (data.bukti == "") {
@@ -203,6 +204,8 @@
                             }
                         } else if (data.bukti == "1") {
                             return dp;
+                        } else if (data.bukti == 'retur') {
+                            return retur;
                         } else {
                             return download;
                         }

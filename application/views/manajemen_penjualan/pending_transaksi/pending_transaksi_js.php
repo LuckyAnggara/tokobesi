@@ -27,6 +27,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         init_table();
+
         function init_table() {
             $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                 return {
@@ -132,11 +133,6 @@
         }).then((result) => {
             if (result.value) {
                 deleteData(id);
-                swal.fire(
-                    'Deleted!',
-                    'Data telah dihapus!',
-                    'success'
-                )
             }
         });
     }
@@ -144,9 +140,13 @@
     function deleteData(id) {
         $.ajax({
             url: "<?= base_url('manajemen_penjualan/pendingtransaksi/delete_data/'); ?>" + id,
-            async: false,
             success: function(data) {
                 $('#datatable-pending-transaksi').DataTable().ajax.reload();
+                swal.fire(
+                    'Deleted!',
+                    'Data telah dihapus!',
+                    'success'
+                )
             }
         });
     }

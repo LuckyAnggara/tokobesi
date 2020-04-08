@@ -40,8 +40,6 @@
   <script>
     $(document).ready(function() {
       $(window).bind('beforeunload', function() {
-
-
         $.ajax({
           url: '<?= base_url("manajemen_penjualan/penjualanbarang/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
           success: function(data) {
@@ -372,7 +370,12 @@
           url: '<?= base_url("manajemen_penjualan/penjualanbarang/get_data_pelanggan/"); ?>' + id_pelanggan.val(),
           type: "POST",
           dataType: "JSON",
-          async: false,
+          beforeSend: function() {
+            $("#div_pelanggan").LoadingOverlay("show");
+          },
+          complete: function() {
+            $("#div_pelanggan").LoadingOverlay("hide");
+          },
           success: function(data) {
             if (data !== null) {
               nama_pelanggan.val(data.nama_pelanggan);
@@ -435,7 +438,6 @@
           url: '<?= base_url("manajemen_penjualan/penjualanbarang/get_data_barang/"); ?>' + kata_kunci,
           type: "POST",
           dataType: "JSON",
-          async: false,
           beforeSend: function() {
             $("#result_page").LoadingOverlay("show");
           },
@@ -619,7 +621,6 @@
           harga_jual: harga_jual,
           diskon: diskon
         },
-        cache: false,
         beforeSend: function() {
           $.LoadingOverlay("show");
         },
@@ -645,8 +646,6 @@
           kode_barang: kode_barang,
           jumlah_penjualan: jumlah_penjualan,
         },
-        cache: false,
-        async: false,
         success: function(data) {}
       })
     }
@@ -658,8 +657,6 @@
         data: {
           id: id,
         },
-        cache: false,
-        async: false,
         success: function(data) {}
       })
     }
@@ -669,7 +666,6 @@
         url: "<?= base_url("manajemen_penjualan/penjualanbarang/get_sum_keranjang/"); ?>" + $('#no_order').text(),
         type: "post",
         dataType: "JSON",
-        async: false,
         success: function(data) {
           if (data.total_harga == null) {
             total = 0;
@@ -846,7 +842,12 @@
     function deleteData_keranjang(id) {
       $.ajax({
         url: "<?= base_url('manajemen_penjualan/penjualanbarang/delete_data_keranjang/'); ?>" + id,
-        async: false,
+        beforeSend: function() {
+          $.LoadingOverlay("show");
+        },
+        complete: function() {
+          $.LoadingOverlay("hide");
+        },
         success: function(data) {
           $('#datatable-keranjang-penjualan').DataTable().ajax.reload();
           total_harga_keranjang();
@@ -919,7 +920,6 @@
         url: '<?= base_url("manajemen_penjualan/penjualanbarang/get_total_perhitungan/"); ?>' + no_order,
         type: "POST",
         dataType: "JSON",
-        async: false,
         success: function(data) {
           // matematika
           // total order - diskon
@@ -1382,7 +1382,6 @@
           jenis_harga: jenis_harga
         },
         cache: false,
-        async: false,
         success: function(data) {
           $('#harga_jual').val(data);
           $('#dummy_harga_jual').val(formatRupiah(data, 'Rp.'));

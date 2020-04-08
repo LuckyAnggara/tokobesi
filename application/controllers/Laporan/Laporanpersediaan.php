@@ -99,17 +99,18 @@ class Laporanpersediaan extends CI_Controller
         $jenis_data = $post['data'];
         
         switch ($jenis_data) {
-            case '1':
-                $data_persediaan = $this->modelLapPersediaan->data_persediaan($post);
-                // $output = json_encode($data_persediaan);
-                // echo $output;
-                $this->laporan_data_barang_harga($post, $data_persediaan);
-                break;
             case '0':
                 $data_persediaan = $this->modelLapPersediaan->data_persediaan($post);
-                $output = json_encode($data_persediaan);
-                echo $output;
+                $this->laporan_data_per_barang($post, $data_persediaan);
+                // $data_persediaan = $this->modelLapPersediaan->data_persediaan($post);
+                // $output = json_encode($data_persediaan);
+                // echo $output;
                 break;
+            case '1':
+                $data_persediaan = $this->modelLapPersediaan->data_persediaan($post);
+                $this->laporan_data_barang_harga($post, $data_persediaan);
+                break;
+           
         }
     }
 
@@ -160,7 +161,7 @@ class Laporanpersediaan extends CI_Controller
 
         $kolom = 7;
         foreach ($data_persediaan as $key => $value) {
-            $spreadsheet->getActiveSheet()->getStyle('D:F')->getNumberFormat()
+            $spreadsheet->getActiveSheet()->getStyle('C:F')->getNumberFormat()
                 ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
 
             $sheet->mergeCells('A' . $kolom . ':B' . $kolom); // merge
@@ -289,6 +290,108 @@ class Laporanpersediaan extends CI_Controller
         $writer = new Xlsx($spreadsheet);
 
         $filename = 'laporan persediaan ' . $post['tanggal'];
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        // $output = json_encode($post);
+        // echo $this->tgl_indo(date("Y-m-d-D", strtotime($post['tanggal'])));
+    }
+
+    public function laporan_data_per_barang($post, $data_persediaan)
+    {
+        $data_perusahaan = $this->modelSetting->get_data_perusahaan();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // SET HEADER
+        // SET JUDUL
+
+        $sheet->mergeCells('A1:E1'); // merge
+        $sheet->mergeCells('A2:E2'); // merge
+        $sheet->mergeCells('A5:E5'); // merge
+        $sheet->setCellValue('A1', 'LAPORAN PERSEDIAAN');
+        $sheet->setCellValue('A2', $data_perusahaan['nama_perusahaan']);
+        $sheet->setCellValue('A5', 'DATA PER TANGGAL : ' . $this->tgl_indo(date("Y-m-d-D", strtotime($post['tanggal']))));
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('A2')->getAlignment()->setHorizontal('center');
+
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+        $sheet->getColumnDimension('E')->setAutoSize(true);
+
+
+        $styleArray = [
+            'borders' => [
+                'top' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'bottom' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'right' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'left' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ]
+        ];
+
+        $kolom = 7;
+        $nomor = 1;
+        $spreadsheet->getActiveSheet()->getStyle('C')->getNumberFormat()
+            ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+
+        $sheet->setCellValue('A' . $kolom, 'NO');
+        $sheet->setCellValue('B' . $kolom, 'KODE BARANG');
+        $sheet->setCellValue('C' . $kolom, 'NAMA BARANG');
+        $sheet->setCellValue('D' . $kolom, 'SATUAN');
+        $sheet->setCellValue('E' . $kolom, 'JUMLAH PERSEDIAAN');
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':E' . $kolom)->applyFromArray($styleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':A' . $kolom)->applyFromArray($styleArray);
+        $spreadsheet->getActiveSheet()->getStyle('B' . $kolom  . ':B' . $kolom)->applyFromArray($styleArray);
+        $spreadsheet->getActiveSheet()->getStyle('C' . $kolom  . ':C' . $kolom)->applyFromArray($styleArray);
+        $spreadsheet->getActiveSheet()->getStyle('D' . $kolom  . ':D' . $kolom)->applyFromArray($styleArray);
+        $spreadsheet->getActiveSheet()->getStyle('E' . $kolom  . ':E' . $kolom)->applyFromArray($styleArray);
+
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':E' . $kolom)
+            ->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':E' . $kolom)
+            ->getFill()->getStartColor()->setARGB('FF16F900');
+        $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':E' . $kolom)
+            ->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK);
+        
+        $kolom++;
+
+        foreach ($data_persediaan as $key => $value) {
+
+            $sheet->setCellValue('A' . $kolom, $nomor);
+            $sheet->setCellValue('B' . $kolom, $value['kode_barang']);
+            $sheet->setCellValue('C' . $kolom, $value['nama_barang']);
+            $sheet->setCellValue('D' . $kolom, $value['nama_satuan']);
+            $sheet->setCellValue('E' . $kolom, $value['total_persediaan_akhir']);
+
+            $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':E' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('A' . $kolom . ':A' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('B' . $kolom  . ':B' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('C' . $kolom  . ':C' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('D' . $kolom  . ':D' . $kolom)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('E' . $kolom  . ':E' . $kolom)->applyFromArray($styleArray);
+
+                $kolom++;
+                $nomor++;
+            }
+
+
+        $writer = new Xlsx($spreadsheet);
+
+        $filename = 'laporan persediaan per barang ' . $post['tanggal'];
 
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');

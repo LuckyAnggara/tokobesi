@@ -25,7 +25,7 @@ class Model_Daftar_Transaksi_Pembelian extends CI_Model
         }
         $this->db->where('tanggal_transaksi >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
         $this->db->where('tanggal_transaksi <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
-        $this->db->order_by('tanggal_transaksi', 'DESC');
+        $this->db->order_by('master_pembelian.tanggal_transaksi', 'DESC');
         $output = $this->db->get();
         return $output;
     }
@@ -42,8 +42,30 @@ class Model_Daftar_Transaksi_Pembelian extends CI_Model
 
     function delete_data($nomor_transaksi)
     {
+        $this->db->select('*');
+        $this->db->from('detail_pembelian');
         $this->db->where('nomor_transaksi', $nomor_transaksi);
-        $this->db->delete('master_pembelian');
+        $data = $this->db->get()->result_array();
+
+        $kurang = 0;
+        
+        foreach ($data as $key => $value) {
+            
+            if($value['jumlah_pembelian'] != $value['saldo']){
+                $kurang++;
+            }
+        }
+
+        if($kurang == 0){
+            $this->db->where('nomor_transaksi', $nomor_transaksi);
+            $this->db->delete('master_pembelian');
+            $this->db->where('nomor_transaksi', $nomor_transaksi);
+            $this->db->delete('master_utang');
+            return 'ok';
+        }else{
+            return 'kurang';
+        }
+
     }
 
     function _uploadNewLampiran()

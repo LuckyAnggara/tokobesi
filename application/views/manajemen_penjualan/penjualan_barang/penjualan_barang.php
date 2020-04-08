@@ -9,7 +9,7 @@
     <!-- end page title end breadcrumb -->
     <div class="row">
         <div class="col-sm-4">
-            <div class="card-box">
+            <div class="card-box" id="div_pelanggan">
                 <div class="form-group row">
                     <h4 class="m-t-0 header-title">Data Pelanggan</h4>
                 </div>

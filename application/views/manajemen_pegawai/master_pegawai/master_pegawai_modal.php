@@ -95,6 +95,15 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
+                                        <label class="col-3 col-form-label">Pembayaran Gaji</label>
+                                        <div class="col-9">
+                                            <select name="status_gaji" id="status_gaji" class="select2 form-control">
+                                                <option value="0">Harian</option>
+                                                <option value="1">Bulanan</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <label class="col-3 col-form-label">Gaji Pokok</label>
                                         <div class="col-9">
                                             <input name="gaji_pokok" id="gaji_pokok" type="text" class="form-control" required>

@@ -311,9 +311,14 @@
             url: "<?= Base_url('manajemen_pegawai/masterpegawai/tambahdatapegawai'); ?>",
             type: "post",
             data: data,
-            async: false,
             processData: false,
             contentType: false,
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $.LoadingOverlay("hide");
+            },
             success: function(data) {
                 if (data == "duplikat") {
                     Swal.fire(
@@ -350,7 +355,6 @@
             data: {
                 nip: nip
             },
-            async: false,
             beforeSend: function(data) {
                 $.LoadingOverlay("show");
             },
@@ -370,7 +374,6 @@
             data: {
                 nip: nip
             },
-            async: false,
             beforeSend: function(data) {
                 $.LoadingOverlay("show");
             },
@@ -406,9 +409,14 @@
             url: "<?= Base_url('manajemen_pegawai/masterpegawai/resetpassword'); ?>",
             type: "post",
             data: data,
-            async: false,
             processData: false,
             contentType: false,
+            beforeSend: function(data) {
+                $.LoadingOverlay("show");
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            },
             success: function(data) {
                 swal.fire(
                     'Reset!',
@@ -449,13 +457,11 @@
             data: {
                 username: username
             },
-            async: false,
             beforeSend: function(data) {
                 $.LoadingOverlay("show");
             },
             success: function(data) {
                 $('#datatable-master-pegawai').DataTable().ajax.reload();
-
             },
             complete: function() {
                 $.LoadingOverlay("hide");

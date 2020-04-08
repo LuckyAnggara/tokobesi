@@ -336,6 +336,7 @@
         var edit_id = $('#edit_id');
         var edit_kode_barang = $('#edit_kode_barang');
         var edit_jumlah = $('#edit_jumlah');
+        var edit_saldo = $('#edit_saldo');
         var edit_harga = $('#edit_harga');
         $.ajax({
             url: "<?= base_url('manajemen_persediaan/saldoawalpersediaan/view_edit_data/'); ?>" + id,
@@ -346,6 +347,7 @@
                 edit_id.val(data.id);
                 edit_kode_barang.val(data.kode_barang + ' - ' + data.nama_barang);
                 edit_jumlah.val(data.qty_awal);
+                edit_saldo.val(data.saldo_awal);
                 edit_harga.val(formatRupiah(data.harga_awal.toString(), 'Rp.'));
                 $('#edit_modal').modal('show');
             }

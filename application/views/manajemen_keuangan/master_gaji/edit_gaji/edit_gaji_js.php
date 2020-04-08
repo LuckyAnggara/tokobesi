@@ -57,9 +57,7 @@
         };
 
         //Init Datatabel Master Stok Persediaan 
-        var table = $('#datatable-daftar-gaji').DataTable({
-            "scrollY": '50vh',
-            "scrollCollapse": true,
+        var table = $('#datatable-daftar-gaji-harian').DataTable({
             "destroy": true,
             "bInfo": false,
             "paging": false,
@@ -71,7 +69,6 @@
             // "buttons": ['copy', 'excel', 'pdf', 'print'],
             // "dom": 'Bfrtip',
             "searching": false,
-            "fixedColumns": true,
             "processing": true,
             "serverSide": false,
             "ordering": true,
@@ -81,7 +78,112 @@
                 blurable: true
             },
             "ajax": {
-                "url": '<?= base_url("manajemen_keuangan/mastergaji/get_detail_master_gaji/"); ?>',
+                "url": '<?= base_url("manajemen_keuangan/mastergaji/get_detail_master_gaji_harian/"); ?>',
+                "data": {
+                    no_ref: no_ref
+                },
+                "type": "POST",
+            },
+            "columnDefs": [{
+                data: "nip",
+                orderable: false,
+                className: 'select-checkbox checkbox-danger',
+                width: "5%",
+                targets: 0,
+                render: function(data, type, full, meta) {
+                    return "";
+                }
+            }, {
+                title: 'Nama Pegawai',
+                data: "nama_lengkap",
+                targets: 1,
+                width: 200,
+                render: function(data, type, full, meta) {
+                    return data;
+                }
+            }, {
+                title: 'Jabatan',
+                data: "jabatan",
+                targets: 2,
+                width: 50,
+                render: function(data, type, full, meta) {
+                    return data;
+                }
+            }, {
+                title: 'Gaji Pokok',
+                data: {
+                    "id": "id",
+                    "gaji_pokok": "gaji_pokok"
+                },
+                targets: 3,
+                width: 50,
+                render: function(data, type, full, meta) {
+                    var angka = formatRupiah(data.gaji_pokok.toString(), 'Rp.');
+                    var display = '<a class="btn" onClick="gaji_pokok_modal(\'' + data.id + '\')"><span>' + angka + '</span></a>';
+                    return display;
+                }
+            }, {
+                title: 'Uang Makan',
+                data: {
+                    "id": "id",
+                    "uang_makan": "uang_makan"
+                },
+                targets: 4,
+                width: 50,
+                render: function(data, type, full, meta) {
+                    var angka = formatRupiah(data.uang_makan.toString(), 'Rp.');
+                    var display = '<a class="btn" onClick="uang_makan_modal(\'' + data.id + '\')"><span>' + angka + '</span></a>';
+                    return display;
+                }
+            }, {
+                title: 'Bonus',
+                data: {
+                    "id": "id",
+                    "bonus": "bonus"
+                },
+                targets: 5,
+                width: 50,
+                render: function(data, type, full, meta) {
+                    var angka = formatRupiah(data.bonus.toString(), 'Rp.');
+                    var display = '<a class="btn" onClick="bonus_modal(\'' + data.id + '\')"><span>' + angka + '</span></a>';
+                    return display;
+                }
+            }, {
+                title: 'Total',
+                data: "total",
+                targets: 6,
+                width: 50,
+                render: function(data, type, full, meta) {
+                    var angka = formatRupiah(data.toString(), 'Rp.');
+                    var display = '<b>' + angka + '</b>';
+                    return display;
+                }
+            }, ],
+
+        });
+
+        var table = $('#datatable-daftar-gaji-bulanan').DataTable({
+            "destroy": true,
+            "bInfo": false,
+            "paging": false,
+            "lengthChange": false,
+            "oLanguage": {
+                "sProcessing": "Sabar yah...",
+                "sZeroRecords": "Tidak ada Data..."
+            },
+            // "buttons": ['copy', 'excel', 'pdf', 'print'],
+            // "dom": 'Bfrtip',
+            "searching": false,
+            "processing": true,
+            "serverSide": false,
+            "ordering": true,
+            select: {
+                style: 'multi+shift',
+                selector: 'td:first-child',
+                blurable: true
+            },
+            "ajax": {
+                "url": '<?= base_url("manajemen_keuangan/mastergaji/get_detail_master_gaji_bulanan/"); ?>',
                 "data": {
                     no_ref: no_ref
                 },
@@ -167,8 +269,47 @@
     }
 
 
-    $('#confirm').on('click', function() {
-        var table = $('#datatable-daftar-gaji').DataTable();
+    $('#confirm_harian').on('click', function() {
+        var table = $('#datatable-daftar-gaji-harian').DataTable();
+        var data = table.rows('.selected').data();
+        if (data.length > 0) {
+            var no_ref = $('#nomor_referensi').val();
+            var total_pembayaran = 0;
+            var id = {};
+            var output = [];
+            $.each(data, function(index, item) {
+                total_pembayaran += parseInt(item.total)
+                output.push(item.id);
+                console.log(item.id);
+            });
+            $('#select_row').text(data.length);
+            $('#jumlah_pembayaran').val(formatRupiah(total_pembayaran.toString(), 'Rp.'))
+            console.log(output);
+            Swal.fire({
+                title: formatRupiah(total_pembayaran.toString(), 'Rp.'),
+                text: 'Bayarkan ?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Bayar!'
+            }).then((result) => {
+                if (result.value) {
+                    proses_bayar(output, no_ref, total_pembayaran)
+                }
+            })
+        } else {
+            Swal.fire(
+                'Oopps!!',
+                'Belum ada data yang di Pilih',
+                'error'
+            )
+        }
+
+    })
+
+    $('#confirm_bulanan').on('click', function() {
+        var table = $('#datatable-daftar-gaji-harian-bulanan').DataTable();
         var data = table.rows('.selected').data();
         if (data.length > 0) {
             var no_ref = $('#nomor_referensi').val();
@@ -221,7 +362,6 @@
                 keterangan: ket,
             },
             dataType: "JSON",
-            async: false,
             beforeSend: function() {
                 $.LoadingOverlay("show");
             },
@@ -245,17 +385,31 @@
                 $.LoadingOverlay("show");
             },
             success: function(data) {
-                $('.btn').attr('hidden', true);
-                setTimeout(function() {
-                    window.location.href = "<?= base_url('manajemen_keuangan/mastergaji/detail_data/'); ?>" + no_ref
-                }, 3000);
-                Swal.fire(
-                    'Terbayarkan !',
-                    '',
-                    'success'
-                ).then((result) => {
-                    window.location.href = "<?= base_url('manajemen_keuangan/mastergaji/detail_data/'); ?>" + no_ref
-                });
+                if (data == 'kurang') {
+                    Swal.fire(
+                        'Oppss!',
+                        'Dana Kurang!',
+                        'error'
+                    )
+                } else if (data == 'ok') {
+                    $('.btn').attr('hidden', true);
+                    setTimeout(function() {
+                        window.location.href = "<?= base_url('manajemen_keuangan/mastergaji/detail_data/'); ?>" + no_ref
+                    }, 3000);
+                    Swal.fire(
+                        'Terbayarkan !',
+                        '',
+                        'success'
+                    ).then((result) => {
+                        window.location.href = "<?= base_url('manajemen_keuangan/mastergaji/detail_data/'); ?>" + no_ref
+                    });
+                } else {
+                    Swal.fire(
+                        'Oppss!',
+                        'Ada kesalahan silahkan ulangi!',
+                        'error'
+                    )
+                }
             },
             complete: function() {
                 $.LoadingOverlay("hide");
@@ -270,7 +424,8 @@
         var tanggal = $('#tanggal');
         var ket = $('#keterangan');
         $('#button_data_div').attr('hidden', false);
-        $('#confirm').attr('hidden', false);
+        $('#confirm_harian').attr('hidden', false);
+        $('#confirm_bulanan').attr('hidden', false);
         no_ref.attr('readonly', true);
         tanggal.attr('readonly', true);
         ket.attr('readonly', true);

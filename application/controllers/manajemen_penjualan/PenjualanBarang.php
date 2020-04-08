@@ -44,14 +44,14 @@ class Penjualanbarang extends CI_Controller
 
     public function index()
     {
-        if ($this->session->userdata('role') !== "1") {
+        if ($this->session->userdata('role') !== "5") {
             redirect(base_url("dashboard"));
         } else {
             $cek_status = $this->modelCoh->cek_ready_kasir();
             $data['menu'] = $this->modelSetting->data_menu();
             $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
             $data['css'] = 'manajemen_penjualan/penjualan_barang/penjualan_barang_css';
-            // if($cek_status > 0){
+            if($cek_status > 0){
                 $this->init_no_order();
                 $data['no_order'] = $this->session->userdata('no_order_dummy');
                 $this->load->view('template/template_header', $data);
@@ -63,15 +63,15 @@ class Penjualanbarang extends CI_Controller
                 $this->load->view('template/template_js');
                 $this->load->view('manajemen_penjualan/penjualan_barang/penjualan_barang_js');
                 $this->load->view('template/template_app_js');
-            // }else{
-            //     $this->load->view('template/template_header', $data);
-            //     $this->load->view('template/template_menu');
-            //     $this->load->view('template/template_lock');
-            //     $this->load->view('template/template_right');
-            //     $this->load->view('template/template_footer');
-            //     $this->load->view('template/template_js');
-            //     $this->load->view('template/template_app_js');
-            // }
+            }else{
+                $this->load->view('template/template_header', $data);
+                $this->load->view('template/template_menu');
+                $this->load->view('template/template_lock');
+                $this->load->view('template/template_right');
+                $this->load->view('template/template_footer');
+                $this->load->view('template/template_js');
+                $this->load->view('template/template_app_js');
+            }
         }
     }
 
@@ -258,10 +258,9 @@ class Penjualanbarang extends CI_Controller
                 $this->load->view('template/template_right');
                 $this->load->view('template/template_footer');
                 $this->load->view('template/template_js');
-
+                $this->load->view('manajemen_penjualan/invoice/invoice_kredit_js');
                 $this->load->view('template/template_app_js');
             } else {
-
                 $this->load->view('template/template_header', $data);
                 $this->load->view('template/template_menu');
                 $this->load->view('manajemen_penjualan/invoice/invoice', $data);
@@ -338,6 +337,7 @@ class Penjualanbarang extends CI_Controller
     function surat_jalan()
     {
         $post = $this->input->post();
-        echo $this->modelPenjualan->surat_jalan($post);
+        $data = $this->modelPenjualan->surat_jalan($post);
+        echo $data;
     }
 }

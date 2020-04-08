@@ -94,9 +94,14 @@
                 url: '<?= base_url("manajemen_pegawai/masterpegawai/SetGambarBaru/"); ?>' + nip,
                 type: "post",
                 data: data,
-                async: false,
                 processData: false,
                 contentType: false,
+                beforeSend: function(data) {
+                    $('#edit_gambar_modal').LoadingOverlay("show");
+                },
+                complete: function() {
+                    $('#edit_gambar_modal').LoadingOverlay("hide");
+                },
                 success: function(data) {
                     $('#edit_gambar_modal').modal('hide');
                     setGambarBaru(nip);
@@ -109,7 +114,6 @@
                 url: '<?= base_url("manajemen_pegawai/masterpegawai/GetGambarBaru/"); ?>' + nip,
                 type: "POST",
                 dataType: "JSON",
-                async: false,
                 success: function(data) {
                     $('#gambar_pegawai').fadeOut(2000, function() {
                         // $('#gambar_pegawai').remove();
@@ -232,15 +236,18 @@
             }
         } else if (div == "pekerjaan") {
             if (bol == false) {
+                $('#status_gaji').attr("disabled", bol);
                 $('#jabatan').attr("readonly", bol);
                 $('#gaji_pokok').attr("readonly", bol);
                 $('#uang_makan').attr("readonly", bol);
                 $('#tanggal_masuk').attr("disabled", bol);
             } else {
+                $('#status_gaji').attr("disabled", bol);
                 $('#jabatan').attr("readonly", bol);
                 $('#gaji_pokok').attr("readonly", bol);
                 $('#uang_makan').attr("readonly", bol);
                 $('#tanggal_masuk').attr("disabled", bol);
+                
             }
         } else if (div == "lainnya") {
             if (bol == false) {
@@ -322,9 +329,14 @@
             url: "<?= Base_url('manajemen_pegawai/masterpegawai/edit_data_umum/'); ?>" + nip,
             type: "post",
             data: data,
-            async: false,
             processData: false,
             contentType: false,
+            beforeSend: function(data) {
+                $.LoadingOverlay("show");
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            },
             success: function(data) {
                 $('#edit_button_umum_div').attr("hidden", true);
                 $('#edit_trigger_umum').attr("hidden", false);
@@ -361,9 +373,14 @@
             url: "<?= Base_url('manajemen_pegawai/masterpegawai/edit_data_alamat/'); ?>" + nip,
             type: "post",
             data: data,
-            async: false,
             processData: false,
             contentType: false,
+            beforeSend: function(data) {
+                $.LoadingOverlay("show");
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            },
             success: function(data) {
                 $('#edit_button_alamat_div').attr("hidden", true);
                 $('#edit_trigger_alamat').attr("hidden", false);
@@ -401,9 +418,14 @@
             url: "<?= Base_url('manajemen_pegawai/masterpegawai/edit_data_pekerjaan/'); ?>" + nip,
             type: "post",
             data: data,
-            async: false,
             processData: false,
             contentType: false,
+            beforeSend: function(data) {
+                $.LoadingOverlay("show");
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            },
             success: function(data) {
                 $('#edit_button_pekerjaan_div').attr("hidden", true);
                 $('#edit_trigger_pekerjaan').attr("hidden", false);
@@ -440,9 +462,14 @@
             url: "<?= Base_url('manajemen_pegawai/masterpegawai/edit_data_lainnya/'); ?>" + nip,
             type: "post",
             data: data,
-            async: false,
             processData: false,
             contentType: false,
+            beforeSend: function(data) {
+                $.LoadingOverlay("show");
+            },
+            complete: function() {
+                $.LoadingOverlay("hide");
+            },
             success: function(data) {
                 $('#edit_button_lainnya_div').attr("hidden", true);
                 $('#edit_trigger_lainnya').attr("hidden", false);

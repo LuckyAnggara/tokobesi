@@ -35,9 +35,10 @@
                     <!-- Image Logo -->
                     <a href="index.html" class="logo">
                         <img src="<?= base_url('assets/images/') . $setting_perusahaan['logo_perusahaan']; ?>" alt="" height="24" class="logo-large">
-                        <span class="logo-large"> <?= $setting_perusahaan['nama_perusahaan']; ?></span>
+                        <span class="logo-large"><?= $setting_perusahaan['nama_perusahaan']; ?></span>
                     </a>
                 </div>
+                <span hidden id="kode_perusahaan"><?= $setting_perusahaan['kode_perusahaan']; ?></span>
                 <!-- End Logo container-->
 
                 <div class="menu-extras topbar-custom">

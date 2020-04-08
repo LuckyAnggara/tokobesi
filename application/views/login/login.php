@@ -97,9 +97,7 @@
     <script src="<?= base_url('assets/'); ?>js/jquery.nicescroll.js"></script>
     <script src="<?= base_url('assets/'); ?>js/jquery.slimscroll.js"></script>
     <script src="<?= base_url('assets/'); ?>js/jquery.scrollTo.min.js"></script>
-
-    <!-- Loading Overlay -->
-    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
+    <script src="<?= base_url('assets/'); ?>js/loading.js"></script>
 
     <!-- Sweet Alert Js  -->
     <script src="<?= base_url('assets/'); ?>plugins/sweet-alert/sweetalert2.all.min.js"></script>
@@ -122,7 +120,10 @@
                     processData: false,
                     contentType: false,
                     beforeSend: function(data) {
-                        $('#loginForm').LoadingOverlay("show");
+                        $.LoadingOverlay("show");
+                    },
+                    complete: function() {
+                        $.LoadingOverlay("hide");
                     },
                     success: function(data) {
                         if (data == "none") {
@@ -162,9 +163,7 @@
                         }
 
                     },
-                    complete: function() {
-                        $('#loginForm').LoadingOverlay("hide");
-                    },
+
                 })
             });
         });

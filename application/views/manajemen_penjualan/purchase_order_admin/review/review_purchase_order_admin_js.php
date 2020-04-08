@@ -189,7 +189,6 @@
         url: '<?= base_url("manajemen_penjualan/purchaseorderadmin/get_total_perhitungan/"); ?>' + no_order,
         type: "POST",
         dataType: "JSON",
-        async: false,
         success: function(data) {
           // matematika
           // total order - diskon
@@ -270,7 +269,6 @@
         var grand_total = parseInt(total_keranjang) - parseInt(total_diskon);
         grand_total = grand_total + parseInt(total_ongkir);
 
-
         push_total_perhitungan(no_order, pajak, total_ongkir);
 
       } else {
@@ -291,8 +289,6 @@
           pajak: pajak,
           ongkir: ongkir,
         },
-        cache: false,
-        async: false,
         success: function(data) {
           set_grand_total(no_order);
         },
@@ -427,8 +423,6 @@
                 down_payment: dp,
                 tanggal_jatuh_tempo: tanggal_jatuh_tempo
               },
-              cache: false,
-              async: false,
               beforeSend: function() {
                 // Show image container
                 $.LoadingOverlay("show");
@@ -440,7 +434,6 @@
                     title: 'Oops...',
                     text: 'Ada Kesalahan!',
                   });
-
                   revertProsesError();
                 } else {
                   Swal.fire({
@@ -462,7 +455,6 @@
 
               },
               complete: function(data) {
-                // Hide image container
                 $.LoadingOverlay("hide");
               }
             });
@@ -475,8 +467,13 @@
     function revertProsesError() {
       $.ajax({
         url: "<?= Base_url('manajemen_penjualan/penjualanbarang/revert_error/'); ?>",
-        cache: false,
-        async: false,
+        beforeSend: function() {
+          // Show image container
+          $.LoadingOverlay("show");
+        },
+        complete: function(data) {
+          $.LoadingOverlay("hide");
+        },
         success: function(data) {
           if (data == "error") {
             Swal.fire({
@@ -595,7 +592,6 @@
                 pesan: text
               },
               type: "post",
-              async: false,
               beforeSend: function() {
                 $.LoadingOverlay("show");
               },
@@ -658,7 +654,6 @@
                 pesan: text
               },
               type: "post",
-              async: false,
               beforeSend: function() {
                 $.LoadingOverlay("show");
               },

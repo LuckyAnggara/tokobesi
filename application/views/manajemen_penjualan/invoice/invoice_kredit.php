@@ -311,7 +311,7 @@
                                      <hr>
                                      <div class="d-print-none">
                                          <div class="pull-right">
-                                             <a href="<?= base_url('laporan/invoice/kredit/') . $data_order['no_order_penjualan']; ?>" class="btn btn-inverse waves-effect waves-light"><i class="fa fa-print"></i> Lx Print </a>
+                                             <a id="print_lx" class="btn btn-inverse waves-effect waves-light" type="button"><i class="fa fa-print"></i> Lx Print </a>
 
                                              <a href="#" class="btn btn-primary waves-effect waves-light"><i class="fa fa-print"></i> Print</a>
                                          </div>

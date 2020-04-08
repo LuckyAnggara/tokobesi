@@ -389,21 +389,21 @@
         $('#print_modal').modal('show');
     })
 
-    $('#tanggalForm').submit(function(e) {
-        e.preventDefault();
-        var kasir = "<?= $this->session->userdata['username']; ?>";
-        console.log(kasir);
-        var data = new FormData(document.getElementById("tanggalForm"));
-        data.append('kasir', kasir);
-        $.ajax({
-            url: "<?= base_url("laporan/kasir/laporan_harian/"); ?>",
-            type: "post",
-            data: data,
-            processData: false,
-            contentType: false,
-            success: function(data) {
-                window.open(this.url, '_blank');
-            }
-        })
-    })
+    // $('#tanggalForm').submit(function(e) {
+    //     e.preventDefault();
+    //     var kasir = "<?= $this->session->userdata['username']; ?>";
+    //     console.log(kasir);
+    //     var data = new FormData(document.getElementById("tanggalForm"));
+    //     data.append('kasir', kasir);
+    //     $.ajax({
+    //         url: "<?= base_url("laporan/kasir/laporan_harian/"); ?>",
+    //         type: "post",
+    //         data: data,
+    //         processData: false,
+    //         contentType: false,
+    //         success: function(data) {
+    //             window.open(this.url, '_blank');
+    //         }
+    //     })
+    // })
 </script>

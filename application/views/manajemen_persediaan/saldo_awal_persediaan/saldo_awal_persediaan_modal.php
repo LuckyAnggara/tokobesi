@@ -51,7 +51,13 @@
                             <label class="col-3 col-form-label">Kode Barang</label>
                             <input name="edit_id" id="edit_id" type="text" class="form-control" hidden>
                             <div class="col-9">
-                                <input name="edit_kode_barang" id="edit_kode_barang" type="text" class="form-control" placeholder="" required>
+                                <input readonly name="edit_kode_barang" id="edit_kode_barang" type="text" class="form-control" placeholder="" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">Saldo Tersedia</label>
+                            <div class="col-9">
+                                <input readonly name="edit_saldo" id="edit_saldo" type="text" class="form-control rupiah" placeholder="" required>
                             </div>
                         </div>
                         <div class="form-group row">

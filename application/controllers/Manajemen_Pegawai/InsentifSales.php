@@ -27,7 +27,7 @@ class Insentifsales extends CI_Controller
 
             $data['css'] = 'manajemen_pegawai/insentif_sales/insentif_sales_css';
             $this->load->view('template/template_header', $data);
-            $this->load->view('template/template_sales/template_menu_sales');
+            $this->load->view('template/template_menu');
             $this->load->view('manajemen_pegawai/insentif_sales/insentif_sales');
             $this->load->view('template/template_right');
             $this->load->view('template/template_footer');

@@ -8,6 +8,8 @@ class Returpenjualan extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Manajemen_Penjualan/Model_Retur_Penjualan', 'modelReturPenjualan');
+        $this->load->model('Manajemen_Keuangan/Model_Piutang', 'modelPiutang');
+        $this->load->model('Manajemen_Keuangan/Model_Coh', 'modelCoh');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
 
         if ($this->session->userdata('status') != "login") {
@@ -17,20 +19,28 @@ class Returpenjualan extends CI_Controller
 
     public function index()
     {
-
+        $cek_status = $this->modelCoh->cek_ready_kasir();
         $data['menu'] = $this->modelSetting->data_menu();
         $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
-
         $data['css'] = 'manajemen_penjualan/retur_penjualan/retur_penjualan_css';
-
-        $this->load->view('template/template_header', $data);
-        $this->load->view('template/template_menu');
-        $this->load->view('manajemen_penjualan/retur_penjualan/retur_penjualan', $data);
-        $this->load->view('template/template_right');
-        $this->load->view('template/template_footer');
-        $this->load->view('template/template_js');
-        $this->load->view('manajemen_penjualan/retur_penjualan/retur_penjualan_js');
-        $this->load->view('template/template_app_js');
+        if ($cek_status > 0) {
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('manajemen_penjualan/retur_penjualan/retur_penjualan', $data);
+            $this->load->view('template/template_right');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('manajemen_penjualan/retur_penjualan/retur_penjualan_js');
+            $this->load->view('template/template_app_js');
+        } else {
+            $this->load->view('template/template_header', $data);
+            $this->load->view('template/template_menu');
+            $this->load->view('template/template_lock');
+            $this->load->view('template/template_right');
+            $this->load->view('template/template_footer');
+            $this->load->view('template/template_js');
+            $this->load->view('template/template_app_js');
+        }       
     }
 
     public function getData()
@@ -52,7 +62,28 @@ class Returpenjualan extends CI_Controller
     public function tambahdatamaster()
     {
         $post = $this->input->post();
-        $this->modelReturPenjualan->tambah_data_master($post);
+        $data = $this->modelReturPenjualan->tambah_data_master($post);
+        if($data == 'sukses'){
+            $this->db->select('no_faktur');
+            $this->db->from('master_piutang');
+            $this->db->where('no_faktur', $post['nomor_faktur']);
+            $cekKredit = $this->db->get()->num_rows();
+
+            if ($cekKredit > 0) {
+                $data = [
+                    'nomor_faktur' => $post['nomor_faktur'],
+                    'tanggal' => date('Y-m-d H:i:s'),
+                    'nominal_pembayaran' => $post['retur_grand_total'],
+                    'keterangan' => 'Retur Penjualan',
+                ];
+                $this->modelPiutang->tambah_pembayaran($data);
+                $this->modelPiutang->update_master($data);
+            }
+            echo 'sukses';
+        }else{
+            echo 'error';
+        }
+        
     }
 
     public function tambahdatadetail()
@@ -60,8 +91,6 @@ class Returpenjualan extends CI_Controller
         $post = $this->input->post();
         $this->modelReturPenjualan->tambah_data_detail($post);
     }
-
-
 
     // daftar retur
 

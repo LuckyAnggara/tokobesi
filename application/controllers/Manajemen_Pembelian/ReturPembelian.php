@@ -8,6 +8,7 @@ class Returpembelian extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Manajemen_Pembelian/Model_Retur_Pembelian', 'modelReturPembelian');
+        $this->load->model('Manajemen_Keuangan/Model_Utang', 'modelUtang');
         $this->load->model('Setting/Model_Setting', 'modelSetting');
 
         if ($this->session->userdata('status') != "login") {
@@ -51,6 +52,22 @@ class Returpembelian extends CI_Controller
     {
         $post = $this->input->post();
         $this->modelReturPembelian->tambah_data_master($post);
+
+        $this->db->select('nomor_transaksi');
+        $this->db->from('master_utang');
+        $this->db->where('nomor_transaksi', $post['nomor_transaksi']);
+        $cekKredit = $this->db->get()->num_rows();
+
+        if($cekKredit > 0){
+            $data = [
+                'nomor_transaksi' => $post['nomor_transaksi'],
+                'tanggal' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
+                'nominal_pembayaran' => $post['retur_grand_total'],
+                'keterangan' => 'Retur Pembelian',
+            ];
+            $this->modelUtang->tambah_pembayaran($data);
+            $this->modelUtang->update_master($data);
+        }
     }
 
     public function tambahdatadetail()
@@ -132,6 +149,12 @@ class Returpembelian extends CI_Controller
     public function delete_faktur()
     {
         $nomor_transaksi = $this->input->post('nomor_transaksi');
-        $this->modelReturPembelian->delete_data($nomor_transaksi);
+        if (empty($nomor_transaksi)) {
+        } else {
+            $data = $this->modelReturPembelian->delete_data($nomor_transaksi);
+            echo $data;
+        }
+        
     }
+
 }

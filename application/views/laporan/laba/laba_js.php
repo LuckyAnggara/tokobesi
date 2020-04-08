@@ -4,24 +4,23 @@
 <script>
     $(document).ready(function() {
         $('#tanggal').datepicker({
-        autoclose: true,
-        todayHighlight: true,
-        orientation: "auto",
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "auto",
         });
     })
 
-    $('#proses').on('click', function(){
+    $('#proses').on('click', function() {
         var date = $('#tanggal').datepicker('getDate'),
-            day  = date.getDate(),  
-            month = date.getMonth() + 1,              
-            year =  date.getFullYear();
-        call_data(day,month,year);
+            day = date.getDate(),
+            month = date.getMonth() + 1,
+            year = date.getFullYear();
+        call_data(day, month, year);
         $('#display_tanggal').text($('#tanggal').val());
     })
 
-    function call_data(day,month,year)
-    {
-         $.ajax({
+    function call_data(day, month, year) {
+        $.ajax({
             url: '<?= base_url("laporan/laba/generate_data"); ?>',
             type: "POST",
             data: {
@@ -30,68 +29,116 @@
                 tahun: year,
             },
             dataType: "JSON",
-            async: false,
+            beforeSend: function() {
+                $('#div_laba').LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $('#div_laba').LoadingOverlay("hide");
+            },
             success: function(data) {
-                var total_penjualan = formatRupiah(data.total_penjualan.toString(),'Rp.')
-                var potongan_penjualan = formatRupiah(data.potongan_penjualan.toString(),'Rp.')
-                var retur_penjualan = formatRupiah(data.retur_penjualan.toString(),'Rp.')
-                var total_potongan_penjualan = formatRupiah(data.total_potongan_penjualan.toString(),'Rp.')
-                var penjualan_kotor = formatRupiah(data.penjualan_kotor.toString(),'Rp.')
-                var harga_pokok_penjualan = formatRupiah(data.harga_pokok_penjualan.toString(),'Rp.')
-                var laba_rugi_kotor = formatRupiah(data.laba_rugi_kotor.toString(),'Rp.')
-                var ongkos_kirim = formatRupiah(data.ongkos_kirim.toString(),'Rp.')
-                var pendapatan_lain = formatRupiah(data.pendapatan_lain.toString(),'Rp.')
 
-                var gaji_pokok = formatRupiah(data.beban_gaji.gaji_pokok.toString(),'Rp.')
-                var uang_makan = formatRupiah(data.beban_gaji.uang_makan.toString(),'Rp.')
-                var bonus = formatRupiah(data.beban_gaji.bonus.toString(),'Rp.')
-                var total_beban = formatRupiah(data.total_beban.toString(),'Rp.')
-                var laba_rugi = formatRupiah(data.laba_rugi.toString(),'Rp.')
+                // pendapatan penjualan
+                var total_penjualan = formatRupiah(data.pendapatan.total_penjualan.toString(), 'Rp.')
+                var diskon_penjualan = formatRupiah(data.pendapatan.potongan_penjualan.toString(), 'Rp.')
+                var retur_penjualan = formatRupiah(data.pendapatan.retur_penjualan.toString(), 'Rp.')
+                var total_potongan_penjualan = formatRupiah(data.pendapatan.total_potongan_penjualan.toString(), 'Rp.')
+                var total_penjualan_bersih = formatRupiah(data.pendapatan.total_penjualan_bersih.toString(), 'Rp.')
+                var persediaan_awal = formatRupiah(data.pendapatan.persediaan_awal.toString(), 'Rp.')
+                var total_pembelian = formatRupiah(data.pendapatan.total_pembelian.toString(), 'Rp.')
+                var potongan_pembelian = formatRupiah(data.pendapatan.potongan_pembelian.toString(), 'Rp.')
+                var retur_pembelian = formatRupiah(data.pendapatan.retur_pembelian.toString(), 'Rp.')
+                var total_potongan_pembelian = formatRupiah(data.pendapatan.total_potongan_pembelian.toString(), 'Rp.')
+                var pembelian_kotor = formatRupiah(data.pendapatan.pembelian_kotor.toString(), 'Rp.')
+                var persediaan_tersedia = formatRupiah(data.pendapatan.persediaan_tersedia.toString(), 'Rp.')
+                var persediaan_akhir = formatRupiah(data.pendapatan.persediaan_akhir.toString(), 'Rp.')
+                var harga_pokok_penjualan = formatRupiah(data.pendapatan.harga_pokok_penjualan.toString(), 'Rp.')
+                var laba_penjualan = formatRupiah(data.pendapatan.laba_penjualan.toString(), 'Rp.')
 
-                $('#total_penjualan').text(total_penjualan);   
-                $('#potongan_penjualan').text(potongan_penjualan);   
-                $('#retur_penjualan').text(retur_penjualan);   
-                $('#total_potongan_penjualan').text(total_potongan_penjualan);   
-                $('#penjualan_kotor').text(penjualan_kotor);   
+                //pendapatan lain - lain
+                var pendapatan_lain = formatRupiah(data.pendapatan.pendapatan_lain.toString(), 'Rp.')
+                var total_pendapatan_lain = formatRupiah(data.pendapatan.total_pendapatan_lain.toString(), 'Rp.')
+
+                //total pendapatan bersih
+                var total_pendapatan_bersih = formatRupiah(data.total_pendapatan_bersih.toString(), 'Rp.')
+
+                //total beban operasional 
+                var total_beban_operasional = formatRupiah(data.total_beban_operasional.toString(), 'Rp.')
+                //beban gaji
+                var gaji_pokok = formatRupiah(data.beban_gaji.gaji_pokok.toString(), 'Rp.')
+                var uang_makan = formatRupiah(data.beban_gaji.uang_makan.toString(), 'Rp.')
+                var bonus = formatRupiah(data.beban_gaji.bonus.toString(), 'Rp.')
+                var total_beban_gaji = formatRupiah(data.total_beban_gaji.toString(), 'Rp.')
+                //beban usaha
+                var total = parseInt(data.total_beban_operasional) + parseInt(data.total_beban_gaji)
+                var total_beban_usaha = formatRupiah(total.toString(), 'Rp.')
+                //Laba Berjalan
+                var laba_berjalan = formatRupiah(data.laba_berjalan.toString(), 'Rp.')
+
+
+                //     var gaji_pokok = formatRupiah(data.beban_gaji.gaji_pokok.toString(),'Rp.')
+                //     var uang_makan = formatRupiah(data.beban_gaji.uang_makan.toString(),'Rp.')
+                //     var bonus = formatRupiah(data.beban_gaji.bonus.toString(),'Rp.')
+                //     var total_beban = formatRupiah(data.total_beban.toString(),'Rp.')
+                //     var laba_rugi = formatRupiah(data.laba_rugi.toString(),'Rp.')
+
+                // pendapatan penjualan
+                $('#total_penjualan').text(total_penjualan);
+                $('#diskon_penjualan').text(diskon_penjualan);
+                $('#retur_penjualan').text(retur_penjualan);
+                $('#total_potongan_penjualan').text(total_potongan_penjualan);
+                $('#total_penjualan_bersih').text(total_penjualan_bersih);
+                $('#persediaan_awal').text(persediaan_awal);
+                $('#total_pembelian').text(total_pembelian);
+                $('#potongan_pembelian').text(potongan_pembelian);
+                $('#retur_pembelian').text(retur_pembelian);
+                $('#total_potongan_pembelian').text(total_potongan_pembelian);
+                $('#pembelian_kotor').text(pembelian_kotor);
+                $('#persediaan_tersedia').text(persediaan_tersedia);
+                $('#persediaan_akhir').text(persediaan_akhir);
                 $('#harga_pokok_penjualan').text(harga_pokok_penjualan);
-              
-                // laba rugi kotor
-                if(data.laba_rugi_kotor < 0){
-                    $('#laba_rugi_kotor').empty();
-                    $('#laba_rugi_kotor').append('<span class="text-danger">('+ laba_rugi_kotor +')</span>')
-                }else{
-                    $('#laba_rugi_kotor').text(laba_rugi_kotor);
-                }
+                $('#laba_penjualan').text(laba_penjualan);
 
-                $('#ongkos_kirim').text(ongkos_kirim);
+                // pendapatan lain - lain
                 $('#pendapatan_lain').text(pendapatan_lain);
+                $('#total_pendapatan_lain').text(total_pendapatan_lain);
+
+                // pendapatan bersih
+                $('#total_pendapatan_bersih').text(total_pendapatan_bersih);
+
 
                 // beban operasional usaha
-                $('#beban_operasional_usaha').empty();
-                $.each(data.beban_operasional_usaha, function(index, item) {
-
-                    var display = '<div class="col-6">'+
-                                    '<b>'+item.nama_biaya+'</b></div>'+
-                                    '<div class="col-3 text-right">'+item.total+'</div> ';
-                    $('#beban_operasional_usaha').append(display);
+                $('#beban_operasional').empty();
+                $.each(data.kategori_biaya, function(index, item) {
+                    var total = formatRupiah(item.total.toString(), 'Rp.');
+                    var display = '<li class="row">' +
+                        '<div class="col-4">' +
+                        '<b>- ' + item.nama_biaya + '</b>' +
+                        '</div>' +
+                        '<div class="col-4 text-right">' +
+                        total +
+                        '</div>' +
+                        '</li>';
+                    $('#beban_operasional').append(display);
                 });
+                $('#total_beban_operasional').text(total_beban_operasional);
 
-                //beban gaji
-                $('#gaji_pokok').text(gaji_pokok)
-                $('#uang_makan').text(uang_makan)
-                $('#bonus').text(bonus)
-                $('#total_beban').text(total_beban);
+                // beban gaji
+                $('#gaji_pokok').text(gaji_pokok);
+                $('#uang_makan').text(uang_makan);
+                $('#bonus').text(bonus);
+                $('#total_beban_gaji').text(total_beban_gaji);
 
-                //laba rugi
+                //total beban usaha
+                $('#total_beban_usaha').text(total_beban_usaha);
 
-                 if(data.laba_rugi < 0){
-                     $('#laba_rugi').empty();
-                    $('#laba_rugi').append('<span class="text-danger">('+ laba_rugi +')</span>')
-                }else{
-                    $('#laba_rugi').text(laba_rugi);
+                if (data.laba_berjalan < 0) {
+                    $('#laba_berjalan').empty();
+                    $('#laba_berjalan').append('<span class="text-danger">(' + laba_berjalan + ')</span>')
+                } else {
+                    $('#laba_berjalan').text(laba_berjalan);
                 }
 
-                 
+
             }
         });
     }

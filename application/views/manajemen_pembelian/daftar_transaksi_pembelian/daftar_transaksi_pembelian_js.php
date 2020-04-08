@@ -164,9 +164,14 @@
                         data: "kredit",
                         targets: 9,
                         render: function(data, type, full, meta) {
-                            var date = new Date(data.tanggal_jatuh_tempo);
-                            date = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
-                            if (data !== "") {
+                            if (data == null) {
+                                var display = '<span class="badge badge-success">Lunas</span>'
+                            } else if (data == '') {
+                                var display = '<span class="badge badge-success">Lunas</span>'
+
+                            } else {
+                                var date = new Date(data.tanggal_jatuh_tempo);
+                                date = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
                                 var display =
                                     '<div class="btn-group">' +
                                     '<span class="badge badge-danger dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Belum Lunas <span class="caret"></span></span>' +
@@ -176,8 +181,6 @@
                                     '<a class="dropdown-item"><b><u>Sisa</u></b></a>' +
                                     '<a class="dropdown-item">' + formatRupiah(data.sisa_utang.toString(), 'Rp.') + '</a>' +
                                     '</div></div>'
-                            } else {
-                                var display = '<span class="badge badge-success">Lunas</span>'
                             }
                             return display;
                         }
@@ -198,14 +201,23 @@
                         targets: 11,
                         render: function(data, type, full, meta) {
                             var display1 = '<a type="button" onClick = "view_detail(\'' + data.nomor_transaksi + '\')" class="btn btn-icon waves-effect waves-light btn-success btn-sm"><i class="fa fa-search" ></i> </a>';
-                            var upload = '<a type="button" onClick = "upload_lampiran(\'' + data.nomor_transaksi + '\')" data-button="' + data.nomor_transaksi + '" class="btn btn-icon waves-effect waves-light btn-danger btn-sm"><i class="fa fa-upload" ></i> </a>';
+                            var upload = '<a type="button" onClick = "upload_lampiran(\'' + data.nomor_transaksi + '\')" data-button="' + data.nomor_transaksi + '" class="btn btn-icon waves-effect waves-light btn-primary btn-sm"><i class="fa fa-upload" ></i> </a>';
                             var download = '<a type="button" onClick = "download_lampiran(\'' + data.lampiran + '\')" data-button="' + data.nomor_transaksi + '" class="btn btn-icon waves-effect waves-light btn-inverse btn-sm"><i class="fa fa-download" ></i> </a>';
-
-                            if (data.lampiran == "") {
-                                return display1 + ' ' + upload;
+                            var del = '<a type="button" onClick = "warning_delete(\'' + data.nomor_transaksi + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm"><i class="fa fa-trash" ></i> </a>';
+                            if (role == 5) {
+                                if (data.lampiran == "") {
+                                    return display1 + ' ' + upload + ' ' + del;
+                                } else {
+                                    return display1 + ' ' + download + ' ' + del;
+                                }
                             } else {
-                                return display1 + ' ' + download;
+                                if (data.lampiran == "") {
+                                    return display1 + ' ' + upload;
+                                } else {
+                                    return display1 + ' ' + download;
+                                }
                             }
+
                         }
                     }
                 ],
@@ -322,5 +334,61 @@
 
     function download_lampiran(lampiran) {
         window.location.href = "<?= base_url('assets/upload/bukti/pembelian/'); ?>" + lampiran;
+    }
+
+    function warning_delete(nomor_transaksi) {
+        swal.fire({
+            title: 'Apa anda yakin?',
+            text: "Pastikan, bahwa barang belum keluar dengan melakukan cek saldo di Master Persediaan!!!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya!'
+        }).then((result) => {
+            if (result.value) {
+                deleteData(nomor_transaksi);
+            }
+        });
+    }
+
+    function deleteData(nomor_transaksi) {
+        $.ajax({
+            url: '<?= base_url("manajemen_pembelian/daftartransaksipembelian/delete_data/"); ?>',
+            type: "post",
+            data: {
+                nomor_transaksi: nomor_transaksi
+            },
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $.LoadingOverlay("hide");
+            },
+            success: function(data) {
+                if (data == 'ok') {
+                    swal.fire(
+                        'Deleted!',
+                        'Data telah dihapus!',
+                        'success'
+                    )
+                } else if (data == 'kurang') {
+                    swal.fire(
+                        'Oopss!',
+                        'Barang sudah ada yang keluar, silahkan di cek di Master Persediaan!',
+                        'error'
+                    )
+                } else {
+                    swal.fire(
+                        'Oopss!',
+                        'ada kesalahan, silahkan ulangi',
+                        'error'
+                    )
+                }
+
+                $('#datatable-daftar-pembelian').DataTable().ajax.reload();
+
+            }
+        });
     }
 </script>
