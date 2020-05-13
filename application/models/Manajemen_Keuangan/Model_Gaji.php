@@ -14,9 +14,11 @@ class Model_Gaji extends CI_Model
 
     function get_master_gaji()
     {
-        $this->db->select('master_gaji.id,master_gaji.nomor_referensi, master_gaji.total_pembayaran,master_gaji.status, master_gaji.keterangan, DATE_FORMAT(master_gaji.tanggal, "%d-%b-%y") as tanggal, master_user.nama as nama_admin,');
+        $periode = $this->modelSetting->get_data_periode();
+        $this->db->select('master_gaji.*, DATE_FORMAT(master_gaji.tanggal, "%d-%b-%y") as tanggal, master_user.nama as nama_admin,');
         $this->db->from('master_gaji');
         $this->db->join('master_user', 'master_user.username = master_gaji.user');
+        $this->db->where('master_gaji.periode', $periode);
         return $this->db->get();
     }
 
@@ -44,7 +46,9 @@ class Model_Gaji extends CI_Model
             'keterangan' => $post['keterangan'],
             'total_pembayaran' => '0',
             'status' => '0',
-            'user' => $this->session->userdata['username']
+            'user' => $this->session->userdata['username'],
+            'periode' => $this->modelSetting->get_data_periode()
+
         ];
         $this->db->insert('master_gaji', $data);
     }

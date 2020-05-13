@@ -77,6 +77,25 @@ class Pocabang extends CI_Controller
         $this->load->view('template/template_app_js');
     }
 
+    function detail_receive($no_order_po)
+    {
+        $data['setting_perusahaan'] = $this->modelSetting->get_data_perusahaan();
+        $data['menu'] = $this->modelSetting->data_menu();
+        $data['css'] = 'po/detail_receive/detail_receive_css';
+
+        $data['po'] = $this->modelPO->get_data_po_receive($no_order_po);
+
+        // print_r($data['data_po']);
+        $this->load->view('template/template_header', $data);
+        $this->load->view('template/template_menu');
+        $this->load->view('po/detail_receive/detail_receive', $data);
+        $this->load->view('template/template_right');
+        $this->load->view('template/template_footer');
+        $this->load->view('template/template_js');
+        $this->load->view('po/detail_receive/detail_receive_js');
+        $this->load->view('template/template_app_js');
+    }
+
 
     private function _generateNomor()
     {
@@ -264,6 +283,12 @@ class Pocabang extends CI_Controller
         echo $output;
     }
 
+    function set_detail_receive()
+    {
+        $post = $this->input->post();
+        $this->modelPO->set_detail_receive($post);
+    }
+
     function print_lx($no_order)
     {
         $setting_perusahaan = $this->modelSetting->get_data_perusahaan();
@@ -370,12 +395,11 @@ class Pocabang extends CI_Controller
         $pdf->Output();
     }
 
-    function print_lx_receive()
+    function print_lx_receive($no_order_po)
     {
-        $setting_perusahaan = $this->modelSetting->get_data_perusahaan();
-        $post = $this->input->post();
-        $data_po = $post;
-        $tanggal_transaksi = $this->tgl_indo(date("Y-m-d-D", strtotime($data_po['tanggal_transaksi'])));
+        $po = $this->modelPO->get_data_po_receive($no_order_po);
+        $data_po = $po['data_po'];
+        $tanggal_transaksi = $this->tgl_indo(date("Y-m-d-D", strtotime($data_po['tanggal_masuk'])));
 
 
         $pdf = new FPDF('p', 'mm', 'letter');
@@ -386,14 +410,14 @@ class Pocabang extends CI_Controller
         // setting jenis font yang akan digunakan
         $pdf->SetFont('Tahoma', 'B', 11);
         // mencetak string
-        $pdf->Cell(100, 6, $setting_perusahaan['nama_perusahaan'], 0, 0, 'L');
+        $pdf->Cell(100, 6, $data_po['nama_perusahaan'], 0, 0, 'L');
         $pdf->Cell(96, 6, 'Purchase Order Cabang', 0, 1, 'R');
         $pdf->SetFont('Tahoma', '', 8);
-        $pdf->MultiCell(100, 5, nl2br($setting_perusahaan['alamat_perusahaan']), 0, 'J');
+        $pdf->MultiCell(100, 5, nl2br($data_po['alamat_perusahaan']), 0, 'J');
 
-        $pdf->Cell(100, 5, 'Telp : ' . $setting_perusahaan['nomor_telepon'] . ' / Fax : ' . $setting_perusahaan['nomor_fax'], 0, 1, 'L');
+        $pdf->Cell(100, 5, 'Telp : ' . $data_po['nomor_telepon'] . ' / Fax : ' . $data_po['nomor_fax'], 0, 1, 'L');
 
-        $pdf->Cell(196, 5, 'Email : ' . $setting_perusahaan['alamat_email'], 0, 1, 'L');
+        $pdf->Cell(196, 5, 'Email : ' . $data_po['alamat_email'], 0, 1, 'L');
         $pdf->Cell(196, 2, '', 'B', 1, 'L');
         // Memberikan space kebawah agar tidak terlalu rapat
         $pdf->Cell(10, 3, '', 0, 1);
@@ -425,7 +449,7 @@ class Pocabang extends CI_Controller
         //     $pdf->Cell(25,6,$row->tanggal_lahir,1,1); 
         // }
         $no = 0;
-        foreach ($data_po['detail_po'] as $key => $value) {
+        foreach ($po['detail_po'] as $key => $value) {
             $no++;
             $pdf->Cell(7, 5, $no, 1, 0, 'C');
             $pdf->Cell(90, 5, $value['nama_barang'], 1, 0);
@@ -453,7 +477,7 @@ class Pocabang extends CI_Controller
         $pdf->Cell(22, 5, $this->rupiah($data_po['biaya_lainnya']), 0, 1, 'R');
         $pdf->Cell(110, 5, '', 0, 1);
         $pdf->SetFont('Tahoma', '', 7);
-        $pdf->Cell(90, 5, $setting_perusahaan['nama_perusahaan'], 0, 0, 'C');
+        $pdf->Cell(90, 5, $data_po['nama_perusahaan'], 0, 0, 'C');
         $pdf->Cell(50, 5, '', 0, 0);
         $pdf->Cell(30, 5, '', 'B', 0);
         $pdf->Cell(5, 5, '', 'B', 0);

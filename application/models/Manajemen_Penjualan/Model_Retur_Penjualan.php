@@ -58,6 +58,8 @@ class Model_Retur_Penjualan extends CI_Model
             "retur_grand_total" => $post['retur_grand_total'],
             'user' => $this->session->userdata['username'],
             'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
+            'periode'=>$this->modelSetting->get_data_periode()
+
         ];
         $this->db->insert('master_retur_penjualan', $data);
         $nominal = $post['retur_grand_total'];
@@ -89,6 +91,8 @@ class Model_Retur_Penjualan extends CI_Model
             "total_retur" => $post['retur_total'],
             'user' => $this->session->userdata['username'],
             'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($post['tanggal_transaksi'])),
+            'periode'=>$this->modelSetting->get_data_periode()
+
         ];
         $this->db->insert('detail_retur_penjualan', $data);
     }
@@ -112,12 +116,16 @@ class Model_Retur_Penjualan extends CI_Model
 
     function get_data_retur($post)
     {
+        $periode = $this->modelSetting->get_data_periode();
+
         $this->db->select('master_retur_penjualan.*,master_pelanggan.nama_pelanggan, master_user.nama as nama_pegawai ');
         $this->db->from('master_retur_penjualan');
         $this->db->join('master_pelanggan', 'master_pelanggan.id_pelanggan = master_retur_penjualan.id_pelanggan');
         $this->db->join('master_user', 'master_user.username = master_retur_penjualan.user');
         $this->db->where('tanggal >=', date('Y-m-d', strtotime($post['tanggal_awal'])));
         $this->db->where('tanggal <=', date('Y-m-d', strtotime($post['tanggal_akhir'])));
+        $this->db->where('periode', $periode);
+
         $this->db->order_by('tanggal', 'DESC');
         $output = $this->db->get();
         return $output;

@@ -44,7 +44,7 @@ class Penjualanbarang extends CI_Controller
 
     public function index()
     {
-        if ($this->session->userdata('role') !== "5") {
+        if ($this->session->userdata('role') !== "1") {
             redirect(base_url("dashboard"));
         } else {
             $cek_status = $this->modelCoh->cek_ready_kasir();

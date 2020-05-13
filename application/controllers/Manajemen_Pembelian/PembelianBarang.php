@@ -18,7 +18,7 @@ class Pembelianbarang extends CI_Controller
 
     public function index()
     {
-        if ($this->session->userdata('role') !== "5") {
+        if ($this->session->userdata('role') !== "2") {
             redirect(base_url("dashboard"));
         } else {
             $data['menu'] = $this->modelSetting->data_menu();

@@ -15,11 +15,14 @@ class Model_Biaya extends CI_Model
 
     function get_daftar_biaya_hari_ini()
     {
-        $this->db->select('detail_biaya.id,detail_biaya.nomor_jurnal, detail_biaya.keterangan, detail_biaya.total, master_kategori_biaya.nama_biaya, DATE_FORMAT(tanggal, "%H:%i") as jam');
+        $periode = $this->modelSetting->get_data_periode();
+        $this->db->select('detail_biaya.*, master_kategori_biaya.nama_biaya, DATE_FORMAT(tanggal, "%H:%i") as jam');
         $this->db->from('detail_biaya');
         $this->db->join('master_kategori_biaya', 'master_kategori_biaya.id = detail_biaya.kategori_biaya');
         $this->db->where('tanggal >=', date('Y-m-d 00:00:00'));
         $this->db->where('tanggal <=', date('Y-m-d 23:59:59'));
+        $this->db->where('detail_biaya.periode', $periode);
+
         return $this->db->get();
     }
 
@@ -27,13 +30,15 @@ class Model_Biaya extends CI_Model
     {
         $tanggal_awal = $post['tanggal_awal'];
         $tanggal_akhir = $post['tanggal_akhir'];
-        $this->db->select('detail_biaya.id,detail_biaya.nomor_jurnal, detail_biaya.keterangan, detail_biaya.total, master_kategori_biaya.nama_biaya, DATE_FORMAT(tanggal, "%d %b %y | %H:%i") as jam_tanggal');
+        $periode = $this->modelSetting->get_data_periode();
+        $this->db->select('detail_biaya.*, master_kategori_biaya.nama_biaya, DATE_FORMAT(tanggal, "%d %b %y | %H:%i") as jam_tanggal');
         $this->db->from('detail_biaya');
         $this->db->join('master_kategori_biaya', 'master_kategori_biaya.id = detail_biaya.kategori_biaya');
         if ($tanggal_awal !== null) {
             $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggal_awal)));
             $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal_akhir)));
         }
+        $this->db->where('detail_biaya.periode', $periode);
         $this->db->order_by('detail_biaya.id', 'DESC');
         return $this->db->get();
     }
@@ -42,6 +47,7 @@ class Model_Biaya extends CI_Model
     {
         $tanggal_awal = $post['tanggal_awal'];
         $tanggal_akhir = $post['tanggal_akhir'];
+        $periode = $this->modelSetting->get_data_periode();
         
         $this->db->select_sum('total');
         $this->db->from('detail_biaya');
@@ -52,6 +58,8 @@ class Model_Biaya extends CI_Model
             $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggal_awal)));
             $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal_akhir)));
         }
+        $this->db->where('periode', $periode);
+
     
         $output = $this->db->get();
         return $output->row()->total;
@@ -67,7 +75,8 @@ class Model_Biaya extends CI_Model
             'total' => $this->normal($post['total_biaya']),
             'status' => 0,
             'tanggal' => date('Y-m-d H:i:s'),
-            'user' => $this->session->userdata['username']
+            'user' => $this->session->userdata['username'],
+            'periode' => $this->modelSetting->get_data_periode()
         ];
         $this->db->insert('detail_biaya', $data);
         return $no_jurnal;

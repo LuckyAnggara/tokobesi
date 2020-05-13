@@ -289,6 +289,9 @@ class Model_Penjualan_Barang extends CI_Model
     {
         // input data baru
 
+        $periode = $this->modelSetting->get_data_periode();
+
+
         if ($post['id_pelanggan'] == "") {
             $id_pelanggan = $this->_createPelangganDummy($post);
         } else {
@@ -305,6 +308,7 @@ class Model_Penjualan_Barang extends CI_Model
             'status_bayar' => $post['status'], // 0 untuk lunas 1 untuk nyicil cashbon
             'tanggal_input' =>  date("Y-m-d H:i:s"),
             'user' => $this->session->userdata['username'],
+            'periode' => $periode
         );
 
         $this->db->insert('master_penjualan', $data);
@@ -313,7 +317,7 @@ class Model_Penjualan_Barang extends CI_Model
         $this->db->query("UPDATE master_penjualan INNER JOIN tabel_perhitungan_order ON tabel_perhitungan_order.no_order = master_penjualan.no_order_penjualan SET master_penjualan.total_penjualan = tabel_perhitungan_order.total_keranjang, master_penjualan.diskon = tabel_perhitungan_order.diskon, master_penjualan.pajak_masukan = tabel_perhitungan_order.pajak, master_penjualan.ongkir = tabel_perhitungan_order.ongkir, master_penjualan.grand_total = tabel_perhitungan_order.grand_total where  tabel_perhitungan_order.no_order = '" . $post['no_order_penjualan'] . "'");
 
         // tambah detail penjualan
-        $this->_tambah_detail_penjualan($post, $no_faktur);
+        $this->_tambah_detail_penjualan($post, $no_faktur, $periode);
         // update status persediaan
         $this->_debet_dari_keranjang_sementara($post);
 
@@ -337,6 +341,7 @@ class Model_Penjualan_Barang extends CI_Model
                 'sisa_piutang' => $sisa_piutang,
                 'tanggal_input' =>  date("Y-m-d H:i:s"),
                 'user' => $this->session->userdata['username'],
+                'periode' => $periode
             );
 
             $this->db->insert('master_piutang', $data);
@@ -349,6 +354,8 @@ class Model_Penjualan_Barang extends CI_Model
                 'user' => $this->session->userdata['username'],
                 'bukti' => '1',
                 'keterangan' => 'Down Payment',
+                'periode' => $periode
+
             );
             $this->db->insert('detail_piutang', $data);
             // update COH
@@ -366,9 +373,9 @@ class Model_Penjualan_Barang extends CI_Model
         }
     }
 
-    private function _tambah_detail_penjualan($post, $no_faktur)
+    private function _tambah_detail_penjualan($post, $no_faktur, $periode)
     {
-        $this->db->query("INSERT INTO `detail_penjualan`(`nomor_faktur`,`tanggal_transaksi`, `no_order_penjualan`, `kode_barang`, `jumlah_penjualan`,`harga_jual`,`diskon`,`total_harga`,`tanggal_input`) SELECT '" .  $no_faktur . "', `tanggal_transaksi`, `no_order_penjualan`, `kode_barang`, `jumlah_penjualan`,`harga_jual`,`diskon`,`total_harga`,`tanggal_input`  FROM temp_tabel_keranjang_penjualan WHERE no_order_penjualan = '" . $post['no_order_penjualan'] . "'");
+        $this->db->query("INSERT INTO `detail_penjualan`(`nomor_faktur`,`tanggal_transaksi`, `no_order_penjualan`, `kode_barang`, `jumlah_penjualan`,`harga_jual`,`diskon`,`total_harga`,`tanggal_input`,`periode`) SELECT '" .  $no_faktur . "', `tanggal_transaksi`, `no_order_penjualan`, `kode_barang`, `jumlah_penjualan`,`harga_jual`,`diskon`,`total_harga`,`tanggal_input`, '" .  $periode . "'  FROM temp_tabel_keranjang_penjualan WHERE no_order_penjualan = '" . $post['no_order_penjualan'] . "'");
     }
 
     private function _debet_dari_keranjang_sementara($post)
@@ -436,9 +443,13 @@ class Model_Penjualan_Barang extends CI_Model
 
     function saldo_awal($kode_barang)
     {
+        $periode = $this->modelSetting->get_data_periode();
+
         $this->db->select('*');
         $this->db->from('master_saldo_awal');
         $this->db->where('kode_barang', $kode_barang);
+        $this->db->where('periode', $periode);
+
         $data = $this->db->get()->row_array();
         if ($data == null) {
             $ouput = [
@@ -452,16 +463,22 @@ class Model_Penjualan_Barang extends CI_Model
 
     function saldo_berjalan($kode_barang)
     {
+        $periode = $this->modelSetting->get_data_periode();
+
         $this->db->select_sum('saldo');
         $this->db->from('detail_pembelian');
         $this->db->where('kode_barang', $kode_barang);
         $this->db->where('saldo !=', 0);
+        $this->db->where('periode', $periode);
+
         $saldo_beli = $this->db->get()->row_array();
 
         $this->db->select_sum('saldo_tersedia');
         $this->db->from('detail_retur_barang_penjualan');
         $this->db->where('kode_barang', $kode_barang);
         $this->db->where('saldo_tersedia !=', 0);
+        $this->db->where('periode', $periode);
+
         $saldo_retur = $this->db->get()->row_array();
 
         if(!isset($saldo_retur)){
@@ -488,11 +505,13 @@ class Model_Penjualan_Barang extends CI_Model
 
     function fifo_lifo($kode_barang, $detail_barang)
     {
+        $periode = $this->modelSetting->get_data_periode();
 
         $this->db->select('*, "beli" jenis_saldo');
         $this->db->from('detail_pembelian');
         $this->db->where('saldo !=', 0);
         $this->db->where('kode_barang', $kode_barang);
+        $this->db->where('periode', $periode);
 
         if ($detail_barang['metode_hpp'] == "LIFO") {
             $this->db->order_by('tanggal_transaksi', 'DESC'); // ASC untuk LIFO
@@ -503,13 +522,15 @@ class Model_Penjualan_Barang extends CI_Model
         return $this->db->get()->result_array();
     }
 
-      function fifo_lifo_retur($kode_barang, $detail_barang)
+    function fifo_lifo_retur($kode_barang, $detail_barang)
     {
+        $periode = $this->modelSetting->get_data_periode();
 
         $this->db->select('id, nomor_faktur as nomor_transaksi,harga_pokok as harga_beli, kode_barang, saldo_tersedia as saldo, tanggal_input as tanggal_transaksi, "retur" jenis_saldo');
         $this->db->from('detail_retur_barang_penjualan');
         $this->db->where('saldo_tersedia !=', 0);
         $this->db->where('kode_barang', $kode_barang);
+        $this->db->where('periode', $periode);
 
         if ($detail_barang['metode_hpp'] == "LIFO") {
             $this->db->order_by('tanggal_input', 'DESC'); // ASC untuk LIFO
@@ -522,6 +543,8 @@ class Model_Penjualan_Barang extends CI_Model
 
     function proses_debet_persediaan($post)
     {
+        $periode = $this->modelSetting->get_data_periode();
+
         $kode_barang = $post['kode_barang'];
         $qty_penjualan = $post['jumlah_penjualan'];
         // total kan persediaan
@@ -571,6 +594,7 @@ class Model_Penjualan_Barang extends CI_Model
                     'keterangan' => $detail_barang['metode_hpp'],
                     'jenis_barang' => 'saldo_awal',
                     'tag' => 'saldoawal_'.$saldo_awal['id'],
+                    'periode' => $periode
                 ];
                 $this->db->insert('master_harga_pokok_penjualan', $data);
                 $this->db->query("UPDATE master_saldo_awal SET saldo_awal = $stok_update WHERE kode_barang = '$kode_barang'");
@@ -591,6 +615,7 @@ class Model_Penjualan_Barang extends CI_Model
                         'keterangan' => $detail_barang['metode_hpp'],
                         'jenis_barang' => 'saldo_awal',
                         'tag' => 'saldoawal_'.$saldo_awal['id'],
+                        'periode' => $periode
                     ];
                     $this->db->insert('master_harga_pokok_penjualan', $data);
                 }
@@ -639,6 +664,7 @@ class Model_Penjualan_Barang extends CI_Model
                             'keterangan' => $detail_barang['metode_hpp'],
                             'jenis_barang' => $jenis_barang_dijual,
                             'tag' => $tag,
+                            'periode' => $periode
                         ];
                         $this->db->insert('master_harga_pokok_penjualan', $data);
 
