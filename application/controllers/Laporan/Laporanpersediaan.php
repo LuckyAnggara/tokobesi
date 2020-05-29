@@ -405,8 +405,8 @@ class Laporanpersediaan extends CI_Controller
 
     function cek()
     {
-        $post['tanggal'] = '2020-03-22';
-        $post['data'] = 0;
+        $post['tanggal'] = '2020-05-28';
+        $post['data'] = 1;
         $data_persediaan = $this->modelLapPersediaan->data_persediaan($post);
         $output = json_encode($data_persediaan);
         echo $output;

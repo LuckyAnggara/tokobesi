@@ -23,7 +23,7 @@ class Model_Dashboard_Supervisor extends CI_Model
     function laporan_spv($kasir = null)
     {
 
-        $this->db->select('saldo_akhir');
+        $this->db->select('saldo_akhir, status');
         $this->db->from('master_coh');
         $this->db->like('tanggal_input', date('Y-m-d'));
         if ($kasir !== null) {
@@ -33,7 +33,7 @@ class Model_Dashboard_Supervisor extends CI_Model
         $data = $this->db->get()->row_array();
 
         $cash = $data['saldo_akhir'];
-
+        $status = $data['status'];
 
         $this->db->select_sum('total');
         $this->db->from('detail_biaya');
@@ -52,6 +52,7 @@ class Model_Dashboard_Supervisor extends CI_Model
 
         $output = [
             'cash' => $cash,
+            'status' => $status,
             'total_pengeluaran' => $total_biaya + $total_gaji
         ];
         return $output;

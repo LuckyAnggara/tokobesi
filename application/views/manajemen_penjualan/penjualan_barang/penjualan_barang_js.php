@@ -39,6 +39,8 @@
   // init hide advance search -->
   <script>
     $(document).ready(function() {
+
+      var is_tunai = true;
       $(window).bind('beforeunload', function() {
         $.ajax({
           url: '<?= base_url("manajemen_penjualan/penjualanbarang/clear_keranjang_belanja/"); ?>' + sessionStorage.getItem("no_order"),
@@ -1170,7 +1172,10 @@
       var isDisabled = $('#id_pelanggan').is(':disabled');
       var tanggal_jatuh_tempo = $('#tanggal_jatuh_tempo').val();
       var dp = $('#dp').val();
+      var keterangan_transfer = $('#keterangan_transfer').val();
+      var nama_bank = $('#nama_bank_text').val();
 
+      
       if ($("#check_pembayaran").is(':checked')) {
         var status = 0
         if (tanggal_jatuh_tempo == "") {
@@ -1187,7 +1192,22 @@
         if (nama_pelanggan == "") {
           warning_pelanggan_kosong();
         } else {
-          proses();
+          if (is_tunai == false) {
+          if(nama_bank == '' || keterangan_transfer == ''){
+            Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Data Transfer Masih Kosong!',
+          });
+          }else{
+            proses();
+          }
+          }else{
+           proses();
+          }
+          
+            
+          
         }
       }
 
@@ -1217,6 +1237,9 @@
                 alamat: alamat,
                 nomor_telepon: nomor_telepon,
                 status: status, // lunas
+                // jika status transfer
+                nama_bank: nama_bank,
+                keterangan_transfer : keterangan_transfer,
                 // untuk kredit
                 down_payment: dp,
                 tanggal_jatuh_tempo: tanggal_jatuh_tempo
@@ -1323,9 +1346,23 @@
   <!-- Tunai $ Kredit -->
 
   <script>
+    $('#is_transfer').change(function() {
+      if (this.checked) {
+        $('#div_tunai').attr('hidden', true);
+        $('#div_transfer').attr('hidden', false);
+        $('#nama_bank').val(null).trigger('change');
+        $('#keterangan_transfer').val('');
+        is_tunai = false;
+      } else {
+        $('#div_transfer').attr('hidden', true);
+        $('#div_tunai').attr('hidden', false);
+        is_tunai = true;
+      
+      }
+    });
+
     $('#check_pembayaran').change(function() {
       if (this.checked) {
-
         if ($('#id_pelanggan').is(':disabled') == false) {
           var id_pelanggan = "";
         } else {
@@ -1343,7 +1380,6 @@
           });
           $('#check_pembayaran').prop('checked', false);
         }
-
       } else {
         $('#kredit_div').attr('hidden', true).fadeOut(5000);
       }
@@ -1388,4 +1424,37 @@
         },
       });
     }
+  </script>
+
+  <script>
+      $("#nama_bank").select2({
+        ajax: {
+          url: '<?= base_url("setting/bank/get_data_bank"); ?>',
+          dataType: 'json',
+          delay: 250,
+          data: function(params) {
+            return {
+              query: params.term, // search term
+            };
+          },
+          processResults: function(data) {
+            var results = [];
+            $.each(data, function(index, item) {
+              results.push({
+                id: item.id,
+                text: item.nama_bank + ' | ' + item.nomor_rekening,
+                // harga_satuan: item.harga_satuan,
+                // nama_satuan: item.nama_satuan,
+                // jumlah_persediaan: item.jumlah_persediaan
+              });
+            });
+            return {
+              results: results
+            };
+          },
+        },
+      }).on('select2:select', function(evt) {
+        var data = $("#nama_bank option:selected").text();
+      $('#nama_bank_text').val(data);
+      });
   </script>

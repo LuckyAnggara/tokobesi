@@ -139,42 +139,4 @@
         </header>
         <!-- End Navigation Bar-->
         <div class="wrapper">
-        	<div class="alert alert-danger">
-        		<div id="movetxt" class="ml12">Segera Lakukan Pembayaran Aplikasi, Sebelum 30 April 2020</div>
-
-        	</div>
-
-        	<style>
-        		.ml12 {
-        			font-weight: 700;
-        			font-size: 12px;
-        			text-transform: uppercase;
-        		}
-
-        		@keyframes moving {
-        			from {
-        				right: -1600px;
-        			}
-
-        			to {
-        				right: 500px;
-        			}
-        		}
-
-        		@-webkit-keyframes moving {
-        			from {
-        				right: -1600px;
-        			}
-
-        			to {
-        				right: 500px;
-        			}
-        		}
-
-        		#movetxt {
-        			animation: moving 30s infinite;
-        			-webkit-animation: moving 30s infinite;
-        			position: relative;
-        		}
-
-        	</style>
+        	

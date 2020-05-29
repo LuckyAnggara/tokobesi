@@ -88,4 +88,13 @@ class Setting extends CI_Controller
             $this->modelSetting->confirm_setting($key, $value);
         }
     }
+
+    public function tambahPeriode(){
+        $post = $this->input->post();
+        $this->modelSetting->tambahPeriode($post);
+    }
+
+
+
+
 }

@@ -10,6 +10,10 @@
 	src="<?= base_url('assets/'); ?>plugins/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 <!-- <script type="text/javascript" src="<?= base_url('assets/'); ?>pages/jquery.xeditable.js"></script> -->
 
+<!-- DatePicker Js -->
+<script src="<?= base_url('assets/'); ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+
 <!-- Init Data -->
 <script>
 	$(document).ready(function () {
@@ -46,17 +50,39 @@
 		$('#edit_gambar_button').on('click', function () {
 			$('#edit_gambar_modal').modal('show');
 		});
+
+		$('#modal_periode').on('hidden.bs.modal', function (e) {
+			$(this)
+				.find("input,textarea,select")
+				.val('')
+				.end()
+				.find("input[type=checkbox], input[type=radio]")
+				.prop("checked", "")
+				.end();
+		});
+
+
+		$('#periode_button').on('click', function () {
+			$('#periode_awal').datepicker({
+				autoclose: true,
+				orientation: "auto",
+			});
+			$('#periode_akhir').datepicker({
+				autoclose: true,
+				orientation: "auto",
+			});
+			$('#modal_periode').modal('show');
+		});
 	})
 
 </script>
 <script>
-	function getDataPeriode()
-	{
+	function getDataPeriode() {
 		var output;
 		$.ajax({
 			url: '<?= base_url("setting/setting/getDataPeriode/"); ?>',
 			type: "post",
-			async : false,
+			async: false,
 			success: function (data) {
 				output = data
 			}
@@ -191,7 +217,8 @@
 
 	function confirm_setting() {
 		var data = $(
-				'.edit_input, .edit_textarea, #prefix_nomor, .edit_number, #notifikasi, #nomor_faktur, #periode, #password_harga')
+				'.edit_input, .edit_textarea, #prefix_nomor, .edit_number, #notifikasi, #nomor_faktur, #periode, #password_harga'
+				)
 			.editable('getValue');
 		$.ajax({
 			url: '<?= base_url("setting/setting/confirmSetting/"); ?>',
@@ -234,6 +261,7 @@
 				$('#catatan_retur_jual').editable('setValue', data.catatan_retur_jual)
 				$('#catatan_retur_beli').editable('setValue', data.catatan_retur_beli)
 				$('#prefix_example').text(data.prefix_faktur)
+
 				setnomorfaktur(data.nomor_faktur)
 
 				$('#password_harga').editable('setValue', data.password_harga)
@@ -250,7 +278,8 @@
 
 				$('#periode').editable('setValue', data.periode)
 
-
+				// API
+				$('#token_api').editable('setValue', data.token_api)
 
 			}
 		});
@@ -324,4 +353,29 @@
 
 	}
 
+</script>
+
+<!-- Periode Tambah Data -->
+
+<script>
+	$('#periodeForm').submit(function (e) {
+		e.preventDefault();
+		var data = new FormData(document.getElementById("periodeForm"));
+		$.ajax({
+			url: "<?= Base_url('setting/setting/tambahPeriode'); ?>",
+			type: "post",
+			data: data,
+			async: false,
+			processData: false,
+			contentType: false,
+			success: function (data) {
+				$('#modal_periode').modal('hide');
+				Swal.fire(
+					'Sukses!',
+					'Refresh Browser!',
+					'success'
+				)
+			}
+		})
+	});
 </script>

@@ -34,10 +34,6 @@
 			<!-- <h5 class="text-muted m-t-0 font-600">Responsive Admin Dashboard</h5> -->
 		</div>
 		<div class="m-t-40 card-box">
-			<div class="text-center alert alert-danger alert-dismissable">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				Harap untuk segera melakukan pembayaran <b>Aplikasi</b>.
-			</div>
 			<div class="text-center">
 				<h4 class="text-uppercase font-bold m-b-0">Sign In</h4>
 			</div>
@@ -164,15 +160,10 @@
 									});
 									$('#password').val('');
 								} else {
-									Swal.fire({
-										icon: 'warning',
-										title: 'Info',
-										html: '<h2>Segera untuk lakukan pembayaran <b>Aplikasi!</b></h2>',
-									}).then((result) => {
+									
 										window.location.href =
-											"<?php echo base_url('dashboard/'); ?>" +
-											data;
-									})
+											"<?php echo base_url('dashboard/'); ?>" + data;
+									
 								}
 							}
 						}

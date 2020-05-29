@@ -22,10 +22,12 @@ class Model_Laporan_Persediaan extends CI_Model
     }
 
     function get_persediaan_per_barang($post){
+        $periode = $this->modelSetting->get_data_periode();
+
         $output = array();
         $data_barang = $this->get_data_barang();
         foreach ($data_barang as $key => $value) {
-            $data_persediaan = $this->get_data_persediaan($value['kode_barang'], $post);
+            $data_persediaan = $this->get_data_persediaan($value['kode_barang'], $post, $periode);
 
             $total_persediaan = 0;
             $total_persediaan_akhir = 0;
@@ -62,13 +64,12 @@ class Model_Laporan_Persediaan extends CI_Model
         return $data;
     }
 
-    function get_data_persediaan($kode_barang, $post){
+    function get_data_persediaan($kode_barang, $post, $periode){
         $output = array();
 
-        $data_saldo_awal = $this->data_saldo_awal($kode_barang);
-        $data_pembelian = $this->data_pembelian($kode_barang, $post);
-        $data_retur_penjualan = $this->data_retur_penjualan($kode_barang, $post);
-
+        $data_saldo_awal = $this->data_saldo_awal($kode_barang, $periode);
+        $data_pembelian = $this->data_pembelian($kode_barang, $post, $periode);
+        $data_retur_penjualan = $this->data_retur_penjualan($kode_barang, $post, $periode);
 
         foreach ($data_saldo_awal as $key => $value) {
             if ($value['saldo_awal'] == 0) {
@@ -88,8 +89,8 @@ class Model_Laporan_Persediaan extends CI_Model
 
         foreach ($data_pembelian as $key => $value) {
             
-            $data_retur_pembelian = $this->data_retur_pembelian($value['kode_barang'], $post, $value['id']);
-            $data_sisa_pembelian = $this->data_sisa_pembelian($value['kode_barang'], $post, $value['id']);
+            $data_retur_pembelian = $this->data_retur_pembelian($value['kode_barang'], $post, $value['id'], $periode);
+            $data_sisa_pembelian = $this->data_sisa_pembelian($value['kode_barang'], $post, $value['id'], $periode);
             $saldo = $value['jumlah_pembelian']  - $data_retur_pembelian - $data_sisa_pembelian ;
             if ($saldo == 0) {
                 continue;
@@ -125,23 +126,26 @@ class Model_Laporan_Persediaan extends CI_Model
         return $output;      
     }
 
-    function data_saldo_awal($kode_barang){
+    function data_saldo_awal($kode_barang, $periode){
+        
         $this->db->select('kode_barang, nomor_faktur, qty_awal,saldo_awal, harga_awal');
         $this->db->from('master_saldo_awal');
         $this->db->where('kode_barang', $kode_barang);
+        $this->db->where('periode', $periode);
         return $this->db->get()->result_array();
     }
 
-    function data_pembelian($kode_barang, $post){
+    function data_pembelian($kode_barang, $post, $periode){
         $this->db->select('kode_barang, jumlah_pembelian, saldo, harga_beli,nomor_transaksi,id');
         $this->db->from('detail_pembelian');
         $this->db->where('kode_barang', $kode_barang);
         $this->db->where('tanggal_transaksi >=', date('Y-01-01 00:00:00'));
         $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($post['tanggal'])));
+        $this->db->where('periode', $periode);
         return $this->db->get()->result_array();
     }
 
-    function data_retur_pembelian($kode_barang, $post, $tag)
+    function data_retur_pembelian($kode_barang, $post, $tag, $periode)
     {
         $this->db->select('sum(`jumlah_retur`) as qty');
         $this->db->from('detail_retur_pembelian');
@@ -149,11 +153,12 @@ class Model_Laporan_Persediaan extends CI_Model
         $this->db->where('id_detail_pembelian', $tag);
         $this->db->where('tanggal_transaksi >=', date('Y-01-01 00:00:00'));
         $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($post['tanggal'])));
+        $this->db->where('periode', $periode);
         $data = $this->db->get()->row();
         return $data->qty;
     }
 
-    function data_sisa_pembelian($kode_barang, $post, $tag)
+    function data_sisa_pembelian($kode_barang, $post, $tag, $periode)
     {
         $this->db->select('sum(`qty`) as qty, tag');
         $this->db->from('master_harga_pokok_penjualan');
@@ -162,11 +167,12 @@ class Model_Laporan_Persediaan extends CI_Model
         $this->db->where('kode_barang', $kode_barang);
         $this->db->where('tanggal_transaksi >=', date('Y-01-01 00:00:00'));
         $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($post['tanggal'])));
+        $this->db->where('periode', $periode);
         $data = $this->db->get()->row();
         return $data->qty;
     }
 
-    function data_retur_penjualan($kode_barang, $post)
+    function data_retur_penjualan($kode_barang, $post, $periode)
     {
 
         $this->db->select('saldo_retur, saldo_tersedia, harga_pokok,nomor_faktur, id');
@@ -174,6 +180,7 @@ class Model_Laporan_Persediaan extends CI_Model
         $this->db->where('kode_barang', $kode_barang);
         $this->db->where('tanggal_transaksi >=', date('Y-01-01'));
         $this->db->where('tanggal_transaksi <=', date('Y-m-d', strtotime($post['tanggal'])));
+        $this->db->where('periode', $periode);
         return $this->db->get()->result_array();
     }
 }

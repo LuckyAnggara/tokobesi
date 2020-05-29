@@ -308,6 +308,7 @@ class Model_Penjualan_Barang extends CI_Model
             'status_bayar' => $post['status'], // 0 untuk lunas 1 untuk nyicil cashbon
             'tanggal_input' =>  date("Y-m-d H:i:s"),
             'user' => $this->session->userdata['username'],
+            'keterangan'=> $post['nama_bank'] . ' KET : '.$post['keterangan_transfer'],
             'periode' => $periode
         );
 
@@ -360,7 +361,10 @@ class Model_Penjualan_Barang extends CI_Model
             $this->db->insert('detail_piutang', $data);
             // update COH
             $nominal = $post['down_payment'];
+
             $this->modelCoh->transaksi_penjualan_kredit($this->session->userdata['username'], $nominal, $no_faktur);
+    
+            
         }else{
             $this->db->select('grand_total');
             $this->db->from('master_penjualan');
@@ -368,8 +372,12 @@ class Model_Penjualan_Barang extends CI_Model
             $data = $this->db->get()->row_array();
             $nominal = $data['grand_total'];
 
-            // update COH
-            $this->modelCoh->transaksi_penjualan_tunai($this->session->userdata['username'], $nominal, $no_faktur);
+            if($post['keterangan_transfer'] == ''){
+                $this->modelCoh->transaksi_penjualan_tunai($this->session->userdata['username'], $nominal, $no_faktur);
+            }else{
+                $is_transfer = $post['nama_bank'] . ' KET : '.$post['keterangan_transfer'];
+                $this->modelCoh->transaksi_penjualan_tunai($this->session->userdata['username'], $nominal, $no_faktur, $is_transfer);
+            }
         }
     }
 

@@ -181,16 +181,26 @@ class Mastercoh extends CI_Controller
     public function get_data_master_kasir_aktif()
     {
         $database = $this->modelCoh->get_data_master_kasir_aktif();
+        if($database !=null){
         $data = $database->result_array();
+        }else{
+$data = [
+    'nama_kasir' => null,
+    'saldo_awal' => null,
+    'saldo_akhir'=> null,
+    'status'=>null
+];
+        }
         $output = array(
             // "draw" => $_POST['draw'],
             "recordsTotal" => $this->db->count_all_results(),
-            "recordsFiltered"  => $database->num_rows(),
+            "recordsFiltered"  => 0,
             "data" => $data
-        );
-
+        );       
         $output = json_encode($output);
         echo $output;
+
+        
     }
 
     

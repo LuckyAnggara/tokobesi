@@ -36,6 +36,11 @@
 									Database
 								</a>
 							</li>
+							<li class="nav-item">
+								<a href="#apisetting" data-toggle="tab" aria-expanded="false" class="nav-link">
+									Api
+								</a>
+							</li>
 						</ul>
 
 						<div class="tab-content">
@@ -171,23 +176,31 @@
 								</table>
 							</div>
 							<div role="tabpanel" class="tab-pane fade" id="databasesetting">
+								
 								<table class="table table-bordered table-striped">
 									<tbody>
-									<tr>
-										<td>Periode Database</td>
-										<td><a href="javascript:void(0);" id="periode"></a></td>
-									</tr>
-										<!-- <tr>
-											<td width="35%">Database</td>
-											<td width="65%"><a href="javascript:void(0);" id="notifikasi"></a></td>
-										</tr>
 										<tr>
-											<td>Frequensi (Dalam Menit)</td>
-											<td><a href="javascript:void(0);" class="edit_number"
-													id="frekuensi_notifikasi"></a></td>
-										</tr> -->
+											<td>Periode Database</td>
+											<td><a href="javascript:void(0);" id="periode"></a></td>
+										</tr>
 									</tbody>
 								</table>
+								<div class="modal-footer">
+									<button type="button" id="periode_button"
+										class="btn btn-primary waves-effect waves-light">Tambah Periode</button>
+								</div>
+							</div>
+							<div role="tabpanel" class="tab-pane fade" id="apisetting">
+							<table class="table table-bordered table-striped">
+									<tbody>
+										<tr>
+											<td width="35%">Api Key</td>
+											<td width="65%"><a href="javascript:void(0);" class="edit_input" 
+													id="token_api"></a></td>
+										</tr>
+									</tbody>
+								</table>
+								
 							</div>
 						</div>
 					</div><!-- end col -->

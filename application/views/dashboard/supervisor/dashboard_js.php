@@ -33,7 +33,7 @@
                 $('#cash').LoadingOverlay("hide");
             },
             success: function(data) {
-                if (data.cash == null) {
+                if (data.cash == null || data.status == '2') {
                     $('#dana_tersedia').text('<span class="text-danger">Close</span>')
                 } else {
                     $('#sign').text('Open')

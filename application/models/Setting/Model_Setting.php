@@ -146,4 +146,13 @@ class Model_Setting extends CI_Model
         return $data['value'];
 
     }
+
+    public function tambahPeriode($post){
+        $data = [
+            'periode'=> $post['periode'],
+            'periode_awal'=> date('Y-m-d', strtotime($post['periode_awal'])),
+            'periode_akhir'=> date('Y-m-d', strtotime($post['periode_akhir'])),
+        ];
+        $this->db->insert('master_periode', $data);
+    }
 }

@@ -65,6 +65,23 @@ class Kartupersediaan extends CI_Controller
         echo $output;
     }
 
+    public function get_data_ajax2($kode_barang)
+    {
+        // $kode_barang = $this->input->post('kode_barang');
+        $database = $this->modelPersediaan->get_kartu_persediaan_ajax2($kode_barang);
+        $output = array(
+            // "draw" => $_POST['draw'],
+            "recordsTotal" => $this->db->count_all_results(),
+            "recordsFiltered"  => 22,
+            "data" =>  array()
+        );
+        $output['data'] = $database;
+        $output = json_encode($output);
+        echo $output;
+    }
+
+    
+
     public function get_data_barang_versi_select2()
     {
         $string = $this->input->post('query');

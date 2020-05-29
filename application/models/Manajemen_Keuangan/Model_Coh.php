@@ -52,7 +52,7 @@ class Model_Coh extends CI_Model
         $this->db->insert('detail_coh', $data);
     }
 
-    function transaksi_penjualan_tunai($user, $nominal, $no_faktur){
+    function transaksi_penjualan_tunai($user, $nominal, $no_faktur, $is_transfer = null){
         $this->db->select('*');
         $this->db->from('master_coh');
         $this->db->where('user', $user);
@@ -66,13 +66,18 @@ class Model_Coh extends CI_Model
         $this->db->where('nomor_referensi', $data_coh['nomor_referensi']);
         $this->db->update('master_coh', $data);
 
+        if($is_transfer == null){
+            $keterangan =  'Penjualan Tunai Nomor Faktur : '.$no_faktur ;
+        }else{
+            $keterangan =  'Penjualan Nomor Faktur : '.$no_faktur . ' Pembayaran Melalui Transfer ke Rekening : '. $is_transfer;
+        }
         // update detail
         $data = [
             'nomor_referensi' => $data_coh['nomor_referensi'],
             'nominal' => $nominal,
             'saldo' => $data_coh['saldo_akhir'] + $nominal,
             'jenis' => 1,
-            'keterangan' => 'Penjualan Tunai Nomor Faktur : '.$no_faktur ,
+            'keterangan' => $keterangan,
             'tanggal_input' => date("Y-m-d H:i:s"),
         ];
         $this->db->insert('detail_coh', $data);
@@ -445,7 +450,10 @@ class Model_Coh extends CI_Model
         $this->db->where('master_coh.status !=', 99);
 
         $this->db->having('nomor_referensi_spv', $data['nomor_referensi']);
-        return $this->db->get();
+        $data = $this->db->get();
+        if($data->num_rows > 0){
+            return $data;
+        }
     }
 
     function get_data_master_histori()

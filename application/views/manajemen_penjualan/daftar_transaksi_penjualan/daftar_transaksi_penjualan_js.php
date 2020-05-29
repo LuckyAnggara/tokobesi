@@ -160,12 +160,12 @@
                         }
                     },
                     {
-                        data: "kredit",
+                        data: {"kredit" : "kredit", 'keterangan' : 'keterangan'},
                         targets: 9,
                         render: function(data, type, full, meta) {
                             var date = new Date(data.tanggal_jatuh_tempo);
                             date = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
-                            if (data !== "") {
+                            if (data.kredit !== "") {
                                 var display =
                                     '<div class="btn-group">' +
                                     '<span class="badge badge-danger dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Belum Lunas <span class="caret"></span></span>' +
@@ -173,10 +173,14 @@
                                     '<a class="dropdown-item"><b><u>Jatuh Tempo</u></b></a>' +
                                     '<a class="dropdown-item">' + date + '</a>' +
                                     '<a class="dropdown-item"><b><u>Sisa</u></b></a>' +
-                                    '<a class="dropdown-item">' + formatRupiah(data.sisa_piutang.toString(), 'Rp.') + '</a>' +
+                                    '<a class="dropdown-item">' + formatRupiah(data.kredit.sisa_piutang.toString(), 'Rp.') + '</a>' +
                                     '</div></div>'
                             } else {
-                                var display = '<span class="badge badge-success">Lunas</span>'
+                                if(data.keterangan !== ''){
+                                    var display = '<span class="badge badge-success">Lunas</span><span class="badge badge-warning">Transfer</span>'
+                                }else{
+                                    var display = '<span class="badge badge-success">Lunas</span>';
+                                }
                             }
                             return display;
                         }

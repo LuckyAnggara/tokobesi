@@ -152,6 +152,14 @@ if ($data_order['status_bayar'] == 1) {
                         <?= $status_pembayaran; ?>
                     </div>
                 </div>
+                <?php if($data_order['keterangan'] != ''):?>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-sm-form-label m-t-10">Transfer Ke</label>
+                    <div class="col-sm-8">
+                        <input id="transfer_ke" name="transfer_ke" type="text" class="form-control" value="<?= $data_order['keterangan']; ?>" readonly>
+                    </div>
+                </div>
+                <?php endif;?>
                 <div class="form-group row">
                     <label class="col-sm-4 col-sm-form-label m-t-10">Grand Total</label>
                     <div class="col-sm-8">
