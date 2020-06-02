@@ -50,25 +50,38 @@
     function proses_surat_jalan(no_pol, no_order) {
         $.ajax({
             url: '<?= base_url("manajemen_penjualan/penjualanbarang/surat_jalan/"); ?>',
-            type: "POST",
+            type: "post",
             data: {
                 no_pol: no_pol,
                 no_order: no_order,
             },
             dataType: 'json',
-            beforeSend: function() {
+            beforeSend: function(data) {
+                
                 $.LoadingOverlay("show");
             },
-            complete: function() {
+            complete: function(data) {
                 $.LoadingOverlay("hide", true);
+                // console.log(data.responseText);
+                
+                if (data.responseText !== "") {
+                    window.open("<?= base_url('laporan/invoice/no_polisi/'); ?>" + no_order);
+                    window.open("<?= base_url('laporan/invoice/tunai/'); ?>" + no_order);
+                } else {
+ 
+                }
             },
             success: function(data) {
-                if (data !== "") {
-                    window.open("<?= base_url('laporan/invoice/no_polisi/'); ?>" + no_order);
-                    window.open("<?= base_url('laporan/invoice/kredit/'); ?>" + no_order);
-                } else {
-
-                }
+                // console.log(data);
+               
+                
+                // if (data !== "") {
+                //     // window.open("<?= base_url('laporan/invoice/no_polisi/'); ?>" + no_order);
+                //     // window.open("<?= base_url('laporan/invoice/tunai/'); ?>" + no_order);
+                    
+                // } else {
+ 
+                // }
             },
         });
     }

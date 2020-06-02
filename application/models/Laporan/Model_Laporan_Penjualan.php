@@ -100,7 +100,12 @@ class Model_Laporan_Penjualan extends CI_Model
         $this->db->from('master_user');
         $this->db->where('username', $sales);
         $data = $this->db->get()->row_array();
-        return $data['nama'];
+        if($sales == "nosales"){
+return "";
+        }else{
+            return $data['nama'];
+
+        }
     }
 
     function get_per_sales($sales, $tanggal){
@@ -145,8 +150,8 @@ class Model_Laporan_Penjualan extends CI_Model
         $this->db->from('master_retur_penjualan');
         $this->db->join('master_user', 'master_user.username = master_retur_penjualan.user');
         $this->db->join('master_pelanggan', 'master_pelanggan.id_pelanggan = master_retur_penjualan.id_pelanggan');
-        $this->db->where('tanggal_transaksi >=', date('Y-m-d 00:00:00', strtotime($tanggal[0])));
-        $this->db->where('tanggal_transaksi <=', date('Y-m-d 23:59:59', strtotime($tanggal[1])));
+        $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($tanggal[0])));
+        $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($tanggal[1])));
         $data = $this->db->get()->result_array();
         return $data;
     }

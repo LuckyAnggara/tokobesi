@@ -70,19 +70,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | The $query_builder variables lets you determine whether or not to load
 | the query builder class.
  */
-$koneksi = mysqli_connect("localhost", "root", "", "tob");
-
-$sql = "SELECT * FROM master_setting WHERE nama_setting = 'database'";
-$hasil = $koneksi->query($sql);
-
-while ($data = $hasil->fetch_array()) { // Tampilkan data dengan pengulangan while
-    $output = $data[2];
-}
-
-$active_group = '2019';
+$active_group = 'default';
 $query_builder = true;
 
-$db['2019'] = array(
+$db['default'] = array(
     'dsn' => '',
     'hostname' => 'localhost',
     //'username' => 'bbmakmur_kadungora',
@@ -107,27 +98,3 @@ $db['2019'] = array(
     'save_queries' => true,
 );
 
-$db['2020'] = array(
-    'dsn' => '',
-    'hostname' => 'localhost',
-    //'username' => 'bbmakmur_kadungora',
-    // 'password' => 'kadungora2020',
-    // 'database' => 'bbmakmur_kadungora',
-    'username' => 'root',
-    'password' => '',
-    'database' => 'tob_dummy',
-    'dbdriver' => 'mysqli',
-    'dbprefix' => '',
-    'pconnect' => false,
-    'db_debug' => (ENVIRONMENT !== 'production'),
-    'cache_on' => false,
-    'cachedir' => '',
-    'char_set' => 'utf8',
-    'dbcollat' => 'utf8_general_ci',
-    'swap_pre' => '',
-    'encrypt' => false,
-    'compress' => false,
-    'stricton' => false,
-    'failover' => array(),
-    'save_queries' => true,
-);

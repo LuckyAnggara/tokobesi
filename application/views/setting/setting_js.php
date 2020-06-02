@@ -18,7 +18,7 @@
 <script>
 	$(document).ready(function () {
 		setData();
-
+		init_tabel_bank();
 		$('#edit_gambar').dropify({
 			messages: {
 				'default': 'Drag dan drop Bukti Barang disini',
@@ -61,6 +61,16 @@
 				.end();
 		});
 
+		$('#modal_bank').on('hidden.bs.modal', function (e) {
+			$(this)
+				.find("input,textarea,select")
+				.val('')
+				.end()
+				.find("input[type=checkbox], input[type=radio]")
+				.prop("checked", "")
+				.end();
+		});
+
 
 		$('#periode_button').on('click', function () {
 			$('#periode_awal').datepicker({
@@ -72,6 +82,11 @@
 				orientation: "auto",
 			});
 			$('#modal_periode').modal('show');
+		});
+
+		$('#detail_bank_button').on('click', function () {
+ 			
+			$('#modal_bank').modal('show');
 		});
 	})
 
@@ -169,7 +184,8 @@
 		$('#notifikasi').editable({
 			type: 'checklist',
 			mode: 'inline',
-			source: [{
+			source: [
+				{
 					value: 1,
 					text: 'Alert Hutang'
 				},
@@ -177,14 +193,14 @@
 					value: 2,
 					text: 'Alert Piutang'
 				},
-				{
-					value: 3,
-					text: 'Transaksi Penjualan'
-				},
-				{
-					value: 4,
-					text: 'Minimum Stock Barang'
-				}
+				// {
+				// 	value: 3,
+				// 	text: 'Transaksi Penjualan'
+				// },
+				// {
+				// 	value: 4,
+				// 	text: 'Minimum Stock Barang'
+				// }
 			]
 		});
 	})
@@ -378,4 +394,112 @@
 			}
 		})
 	});
+</script>
+
+<!-- Data Bank -->
+
+<script>
+function init_tabel_bank(){
+            $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+                return {
+                    "iStart": oSettings._iDisplayStart,
+                    "iEnd": oSettings.fnDisplayEnd(),
+                    "iLength": oSettings._iDisplayLength,
+                    "iTotal": oSettings.fnRecordsTotal(),
+                    "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                    "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                    "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+                };
+            };
+           
+            var table = $('#datatable-bank').DataTable({
+                "destroy": true,
+                "paging": true,
+				"lengthChange": false,
+                "searching": true,
+                "processing": true,
+                "serverSide": false,
+                "ajax": {
+                    "url": '<?= base_url("setting/bank/get_data_bank_table/"); ?>',
+                    "type": "POST",
+                },
+                "columnDefs": [{
+                        targets: 0,
+                        render: function(data, type, full, meta) {
+                            return "";
+                        }
+                    },
+                    {
+                        data: "nama_bank",
+                        targets: 1,
+                        render: function(data, type, full, meta) {
+                            return data;
+                        }
+                    },
+                    {
+                        data: "nomor_rekening",
+                        targets: 2,
+                        render: function(data, type, full, meta) {
+                            return data;
+                        }
+                    },
+					{
+                        data: "id",
+                        targets: 3,
+                        render: function(data, type, full, meta) {
+                            var del = '<a type="button" onClick = "delete_data_bank(\'' + data + '\')" class="btn btn-icon waves-effect waves-light btn-danger btn-sm"><i class="fa fa-trash" ></i> </a>';
+							return del;
+                        }
+                    },
+                ],
+                "rowCallback": function(row, data, iDisplayIndex) {
+                    var info = this.fnPagingInfo();
+                    var page = info.iPage;
+                    var length = info.iLength;
+                    var index = page * length + (iDisplayIndex + 1);
+                    $('td:eq(0)', row).html(index);
+                }
+            });
+}
+
+$('#bankForm').submit(function (e) {
+		e.preventDefault();
+		var data = new FormData(document.getElementById("bankForm"));
+		$.ajax({
+			url: "<?= Base_url('setting/bank/tambahBank'); ?>",
+			type: "post",
+			data: data,
+			async: false,
+			processData: false,
+			contentType: false,
+			success: function (data) {
+				$('#datatable-bank').DataTable().ajax.reload();
+				Swal.fire(
+					'Sukses!',
+					'Data Bank sudah di tambahkan!',
+					'success'
+				)
+			}
+		})
+});
+
+function delete_data_bank(id) {
+        $.ajax({
+            url: '<?= base_url("setting/bank/delete_data/"); ?>',
+            type: "post",
+            data: {
+                id: id
+            },
+            beforeSend: function() {
+                $.LoadingOverlay("show");
+            },
+            complete: function(data) {
+                $.LoadingOverlay("hide");
+            },
+            success: function(data) {
+                $('#datatable-bank').DataTable().ajax.reload();
+            }
+        });
+    }
+
 </script>

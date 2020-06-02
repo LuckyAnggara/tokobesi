@@ -450,9 +450,13 @@ class Model_Coh extends CI_Model
         $this->db->where('master_coh.status !=', 99);
 
         $this->db->having('nomor_referensi_spv', $data['nomor_referensi']);
+
         $data = $this->db->get();
-        if($data->num_rows > 0){
+        // return $data;
+        if($data->num_rows() > 0){
             return $data;
+        }else{
+            return "kosong";
         }
     }
 

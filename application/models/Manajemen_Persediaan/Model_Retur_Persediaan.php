@@ -44,7 +44,7 @@ class Model_Retur_Persediaan extends CI_Model
         return $data->saldo;
     }
 
-    function push_retur($post)
+    function push_retur($post,$periode)
     {
         $data_retur = $this->get_barang_retur($post['id']);
         $data = [
@@ -57,6 +57,7 @@ class Model_Retur_Persediaan extends CI_Model
             'tanggal_input' =>  date('Y-m-d H:i:s'),
             'tanggal_transaksi' => date('Y-m-d H:i:s', strtotime($data_retur['tanggal_transaksi'])),
             'user' => $this->session->userdata['username'],
+            'periode'=> $periode
         ];
 
         $this->db->insert('detail_retur_barang_penjualan', $data);

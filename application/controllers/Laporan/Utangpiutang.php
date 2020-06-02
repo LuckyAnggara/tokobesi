@@ -143,6 +143,7 @@ class Utangpiutang extends CI_Controller
         $utang_kemarin = $this->modelLapUtang->utang_kemarin($post);
         $utang_hari_ini = $this->modelLapUtang->utang_hari_ini($post);
         $pembayaran_hari_ini = $this->modelLapUtang->pembayaran_hari_ini($post);
+        
 
         $sheet->mergeCells('A1:H1'); // merge
         $sheet->mergeCells('A2:H2'); // merge
@@ -689,6 +690,8 @@ class Utangpiutang extends CI_Controller
         $piutang_kemarin = $this->modelLapPiutang->piutang_kemarin($post);
         $piutang_hari_ini = $this->modelLapPiutang->piutang_hari_ini($post);
         $pembayaran_hari_ini = $this->modelLapPiutang->pembayaran_hari_ini($post);
+        $retur_hari_ini = $this->modelLapPiutang->retur_piutang_hari_ini($post);
+        $pembayaran_tunai_hari_ini = $this->modelLapPiutang->pembayaran_tunai_hari_ini($post);
 
         $sheet->mergeCells('A1:H1'); // merge
         $sheet->mergeCells('A2:H2'); // merge
@@ -831,10 +834,26 @@ class Utangpiutang extends CI_Controller
         $spreadsheet->getActiveSheet()->getStyle('G' . $kolom)
             ->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK);
         $kolom++;
+        $kolom++;
         $sheet->mergeCells('E' . $kolom . ':F' . $kolom); // merge
         $sheet->setCellValue('E' . $kolom, 'PEMBAYARAN HARI INI');
-        $sheet->setCellValue('G' . $kolom, $pembayaran_hari_ini);
+        $sheet->setCellValue('G' . $kolom, $pembayaran_hari_ini - $retur_hari_ini);
         $kolom++;
+        $sheet->mergeCells('E' . $kolom . ':F' . $kolom); // merge
+        $sheet->setCellValue('E' . $kolom, 'RETUR PIUTANG HARI INI');
+        $sheet->setCellValue('G' . $kolom, $retur_hari_ini);
+        $kolom++;
+        $sheet->mergeCells('E' . $kolom . ':F' . $kolom); // merge
+        $sheet->setCellValue('E' . $kolom, '');
+        $sheet->setCellValue('G' . $kolom, $pembayaran_hari_ini);
+        $spreadsheet->getActiveSheet()->getStyle('G' . $kolom)
+        ->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+    $spreadsheet->getActiveSheet()->getStyle('G' . $kolom)
+        ->getFill()->getStartColor()->setARGB('FF16F900');
+    $spreadsheet->getActiveSheet()->getStyle('G' . $kolom)
+        ->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK);
+    $kolom++;
+    $kolom++;
         $sheet->mergeCells('E' . $kolom . ':F' . $kolom); // merge
         $sheet->setCellValue('E' . $kolom, 'TOTAL PIUTANG');
         $sheet->setCellValue('G' . $kolom, $piutang_kemarin + $piutang_hari_ini - $pembayaran_hari_ini);

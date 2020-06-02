@@ -47,7 +47,7 @@ class Returpenjualan extends CI_Controller
     {
         $post = $this->input->post();
         $output = $this->modelReturPenjualan->get_data($post);
-        $output = $output = json_encode($output);
+        $output = json_encode($output);
         echo $output;
     }
 
@@ -61,15 +61,33 @@ class Returpenjualan extends CI_Controller
 
     public function tambahdatamaster()
     {
+        $user = $this->session->userdata('username');
         $post = $this->input->post();
-        $data = $this->modelReturPenjualan->tambah_data_master($post);
-        if($data == 'sukses'){
-            $this->db->select('no_faktur');
-            $this->db->from('master_piutang');
-            $this->db->where('no_faktur', $post['nomor_faktur']);
-            $cekKredit = $this->db->get()->num_rows();
+        $dana = $this->modelCoh->cek_dana($user); // cek dana user
 
-            if ($cekKredit > 0) {
+        if($post['tunai'] == "true"){
+            if($post['retur_grand_total'] > $dana ){
+                echo "kurang"; // dana user kurang
+            }else{
+                $proses = $this->proses_retur($post);
+                echo $proses;
+            }
+        }else{
+            $proses = $this->proses_retur($post);
+            echo $proses;
+        }  
+    }
+
+    public function proses_retur($post){
+        $data = $this->modelReturPenjualan->tambah_data_master($post);
+
+        if($data == 'sukses'){
+                $this->db->select('sisa_piutang');
+                $this->db->from('master_piutang');
+                $this->db->where('no_faktur', $post['nomor_faktur']);
+                $cek_saldo = $this->db->get()->row_array();
+            
+            if ($cek_saldo > $post['retur_grand_total']) {
                 $data = [
                     'nomor_faktur' => $post['nomor_faktur'],
                     'tanggal' => date('Y-m-d H:i:s'),
@@ -78,12 +96,13 @@ class Returpenjualan extends CI_Controller
                 ];
                 $this->modelPiutang->tambah_pembayaran($data);
                 $this->modelPiutang->update_master($data);
+            }else{
+                return 'piutangkurang'; // saldo piutang lebih kecil dari retur
             }
-            echo 'sukses';
+            return 'sukses';
         }else{
-            echo 'error';
+            return 'error';
         }
-        
     }
 
     public function tambahdatadetail()

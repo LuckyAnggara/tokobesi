@@ -124,7 +124,6 @@ class Model_Laporan_Piutang extends CI_Model
 
     function pembayaran_hari_ini($post)
     {
-
         $this->db->select_sum('nominal_pembayaran', 'pembayaran_hari_ini');
         $this->db->from('detail_piutang');
         $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($post['tanggal'])));
@@ -135,6 +134,37 @@ class Model_Laporan_Piutang extends CI_Model
             return 0;
         } else {
             return $pembayaran_hari_ini;
+        }
+    }
+
+    function retur_piutang_hari_ini($post){
+        $this->db->select_sum('nominal_pembayaran', 'retur_hari_ini');
+        $this->db->from('detail_piutang');
+        $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($post['tanggal'])));
+        $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($post['tanggal'])));
+        $this->db->where('keterangan', 'Retur Penjualan');
+        $data = $this->db->get()->row();
+        $retur_hari_ini =  $data->retur_hari_ini;
+        if ($retur_hari_ini == null) {
+            return 0;
+        } else {
+            return $retur_hari_ini;
+        }
+    }
+
+    function pembayaran_tunai_hari_ini($post){
+        $this->db->select_sum('nominal_pembayaran', 'pembayaran_tunia_hari_ini');
+        $this->db->from('detail_piutang');
+        $this->db->where('tanggal >=', date('Y-m-d 00:00:00', strtotime($post['tanggal'])));
+        $this->db->where('tanggal <=', date('Y-m-d 23:59:59', strtotime($post['tanggal'])));
+        $this->db->where('keterangan !=', 'Retur Penjualan');
+        $this->db->where('keterangan !=', 'Down Payment');
+        $data = $this->db->get()->row();
+        $pembayaran_tunia_hari_ini =  $data->pembayaran_tunia_hari_ini;
+        if ($pembayaran_tunia_hari_ini == null) {
+            return 0;
+        } else {
+            return $pembayaran_tunia_hari_ini;
         }
     }
 }

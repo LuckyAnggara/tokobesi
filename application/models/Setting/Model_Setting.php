@@ -155,4 +155,27 @@ class Model_Setting extends CI_Model
         ];
         $this->db->insert('master_periode', $data);
     }
+
+    public function get_data_bank(){
+        $this->db->select('*');
+        $this->db->from('data_bank');
+        $data =$this->db->get()->result_array();
+        return $data;
+    }
+
+    public function tambahBank($post){
+        $data = [
+            'nama_bank'=> $post['nama_bank'],
+            'nomor_rekening'=> $post['nomor_rekening'],
+        ];
+        $this->db->insert('data_bank', $data);
+    }
+
+    public function delete_data_bank($post){
+        $id = $post['id'];
+        if($id != null){
+            $this->db->where('id', $id);
+            $this->db->delete('data_bank');
+        }
+    }
 }

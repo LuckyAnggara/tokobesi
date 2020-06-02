@@ -67,3 +67,44 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
+
+<div id="modal_bank" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="edit_data_label"></h4>
+            </div>
+            <form data-parsley-validate novalidate autocomplete="off" id="bankForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">Nama Bank</label>
+                        <div class="col-9">
+                            <input name="nama_bank" id="nama_bank" type="text" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">Nomor Rekening</label>
+                        <div class="col-9">
+                            <input name="nomor_rekening" id="nomor_rekening" type="text" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="md-close" name="button-close" type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                    <button type="submit" name="button-add" class="btn btn-primary waves-effect waves-light">Submit</button>
+                </div>
+                <hr>
+                <table id="datatable-bank" class="table table-striped table-bordered  dt-responsive nowrap" cellspacing="0" width="100%">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Nama Bank</th>
+                                <th>Nomor Rekening</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>

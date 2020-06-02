@@ -86,7 +86,8 @@ class Returpersediaan extends CI_Controller
 
     public function push_retur()
     {
+        $periode = $this->modelSetting->get_data_periode();
         $post = $this->input->post();
-        $this->modelReturPersediaan->push_retur($post);
+        $this->modelReturPersediaan->push_retur($post, $periode);
     }
 }

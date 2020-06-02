@@ -595,6 +595,7 @@ class Dashboard extends CI_Controller
             $this->load->view('template/template_footer');
             $this->load->view('template/template_js');
             $this->load->view('dashboard/manajer/dashboard_js');
+            $this->load->view('dashboard/manajer/dashboard_notif_js');
             $this->load->view('template/template_app_js');
         }
     }

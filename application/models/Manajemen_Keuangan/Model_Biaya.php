@@ -91,10 +91,10 @@ class Model_Biaya extends CI_Model
 
     function nomor_jurnal()
     {
-        $this->db->select_max('nomor_jurnal');
+        $this->db->select_max('id');
         $data = $this->db->get('detail_biaya');
-        if ($data->row('nomor_jurnal') !== null) {
-            $number = substr($data->row('nomor_jurnal'),7);
+        if ($data->row('id') !== null) {
+            $number = substr($data->row('id'),7);
             $number = $number + 1;
             $tgl = date('dmy');
             return $tgl . '4' . $number;

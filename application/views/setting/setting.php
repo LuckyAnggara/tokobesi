@@ -26,14 +26,14 @@
 									Transaksi
 								</a>
 							</li>
-							<!-- <li class="nav-item">
+							<li class="nav-item">
                                 <a href="#settings1" data-toggle="tab" aria-expanded="false" class="nav-link">
                                     Notifikasi
                                 </a>
-                            </li> -->
+                            </li>
 							<li class="nav-item">
 								<a href="#databasesetting" data-toggle="tab" aria-expanded="false" class="nav-link">
-									Database
+									Data
 								</a>
 							</li>
 							<li class="nav-item">
@@ -156,6 +156,10 @@
 										<tr>
 											<td>Password Harga</td>
 											<td><a href="javascript:void(0);" id="password_harga"></a></td>
+										</tr>
+										<tr>
+											<td>Data Rekening Bank</td>
+											<td><button type="button" id="detail_bank_button" class="btn-xs btn-primary waves-effect waves-light">Detail</button></td>
 										</tr>
 									</tbody>
 								</table>

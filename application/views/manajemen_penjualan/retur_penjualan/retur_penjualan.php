@@ -162,7 +162,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div id="div_hitung" hidden class="row">
         <div class="col-12">
             <div class="card-box">
                 <div class="form-group row">

@@ -7,7 +7,6 @@
 
 <!-- Pusher Notif Sendiri -->
 <script src="<?= base_url('assets/'); ?>js/pusher.notif.js"></script>
-
 <!-- CHART.js -->
 <script src="<?= base_url('assets/'); ?>plugins/chartjs/chart.bundle.min.js"></script>
 <!-- DatePicker Js -->
